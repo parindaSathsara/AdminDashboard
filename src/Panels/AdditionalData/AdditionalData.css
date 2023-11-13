@@ -1,0 +1,17 @@
+.upload_section{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.upload_section div h6.section_title{
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.btn_submit_addtional{
+    width: auto;
+    margin-top: 30px !important;
+    margin-left: 10px !important;
+    display: block;
+}

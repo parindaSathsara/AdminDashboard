@@ -1,0 +1,22 @@
+#demo {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s 0.1s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.table__PayentProf{
+    text-align: center;
+    /* border: 1px solid #000; */
+    width: 100%;
+}
+
+.table__PayentProf tr td{
+    border: 1px groove;
+}
+
+.status_success{
+    color: #fff;
+    font-weight: bold;
+    background-color: green;
+}

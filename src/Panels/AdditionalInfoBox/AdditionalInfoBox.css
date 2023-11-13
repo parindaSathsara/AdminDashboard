@@ -1,0 +1,29 @@
+input.editable_texts{
+    border: none !important;
+    font-size: 12px;
+}
+
+input.editable_texts:focus{
+    border: 1px solid rgb(98, 169, 190) !important;
+}
+
+div.loader_pre{
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #ffffff !important;
+    position: absolute;
+    left: 0;
+    opacity: .8;
+}
+
+div.loader_pre .loading__loader{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+}
+
+div.additional_infor_boxmodal table{
+    font-size: 12px;
+}

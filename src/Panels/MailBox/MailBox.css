@@ -1,0 +1,7 @@
+.muted__text{
+    font-size: 12px;
+}
+
+.mail_box_form input.mail_box_input[placeholder]{
+    font-size: 11px;
+}

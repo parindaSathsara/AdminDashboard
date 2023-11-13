@@ -1,0 +1,30 @@
+.expand_bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin: 5px;
+}
+
+button.confirm_details_title{
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+    background-color: transparent;
+    border-color: #000;
+    width: 200px;
+}
+
+.type_class-Confirmed{
+    background-color: #59a87a !important;
+    color: #fff;
+}
+
+button.confirm_details_title:hover{
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.confirmation_table{
+    transition: width 1s linear;
+}

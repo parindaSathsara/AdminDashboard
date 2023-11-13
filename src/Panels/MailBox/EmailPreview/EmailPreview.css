@@ -1,0 +1,66 @@
+.email_prev_container{
+    
+}
+
+.email_prev_container .prev_top_box{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.email_prev_container .prev_top_box .prev-invoice-data p.invoice-text{
+    font-size: 12px;
+    text-align: right;
+    margin: 3px;
+}
+
+.email_prev_container .prev_top_box .prev-invoice-data p.invoice-text span.invoice-inner-text{
+    background-color: rgb(15, 179, 15);
+    color: #fff;
+    padding: 2px 3px;
+    font-weight: 500;
+}
+
+.prev_mid_box{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.prev_mid_box .address_box p.address-box-text{
+    text-align: left;
+    font-size: 12px;
+    margin: 3px;
+}
+
+span.box-header{
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.prev_mid_box .room_info_box p.room-info-text{
+    font-size: 12px;
+    text-align: left;
+    margin: 3px;
+}
+
+.prev_mid_box .pax_info_box p.pax-info-text{
+    font-size: 12px;
+    text-align: left;
+    margin: 3px;
+}
+
+.prev_mid_box .hotel_info_box p.hotel-info-text{
+    font-size: 12px;
+    text-align: right;
+    margin: 3px;
+}
+
+.prev_mid_box .hotel_info_box p.hotel-info-text:first-child{
+    font-weight: 700;
+}
+
+.table_info_box table.table{
+    font-size: 12px;
+}

@@ -1,4 +1,6 @@
-import React from 'react'
+/* eslint-disable */
+
+import React, { useEffect, useState } from 'react'
 
 import {
   CAvatar,
@@ -17,31 +19,18 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CWidgetStatsB,
 } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cibTwitter,
-  cilCloudDownload,
-  cilPeople,
-  cilUser,
-  cilUserFemale,
+  cibGmail,
+  cibFilezilla,
+  cilNoteAdd,
+  cilViewModule,
+  cilViewColumn,
+  cilViewStream
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -54,354 +43,316 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { DocsExample } from 'src/components'
+import { getAllCardData, getAllDataUserWise, getDashboardOrdersIdWise } from 'src/service/api_calls'
+import MaterialTable from 'material-table'
+import { Icon, ThemeProvider, createTheme } from '@mui/material'
+import ProductDetails from 'src/Panels/ProductDetails/ProductDetails'
+import ConfirmationDetails from 'src/Panels/ConfirmationDetails/ConfirmationDetails'
+import AccountsDetails from 'src/Panels/AccountsDetails/AccountsDetails'
+import SupDetails from 'src/Panels/SupDetails/SupDetails'
+import FeebackDetails from 'src/Panels/FeebackDetails/FeebackDetails'
+import { Tab, Tabs } from 'react-bootstrap'
+import { NavLink } from 'react-router-dom'
+import PaymentModal from 'src/Panels/PaymentModal/PaymentModal'
+import AdditionalData from 'src/Panels/AdditionalData/AdditionalData'
+import MailBox from 'src/Panels/MailBox/MailBox'
+import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
+
+
 
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
+  const [orderid, setOrderId] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [showModalAdd, setShowModalAdd] = useState(false);
 
-  const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
+  const [showMailModal, setShowMailModal] = useState(false);
+  const [showAddtitionalModal, setShowAdditionalModal] = useState(false);
+  const [rowDetails, setRowDetails] = useState([]);
 
-  const progressGroupExample2 = [
-    { title: 'Male', icon: cilUser, value: 53 },
-    { title: 'Female', icon: cilUserFemale, value: 43 },
-  ]
+  const handleSendMail = (e) => {
+    setShowMailModal(true)
+    setOrderId(e)
+  }
 
-  const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
+  const handleAdditionalModal = (e) => {
+    setShowModalAdd(true)
+    console.log(e)
+    setOrderId(e)
+  }
 
-  const tableExample = [
-    {
-      avatar: { src: avatar1, status: 'success' },
-      user: {
-        name: 'Yiorgos Avraamu',
-        new: true,
-        registered: 'Jan 1, 2021',
+  
+  const handleAdditionalInfoModal = (e) => {
+    setShowAdditionalModal(true)
+    setOrderId(e)
+}
+
+
+  const defaultMaterialTheme = createTheme();
+
+
+
+  const [orderData, setOrderData] = useState([])
+  const [cardData, setCardData] = useState({
+    orderCount: 0,
+    customerCount: 0,
+    salesCount: "",
+    suppliersCount: 0
+  })
+  const [orderDataIDWise, setOrderDataIdWise] = useState([])
+
+  useEffect(() => {
+    getAllDataUserWise().then(res => {
+      setOrderData(res)
+    })
+
+    getAllCardData().then(res => {
+      console.log(res)
+      setCardData(res)
+    })
+    // setOrderData(getAllDataUserWise());
+
+  }, []);
+
+
+
+  const data = {
+    columns: [
+      // {
+      //     title: '#ID', field: 'id', align: 'center', editable: 'never',
+      // },
+      {
+        title: 'Order Id', field: 'oid', align: 'left', editable: 'never',
       },
-      country: { name: 'USA', flag: cifUs },
-      usage: {
-        value: 50,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
+      {
+        title: 'Booking Date | Time', field: 'booking_date', align: 'left', editable: 'never',
       },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
-    },
-    {
-      avatar: { src: avatar2, status: 'danger' },
-      user: {
-        name: 'Avram Tarasios',
-        new: false,
-        registered: 'Jan 1, 2021',
+      {
+        title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
       },
-      country: { name: 'Brazil', flag: cifBr },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'info',
+      {
+        title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
       },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
-    },
-    {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'India', flag: cifIn },
-      usage: {
-        value: 74,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'warning',
+      {
+        title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
       },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
-    },
-    {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'France', flag: cifFr },
-      usage: {
-        value: 98,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'danger',
+
+      {
+        title: 'Total Amount', field: 'total_amount', align: 'right', editable: 'never',
       },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
-    },
-    {
-      avatar: { src: avatar5, status: 'success' },
-      user: {
-        name: 'Agapetus Tadeáš',
-        new: true,
-        registered: 'Jan 1, 2021',
+      {
+        title: 'Paid Amount', field: 'paid_amount', align: 'right', editable: 'never',
       },
-      country: { name: 'Spain', flag: cifEs },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'primary',
+
+
+      {
+        title: 'Discount Amount', field: 'discount_amount', align: 'right', editable: 'never',
       },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
-    },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2021',
+      {
+        title: 'Delivery Charge', field: 'delivery_charge', align: 'right', editable: 'never',
       },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
+      {
+        title: 'Additional Information', field: 'additional_data', align: 'center', editable: 'never',
       },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ]
+      {
+        title: 'Actions', field: 'actions', align: 'center', editable: 'never',
+      },
+
+    ],
+    rows: orderData?.map((value, idx) => {
+      return {
+        // id: value.MainTId,
+        oid: value.OrderId,
+        booking_date: value.checkout_date,
+        pay_type: value.payment_type,
+        pay_category: value.pay_category,
+        total_amount: value.ItemCurrency + " " + value.total_amount,
+        paid_amount: value.ItemCurrency + " " + value.paid_amount,
+        discount_amount: value.ItemCurrency + " " + value.discount_price,
+        delivery_charge: value.ItemCurrency + " " + value.delivery_charge,
+        additional_data: <><button className="btn btn-primary btn_aditional_data btn-sm" onClick={(e) => { handleAdditionalModal(value.OrderId) }} ><CIcon icon={cilNoteAdd} size="sm" /></button> | <button type='button' className='btn btn-info view_upload_info btn-sm' onClick={() => { handleAdditionalInfoModal(value.OrderId) }}><CIcon icon={cilViewStream} size="sm" /></button></>,
+
+        actions:
+          <div className='actions_box'>
+            {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+            <button className="btn btn_actions" onClick={(e) => { handleSendMail(value.OrderId) }}><CIcon icon={cibGmail} size="lg" /></button>
+          </div>
+
+      }
+    })
+  }
+
+
+  const [tabIndex, setTabIndex] = useState("")
+
+
+  const handleChange = (e) => {
+    console.log(e)
+  }
+
 
   return (
     <>
       {/* <WidgetsDropdown /> */}
+
+
+      <CRow>
+        <CCol xs={12} sm={6} lg={3}>
+          <CWidgetStatsB
+            className="mb-4"
+            progress={{ color: 'success', value: 100.0 }}
+            text="Last 30 Days Orders"
+            title="Orders"
+            value={'' + cardData.orderCount}
+          />
+        </CCol>
+        <CCol xs={12} sm={6} lg={3}>
+          <CWidgetStatsB
+            className="mb-4"
+            value={"USD " + cardData.salesCount}
+            title="Sales"
+            progress={{ color: 'danger', value: 100.0 }}
+            text="Last 30 Days Sales"
+          />
+        </CCol>
+        <CCol xs={12} sm={6} lg={3}>
+          <CWidgetStatsB
+            className="mb-4"
+            value={cardData.customerCount}
+            title="Customers"
+            progress={{ color: 'warning', value: 100.0 }}
+            text="Customers (Joined on Last 30 Days)"
+          />
+        </CCol>
+
+        <CCol xs={12} sm={6} lg={3}>
+          <CWidgetStatsB
+            className="mb-4"
+            value={'' + cardData.suppliersCount}
+            title="Suppliers"
+            progress={{ color: 'info', value: 100.0 }}
+            text="Customers (Joined on Last 30 Days)"
+          />
+        </CCol>
+
+      </CRow>
+
+
       <CCard className="mb-4">
+
+
+
         <CCardBody>
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                Traffic
+                Customer Orders
               </h4>
-              <div className="small text-medium-emphasis">January - July 2021</div>
+              {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
             </CCol>
-            <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
-              </CButton>
-              <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value}
-                    className="mx-0"
-                    active={value === 'Month'}
-                  >
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </CCol>
+
           </CRow>
-          <DocsExample href="components/table">
-            <CTable>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Otto</CTableDataCell>
-                  <CTableDataCell>@mdo</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Thornton</CTableDataCell>
-                  <CTableDataCell>@fat</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                  <CTableDataCell colSpan="2">Larry the Bird</CTableDataCell>
-                  <CTableDataCell>@twitter</CTableDataCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
-          </DocsExample>
+
+          <ThemeProvider theme={defaultMaterialTheme}>
+            <MaterialTable
+              title=""
+              // tableRef={tableRef}
+              data={data.rows}
+              columns={data.columns}
+
+
+              detailPanel={(e) => {
+                return (
+                  <div className='mainContainerTables'>
+                    <div className="col-md-12 mb-4 sub_box materialTableDP">
+                      <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
+                    </div>
+
+
+                  </div>
+                )
+
+              }
+              }
+
+
+
+              options={{
+
+                sorting: true, search: true,
+                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                showSelectAllCheckbox: false, showTextRowsSelected: false,
+                grouping: true, columnsButton: true,
+                headerStyle: { background: '#3c4b64', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+
+                // fixedColumns: {
+                //     left: 6
+                // }
+              }}
+            // editable={{
+            //     onRowUpdate: (selectedRow) => new Promise((resolve, reject) => {
+            //         deleteShippingAddress(selectedRow['id']);
+            //         setTimeout(() => resolve(), 500);
+            //         getShippingData();
+            //     }),
+
+
+            // }}
+            // cellEditable={{
+            //     onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
+            //         return new Promise((resolve, reject) => {
+            //             handleOrderStatus(rowData, newValue, oldValue, columnDef)
+            //             setTimeout(resolve, 1000);
+            //         });
+            //     }
+            // }}
+
+            />
+          </ThemeProvider>
+
         </CCardBody>
-        <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
-            {progressExample.map((item, index) => (
-              <CCol className="mb-sm-2 mb-0" key={index}>
-                <div className="text-medium-emphasis">{item.title}</div>
-                <strong>
-                  {item.value} ({item.percent}%)
-                </strong>
-                <CProgress thin className="mt-2" color={item.color} value={item.percent} />
-              </CCol>
-            ))}
-          </CRow>
-        </CCardFooter>
+
       </CCard>
 
-      <WidgetsBrand withCharts />
 
-      <CRow>
-        <CCol xs>
-          <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
-            <CCardBody>
-              <CRow>
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
-                        <div className="fs-5 fw-semibold">9,123</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Recurring Clients</div>
-                        <div className="fs-5 fw-semibold">22,643</div>
-                      </div>
-                    </CCol>
-                  </CRow>
 
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">{item.title}</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="info" value={item.value1} />
-                        <CProgress thin color="danger" value={item.value2} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
 
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Pageviews</div>
-                        <div className="fs-5 fw-semibold">78,623</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Organic</div>
-                        <div className="fs-5 fw-semibold">49,123</div>
-                      </div>
-                    </CCol>
-                  </CRow>
 
-                  <hr className="mt-0" />
+      {showModalAdd == true ?
+        <AdditionalData
+          show={showModalAdd}
+          onHide={() => setShowModalAdd(false)}
+          orderid={orderid}
+        />
+        :
+        null
+      }
 
-                  {progressGroupExample2.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">{item.value}%</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="warning" value={item.value} />
-                      </div>
-                    </div>
-                  ))}
+      {showMailModal == true ?
+        <MailBox
+          show={showMailModal}
+          onHide={() => setShowMailModal(false)}
+          orderid={orderid}
+        />
+        :
+        null
+      }
 
-                  <div className="mb-5"></div>
+      {showAddtitionalModal == true ?
+        <AdditionalInfoBox
+          show={showAddtitionalModal}
+          onHide={() => setShowAdditionalModal(false)}
+          orderid={orderid}
+        />
+        :
+        null
+      }
 
-                  {progressGroupExample3.map((item, index) => (
-                    <div className="progress-group" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">
-                          {item.value}{' '}
-                          <span className="text-medium-emphasis small">({item.percent}%)</span>
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="success" value={item.percent} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-              </CRow>
-
-              <br />
-
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>User</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
-                    <CTableHeaderCell>Usage</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
-                    <CTableHeaderCell>Activity</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.usage.value}%</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">{item.usage.period}</small>
-                          </div>
-                        </div>
-                        <CProgress thin color={item.usage.color} value={item.usage.value} />
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.payment.icon} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small text-medium-emphasis">Last login</div>
-                        <strong>{item.activity}</strong>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
     </>
   )
 }
