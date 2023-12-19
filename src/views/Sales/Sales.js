@@ -21,7 +21,7 @@ import {
     CTableRow,
     CWidgetStatsB,
 } from '@coreui/react'
-import { CChartBar, CChartLine, CChartPolarArea } from '@coreui/react-chartjs'
+import { CChartBar, CChartLine,   CChartPie,CChartPolarArea } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import {
@@ -97,8 +97,8 @@ const Sales = () => {
     const [chartData, setChartData] = useState({
         categoryList: [],
         categoryCount: [],
-        months:[],
-        values:[]
+        months: [],
+        values: []
     })
     const [orderDataIDWise, setOrderDataIdWise] = useState([])
 
@@ -129,17 +129,18 @@ const Sales = () => {
 
 
             <CRow>
-                <CCol xs={6}>
+                <CCol xs={12} md={6}>
                     <CCard className="mb-4">
-                        <CCardHeader>Category Sales Pie Chart (Last 30 Days)</CCardHeader>
+                        <CCardHeader>Pie Chart</CCardHeader>
                         <CCardBody>
-                            <CChartPolarArea
+                            <CChartPie
                                 data={{
-                                    labels: chartData.categoryList,
+                                    labels: ['Red', 'Green', 'Yellow'],
                                     datasets: [
                                         {
-                                            data: chartData.categoryCount,
-                                            backgroundColor: ['#FF6384', '#4BC0C0', '#FFCE56', '#E7E9ED', '#36A2EB', '#36A2EB'],
+                                            data: [300, 50, 100],
+                                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
                                         },
                                     ],
                                 }}
@@ -148,18 +149,18 @@ const Sales = () => {
                     </CCard>
                 </CCol>
 
-                <CCol xs={6}>
+                <CCol xs={12} md={6}>
                     <CCard className="mb-4">
-                        <CCardHeader>Sales Bar Chart (This Year)</CCardHeader>
+                        <CCardHeader>Bar Chart</CCardHeader>
                         <CCardBody>
                             <CChartBar
                                 data={{
-                                    labels: chartData.months,
+                                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],
                                     datasets: [
                                         {
-                                            label: 'Sales',
+                                            label: 'GitHub Commits',
                                             backgroundColor: '#f87979',
-                                            data: chartData.values,
+                                            data: [40, 20, 12, 39, 10, 40, 39, 80, 40],
                                         },
                                     ],
                                 }}
@@ -168,6 +169,38 @@ const Sales = () => {
                         </CCardBody>
                     </CCard>
                 </CCol>
+                <div>
+                <CCol xs={12}>
+        <CCard className="mb-4">
+          <CCardHeader>Line Chart</CCardHeader>
+          <CCardBody>
+            <CChartLine
+              data={{
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],
+                datasets: [
+                  {
+                    label: 'My First dataset',
+                    backgroundColor: 'rgba(220, 220, 220, 0.2)',
+                    borderColor: 'rgba(220, 220, 220, 1)',
+                    pointBackgroundColor: 'rgba(220, 220, 220, 1)',
+                    pointBorderColor: '#fff',
+                    data: [random(), random(), random(), random(), random(), random(), random(), random(), random(), random(), random(), random()],
+                  },
+                  {
+                    label: 'My Second dataset',
+                    backgroundColor: 'rgba(151, 187, 205, 0.2)',
+                    borderColor: 'rgba(151, 187, 205, 1)',
+                    pointBackgroundColor: 'rgba(151, 187, 205, 1)',
+                    pointBorderColor: '#fff',
+                    data: [random(), random(), random(), random(), random(), random(), random(), random(), random(), random(), random(), random()],
+                  },
+                ],
+              }}
+            />
+          </CCardBody>
+        </CCard>
+      </CCol>
+                </div>
 
             </CRow>
 

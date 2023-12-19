@@ -75,63 +75,63 @@ const Login = () => {
 
   return (
     <>
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-      <CContainer>
+      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+        <CContainer>
 
 
-        <CRow className="justify-content-center">
-          <CCol md={6}>
-            <CCardGroup>
+          <CRow className="justify-content-center">
+            <CCol md={6}>
+              <CCardGroup>
 
-              <CCard className="p-4">
-                <CCardBody>
-                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
-                    <img src={logo} width={100} alt="Logo" />
-                  </div>
+                <CCard className="p-4">
+                  <CCardBody>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
+                      <img src={logo} width={100} alt="Logo" />
+                    </div>
 
-                  <CForm>
-                    <h1 style={{ textAlign: 'center', fontSize: 28 }}>Login</h1>
-                    <p className="text-medium-emphasis" style={{ textAlign: 'center' }}>Sign In to your account</p>
-                    {/* <form className="row" onSubmit={handleFormSubmit}> */}
-                    <CInputGroup className="mb-3">
-                      <CInputGroupText>
-                        <CIcon icon={cilUser} />
-                      </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" name='username' onChange={handleInputChange} />
-                    </CInputGroup>
-                    <CInputGroup className="mb-4">
-                      <CInputGroupText>
-                        <CIcon icon={cilLockLocked} />
-                      </CInputGroupText>
-                      <CFormInput
-                        type="password"
-                        placeholder="Password"
-                        name='password'
-                        autoComplete="current-password"
-                        onChange={handleInputChange}
-                      />
-                    </CInputGroup>
+                    <CForm>
+                      <h1 style={{ textAlign: 'center', fontSize: 28 }}>Login</h1>
+                      <p className="text-medium-emphasis" style={{ textAlign: 'center' }}>Sign In to your account</p>
+                      {/* <form className="row" onSubmit={handleFormSubmit}> */}
+                      <CInputGroup className="mb-3">
+                        <CInputGroupText>
+                          <CIcon icon={cilUser} />
+                        </CInputGroupText>
+                        <CFormInput placeholder="Username" autoComplete="username" name='username' onChange={handleInputChange} />
+                      </CInputGroup>
+                      <CInputGroup className="mb-4">
+                        <CInputGroupText>
+                          <CIcon icon={cilLockLocked} />
+                        </CInputGroupText>
+                        <CFormInput
+                          type="password"
+                          placeholder="Password"
+                          name='password'
+                          autoComplete="current-password"
+                          onChange={handleInputChange}
+                        />
+                      </CInputGroup>
 
-                    <CRow>
+                      <CRow>
 
-                      <CButton type='submit' color="primary" className="px-4" onClick={handleFormSubmit}>
-                        Login
-                      </CButton>
+                        <CButton type='submit' color="primary" className="px-4" onClick={handleFormSubmit}>
+                          Login
+                        </CButton>
 
-                      {/* <CCol xs={6} className="text-right">
+                        {/* <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
                           Forgot password?
                         </CButton>
                       </CCol> */}
-                    </CRow>
-                    {/* </form> */}
-                  </CForm>
-                </CCardBody>
-              </CCard>
+                      </CRow>
+                      {/* </form> */}
+                    </CForm>
+                  </CCardBody>
+                </CCard>
 
-              <div className="text-white  loginCard" style={{ width: '40%' }}>
+                <div className="text-white  loginCard" style={{ width: '40%' }}>
 
-                {/* <div>
+                  {/* <div>
                     <h2>Sign up</h2>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -144,24 +144,24 @@ const Login = () => {
                     </Link>
                   </div> */}
 
-              </div>
+                </div>
 
-            </CCardGroup>
-          </CCol>
-        </CRow>
-      </CContainer>
+              </CCardGroup>
+            </CCol>
+          </CRow>
+        </CContainer>
 
-    </div>
+      </div>
 
-<CFooter>
-<small className="text-muted hint__Text">
-  Please contact Admin if forgot the password to login
-</small>
-<hr className='hr__' />
-<small>&copy;2023 Apple Techlabs</small>
-</CFooter>
+      <CFooter>
+        <small className="text-muted hint__Text">
+          Please contact Admin if forgot the password to login
+        </small>
+        <hr className='hr__' />
+        <small>&copy;2023 Apple Techlabs</small>
+      </CFooter>
 
-</>
+    </>
   )
 }
 
