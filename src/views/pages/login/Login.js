@@ -17,8 +17,10 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
+
 import logo from '../../../assets/brand/logo.png'
 import AuthUser from 'src/service/authenticator'
+import axios from 'axios'
 
 const Login = () => {
 
@@ -43,14 +45,14 @@ const Login = () => {
     e.preventDefault();
 
     const formdata = new FormData();
-
+    // formdata.append('_token', csrfToken); // Make sure to replace csrfToken with the actual token.
     formdata.append('username', loginInput.username);
     formdata.append('password', loginInput.password);
 
     console.log(...formdata)
 
-    // axios.get('/sanctum/csrf-cookie').then((response) => {
-    http_call.post('/login', formdata).then((res) => {
+    // axios.get('/sanctum/csrf-cookie', { withCredentials: true }).then((response) => {
+    axios.post('/user_login', formdata).then((res) => {
       console.log(res)
       if (res.data.status === 200) {
         console.log("login completed")
@@ -66,6 +68,7 @@ const Login = () => {
         // })
       }
     }).catch((err) => {
+     console.log(err,"Error is")
       throw new Error(err);
     });
     // })
@@ -123,6 +126,8 @@ const Login = () => {
                           Forgot password?
                         </CButton>
                       </CCol> */}
+
+
                       </CRow>
                       {/* </form> */}
                     </CForm>
@@ -149,7 +154,9 @@ const Login = () => {
               </CCardGroup>
             </CCol>
           </CRow>
+
         </CContainer>
+
 
       </div>
 

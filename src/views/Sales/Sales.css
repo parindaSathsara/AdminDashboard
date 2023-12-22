@@ -1,0 +1,33 @@
+.pieChart{
+height: 96%;
+}
+
+/* 
+.chart-wrapper.pieCharts {
+    box-sizing: border-box;
+    height: -webkit-fill-available;
+} */
+
+/* canvas {
+height: 55%;
+}  */
+
+.smallPieChart {
+    width: 380px;  /* Adjust the width as needed */
+    height: 380px; /* Adjust the height as needed */
+   margin-left: 20%;
+}
+
+.optionType{
+    width: 200px;
+    
+    
+}
+
+canvas {
+    display: inline;
+    box-sizing: border-box;
+    height: 100%;
+    width: 400px;
+}
+

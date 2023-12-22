@@ -7,11 +7,22 @@ import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
-// axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 // axios.defaults.baseURL = 'http://172.16.26.244:8000/api/'
 // axios.defaults.data = 'http://172.16.26.244:8000'
-axios.defaults.baseURL = 'http://backend.aahaas.com/api/'
-axios.defaults.data = 'http://backend.aahaas.com'
+
+// axios.defaults.baseURL = 'http://backend.aahaas.com/api/'
+// axios.defaults.data = 'http://backend.aahaas.com'
+
+// const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+// if (csrfTokenMeta) {
+//   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfTokenMeta.getAttribute('content');
+// } else {
+//   console.error('CSRF token meta tag not found');
+// }
+
+axios.defaults.baseURL = 'http://172.16.26.170:8000/api/'
+axios.defaults.data = 'http://172.16.26.170:8000'
 
 const loading = (
   <div className="pt-3 text-center">

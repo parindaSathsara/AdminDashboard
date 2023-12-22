@@ -1,11 +1,107 @@
 import React from 'react'
 import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 import { DocsLink } from 'src/components'
+import { Icon, ThemeProvider, createTheme } from '@mui/material'
+import MaterialTable from 'material-table'
+import { useState,useEffect } from 'react'
+import logo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
+
+
 
 const Typography = () => {
+
+  const defaultMaterialTheme = createTheme();
+
+  // const [orderData, setOrderData] = useState([])
+
+  const [data, setData] = useState({ rows: [] });
+
+  useEffect(() => {
+    fetch('http://172.16.26.170:8000/api/customer_orders_count')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setData({ rows: data });
+        console.log("response", data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+  
+  
+
+  
+  // const data = {
+  //   columns: [
+  //     // {
+  //     //     title: '#ID', field: 'id', align: 'center', editable: 'never',
+  //     // },
+  //     {
+  //       title: 'Order Id', field: 'oid', align: 'left', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Booking Date | Time', field: 'booking_date', align: 'left', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
+  //     },
+
+  //     {
+  //       title: 'Total Amount', field: 'total_amount', align: 'right', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Paid Amount', field: 'paid_amount', align: 'right', editable: 'never',
+  //     },
+
+
+  //     {
+  //       title: 'Discount Amount', field: 'discount_amount', align: 'right', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Delivery Charge', field: 'delivery_charge', align: 'right', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Additional Information', field: 'additional_data', align: 'center', editable: 'never',
+  //     },
+  //     {
+  //       title: 'Actions', field: 'actions', align: 'center', editable: 'never',
+  //     },
+
+  //   ],
+  //   rows: orderData?.map((value, idx) => {
+  //     return {
+  //       // id: value.MainTId,
+  //       oid: value.OrderId,
+  //       booking_date: value.checkout_date,
+  //       pay_type: value.payment_type,
+  //       pay_category: value.pay_category,
+  //       total_amount: value.ItemCurrency + " " + value.total_amount,
+  //       paid_amount: value.ItemCurrency + " " + value.paid_amount,
+  //       discount_amount: value.ItemCurrency + " " + value.discount_price,
+  //       delivery_charge: value.ItemCurrency + " " + value.delivery_charge,
+  //       additional_data: <><button className="btn btn-primary btn_aditional_data btn-sm" onClick={(e) => { handleAdditionalModal(value.OrderId) }} ><CIcon icon={cilNoteAdd} size="sm" /></button> | <button type='button' className='btn btn-info view_upload_info btn-sm' onClick={() => { handleAdditionalInfoModal(value.OrderId) }}><CIcon icon={cilViewStream} size="sm" /></button></>,
+
+  //       actions:
+  //         <div className='actions_box'>
+  //           {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+  //           <button className="btn btn_actions" onClick={(e) => { handleSendMail(value.OrderId) }}><CIcon icon={cibGmail} size="lg" /></button>
+  //         </div>
+
+  //     }
+  //   })
+  // }
   return (
     <>
-      <CCard className="mb-4">
+      {/* <CCard className="mb-4">
         <CCardHeader>
           Headings
           <DocsLink href="https://coreui.io/docs/content/typography/" />
@@ -221,7 +317,75 @@ const Typography = () => {
             </dl>
           </div>
         </CCardBody>
-      </CCard>
+      </CCard> */}
+
+{/* <ThemeProvider theme={defaultMaterialTheme}>
+                <MaterialTable
+                    title=""
+                    data={data.rows}
+                    columns={[
+                        { title: 'Customer Name', field: 'customerName' },
+                        { title: 'Order Count', field: 'orderCount' },
+                        { title: 'Total Order Amount', field: 'Total Order Amount' },
+                        { title: 'Email', field: 'email' }
+                    ]}
+                    detailPanel={(e) => {
+                        return (
+                            <div className='mainContainerTables'>
+                                <div className="col-md-12 mb-4 sub_box materialTableDP">
+                                    <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
+                                </div>
+                            </div>
+                        )
+                    }}
+                    options={{
+                        sorting: true,
+                        search: true,
+                        // ... other options
+                    }}
+                // ... other props
+                />
+            </ThemeProvider> */}
+
+            <ThemeProvider theme={defaultMaterialTheme}>
+      <MaterialTable
+        title="Best Customer"
+        data={data.rows}
+        columns={[
+          { title: 'Customer Name', field: 'user_name' },
+          { title: 'Order Count', field: 'checkouts_count' },
+          { title: 'totalprice', field: 'checkouts_sum_total_price' }, // Make sure this matches your API response key
+          { title: 'Email', field: 'email' },
+          {
+            title: 'User Profile',
+            field: 'customer_profilepic',
+            render: (rowData) => (
+              <img
+              src={rowData.customer_profilepic || {logo}} // Adjust the path accordingly
+              alt="Profile Pic"
+              style={{ width: 50, height: 50, borderRadius: '50%' }}
+            />
+            ),
+          },          
+        ]}
+        detailPanel={(e) => {
+          return (
+            <div className='mainContainerTables'>
+              <div className="col-md-12 mb-4 sub_box materialTableDP">
+                {/* Assuming ProductDetails is a component that takes orderDataIDWise and orderid as props */}
+                <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
+              </div>
+            </div>
+          )
+        }}
+        options={{
+          sorting: true,
+          search: true,
+          // ... other options
+        }}
+      />
+    </ThemeProvider>
+
     </>
   )
 }
