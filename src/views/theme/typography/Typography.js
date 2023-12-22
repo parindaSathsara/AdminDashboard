@@ -348,10 +348,10 @@ const Typography = () => {
             </ThemeProvider> */}
 
             <ThemeProvider theme={defaultMaterialTheme}>
-      <MaterialTable
-        title="Best Customer"
-        data={data.rows}
-        columns={[
+            <MaterialTable
+             title="Best Customer"
+             data={data.rows}
+             columns={[
           { title: 'Customer Name', field: 'user_name' },
           { title: 'Order Count', field: 'checkouts_count' },
           { title: 'totalprice', field: 'checkouts_sum_total_price' }, // Make sure this matches your API response key

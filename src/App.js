@@ -11,8 +11,8 @@ axios.defaults.withCredentials = true
 // axios.defaults.baseURL = 'http://172.16.26.244:8000/api/'
 // axios.defaults.data = 'http://172.16.26.244:8000'
 
-// axios.defaults.baseURL = 'http://backend.aahaas.com/api/'
-// axios.defaults.data = 'http://backend.aahaas.com'
+axios.defaults.baseURL = 'http://backend.aahaas.com/api/'
+axios.defaults.data = 'http://backend.aahaas.com'
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
@@ -21,8 +21,8 @@ axios.defaults.withCredentials = true
 //   console.error('CSRF token meta tag not found');
 // }
 
-axios.defaults.baseURL = 'http://172.16.26.170:8000/api/'
-axios.defaults.data = 'http://172.16.26.170:8000'
+// axios.defaults.baseURL = 'http://172.16.26.170:8000/api/'
+// axios.defaults.data = 'http://172.16.26.170:8000'
 
 const loading = (
   <div className="pt-3 text-center">
