@@ -1,5 +1,5 @@
-.pieChart{
-height: 96%;
+.pieChart {
+    height: 96%;
 }
 
 /* 
@@ -13,21 +13,38 @@ height: 55%;
 }  */
 
 .smallPieChart {
-    width: 380px;  /* Adjust the width as needed */
-    height: 380px; /* Adjust the height as needed */
-   margin-left: 20%;
+    width: 380px;
+    /* Adjust the width as needed */
+    height: 380px;
+    /* Adjust the height as needed */
+    margin-left: 20%;
 }
 
-.optionType{
-    width: 200px;
-    
-    
+.optionType {
+    width: 220px;
+
+
 }
 
-canvas {
+.BarChart {
+    height: 96%;
+}
+
+.smallBarChart {
     display: inline;
     box-sizing: border-box;
     height: 100%;
     width: 400px;
 }
 
+.calen_form {
+    display: inline-flex;
+    margin-left: -169px;
+    margin-top: 6px;
+}
+
+.load {
+    align-items: center!important;
+    justify-content: center!important;
+    display: flex!important;
+}

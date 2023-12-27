@@ -25,6 +25,9 @@ import {
 import { CChartBar, CChartLine, CChartPie, CChartPolarArea } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
+import { PacmanLoader } from 'react-spinners';
+
+
 import {
     cibGmail,
     cibFilezilla,
@@ -72,6 +75,7 @@ const Sales = () => {
     const [showMailModal, setShowMailModal] = useState(false);
     const [showAddtitionalModal, setShowAdditionalModal] = useState(false);
     const [rowDetails, setRowDetails] = useState([]);
+
 
     const handleSendMail = (e) => {
         setShowMailModal(true)
@@ -140,73 +144,188 @@ const Sales = () => {
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOptionLine, setSelectedOptionLine] = useState('');
     const [selectedOptionBar, setSelectedOptionBar] = useState('');
-    const [chartData, setChartData] = useState(null);
+    const [chartData, setChartData] = useState({});
     const [LineData, setLineData] = useState(null);
-    const [BarData,setBarData] = useState(null)
+    const [BarData, setBarData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [errorBar, setErrorBar] = useState(null);
+
+
+
+    const [pieloading, setPieLoading] = useState(false);
+    const [pieerror, setPieError] = useState(null);
+
+
+    const [lineloading, setLineLoading] = useState(false);
+    const [lineerror, setLineError] = useState(null);
+
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    const [startDateBar, setStartDateBar] = useState('');
+    const [endDateBar, setEndDateBar] = useState('');
+
+    const [startDateLine, setStartDateLine] = useState('');
+    const [endDateLine, setEndDateLine] = useState('');
+
+
+
+
 
     const handleSelectChange = (event) => {
         console.log('Selected Option:', event.target.value);
         setSelectedOption(event.target.value);
     };
 
-    const handleSelect = (event) => {
+    const handleSelectLine = (event) => {
         console.log('Selected Option:', event.target.value);
         setSelectedOptionLine(event.target.value);
     };
 
-    const handleoptionBar =(event) =>{
+    const handleoptionBar = (event) => {
+        console.log('Selected Option:', event.target.value);
         setSelectedOptionBar(event.target.value);
     }
 
     useEffect(() => {
-        // Make the API request when the selected option changes
-        if (selectedOption) {
-            // Replace 'YOUR_API_BASE_URL' with the actual base URL of your API
-            axios.get('/overall_sales/')
-                .then(response => {
-                    // Assuming the API response contains the necessary data for the chart
+
+        if (selectedOption && selectedOption !== 'customSelect') {
+            // Your existing logic for other options
+            setPieLoading(true);
+            setPieError(null);
+
+            // Modify the endpoint based on the selected date option
+            const apiUrl = `overall_sales/${selectedOption}`;
+
+            axios.get(apiUrl)
+                .then((response) => {
                     setChartData(response.data.data);
                     console.log("Response data:", response.data.data);
                 })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    // Handle error if needed
+                .catch((error) => {
+                    console.error('No data for this date. Please try again.', error);
+                    setPieError('No data for this date. Please try again.');
+                })
+                .finally(() => {
+                    setPieLoading(false);
+                });
+
+        } else if (selectedOption === 'customSelect' && startDate && endDate) {
+            setPieLoading(true);
+            setPieError(null);
+
+            // Modify the endpoint based on the selected date option
+            const apiUrl = `overall_sales/${startDate}/${endDate}`;
+
+
+            axios.get(apiUrl)
+                .then((response) => {
+                    setChartData(response.data.data);
+                    console.log("Response data:", response.data.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data for the selected date range.', error);
+                    setPieError('Error fetching data for the selected date range. Please try again.');
+                })
+                .finally(() => {
+                    setPieLoading(false);
                 });
         }
-    }, [selectedOption]);
+    }, [selectedOption, startDate, endDate]);
+
+
 
     useEffect(() => {
-        // Make the API request when the selected option changes
-        if (selectedOptionLine) {
-            // Replace 'YOUR_API_BASE_URL' with the actual base URL of your API
-            axios.get('/overall_amount')
-                .then(res => {
-                    // Assuming the API response contains the necessary data for the chart
-                    setLineData(res.data);
-                    console.log("Response data:", res.data);
+        if (selectedOptionBar && selectedOptionBar !== 'customSelect') {
+            setLoading(true);
+            setErrorBar(null);
+
+
+
+            const apiUrl = `api/overall_totalprice/${selectedOptionBar}`;
+
+            axios.get(apiUrl)
+                .then((response) => {
+                    setBarData(response.data);
+                    console.log("Bar Chart Response data:", response.data);
                 })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    // Handle error if needed
+                .catch((error) => {
+                    console.error('Error fetching data for the selected date range:', error);
+                    setErrorBar('Error fetching data for the selected date range. Please try again.');
+                })
+                .finally(() => {
+                    setLoading(false);
                 });
         }
-    }, [selectedOptionLine]);
+
+        else if (selectedOptionBar === 'customSelect' && startDateBar && endDateBar) {
+            setLoading(true);
+            setErrorBar(null);
 
 
-    useEffect(()=>{
-        if(selectedOptionBar){
 
-            axios.get('http://172.16.26.170:8000/api/overall_totalprice')
-            .then(reso => {
-                setBarData(reso.data)
-                console.log("reso",reso.data)
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                // Handle error if needed
-            });
+            const apiUrl = `overall_totalprice/${startDateBar}/${endDateBar}`;
+
+            axios.get(apiUrl)
+                .then((response) => {
+                    setBarData(response.data);
+                    console.log("Bar Chart Response data:", response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data for the selected date range:', error);
+                    setErrorBar('Error fetching data for the selected date range. Please try again.');
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
         }
-    }, [selectedOptionBar])
+    }, [selectedOptionBar, startDateBar, endDateBar]);
+
+
+    useEffect(() => {
+        if (selectedOptionLine && selectedOptionLine !== 'customSelect') {
+            // Your existing logic for other options
+            setLineLoading(true);
+            setLineError(null);
+
+            // Modify the endpoint based on the selected date option
+            const apiUrl = `overall_amount/${selectedOptionLine}`;
+
+            axios.get(apiUrl)
+                .then((res) => {
+                    setLineData(res.data);
+                    console.log("Line Chart Response data:", res.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data for the selected date range:', error);
+                    setLineError('Error fetching data for the selected date range. Please try again.');
+                })
+                .finally(() => {
+                    setLineLoading(false);
+                });
+
+        } else if (selectedOptionLine === 'customSelect' && startDateLine && endDateLine) {
+            setLineLoading(true);
+            setLineError(null);
+
+            const apiUrl = `overall_amount/${startDateLine}/${endDateLine}`;
+
+            axios.get(apiUrl)
+                .then((res) => {
+                    setLineData(res.data);
+                    console.log("Line Chart Response data:", res.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data for the selected date range:', error);
+                    setLineError('Error fetching data for the selected date range. Please try again.');
+                })
+                .finally(() => {
+                    setLineLoading('Loading..');
+                });
+        }
+    }, [selectedOptionLine, startDateLine, endDateLine]);
+
+
 
 
     var dateArray = LineData?.dates;
@@ -222,7 +341,7 @@ const Sales = () => {
             <CRow>
                 <CCol xs={12} md={6}>
                     <CCard className="mb-4 pieChart">
-                        <CCardHeader>Pie Chart</CCardHeader>
+                        <CCardHeader>Overall Sales</CCardHeader>
                         <div className="mb-3 optionType ms-auto">
                             <label htmlFor="selectInput" className="form-label">Filter Date</label>
                             <select
@@ -232,34 +351,60 @@ const Sales = () => {
                                 onChange={handleSelectChange}
                             >
                                 <option value="">Select an option</option>
-                                <option value="last7Days">Last 7 Days</option>
-                                <option value="lastMonth">Last Month</option>
-                                <option value="last3Months">Last 3 Months</option>
+                                <option value="lastweek">Last 7 Days</option>
+                                <option value="lastmonth">Last Month</option>
+                                <option value="last3months">Last 3 Months</option>
                                 <option value="customSelect">Custom Select</option>
                             </select>
+                            {selectedOption === 'customSelect' && (
+                                <div className='calen_form'>
+                                    <label htmlFor="startDate" className="form-label">Start Date</label>
+                                    <input
+                                        type="date"
+                                        id="startDate"
+                                        className="form-control"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                    />
+                                    <label htmlFor="endDate" className="form-label">End Date</label>
+                                    <input
+                                        type="date"
+                                        id="endDate"
+                                        className="form-control"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                    />
+                                </div>
+                            )}
+
                         </div>
                         <CCardBody>
                             {/* Render the chart component using the chartData */}
-                            <CChartPie className='smallPieChart'
-                                data={{
-                                    labels: ['Essentials', 'Non Essentials', 'Lifestyles', 'Hotel', 'Education', 'Flight'],
-                                    datasets: [
-                                        {
-                                            data: [chartData?.essential, chartData?.nonessential, chartData?.lifestyle, chartData?.hotel, chartData?.education, chartData?.flight],
-                                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#58508D', '#7AC142', ' #6CA0DC'],
-                                            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#58508D', '#7AC142', ' #6CA0DC'],
-                                        },
-                                    ],
-                                }}
-                            />
+                            <div className='load'>{pieloading && <PacmanLoader color="#d63642" />}</div>
+
+                            {pieerror && <p>{pieerror}</p>}
+                            {!pieloading && !pieerror && chartData && (
+                                <CChartPie className='smallPieChart'
+                                    data={{
+                                        labels: ['Essentials', 'Non Essentials', 'Lifestyles', 'Hotel', 'Education', 'Flight'],
+                                        datasets: [
+                                            {
+                                                data: [chartData?.essential, chartData?.nonessential, chartData?.lifestyle, chartData?.hotel, chartData?.education, chartData?.flight],
+                                                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#58508D', '#7AC142', ' #6CA0DC'],
+                                                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#58508D', '#7AC142', ' #6CA0DC'],
+                                            },
+                                        ],
+                                    }}
+                                />
+                            )}
                         </CCardBody>
                     </CCard>
                 </CCol>
 
 
                 <CCol xs={12} md={6}>
-                    <CCard className="mb-4 ">
-                        <CCardHeader>Bar Chart</CCardHeader>
+                    <CCard className="mb-4 BarChart">
+                        <CCardHeader>Overall total price</CCardHeader>
                         <div className='mb-3 optionType ms-auto'>
                             <label htmlFor='selectInput' className='form-label'>Filter Data</label>
                             <select
@@ -269,106 +414,163 @@ const Sales = () => {
                                 onChange={handleoptionBar}
                             >
                                 <option value="">Select an option</option>
-                                <option value="last7Days">Last 7 Days</option>
-                                <option value="lastMonth">Last Month</option>
-                                <option value="last3Months">Last 3 Months</option>
+                                <option value="lastweek">Last 7 Days</option>
+                                <option value="lastmonth">Last Month</option>
+                                <option value="last3months">Last 3 Months</option>
                                 <option value="customSelect">Custom Select</option>
                             </select>
+                            {selectedOptionBar === 'customSelect' && (
+                                <div className='calen_form'>
+                                    <label htmlFor="startDateBar" className="form-label">Start Date</label>
+                                    <input
+                                        type="date"
+                                        id="startDateBar"
+                                        className="form-control"
+                                        value={startDateBar}
+                                        onChange={(e) => setStartDateBar(e.target.value)}
+                                    />
+                                    <label htmlFor="endDateBar" className="form-label">End Date</label>
+                                    <input
+                                        type="date"
+                                        id="endDateBar"
+                                        className="form-control"
+                                        value={endDateBar}
+                                        onChange={(e) => setEndDateBar(e.target.value)}
+                                    />
+                                </div>
+                            )}
+
+
                         </div>
                         <CCardBody>
-                            <CChartBar className='smallPieChart'
-                                data={{
-                                    labels:dateArrays,
-                                    datasets: [
-                                        {
-                                            label: 'Overall total price',
-                                            data: BarData?.amounts,
-                                            backgroundColor: 'red',
-                                        }
-                                    ],
-                                }}
-                                labels="months"
-                            />
+                            <div className='load'>
+                                {loading && <PacmanLoader color="#d63642" />}
+                            </div>
+                            {errorBar && <p>{errorBar}</p>}
+                            {!loading && !errorBar && BarData && (
+                                <CChartBar
+                                    className='smallBarChart'
+                                    data={{
+                                        labels: dateArrays,
+                                        datasets: [
+                                            {
+                                                label: 'Overall total price',
+                                                data: BarData.amounts,
+                                                backgroundColor: 'green',
+                                            }
+                                        ],
+                                    }}
+                                    labels="months"
+                                />
+                            
+                               
+                            )}
                         </CCardBody>
                     </CCard>
                 </CCol>
                 <div>
                     <CCol xs={12}>
                         <CCard className="mb-4">
-                            <CCardHeader>Line Chart</CCardHeader>
+                            <CCardHeader>Overall Amount</CCardHeader>
                             <div className="mb-3 optionType ms-auto">
                                 <label htmlFor="selectInput" className="form-label">Filter Date</label>
                                 <select
                                     id="selectInput"
                                     className="form-select form-select-sm"
                                     value={selectedOptionLine}
-                                    onChange={handleSelect}
+                                    onChange={handleSelectLine}
                                 >
                                     <option value="">Select an option</option>
-                                    <option value="last7Days">Last 7 Days</option>
-                                    <option value="lastMonth">Last Month</option>
-                                    <option value="last3Months">Last 3 Months</option>
+                                    <option value="lastweek">Last 7 Days</option>
+                                    <option value="lastmonth">Last Month</option>
+                                    <option value="last3months">Last 3 Months</option>
                                     <option value="customSelect">Custom Select</option>
                                 </select>
+                                {selectedOptionLine === 'customSelect' && (
+                                    <div className='calen_form'>
+                                        <label htmlFor="startDateLine" className="form-label">Start Date</label>
+                                        <input
+                                            type="date"
+                                            id="startDateLine"
+                                            className="form-control"
+                                            value={startDateLine}
+                                            onChange={(e) => setStartDateLine(e.target.value)}
+                                        />
+                                        <label htmlFor="endDateBar" className="form-label">End Date</label>
+                                        <input
+                                            type="date"
+                                            id="endDateLine"
+                                            className="form-control"
+                                            value={endDateLine}
+                                            onChange={(e) => setEndDateLine(e.target.value)}
+                                        />
+                                    </div>
+                                )}
+
                             </div>
                             <CCardBody>
-                                <CChartLine
-                                    data={{
-                                        labels: dateArray,
-                                        datasets: [
-                                            {
-                                                label: 'Essentials',
-                                                backgroundColor: 'red',
-                                                borderColor: 'red',
-                                                pointBackgroundColor: 'red',
-                                                pointBorderColor: '#fff',
-                                                data: LineData?.category_wise_data?.category_1,
-                                            },
-                                            {
-                                                label: 'Non Essentials',
-                                                backgroundColor: 'blue',
-                                                borderColor: 'blue',
-                                                pointBackgroundColor: 'blue',
-                                                pointBorderColor: '#fff',
-                                                data: LineData?.category_wise_data?.category_2,
-                                            },
+                                
+                                    <div className='load'>{lineloading && <PacmanLoader color="#d63642" />}</div>
+                              { !lineloading && !lineerror && LineData &&  (
+                                    <CChartLine
+                                        data={{
+                                            labels: dateArray,
+                                            datasets: [
+                                                {
+                                                    label: 'Essentials',
+                                                    backgroundColor: 'red',
+                                                    borderColor: 'red',
+                                                    pointBackgroundColor: 'red',
+                                                    pointBorderColor: '#fff',
+                                                    data: LineData?.category_wise_data?.category_1,
+                                                },
+                                                {
+                                                    label: 'Non Essentials',
+                                                    backgroundColor: 'blue',
+                                                    borderColor: 'blue',
+                                                    pointBackgroundColor: 'blue',
+                                                    pointBorderColor: '#fff',
+                                                    data: LineData?.category_wise_data?.category_2,
+                                                },
 
-                                            {
-                                                label: 'Lifestyles',
-                                                backgroundColor: 'rgba(151, 187, 205, 0.2)',
-                                                borderColor: 'rgba(151, 187, 205, 1)',
-                                                pointBackgroundColor: 'rgba(151, 187, 205, 1)',
-                                                pointBorderColor: '#fff',
-                                                data: LineData?.category_wise_data?.category_3,
-                                            },
+                                                {
+                                                    label: 'Lifestyles',
+                                                    backgroundColor: 'rgba(151, 187, 205, 0.2)',
+                                                    borderColor: 'rgba(151, 187, 205, 1)',
+                                                    pointBackgroundColor: 'rgba(151, 187, 205, 1)',
+                                                    pointBorderColor: '#fff',
+                                                    data: LineData?.category_wise_data?.category_3,
+                                                },
 
-                                            {
-                                                label: 'Hotels',
-                                                backgroundColor: 'green',
-                                                borderColor: 'green',
-                                                pointBackgroundColor: 'green',
-                                                pointBorderColor: '#fff',
-                                                data: LineData?.category_wise_data?.category_4,
-                                            },
-                                            {
-                                                label: 'Education',
-                                                backgroundColor: 'pink',
-                                                borderColor: 'pink',
-                                                pointBackgroundColor: 'pink',
-                                                pointBorderColor: '#fff',
-                                                data: LineData?.category_wise_data?.category_5,
-                                            },
-                                            {
-                                                label: 'Flight',
-                                                backgroundColor: 'orange',
-                                                borderColor: 'orange',
-                                                pointBackgroundColor: 'orange',
-                                                pointBorderColor: '#fff',
-                                                data: LineData?.category_wise_data?.category_6,
-                                            }
-                                        ],
-                                    }}
-                                />
+                                                {
+                                                    label: 'Hotels',
+                                                    backgroundColor: 'green',
+                                                    borderColor: 'green',
+                                                    pointBackgroundColor: 'green',
+                                                    pointBorderColor: '#fff',
+                                                    data: LineData?.category_wise_data?.category_4,
+                                                },
+                                                {
+                                                    label: 'Education',
+                                                    backgroundColor: 'pink',
+                                                    borderColor: 'pink',
+                                                    pointBackgroundColor: 'pink',
+                                                    pointBorderColor: '#fff',
+                                                    data: LineData?.category_wise_data?.category_5,
+                                                },
+                                                {
+                                                    label: 'Flight',
+                                                    backgroundColor: 'orange',
+                                                    borderColor: 'orange',
+                                                    pointBackgroundColor: 'orange',
+                                                    pointBorderColor: '#fff',
+                                                    data: LineData?.category_wise_data?.category_6,
+                                                }
+                                            ],
+                                        }}
+                                    />
+                               
+                                )}
                             </CCardBody>
                         </CCard>
                     </CCol>
@@ -377,7 +579,7 @@ const Sales = () => {
 
 
 
-            </CRow>
+            </CRow >
 
             <ThemeProvider theme={defaultMaterialTheme}>
                 <MaterialTable

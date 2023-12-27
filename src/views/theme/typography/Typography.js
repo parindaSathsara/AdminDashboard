@@ -4,7 +4,7 @@ import { DocsLink } from 'src/components'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table'
 import { useState,useEffect } from 'react'
-import logo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
+import loogo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
 
 
 
@@ -17,7 +17,7 @@ const Typography = () => {
   const [data, setData] = useState({ rows: [] });
 
   useEffect(() => {
-    fetch('http://172.16.26.170:8000/api/customer_orders_count')
+    fetch('http://192.168.1.14:8000/api/customer_orders_count')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -361,7 +361,7 @@ const Typography = () => {
             field: 'customer_profilepic',
             render: (rowData) => (
               <img
-              src={rowData.customer_profilepic || {logo}} // Adjust the path accordingly
+              src={rowData.customer_profilepic || loogo} // Adjust the path accordingly
               alt="Profile Pic"
               style={{ width: 50, height: 50, borderRadius: '50%' }}
             />

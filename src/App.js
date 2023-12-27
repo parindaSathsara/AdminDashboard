@@ -14,6 +14,11 @@ axios.defaults.withCredentials = true
 axios.defaults.baseURL = 'http://backend.aahaas.com/api/'
 axios.defaults.data = 'http://backend.aahaas.com'
 
+
+// axios.defaults.baseURL = 'http://192.168.1.14:8000/api/'
+// axios.defaults.data = 'http://192.168.1.14:8000'
+
+
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
 //   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfTokenMeta.getAttribute('content');
