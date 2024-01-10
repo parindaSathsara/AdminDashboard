@@ -242,7 +242,7 @@ const Sales = () => {
 
 
 
-            const apiUrl = `api/overall_totalprice/${selectedOptionBar}`;
+            const apiUrl = `overall_totalprice/${selectedOptionBar}`;
 
             axios.get(apiUrl)
                 .then((response) => {
