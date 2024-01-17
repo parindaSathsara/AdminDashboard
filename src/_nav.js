@@ -47,6 +47,12 @@ const _nav = [
     to: '/theme/AccountSystem',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Testing',
+    to: '/theme/Testing',
+    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  },
   // {
   //   component: CNavTitle,
   //   name: 'Components',
