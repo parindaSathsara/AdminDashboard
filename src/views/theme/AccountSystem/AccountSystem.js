@@ -24,7 +24,6 @@ import {
 import { DocsLink } from 'src/components'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table'
-import loogo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
 
 
 const AccountSystem = () => {
@@ -71,7 +70,7 @@ const AccountSystem = () => {
             { title: 'Order Name', field: 'Order Name' },
             { title: 'orderDate', field: 'orderDate' }, // Make sure this matches your API response key
             { title: 'Status', field: 'status' }
-          
+
           ]}
           detailPanel={(e) => {
             return (

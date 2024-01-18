@@ -1,0 +1,55 @@
+.btnViewAction {
+    background-color: rgb(60, 75, 100) !important;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.btnViewAction:hover {
+    background-color: rgb(69, 90, 126) !important;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+
+.orderDetailsMainContainer {
+    padding: 15px;
+
+}
+
+.orderDetailsMainContainer .card-body {
+    background-color: #F2F5F7;
+    border-radius: 10px;
+    /* box-shadow: 2px 2px 5px #88888818; */
+}
+
+.orderDetailsMainContainer .card {
+    --cui-card-border-width: 0px;
+
+}
+
+.orderDetailsMainContainer .card .text-medium-emphasis {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.orderDetailsMainContainer.header {
+    color: black;
+}
+
+
+.orderDetailsMainContainer .mainContainerTables {
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    background-color: rgb(250, 250, 250);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Set your desired shadow values */
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.orderDetailsMainContainer .cardHeader {
+    margin-bottom: 15px;
+    color: black;
+}

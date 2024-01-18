@@ -2,9 +2,10 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
+const AccountsDepartment = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsDepartment.jsx'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
-const AccountSystem=React.lazy(()=> import('./views/theme/AccountSystem/AccountSystem'))
+const AccountSystem = React.lazy(() => import('./views/theme/AccountSystem/AccountSystem'))
 
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -57,11 +58,12 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact:true },
+  { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
   { path: '/sales', name: 'Sales', element: Sales, exact: true },
+  { path: '/accounts', name: 'Sales', element: AccountsDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
-  {path:'/theme/AccountSystem', name:'AccountSystem', element:AccountSystem},
+  { path: '/theme/AccountSystem', name: 'AccountSystem', element: AccountSystem },
   { path: '/base', name: 'Base', element: Cards, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
@@ -101,8 +103,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: "/login",  name: 'login' , element:Login },
-  { path: "/register",  name: 'register' , element:Register }
+  { path: "/login", name: 'login', element: Login },
+  { path: "/register", name: 'register', element: Register }
 ]
 
 export default routes

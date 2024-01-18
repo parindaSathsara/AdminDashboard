@@ -4,7 +4,7 @@ import { DocsLink } from 'src/components'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table'
 import { useState, useEffect } from 'react'
-import loogo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
+// import loogo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
 import axios from 'axios'
 
 

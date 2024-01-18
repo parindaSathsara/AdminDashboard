@@ -22,7 +22,7 @@ function ProductDetails(props) {
 
     const [productData, setProductData] = useState([])
     const [showModal, setShowModal] = useState(false);
-    const [rowDetails,setRowDetails] = useState([])
+    const [rowDetails, setRowDetails] = useState([])
 
     const handlePaymentProof = (e) => {
         setShowModal(true)
@@ -83,15 +83,17 @@ function ProductDetails(props) {
 
     useEffect(() => {
 
+        console.log("Order id", props.orderid)
+
         // setProductData(props.dataset)
         getDashboardOrdersIdWise(props.orderid).then((res) => {
             setProductData(res.dataset)
         })
 
-    }, [props.dataset])
+    }, [props.orderid])
 
 
-    const reload=()=>{
+    const reload = () => {
         getDashboardOrdersIdWise(props.orderid).then((res) => {
             setProductData(res.dataset)
         })
@@ -117,7 +119,7 @@ function ProductDetails(props) {
             { field: 'stock', title: 'Stock', align: 'left', },
             { field: 'cancel_dead', title: 'CancelDeadline', align: 'left', },
             { field: 'cancel_policy', title: 'CancelPolicy', align: 'left', },
-            
+
 
         ],
         rows: productData?.map((value) => {
@@ -201,9 +203,9 @@ function ProductDetails(props) {
                         exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                         showSelectAllCheckbox: false, showTextRowsSelected: false,
                         grouping: false, columnsButton: false,
-                        rowStyle: { fontSize: "12px", width: "100%", color: "#000" },
+                        rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
                         editCellStyle: { width: "100%" },
-                        headerStyle: { fontSize: "13px", backgroundColor: '#EFF6F9' }
+                        headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
 
                         // fixedColumns: {
                         //     left: 6
@@ -212,34 +214,40 @@ function ProductDetails(props) {
                 />
             </div>
 
-            <Tabs
-                defaultActiveKey="confirmation"
-                id="uncontrolled-tab-example"
-                className="mt-4"
-            >
-                <Tab eventKey="confirmation" title="Confirmation Details">
-                    <ConfirmationDetails dataset={productData} orderid={props.orderid} relord={() => reload()}/>
-                </Tab>
-                <Tab eventKey="acc" title="Accounts Details">
-                    <AccountsDetails dataset={productData} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)}/>
-                </Tab>
-                <Tab eventKey="sup" title="Supplier Details">
-                    <SupDetails dataset={productData} orderid={props.orderid} />
-                </Tab>
-                <Tab eventKey="feedback" title="Feedback Details">
-                    <FeebackDetails dataset={productData} orderid={props.orderid} />
-                </Tab>
-            </Tabs>
+            {props?.accounts ?
+                null :
+                <>
+                    <Tabs
+                        defaultActiveKey="confirmation"
+                        id="uncontrolled-tab-example"
+                        className="mt-4"
+                    >
+                        <Tab eventKey="confirmation" title="Confirmation Details">
+                            <ConfirmationDetails dataset={productData} orderid={props.orderid} relord={() => reload()} />
+                        </Tab>
+                        <Tab eventKey="acc" title="Accounts Details">
+                            <AccountsDetails dataset={productData} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
+                        </Tab>
+                        <Tab eventKey="sup" title="Supplier Details">
+                            <SupDetails dataset={productData} orderid={props.orderid} />
+                        </Tab>
+                        <Tab eventKey="feedback" title="Feedback Details">
+                            <FeebackDetails dataset={productData} orderid={props.orderid} />
+                        </Tab>
+                    </Tabs>
+                    {showModal == true ?
+                        <PaymentModal
+                            show={showModal}
+                            onHide={() => setShowModal(false)}
+                            dataset={rowDetails}
+                        />
+                        :
+                        null
+                    }
+                </>
 
-            {showModal == true ?
-                <PaymentModal
-                    show={showModal}
-                    onHide={() => setShowModal(false)}
-                    dataset={rowDetails}
-                />
-                :
-                null
             }
+
         </>
     )
 }
