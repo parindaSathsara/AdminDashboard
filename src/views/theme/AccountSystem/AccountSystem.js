@@ -82,8 +82,6 @@ const AccountSystem = () => {
   return (
     <>
 
-
-
       <ThemeProvider theme={defaultMaterialTheme}>
         <MaterialTable
           title="Order Details"
@@ -186,7 +184,7 @@ const AccountSystem = () => {
 
         </table>
       </div>
-
+</>
       );
 };
 
