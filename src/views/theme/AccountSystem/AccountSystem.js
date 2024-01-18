@@ -1,18 +1,8 @@
-/* eslint-disable */
-
-import React, { useEffect, useState } from 'react'
-
+import React, { useState } from 'react';
 import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
-  CCol,
-  CProgress,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -27,33 +17,67 @@ import MaterialTable from 'material-table'
 
 
 const AccountSystem = () => {
+  const data = [
+    { id: 1, orderSummary: 'Summary 1', orderName: 'Sprite', orderDate: '2024-01-10', status: 'Pending' },
+    { id: 2, orderSummary: 'Summary 2', orderName: 'COCONUT HUSK ELEPHANT', orderDate: '2024-01-11', status: 'Completed' },
+    { id: 3, orderSummary: 'Summary 3', orderName: 'Revello Milk', orderDate: '2024-03-11', status: 'refund' },
+    { id: 4, orderSummary: 'Summary 4', orderName: 'Laxapana  ', orderDate: '2024-05-11', status: 'Completed' },
+    { id: 5, orderSummary: 'Summary 5', orderName: 'MilkRice  ', orderDate: '2024-05-11', status: 'cancellation' },
 
+    // Add more rows as needed
+  ];
 
+  const fields = ['id', 'orderSummary', 'orderName', 'orderDate', 'status'];
 
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState('');
 
+  const handleAccept = (id) => {
+    // Implement logic for accepting the order with the given id
+    console.log(`Order ${id} accepted`);
+  };
 
-  const defaultMaterialTheme = createTheme();
-  // const [orderData, setOrderData] = useState([])
+  const handleDecline = (id) => {
+    // Implement logic for declining the order with the given id
+    console.log(`Order ${id} declined`);
+  };
 
-  const [data, setData] = useState({ rows: [] });
+  const handleStatusFilter = (status) => {
+    setStatusFilter(status);
+  };
 
-  // useEffect(() => {
-  //   fetch('url')
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(data => {
+  const handleResetFilter = () => {
+    setStatusFilter(null);
+  };
 
-  //     })
-  //     .catch(error => console.error('Error fetching data:', error));
-  // }, []);
+  const toggleAccordion = (index) => {
+    setActiveAccordion(activeAccordion === index ? null : index);
+  };
 
+  // const filteredData = statusFilter ? data.filter(item => item.status.toLowerCase() === statusFilter) : data;
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
+  // const filteredData = data.filter(item => {
+  //   const orderNameLowerCase = item.orderName.toLowerCase();
+  //   const searchTermLowerCase = searchTerm.toLowerCase();
+  //   return orderNameLowerCase.includes(searchTermLowerCase);
+  // });
 
+  const filteredData = data.filter((item) => {
+    const orderNameLowerCase = item.orderName.toLowerCase();
+    const searchTermLowerCase = searchTerm.toLowerCase();
+    const statusLowerCase = statusFilter ? statusFilter.toLowerCase() : null;
+
+    return (
+      orderNameLowerCase.includes(searchTermLowerCase) &&
+      (!statusLowerCase || item.status.toLowerCase() === statusLowerCase)
+    );
+  });
 
   return (
     <>
@@ -163,10 +187,7 @@ const AccountSystem = () => {
         </table>
       </div>
 
+      );
+};
 
-
-    </>
-  )
-}
-
-export default AccountSystem
+      export default AccountSystem;

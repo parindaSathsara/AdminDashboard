@@ -105,6 +105,8 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: "/login", name: 'login', element: Login },
   { path: "/register", name: 'register', element: Register }
+
+
 ]
 
 export default routes
