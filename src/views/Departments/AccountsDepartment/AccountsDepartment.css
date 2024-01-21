@@ -3,6 +3,7 @@
     color: white;
     font-weight: 600;
     font-size: 16px;
+    border: none !important;
 }
 
 .btnViewAction:hover {
@@ -52,4 +53,24 @@
 .orderDetailsMainContainer .cardHeader {
     margin-bottom: 15px;
     color: black;
+}
+
+
+.radioGroup .btn {
+    margin-right: 10px;
+    font-size: 16px;
+    font-weight: 400;
+
+}
+
+.radioGroup .btn-check:checked+.btn {
+    color: white;
+}
+
+.modalRejection {
+    background-color: #0000008e;
+}
+
+.cardNormalText {
+    font-size: 14px;
 }

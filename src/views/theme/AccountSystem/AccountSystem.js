@@ -186,8 +186,8 @@ const AccountSystem = () => {
 
         </table>
       </div>
-
-      );
+    </>
+  );
 };
 
-      export default AccountSystem;
+export default AccountSystem;

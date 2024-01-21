@@ -1,4 +1,4 @@
-import { CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CRow, CWidgetStatsA, CWidgetStatsB, CWidgetStatsC, CWidgetStatsD } from "@coreui/react";
+import { CButton, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CFormCheck, CRow, CWidgetStatsA, CWidgetStatsB, CWidgetStatsC, CWidgetStatsD } from "@coreui/react";
 import { useEffect, useState } from "react";
 import ProductDetails from "src/Panels/ProductDetails/ProductDetails";
 import { getPaymentStatusById } from "src/service/api_calls";
@@ -29,6 +29,7 @@ function OrderDetailsAccounts(props) {
     return (
 
         <div className="orderDetailsMainContainer">
+
             <CRow>
                 <CCol xs={12} sm={6} lg={4}>
                     <CWidgetStatsC
@@ -58,8 +59,8 @@ function OrderDetailsAccounts(props) {
                         text="Lorem ipsum dolor sit amet enim."
                     />
                 </CCol>
-
             </CRow>
+
 
             <div className='mainContainerTables'>
 
@@ -69,96 +70,102 @@ function OrderDetailsAccounts(props) {
                 </div>
             </div>
 
-            <div className='mainContainerTables'>
 
+            <CRow>
+                <CCol xs={9} sm={9} lg={9}>
+                    <div className='mainContainerTables'>
+                        <div className="col-md-12 mb-4 sub_box materialTableDP">
 
-                <div className="col-md-12 mb-4 sub_box materialTableDP">
-                    <CCol xs={12} sm={12} lg={12}>
-
-                        <h5 className="cardHeader">Payment Type - {dataset?.['pay_category']}</h5>
-                        {
-                            dataset?.['pay_category'] == 'Online Transfer' ?
-                                <>
-
-                                    <table class="table">
-                                        <thead className="thead-dark">
-                                            <tr>
-                                                <th scope="col">Reference No</th>
-                                                <th scope="col">Reference E-mail</th>
-                                                <th scope="col">Reference Image</th>
-                                                <th scope="col">Checkout Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><b>{dataset['reference_no']}</b></td>
-                                                <td>{dataset['reference_email']}</td>
-                                                <td><a target="_blank" href={'https://api.aahaas.com/' + dataset['reference_Image']}>
-                                                    <img src={'https://api.aahaas.com/' + dataset['reference_Image']} width="250"
-                                                        height="250"
-                                                        style={{ objectFit: 'cover' }} />
-                                                </a></td>
-                                                <td>{dataset['checkout_date']}</td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-
-
-                                </>
-                                :
-                                dataset?.['pay_category'] == 'Card Payment' ?
+                            <h5 className="cardHeader">Payment Type - {dataset?.['pay_category']}</h5>
+                            {
+                                dataset?.['pay_category'] == 'Online Transfer' ?
                                     <>
-                                        <table className='table table-bordered table__PayentProf'>
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Payment Status</th>
-                                                    <th scope="col">Payment Result</th>
-                                                    <th scope="col">Transaction Token</th>
-                                                    <th scope="col">Authentication Status</th>
-                                                    <th scope="col">Checkout Date</th>
 
+                                        <table class="table">
+                                            <thead className="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Reference No</th>
+                                                    <th scope="col">Reference E-mail</th>
+                                                    <th scope="col">Reference Image</th>
+                                                    <th scope="col">Checkout Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    {
-                                                        dataset['result'] == 'SUCCESS' ?
-                                                            <td className='status_success'>{dataset['result']}</td>
-                                                            :
-                                                            <td>{dataset['result']}</td>
-                                                    }
-                                                    <td>{dataset['trans_token']}</td>
-                                                    <td>{dataset['auth_status']}</td>
+                                                    <td><b>{dataset['reference_no']}</b></td>
+                                                    <td>{dataset['reference_email']}</td>
+                                                    <td><a target="_blank" href={'https://api.aahaas.com/' + dataset['reference_Image']}>
+                                                        <img src={'https://api.aahaas.com/' + dataset['reference_Image']} width="250"
+                                                            height="250"
+                                                            style={{ objectFit: 'cover' }} />
+                                                    </a></td>
                                                     <td>{dataset['checkout_date']}</td>
                                                 </tr>
 
                                             </tbody>
-
                                         </table>
+
+
                                     </>
                                     :
-                                    null
-                        }
-                    </CCol>
-                </div>
-            </div>
+                                    dataset?.['pay_category'] == 'Card Payment' ?
+                                        <>
+                                            <table className='table table-bordered table__PayentProf'>
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Payment Status</th>
+                                                        <th scope="col">Payment Result</th>
+                                                        <th scope="col">Transaction Token</th>
+                                                        <th scope="col">Authentication Status</th>
+                                                        <th scope="col">Checkout Date</th>
 
-            <div className='mainContainerTables'>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        {
+                                                            dataset['result'] == 'SUCCESS' ?
+                                                                <td className='status_success'>{dataset['result']}</td>
+                                                                :
+                                                                <td>{dataset['result']}</td>
+                                                        }
+                                                        <td>{dataset['trans_token']}</td>
+                                                        <td>{dataset['auth_status']}</td>
+                                                        <td>{dataset['checkout_date']}</td>
+                                                    </tr>
 
+                                                </tbody>
 
-                <div className="col-md-12 mb-4 sub_box materialTableDP">
-                    <CCol xs={12} sm={12} lg={12}>
-
-                        <h5 className="cardHeader">Payment Confirmation</h5>
-
-                        <div>
+                                            </table>
+                                        </>
+                                        :
+                                        null
+                            }
 
                         </div>
+                    </div>
+                </CCol>
 
-                    </CCol>
-                </div>
-            </div>
+                <CCol xs={3} sm={3} lg={3} style={{ height: "100%" }}>
+                    <div className='mainContainerTables col'>
+                        <h5 className="cardHeader mb-2">Customer Details</h5>
+                        <div>
+                            <label className="cardHeader mb-1 cardNormalText">Name - {paymentDataSet.customer_fname}</label>
+                        </div>
+                        <div>
+                            <label className="cardHeader mb-1 cardNormalText">Contact Number - +{paymentDataSet.contact_number}</label>
+                        </div>
+                        <div>
+                            <label className="cardHeader mb-1 cardNormalText">Email - {paymentDataSet.customer_email}</label>
+                        </div>
+                        <div>
+                            <label className="cardHeader mb-1 cardNormalText">Nationality - {paymentDataSet.customer_nationality}</label>
+                        </div>
+                    </div>
+                </CCol>
+            </CRow>
+
+
 
         </div>
 

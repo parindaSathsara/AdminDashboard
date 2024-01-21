@@ -11,6 +11,7 @@ import {
     CCardFooter,
     CCardHeader,
     CCol,
+    CFormCheck,
     CProgress,
     CRow,
     CTable,
@@ -56,17 +57,21 @@ import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
 import OrderDetailsAccounts from './OrderDetailsAccounts'
 
 
+import Swal from 'sweetalert2'
+import PaymentRejection from './PaymentRejection'
+import axios from 'axios'
+
+
 
 const Dashboard = () => {
     const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
     const [orderid, setOrderId] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [showModalAdd, setShowModalAdd] = useState(false);
+    const [paymentRejection, setPaymentRejection] = useState(false)
 
     const [showMailModal, setShowMailModal] = useState(false);
-    const [showAddtitionalModal, setShowAdditionalModal] = useState(false);
-    const [rowDetails, setRowDetails] = useState([]);
+
 
     const handleSendMail = (e) => {
         setShowMailModal(true)
@@ -182,11 +187,67 @@ const Dashboard = () => {
     }
 
 
-    const [tabIndex, setTabIndex] = useState("")
+
+    const handleApprovePayment = () => {
 
 
-    const handleChange = (e) => {
-        console.log(e)
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to approve this payment",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#2eb85c",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Approve Payment"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                axios.get(`sendInvoiceToCustomer/${orderid}`).then(res => {
+                    if (res.data.status == 200) {
+
+                        Swal.fire({
+                            title: "Payment Approved!",
+                            text: "Order - " + orderid + " Payment Approved",
+                            icon: "success"
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Error While Invoice Generation",
+                            text: "Order - " + orderid + " Failed to generate the invoice",
+                            icon: "error"
+                        });
+                    }
+                })
+            }
+        });
+
+        // console.log("handle approve payment")
+        // console.log("Handle Approve Payment")
+
+    }
+
+    const handleRejectPayment = () => {
+        setPaymentRejection(true)
+
+        // Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "You want to reject this payment",
+        //     icon: "question",
+        //     showCancelButton: true,
+        //     confirmButtonColor: "#979797",
+        //     cancelButtonColor: "#d33",
+        //     confirmButtonText: "Reject Payment"
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         Swal.fire({
+        //             title: "Payment Approved!",
+        //             text: "Order - " + orderid + "Payment Approved",
+        //             icon: "success"
+        //         });
+        //     }
+        // });
     }
 
 
@@ -198,7 +259,13 @@ const Dashboard = () => {
                 aria-labelledby="contained-modal-title-vcenter" >
                 <Modal.Header closeButton>
 
-                    <Modal.Title>Order Details {orderid}</Modal.Title>
+                    <Modal.Title>Order Details - {orderid}</Modal.Title>
+
+                    <div className="radioGroup" style={{ marginLeft: "30px" }}>
+                        <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
+                        <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
+                    </div>
+
                 </Modal.Header>
 
                 <Modal.Body className="modalBodyDef">
@@ -209,6 +276,26 @@ const Dashboard = () => {
 
                 </Modal.Footer>
             </Modal >
+
+
+            <Modal show={paymentRejection} onHide={() => setPaymentRejection(false)} centered size="lg"
+                aria-labelledby="contained-modal-title-vcenter" className='modalRejection'>
+                <Modal.Header closeButton>
+
+                    <Modal.Title>Order Payment Rejection - Order({orderid})</Modal.Title>
+
+
+                </Modal.Header>
+
+                <Modal.Body className="modalBodyDef">
+                    <PaymentRejection paymentDataSet={paymentDataSet} orderid={orderid}></PaymentRejection>
+                </Modal.Body>
+
+                <Modal.Footer className="mainFooterModal">
+
+                </Modal.Footer>
+            </Modal >
+
 
             <CCard className="mb-4">
 
@@ -248,7 +335,7 @@ const Dashboard = () => {
                                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                                 grouping: true, columnsButton: true,
-                                headerStyle: { background: '#3c4b64', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
 
                                 // fixedColumns: {
