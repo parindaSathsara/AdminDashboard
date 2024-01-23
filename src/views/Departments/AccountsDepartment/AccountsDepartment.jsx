@@ -61,7 +61,7 @@ import Swal from 'sweetalert2'
 import PaymentRejection from './PaymentRejection'
 import axios from 'axios'
 
-
+import LoadingBar from 'react-top-loading-bar'
 
 const Dashboard = () => {
     const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
@@ -186,11 +186,13 @@ const Dashboard = () => {
         console.log("Value", value)
     }
 
+    const [progress, setProgress] = useState(0)
+
 
 
     const handleApprovePayment = () => {
 
-
+        setProgress(0)
 
         Swal.fire({
             title: "Are you sure?",
@@ -203,16 +205,20 @@ const Dashboard = () => {
         }).then((result) => {
             if (result.isConfirmed) {
 
+
+                setProgress(25)
                 axios.get(`sendInvoiceToCustomer/${orderid}`).then(res => {
                     if (res.data.status == 200) {
-
+                        setProgress(100)
                         Swal.fire({
                             title: "Payment Approved!",
                             text: "Order - " + orderid + " Payment Approved",
                             icon: "success"
                         });
+
                     }
                     else {
+                        setProgress(100)
                         Swal.fire({
                             title: "Error While Invoice Generation",
                             text: "Order - " + orderid + " Failed to generate the invoice",
@@ -254,6 +260,7 @@ const Dashboard = () => {
     return (
         <>
             {/* <WidgetsDropdown /> */}
+            <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} />
 
             <Modal show={showModal} onHide={() => setShowModal(false)} centered size="fullscreen"
                 aria-labelledby="contained-modal-title-vcenter" >
