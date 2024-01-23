@@ -60,6 +60,12 @@ const _nav = [
     to: '/theme/Testing',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Chat',
+    to: '/theme/Chats',
+    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  },
   // {
   //   component: CNavTitle,
   //   name: 'Components',
