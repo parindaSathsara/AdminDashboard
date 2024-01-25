@@ -381,7 +381,19 @@
 .edit_buttons {
   display: flex;
   margin-top: 10px;
+  animation: openIcons 1s forwards;
 }
+
+@keyframes openIcons {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 10;
+  }
+}
+
 
 .edit_buttons span {
   margin: 0 10px;
