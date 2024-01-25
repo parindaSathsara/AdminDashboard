@@ -186,7 +186,7 @@
 }
 
 .customer_head {
-  height: 60vh;
+  height: 65vh;
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
@@ -211,6 +211,7 @@
   width: 60px;
   height: 60px;
   grid-area: userimage;
+  mix-blend-mode: multiply;
 }
 
 .user_name {
@@ -259,6 +260,7 @@
 .user_image_main {
   margin: 10px;
   grid-area: user_image_main;
+  mix-blend-mode: multiply;
 }
 
 .user_name_main {
@@ -272,8 +274,7 @@
 }
 
 .chat_msg_update {
-  display: grid;
-  height: 60vh;
+  height: 58vh;
   overflow: scroll;
 }
 
@@ -287,16 +288,14 @@
   border: 0;
   border-radius: 10px;
   outline: 0;
-  font-size: 20px;
   padding: 10px;
 }
 
 .chat_time {
   margin-top: -10px;
   font-size: 10px;
+  color: darkblue;
 }
-
-
 
 .send_icon_main {
   border: 0;
@@ -309,33 +308,48 @@
   padding: 10px 20px;
   place-content: center;
   font-weight: 400;
-  max-width: 80%;
+  max-width: 90%;
+  min-height: 70px;
   max-height: fit-content;
 }
 
 .chat_bubble_main.left_side {
-  background-color: lightgray;
   margin: 0 0 10px 10px;
-  border-radius: 10px 0 10px 10px;
   margin-right: auto;
+  border-left: 3px solid red;
 }
 
 .chat_bubble_main.right_side {
-  background-color: lightgray;
-  /* background-color: rgb(162, 246, 162); */
-  margin: 0 10px 10px 0;
+  margin: 0 10px 10px 0px;
   margin-left: auto;
-  /* color: white; */
-  border-radius: 0 10px 10px 10px;
+  text-align: right;
+  border-right: 3px solid red;
+}
+
+.chat_bubble_main.right_side .chat_user_image {
+  float: right;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+.chat_bubble_main.left_side .chat_user_image {
+  float: left;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .chat_bubble_main.right_side .chat_time {
   margin-left: auto;
 }
 
-.chat_context span {
-  font-size: 15px;
-  /* color: red; */
+.chat_context {
+  font-weight: 500;
 }
 
 .search_main {
@@ -357,14 +371,26 @@
   color: darkblue;
 }
 
-.go_down_button {
-  padding: 10px;
-  width: fit-content;
-  margin-left: auto;
-  font-size: 40px;
-  position: absolute;
-  right: 10px;
-  bottom: 80px;
+.go_down_icon {
+  border: 0;
+  background: transparent;
+  color: black;
+  /* font-size: 25px; */
+}
+
+.edit_buttons {
+  display: flex;
+  margin-top: 10px;
+}
+
+.edit_buttons span {
+  margin: 0 10px;
+  color: #555;
+}
+
+.edit_buttons span:hover {
+  font-weight: 1000;
+  color: black;
 }
 
 .sign_out_button {

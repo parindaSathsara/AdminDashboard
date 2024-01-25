@@ -5,7 +5,7 @@ import 'firebase/analytics';
 import { GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane, faGear, faUserPlus, faAngleDown, faUserMinus, faCircleXmark, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane, faGear, faUserPlus, faAngleDown, faUserMinus, faCircleXmark, faFilter, faCircleInfo, faPen, faTrash, faFlag } from '@fortawesome/free-solid-svg-icons'
 import logo from '../Components/img/Customer.png';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
@@ -14,9 +14,10 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 function Chatshome() {
 
-    const [user] = useAuthState(auth);
     const resetRef = useRef();
+    const scrollBoxRef = useRef(null);
 
+    const [user] = useAuthState(auth);
     const [userID, setUSerID] = useState('');
     const [cusData, setData] = useState([]);
     const [customerChatID, setcustomerChatID] = useState('')
@@ -25,7 +26,6 @@ function Chatshome() {
     const [searchVendor, setSearchVendor] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
     const [selectedVedor, setselectedVedor] = useState([]);
-    const [chatID, setChatID] = useState('');
     const [infoDetails, setInfoDetails] = useState('');
 
     const [customer_message_collections, set_customer_message_collections] = useState([]);
@@ -38,12 +38,10 @@ function Chatshome() {
         addVendor: false,
         removeVendor: false,
         showInfo: false,
+        showEdit: false,
+        showFlag: false,
+        showDelete: false
     });
-
-    // if (user.uid !== "V8dhiidmAUQVyywk7lsLWUMZMaC2") {
-    //   alert("vishnu is taking care of admin hence signing out ....")
-    //   auth.signOut();
-    // }
 
     const addSelecetedVendor = (customerChatID) => {
         filteredCustomerChats.map((value) => {
@@ -136,9 +134,8 @@ function Chatshome() {
         }
     };
 
-    const getUserMessages = (value, value2, value3) => {
+    const getUserMessages = (value, value3) => {
         setcustomerChatID(value);
-        setChatID(value2)
         setInfoDetails(value3)
         const q = query(
             collection(db, "chats/chats_dats/" + value),
@@ -164,8 +161,6 @@ function Chatshome() {
         if (userMessage.trim() === "") {
             return null;
         }
-        // admin UI shoule be constant
-        // need to develope
         const adminUID = 'XIidzTBzhaWAtUoRlTMUvvEnDlz1';
         const { displayName, photoURL } = auth.currentUser;
         await addDoc(collection(db, "chats/chats_dats/" + userID), {
@@ -189,15 +184,6 @@ function Chatshome() {
             }
         }
         return '';
-    };
-
-    const googleSignIn = () => {
-        const provider = new GoogleAuthProvider();
-        signInWithRedirect(auth, provider);
-    };
-
-    const signOut = () => {
-        auth.signOut();
     };
 
     const fetchData = async () => {
@@ -226,6 +212,21 @@ function Chatshome() {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+    };
+
+    const scrollDown = () => {
+        if (scrollBoxRef.current) {
+            scrollBoxRef.current.scrollTop = scrollBoxRef.current.scrollHeight;
+        }
+    };
+
+    const googleSignIn = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithRedirect(auth, provider);
+    };
+
+    const signOut = () => {
+        auth.signOut();
     };
 
     useEffect(() => {
@@ -262,11 +263,35 @@ function Chatshome() {
         }
     }, [])
 
+    useEffect(() => {
+        scrollDown()
+    }, [messages]);
+
+    const [editButtons, setEditButtons] = useState({
+        state: false,
+        key: ''
+    })
+
+    const handleMouseEnter = (value) => {
+        setEditButtons({
+            state: true,
+            key: value
+        });
+    };
+
+    const handleMouseLeave = (value) => {
+        setEditButtons({
+            state: false,
+            key: ''
+        });
+    };
+
+
     return (
         <div className="d-flex main_container">
             <div className="col-4 user_chat_details">
                 <div className="col-11 search_box d-flex align-items-center justify-content-start ">
-                    <img src={logo} className='admin_logo' />
+                    <img draggable='false' src={logo} className='admin_logo' />
                     <input className="col-9 my-2 " value={searchCustomer} placeholder="Search user..." onChange={(e) => searchCustomerFun(e)} />
                 </div>
                 <div className='d-flex'>
@@ -276,6 +301,9 @@ function Chatshome() {
                         <span className='mx-2'>reset</span>
                         <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
+                    {/* <button className='ms-auto mx-4 filter_buttons btn'> */}
+                        {/* <FontAwesomeIcon icon={faFilter} size='xl' style={{ color: "#000000", }} /> */}
+                    {/* </button> */}
                 </div>
                 <div className="customer_head">
                     {
@@ -284,8 +312,8 @@ function Chatshome() {
                     {
                         cusData.map((value, key) => (
                             value?.sortedMessages.length >= 1 &&
-                            <div className="customer_details" key={key} onClick={() => getUserMessages(value.customerChatID.customer_collection_id, value.customerChatID.chat_id, value)}>
-                                <img className="user_image" src={value?.customerChatID?.chat_avatar || value?.sortedMessages[0]?.avatar} alt='user profile' />
+                            <div className="customer_details" key={key} onClick={() => getUserMessages(value.customerChatID.customer_collection_id, value)}>
+                                <img draggable='false' className="user_image" src={value?.customerChatID?.chat_avatar || value?.sortedMessages[0]?.avatar} alt='user profile' />
                                 <p className='user_name'>{value?.customerChatID.customer_name} {value.customerChatID.group_chat && `collabed with ${value.customerChatID.supplier_name}`}</p>
                                 <p className='last_time'>{value?.customerChatID.updated_at.slice(11, 16)}</p>
                                 <p className='user_last_msg'>{value?.sortedMessages[value.sortedMessages.length - 1]?.text}</p>
@@ -298,7 +326,7 @@ function Chatshome() {
                 messages.length > 0 &&
                 <div className="col-8">
                     <div className="main_customer_head">
-                        <img className="user_image user_image_main" src={messages[0]?.avatar || logo} />
+                        <img draggable='false' className="user_image user_image_main" src={messages[0]?.avatar || logo} />
                         <p className="user_name_main">{messages[0]?.name}</p>
                         <p className="user_last_seen_main">last seen at {getTime(messages[messages.length - 1]?.createdAt, "value2")}</p>
                         <FontAwesomeIcon icon={faUserPlus} className="add_vendor_icon" onClick={() => setShowModal(prevState => ({ ...prevState, addVendor: true }))} />
@@ -309,30 +337,50 @@ function Chatshome() {
                                 <button onClick={signOut} className="sign_out_button" type="button">Sign Out</button>
                                 :
                                 <button className="sign_in_button">
-                                    <img onClick={googleSignIn} src={googleSignIn} alt="sign in with google" type="button" />
+                                    <img draggable='false' onClick={googleSignIn} src={googleSignIn} alt="sign in with google" type="button" />
                                 </button>
                         }
                     </div>
-                    <div className="chat_msg_update">
-                        {
-                            messages.map((value, key) => {
-                                return (
-                                    <div className={`${value.uid === undefined ? "chat_bubble_main right_side" : "chat_bubble_main left_side"} `} key={key}>
-                                        <p className="chat_context">{value.text} : <span>({value.name || value.uid})</span> </p>
-                                        <span className="chat_time">{getTime(value?.createdAt, "value2")}</span>
+                    <div className="chat_msg_update" ref={scrollBoxRef}>
+                        <div className='main_chat_container'>
+                            {messages.map((value, key) => (
+                                <div className={`${value.uid === undefined ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
+                                    onMouseEnter={() => { handleMouseEnter(key) }}
+                                    onMouseLeave={() => { handleMouseLeave(key) }}
+                                >
+                                    <img draggable='false' src={value.avatar} className="chat_user_image" />
+                                    <p className="chat_context">{value.text} </p>
+                                    <span className="chat_time">{getTime(value?.createdAt, "value2")}</span>
+                                    <div className='edit_buttons'
+                                        style={{ display: editButtons.state && editButtons.key === key ? 'block' : 'none' }}>
+                                        <span>
+                                            <FontAwesomeIcon icon={faPen} onClick={() => setShowModal(prevState => ({ ...prevState, showEdit: true }))} />
+                                        </span>
+                                        <span>
+                                            <FontAwesomeIcon icon={faTrash} onClick={() => setShowModal(prevState => ({ ...prevState, showDelete: true }))} />
+                                        </span>
+                                        <span>
+                                            <FontAwesomeIcon icon={faFlag} onClick={() => setShowModal(prevState => ({ ...prevState, showFlag: true }))} />
+                                        </span>
                                     </div>
-                                )
-                            })
-                        }
-                        <span className="go_down_button">
-                            {/* <FontAwesomeIcon icon={faAngleDown} /> */}
-                        </span>
+                                </div>
+                            ))}
+                            {/* <FontAwesomeIcon icon={faAngleDown} className="go_down_button" onClick={scrollDown} /> */}
+                        </div>
                     </div>
+
+
+
                     <div className="message_send_content d-flex">
 
-                        <input type="text" className="col-11" value={userMessage} placeholder={`chat with user...`} onChange={(e) => setUserMessage(e.target.value)} />
-                        <button className="col-1 send_icon_main">
-                            <FontAwesomeIcon icon={faPaperPlane} onClick={sendMessage} /></button>
+                        <input type="text" className="col-9" value={userMessage} placeholder={`chat with user...`} onChange={(e) => setUserMessage(e.target.value)} />
+                        <button className="col-1 send_icon_main" onClick={sendMessage}>
+                            Send <FontAwesomeIcon icon={faPaperPlane} />
+                        </button>
+                        <button className='col-2 go_down_icon' onClick={scrollDown}>
+                            Go down <FontAwesomeIcon icon={faAngleDown} size='xl' />
+                        </button>
+
                     </div>
                 </div>
             }
@@ -371,6 +419,43 @@ function Chatshome() {
                     </div>
                 </div>
             </Modal>
+
+            <Modal show={showModal.showEdit} className="model_popup">
+                <div className="remove_pop_up container">
+                    <p className='text-center border-bottom py-4'>Enter your message...</p>
+                    <div className='col-10 m-auto'>
+                        <input type='text' className='form-control text-center py-4' placeholder='Enter your message...' />
+                    </div>
+                    <div className='d-flex justify-content-around col-6 offset-3 my-3'>
+                        <button className='btn btn-primary px-3 mx-5 col-6' >Yes</button>
+                        <button className='btn btn-danger px-3 mx-5 col-6' onClick={() => setShowModal(prevState => ({ ...prevState, showEdit: false }))}>Cancel</button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal show={showModal.showDelete} className="model_popup">
+                <div className="remove_pop_up container">
+                    <p className='text-center border-bottom py-5 fs-4'>Are you sure delete the message ?</p>
+                    <div className='d-flex justify-content-around col-6 offset-3 my-3'>
+                        <button className='btn btn-primary px-3 mx-5 col-4' >Yes</button>
+                        <button className='btn btn-danger px-3 mx-5 col-4' onClick={() => setShowModal(prevState => ({ ...prevState, showDelete: false }))}>No</button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal show={showModal.showFlag} className="model_popup">
+                <div className="remove_pop_up container">
+                    <p className='text-center border-bottom py-4'>Reason why it should be flag ?</p>
+                    <div className='col-10 m-auto'>
+                        <input type='text' className='form-control text-center py-3' placeholder='Enter your message...' />
+                    </div>
+                    <div className='d-flex justify-content-around col-6 offset-3 my-3'>
+                        <button className='btn btn-primary px-3 mx-5 col-4' >Yes</button>
+                        <button className='btn btn-danger px-3 mx-5 col-4' onClick={() => setShowModal(prevState => ({ ...prevState, showFlag: false }))}>No</button>
+                    </div>
+                </div>
+            </Modal>
+
 
             <Modal show={showModal.showInfo} className="model_popup">
                 <div className="remove_pop_up">
