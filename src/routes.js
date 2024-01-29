@@ -2,6 +2,8 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
+
+const AccountsRefunds = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsRefund'))
 const AccountsDepartment = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsDepartment.jsx'))
 const DeliveryDepartment = React.lazy(() => import('./views/Departments/DeliveryDepartment/DeliveryDepartment.jsx'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -61,7 +63,8 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
   { path: '/sales', name: 'Sales', element: Sales, exact: true },
-  { path: '/accounts', name: 'Sales', element: AccountsDepartment, exact: true },
+  { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
+  { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

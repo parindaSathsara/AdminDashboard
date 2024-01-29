@@ -195,7 +195,7 @@ function AccountsDetails(props) {
                 }
             </div>
 
-         
+
         </>
     )
 }
