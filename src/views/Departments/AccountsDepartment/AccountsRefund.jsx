@@ -62,6 +62,7 @@ import PaymentRejection from './PaymentRejection'
 import axios from 'axios'
 
 import LoadingBar from 'react-top-loading-bar'
+import CustomerFeedbacks from './CustomerFeedbacks'
 
 const AccountsRefunds = () => {
     const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
@@ -116,7 +117,7 @@ const AccountsRefunds = () => {
             //     title: '#ID', field: 'id', align: 'center', editable: 'never',
             // },
             {
-                title: 'Order Id', field: 'oid', align: 'left', editable: 'never',
+                title: 'Order Id', field: 'oid', align: 'left', editable: 'never', width: 10
             },
             {
                 title: 'Reason for Refund', field: 'reason_refund', align: 'left', editable: 'never',
@@ -124,16 +125,26 @@ const AccountsRefunds = () => {
             {
                 title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
             },
-
+            {
+                title: 'Refund Amount', field: 'refund_amount', align: 'left', editable: 'never',
+            },
+            {
+                title: 'Actions', field: 'actions', align: 'center', editable: 'never',
+            },
 
         ],
         rows: refundRequests?.map((value, idx) => {
             return {
                 // id: value.MainTId,
-                oid: value.OrderId,
+                oid: value.checkout_id,
                 reason_refund: value.reason_for_refund,
-                pay_type: value.payment_type,
-
+                refund_amount: value.total_amount,
+                pay_type: value.pay_category,
+                actions:
+                    <div className='actions_box'>
+                        {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+                        <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
+                    </div>
             }
         })
     }
@@ -141,12 +152,12 @@ const AccountsRefunds = () => {
 
 
 
-    const [paymentDataSet, setPaymentDataSet] = useState([])
+    const [refundDataSet, setRefundDataSet] = useState([])
 
     const handleModalOpen = (value, dataSet) => {
 
         setOrderId(value)
-        setPaymentDataSet(dataSet)
+        setRefundDataSet(dataSet)
         setShowModal(true)
 
 
@@ -230,24 +241,27 @@ const AccountsRefunds = () => {
             <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} />
 
 
-            <Modal show={paymentRejection} onHide={() => setPaymentRejection(false)} centered size="lg"
-                aria-labelledby="contained-modal-title-vcenter" className='modalRejection'>
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered size="fullscreen"
+                aria-labelledby="contained-modal-title-vcenter" >
                 <Modal.Header closeButton>
 
-                    <Modal.Title>Order Payment Rejection - Order({orderid})</Modal.Title>
+                    <Modal.Title>Refund Details</Modal.Title>
 
+                    <div className="radioGroup" style={{ marginLeft: "30px" }}>
+                        <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
+                        <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
+                    </div>
 
                 </Modal.Header>
 
                 <Modal.Body className="modalBodyDef">
-                    <PaymentRejection paymentDataSet={paymentDataSet} orderid={orderid}></PaymentRejection>
+                    <CustomerFeedbacks orderId={orderid}></CustomerFeedbacks>
                 </Modal.Body>
 
                 <Modal.Footer className="mainFooterModal">
 
                 </Modal.Footer>
             </Modal >
-
 
             <CCard className="mb-4">
                 <CCardBody>

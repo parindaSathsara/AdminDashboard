@@ -44,6 +44,25 @@ const getAllRefundRequests = async () => {
 
 }
 
+const getAllFeedbacks = async (id) => {
+    var dataArray = [];
+    await axios
+        .get(`/get_all_refund_requests/${id}`)
+        .then((res) => {
+            console.log(res)
+
+            if (res.data.status === 200) {
+                dataArray = res.data.response
+            }
+        })
+        .catch((err) => {
+            throw new Error(err)
+        })
+
+    return dataArray;
+
+}
+
 
 
 
@@ -440,7 +459,7 @@ async function updateAdditionalInfoDataByOrderId(dataset, id) {
 }
 
 export {
-    getAllRefundRequests,
+    getAllRefundRequests, getAllFeedbacks,
     getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
     availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId
 }
