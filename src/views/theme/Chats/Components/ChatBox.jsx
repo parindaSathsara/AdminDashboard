@@ -47,22 +47,21 @@ function Chatshome() {
         filteredCustomerChats.map((value) => {
             if (customerChatID === value.customer_collection_id) {
                 if (value.supplier_id === '' || value.supplier_id === null || value.supplier_id === undefined) {
+                   
+
                     const dataSet = {
                         customer_collection_id: customerChatID,
                         supplier_id: selectedVedor.id,
                         supplier_name: selectedVedor.username,
                         group_chat: true,
+                        supplier_mail_id: selectedVedor.email,
+                        supplier_added_date: new Date(),
                         customer_name: infoDetails.customerChatID.customer_name,
                         status: infoDetails.customerChatID.status,
-                        chat_created_date: null,
-                        customer_mail_id: infoDetails.customerChatID.customer_mail_id,
-                        supplier_mail_id: selectedVedor.email,
-                        supplier_added_date: '',
-                        comments: null,
-                        chat_name: null,
-                        customer_id: value.customer_id,
+                        comments: '',
                         chat_id: infoDetails.customerChatID.chat_id
-                    }
+                    };
+
                     try {
                         axios.post('/updatechat', dataSet).then(res => {
                             if (res.data.status === 200) {
@@ -75,6 +74,7 @@ function Chatshome() {
                         console.log(error);
                         throw new Error(error)
                     }
+
                 } else {
                     alert('vendor is already existing')
                 }
@@ -113,7 +113,6 @@ function Chatshome() {
     };
 
     const getGroupchat = (para) => {
-        console.log(customer_message_collections);
         if (para === 'getGrpChat') {
             const filteredDetails = customer_message_collections.filter(
                 (vendor) => vendor.group_chat === 'true'
@@ -151,7 +150,7 @@ function Chatshome() {
                 (a, b) => a.createdAt - b.createdAt
             );
             setMessages(sortedMessages);
-            setUSerID(value)
+            setUSerID(value);
         });
         return getMessages;
     }
@@ -286,7 +285,6 @@ function Chatshome() {
         });
     };
 
-
     return (
         <div className="d-flex main_container">
             <div className="col-4 user_chat_details">
@@ -302,13 +300,10 @@ function Chatshome() {
                         <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
                     {/* <button className='ms-auto mx-4 filter_buttons btn'> */}
-                        {/* <FontAwesomeIcon icon={faFilter} size='xl' style={{ color: "#000000", }} /> */}
+                    {/* <FontAwesomeIcon icon={faFilter} size='xl' style={{ color: "#000000", }} /> */}
                     {/* </button> */}
                 </div>
                 <div className="customer_head">
-                    {
-                        console.log(cusData)
-                    }
                     {
                         cusData.map((value, key) => (
                             value?.sortedMessages.length >= 1 &&
@@ -343,8 +338,9 @@ function Chatshome() {
                     </div>
                     <div className="chat_msg_update" ref={scrollBoxRef}>
                         <div className='main_chat_container'>
+
                             {messages.map((value, key) => (
-                                <div className={`${value.uid === undefined ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
+                                <div className={`${value.uid == user.uid ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
                                     onMouseEnter={() => { handleMouseEnter(key) }}
                                     onMouseLeave={() => { handleMouseLeave(key) }}
                                 >
@@ -478,16 +474,16 @@ function Chatshome() {
                             {/* need to add if it is necessary */}
 
                             {/* <select className='border-0 p-1 outline-0'>
-              <option value="select" selected>{infoDetails.customerChatID.status}</option>
-              <option value="completed">completed</option>
-              <option value="pending">pending</option>
-              <option value="rejected">rejected</option>
-            </select> */}
+                                <option value="select" selected>{infoDetails.customerChatID.status}</option>
+                                <option value="completed">completed</option>
+                                <option value="pending">pending</option>
+                                <option value="rejected">rejected</option>
+                            </select> */}
 
                             {/* <p>
-              Comments :
-              <input className='border-0 border-bottom mx-2' placeholder='Your comments here...' />
-            </p> */}
+                                Comments :
+                                <input className='border-0 border-bottom mx-2' placeholder='Your comments here...' />
+                            </p> */}
                         </div>
                     }
                     <div className='buttons d-flex justify-content-center m-4'>
