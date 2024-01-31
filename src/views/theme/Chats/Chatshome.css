@@ -1,4 +1,9 @@
+.testing{
+  margin: -25px -25px 0px -25px ;
+}
+
 .main_container {
+  padding-bottom: 25px;
   background-color: white;
 }
 
@@ -192,13 +197,13 @@
 }
 
 .customer_details {
-  margin: 10px 20px;
+  margin: 10px;
   display: grid;
   grid-template-areas:
-    'userimage username usertime'
-    'userimage userlastmsg userlastmsg';
+    'userimage username  usertime'
+    'userimage  userlastmsg  userlastmsg  ';
   border-radius: 10px;
-  padding: 5px;
+  justify-content: start;
 }
 
 .customer_details:hover {
@@ -207,14 +212,15 @@
 
 .user_image {
   border-radius: 50%;
-  margin: auto;
-  width: 60px;
-  height: 60px;
+  margin: auto 20px;
+  border: 1px solid gray;
+  width: 50px;
+  height: 50px;
   grid-area: userimage;
-  mix-blend-mode: multiply;
 }
 
 .user_name {
+  width: 230px;
   grid-area: username;
   padding-left: 10px;
   font-weight: 600;
@@ -224,13 +230,13 @@
   grid-area: userlastmsg;
   padding-left: 10px;
   white-space: nowrap;
-  width: 270px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .last_time {
   grid-area: usertime;
+  font-size: 12px;
   text-align: right;
 }
 

@@ -11,6 +11,8 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { auth, db } from 'src/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import groupIcon from './img/conversation.png'
+import nonGroupIcon from './img/team (1).png'
 
 function Chatshome() {
 
@@ -47,22 +49,21 @@ function Chatshome() {
         filteredCustomerChats.map((value) => {
             if (customerChatID === value.customer_collection_id) {
                 if (value.supplier_id === '' || value.supplier_id === null || value.supplier_id === undefined) {
+
+
                     const dataSet = {
                         customer_collection_id: customerChatID,
                         supplier_id: selectedVedor.id,
                         supplier_name: selectedVedor.username,
                         group_chat: true,
+                        supplier_mail_id: selectedVedor.email,
+                        supplier_added_date: new Date(),
                         customer_name: infoDetails.customerChatID.customer_name,
                         status: infoDetails.customerChatID.status,
-                        chat_created_date: null,
-                        customer_mail_id: infoDetails.customerChatID.customer_mail_id,
-                        supplier_mail_id: selectedVedor.email,
-                        supplier_added_date: '',
-                        comments: null,
-                        chat_name: null,
-                        customer_id: value.customer_id,
+                        comments: '',
                         chat_id: infoDetails.customerChatID.chat_id
-                    }
+                    };
+
                     try {
                         axios.post('/updatechat', dataSet).then(res => {
                             if (res.data.status === 200) {
@@ -75,6 +76,7 @@ function Chatshome() {
                         console.log(error);
                         throw new Error(error)
                     }
+
                 } else {
                     alert('vendor is already existing')
                 }
@@ -113,7 +115,6 @@ function Chatshome() {
     };
 
     const getGroupchat = (para) => {
-        console.log(customer_message_collections);
         if (para === 'getGrpChat') {
             const filteredDetails = customer_message_collections.filter(
                 (vendor) => vendor.group_chat === 'true'
@@ -151,7 +152,7 @@ function Chatshome() {
                 (a, b) => a.createdAt - b.createdAt
             );
             setMessages(sortedMessages);
-            setUSerID(value)
+            setUSerID(value);
         });
         return getMessages;
     }
@@ -161,7 +162,7 @@ function Chatshome() {
         if (userMessage.trim() === "") {
             return null;
         }
-        const adminUID = 'XIidzTBzhaWAtUoRlTMUvvEnDlz1';
+        const adminUID = 'admin';
         const { displayName, photoURL } = auth.currentUser;
         await addDoc(collection(db, "chats/chats_dats/" + userID), {
             text: userMessage,
@@ -187,6 +188,7 @@ function Chatshome() {
     };
 
     const fetchData = async () => {
+        let allChatData = [];
         try {
             const data_promise = filteredCustomerChats.map(async (value) => {
                 if (value.customer_collection_id !== null && value.customer_collection_id !== undefined && value.customer_collection_id !== '') {
@@ -203,12 +205,15 @@ function Chatshome() {
                     const sortedMessages = fetchedMessages.sort(
                         (a, b) => a.createdAt - b.createdAt
                     );
-                    return { customerChatID: value, sortedMessages };
+                    if(sortedMessages.length !== 0){
+                        allChatData = [...allChatData,{ customerChatID: value, sortedMessages } ] 
+                        return { customerChatID: value, sortedMessages };
+                    }
                 }
 
             })
-            const allData = await Promise.all(data_promise);
-            setData(allData);
+            await Promise.all(data_promise);
+            setData(allChatData);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -287,9 +292,10 @@ function Chatshome() {
     };
 
 
+
     return (
         <div className="d-flex main_container">
-            <div className="col-4 user_chat_details">
+            <div className="col-3 user_chat_details">
                 <div className="col-11 search_box d-flex align-items-center justify-content-start ">
                     <img draggable='false' src={logo} className='admin_logo' />
                     <input className="col-9 my-2 " value={searchCustomer} placeholder="Search user..." onChange={(e) => searchCustomerFun(e)} />
@@ -302,18 +308,14 @@ function Chatshome() {
                         <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
                     {/* <button className='ms-auto mx-4 filter_buttons btn'> */}
-                        {/* <FontAwesomeIcon icon={faFilter} size='xl' style={{ color: "#000000", }} /> */}
+                    {/* <FontAwesomeIcon icon={faFilter} size='xl' style={{ color: "#000000", }} /> */}
                     {/* </button> */}
                 </div>
                 <div className="customer_head">
                     {
-                        console.log(cusData)
-                    }
-                    {
                         cusData.map((value, key) => (
-                            value?.sortedMessages.length >= 1 &&
                             <div className="customer_details" key={key} onClick={() => getUserMessages(value.customerChatID.customer_collection_id, value)}>
-                                <img draggable='false' className="user_image" src={value?.customerChatID?.chat_avatar || value?.sortedMessages[0]?.avatar} alt='user profile' />
+                                <img draggable='false' className="user_image" src={value.customerChatID.chat_avatar} alt='user profile' />
                                 <p className='user_name'>{value?.customerChatID.customer_name} {value.customerChatID.group_chat && `collabed with ${value.customerChatID.supplier_name}`}</p>
                                 <p className='last_time'>{value?.customerChatID.updated_at.slice(11, 16)}</p>
                                 <p className='user_last_msg'>{value?.sortedMessages[value.sortedMessages.length - 1]?.text}</p>
@@ -343,8 +345,9 @@ function Chatshome() {
                     </div>
                     <div className="chat_msg_update" ref={scrollBoxRef}>
                         <div className='main_chat_container'>
+
                             {messages.map((value, key) => (
-                                <div className={`${value.uid === undefined ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
+                                <div className={`${value.uid == user.uid ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
                                     onMouseEnter={() => { handleMouseEnter(key) }}
                                     onMouseLeave={() => { handleMouseLeave(key) }}
                                 >
@@ -478,16 +481,16 @@ function Chatshome() {
                             {/* need to add if it is necessary */}
 
                             {/* <select className='border-0 p-1 outline-0'>
-              <option value="select" selected>{infoDetails.customerChatID.status}</option>
-              <option value="completed">completed</option>
-              <option value="pending">pending</option>
-              <option value="rejected">rejected</option>
-            </select> */}
+                                <option value="select" selected>{infoDetails.customerChatID.status}</option>
+                                <option value="completed">completed</option>
+                                <option value="pending">pending</option>
+                                <option value="rejected">rejected</option>
+                            </select> */}
 
                             {/* <p>
-              Comments :
-              <input className='border-0 border-bottom mx-2' placeholder='Your comments here...' />
-            </p> */}
+                                Comments :
+                                <input className='border-0 border-bottom mx-2' placeholder='Your comments here...' />
+                            </p> */}
                         </div>
                     }
                     <div className='buttons d-flex justify-content-center m-4'>
