@@ -46,20 +46,22 @@ const getAllRefundRequests = async () => {
 
 const getAllFeedbacks = async (id) => {
     var dataArray = [];
+    var productData = [];
     await axios
-        .get(`/get_all_refund_requests/${id}`)
+        .get(`/get_all_feedbacks/${id}`)
         .then((res) => {
             console.log(res)
 
             if (res.data.status === 200) {
                 dataArray = res.data.response
+                productData = res.data.product
             }
         })
         .catch((err) => {
             throw new Error(err)
         })
 
-    return dataArray;
+    return [dataArray, productData];
 
 }
 

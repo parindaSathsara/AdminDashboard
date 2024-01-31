@@ -26,6 +26,8 @@ axios.defaults.withCredentials = true
 //   console.error('CSRF token meta tag not found');
 // }
 
+//
+
 axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
 axios.defaults.data = 'http://172.16.26.238:8000'
 

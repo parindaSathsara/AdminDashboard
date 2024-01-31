@@ -141,10 +141,15 @@ const AccountsRefunds = () => {
                 refund_amount: value.total_amount,
                 pay_type: value.pay_category,
                 actions:
-                    <div className='actions_box'>
-                        {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
-                        <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
-                    </div>
+                    value.refund_type == "" || value.refund_type == null ?
+                        <div className='actions_box'>
+                            {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+                            <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
+                        </div>
+                        :
+                        null
+
+
             }
         })
     }
@@ -166,73 +171,37 @@ const AccountsRefunds = () => {
 
     const [progress, setProgress] = useState(0)
 
+    const [refundCustomerData, setRefundCustomerData] = useState([])
 
-
-    const handleApprovePayment = () => {
-
-        setProgress(0)
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You want to approve this payment",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#2eb85c",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Approve Payment"
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-
-                setProgress(25)
-                axios.get(`sendInvoiceToCustomer/${orderid}`).then(res => {
-                    if (res.data.status == 200) {
-                        setProgress(100)
-                        Swal.fire({
-                            title: "Payment Approved!",
-                            text: "Order - " + orderid + " Payment Approved",
-                            icon: "success"
-                        });
-
-                    }
-                    else {
-                        setProgress(100)
-                        Swal.fire({
-                            title: "Error While Invoice Generation",
-                            text: "Order - " + orderid + " Failed to generate the invoice",
-                            icon: "error"
-                        });
-                    }
-                })
-            }
-        });
-
-        // console.log("handle approve payment")
-        // console.log("Handle Approve Payment")
-
-    }
 
     const handleRejectPayment = () => {
         setPaymentRejection(true)
 
-        // Swal.fire({
-        //     title: "Are you sure?",
-        //     text: "You want to reject this payment",
-        //     icon: "question",
-        //     showCancelButton: true,
-        //     confirmButtonColor: "#979797",
-        //     cancelButtonColor: "#d33",
-        //     confirmButtonText: "Reject Payment"
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         Swal.fire({
-        //             title: "Payment Approved!",
-        //             text: "Order - " + orderid + "Payment Approved",
-        //             icon: "success"
-        //         });
-        //     }
-        // });
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to reject this refund",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#979797",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Reject Payment"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Payment Approved!",
+                    text: "Order - " + orderid + "Payment Approved",
+                    icon: "success"
+                });
+            }
+        });
     }
+
+    const handleFeedback = () => {
+        getAllRefundRequests().then(res => {
+            setRefundRequests(res)
+        })
+    }
+
 
 
     return (
@@ -247,15 +216,10 @@ const AccountsRefunds = () => {
 
                     <Modal.Title>Refund Details</Modal.Title>
 
-                    <div className="radioGroup" style={{ marginLeft: "30px" }}>
-                        <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
-                        <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
-                    </div>
-
                 </Modal.Header>
 
                 <Modal.Body className="modalBodyDef">
-                    <CustomerFeedbacks orderId={orderid}></CustomerFeedbacks>
+                    <CustomerFeedbacks orderId={orderid} orderValue={refundDataSet} onFeedback={handleFeedback}></CustomerFeedbacks>
                 </Modal.Body>
 
                 <Modal.Footer className="mainFooterModal">
