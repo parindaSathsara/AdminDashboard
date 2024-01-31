@@ -10,7 +10,7 @@ function Chatshome() {
   const [user] = useAuthState(auth);
 
   return (
-    <div>
+    <div className='testing'>
       {!user ? (
         <Welcome />
       ) : (
