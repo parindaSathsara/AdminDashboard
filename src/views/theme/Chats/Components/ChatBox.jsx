@@ -160,14 +160,16 @@ function Chatshome() {
         if (userMessage.trim() === "") {
             return null;
         }
-        const adminUID = 'admin';
+        const uid = 'admin';
         const { displayName, photoURL } = auth.currentUser;
         await addDoc(collection(db, "chats/chats_dats/" + userID), {
             text: userMessage,
             name: displayName,
             avatar: photoURL,
             createdAt: serverTimestamp(),
-            adminUID,
+            role: "Admin",
+            readAt: null,
+            uid: uid,
         });
         setUserMessage("");
     }
@@ -203,8 +205,8 @@ function Chatshome() {
                     const sortedMessages = fetchedMessages.sort(
                         (a, b) => a.createdAt - b.createdAt
                     );
-                    if(sortedMessages.length !== 0){
-                        allChatData = [...allChatData,{ customerChatID: value, sortedMessages } ] 
+                    if (sortedMessages.length !== 0) {
+                        allChatData = [...allChatData, { customerChatID: value, sortedMessages }]
                         return { customerChatID: value, sortedMessages };
                     }
                 }
@@ -345,7 +347,7 @@ function Chatshome() {
                         <div className='main_chat_container'>
 
                             {messages.map((value, key) => (
-                                <div className={`${value.uid == user.uid ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
+                                <div className={`${value.uid == "admin" ? "chat_bubble_main right_side main_chat" : "chat_bubble_main left_side main_chat"}`} key={key}
                                     onMouseEnter={() => { handleMouseEnter(key) }}
                                     onMouseLeave={() => { handleMouseLeave(key) }}
                                 >
