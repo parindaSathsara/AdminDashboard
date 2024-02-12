@@ -49,8 +49,6 @@ function Chatshome() {
         filteredCustomerChats.map((value) => {
             if (customerChatID === value.customer_collection_id) {
                 if (value.supplier_id === '' || value.supplier_id === null || value.supplier_id === undefined) {
-
-
                     const dataSet = {
                         customer_collection_id: customerChatID,
                         supplier_id: selectedVedor.id,
