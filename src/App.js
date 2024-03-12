@@ -8,11 +8,11 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-// axios.defaults.baseURL = 'http://172.16.26.244:8000/api/'
-// axios.defaults.data = 'http://172.16.26.244:8000'
+axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
+axios.defaults.data = 'http://172.16.26.238:8000'
 
-axios.defaults.baseURL = 'https://api.aahaas.com/api'
-axios.defaults.data = 'https://api.aahaas.com'
+// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://admin-api.aahaas.com'
 
 
 // axios.defaults.baseURL = 'http://192.168.1.19:8000/api/'

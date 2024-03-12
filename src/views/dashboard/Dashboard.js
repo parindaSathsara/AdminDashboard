@@ -134,9 +134,7 @@ const Dashboard = () => {
       {
         title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
       },
-      {
-        title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
-      },
+
 
       {
         title: 'Total Amount', field: 'total_amount', align: 'right', editable: 'never',
@@ -161,25 +159,25 @@ const Dashboard = () => {
 
     ],
     rows: orderData?.map((value, idx) => {
+      if (!value) return null; // Handle null value
       return {
-        // id: value.MainTId,
         oid: value.OrderId,
         booking_date: value.checkout_date,
         pay_type: value.payment_type,
         pay_category: value.pay_category,
-        total_amount: value.ItemCurrency + " " + value.total_amount,
-        paid_amount: value.ItemCurrency + " " + value.paid_amount,
-        discount_amount: value.ItemCurrency + " " + value.discount_price,
-        delivery_charge: value.ItemCurrency + " " + value.delivery_charge,
-        additional_data: <><button className="btn btn-primary btn_aditional_data btn-sm" onClick={(e) => { handleAdditionalModal(value.OrderId) }} ><CIcon icon={cilNoteAdd} size="sm" /></button> | <button type='button' className='btn btn-info view_upload_info btn-sm' onClick={() => { handleAdditionalInfoModal(value.OrderId) }}><CIcon icon={cilViewStream} size="sm" /></button></>,
-
-        actions:
+        total_amount: value.ItemCurrency + " " + (value.total_amount || "0.00"), // Check for null or undefined
+        paid_amount: value.ItemCurrency + " " + (value.paid_amount || "0.00"), // Check for null or undefined
+        discount_amount: value.ItemCurrency + " " + (value.discount_price || "0.00"), // Check for null or undefined
+        delivery_charge: value.ItemCurrency + " " + (value.delivery_charge || "0.00"), // Check for null or undefined
+        additional_data: (
+          <><button className="btn btn-primary btn_aditional_data btn-sm" onClick={(e) => { handleAdditionalModal(value.OrderId) }} ><CIcon icon={cilNoteAdd} size="sm" /></button> | <button type='button' className='btn btn-info view_upload_info btn-sm' onClick={() => { handleAdditionalInfoModal(value.OrderId) }}><CIcon icon={cilViewStream} size="sm" /></button></>
+        ),
+        actions: (
           <div className='actions_box'>
-            {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
             <button className="btn btn_actions" onClick={(e) => { handleSendMail(value.OrderId) }}><CIcon icon={cibGmail} size="lg" /></button>
           </div>
-
-      }
+        )
+      };
     })
   }
 
@@ -199,41 +197,55 @@ const Dashboard = () => {
 
       <CRow>
         <CCol xs={12} sm={6} lg={3}>
+
           <CWidgetStatsB
-            className="mb-4"
-            progress={{ color: 'success', value: 100.0 }}
-            text="Last 30 Days Orders"
-            title="Orders"
-            value={'' + cardData.orderCount}
+            color="success"
+            inverse
+            value={cardData.orderCount + ""}
+            title="Orders Count"
+            progress={{ value: 100.00 }}
+            text="Last 30 Days Order Count"
           />
+
         </CCol>
         <CCol xs={12} sm={6} lg={3}>
           <CWidgetStatsB
             className="mb-4"
-            value={"USD " + cardData.salesCount}
+            value={cardData.salesCount + ""}
             title="Sales"
-            progress={{ color: 'danger', value: 100.0 }}
+            color="danger"
+            inverse
+            progress={{ value: 100.0 }}
             text="Last 30 Days Sales"
           />
         </CCol>
         <CCol xs={12} sm={6} lg={3}>
+
           <CWidgetStatsB
             className="mb-4"
-            value={cardData.customerCount}
+            value={cardData.customerCount + ""}
             title="Customers"
-            progress={{ color: 'warning', value: 100.0 }}
-            text="Customers (Joined on Last 30 Days)"
+            color="warning"
+            inverse
+            progress={{ value: 100.0 }}
+            text="Last 30 Days Customer Count"
           />
         </CCol>
 
         <CCol xs={12} sm={6} lg={3}>
+
+
           <CWidgetStatsB
             className="mb-4"
-            value={'' + cardData.suppliersCount}
+            value={cardData.suppliersCount + ""}
             title="Suppliers"
-            progress={{ color: 'info', value: 100.0 }}
-            text="Customers (Joined on Last 30 Days)"
+            color="info"
+            inverse
+            progress={{ value: 100.0 }}
+            text="Last 30 Days Supplier Count"
           />
+
+
         </CCol>
 
       </CRow>
@@ -269,7 +281,7 @@ const Dashboard = () => {
                 return (
                   <div className='mainContainerTables'>
                     <div className="col-md-12 mb-4 sub_box materialTableDP">
-                      <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
+                      <ProductDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
                     </div>
 
 

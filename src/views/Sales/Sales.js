@@ -462,8 +462,8 @@ const Sales = () => {
                                     }}
                                     labels="months"
                                 />
-                            
-                               
+
+
                             )}
                         </CCardBody>
                     </CCard>
@@ -509,9 +509,9 @@ const Sales = () => {
 
                             </div>
                             <CCardBody>
-                                
-                                    <div className='load'>{lineloading && <PacmanLoader color="#d63642" />}</div>
-                              { !lineloading && !lineerror && LineData &&  (
+
+                                <div className='load'>{lineloading && <PacmanLoader color="#d63642" />}</div>
+                                {!lineloading && !lineerror && LineData && (
                                     <CChartLine
                                         data={{
                                             labels: dateArray,
@@ -569,7 +569,7 @@ const Sales = () => {
                                             ],
                                         }}
                                     />
-                               
+
                                 )}
                             </CCardBody>
                         </CCard>
@@ -594,7 +594,7 @@ const Sales = () => {
                         return (
                             <div className='mainContainerTables'>
                                 <div className="col-md-12 mb-4 sub_box materialTableDP">
-                                    <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
+                                    <ProductDetails dataset={orderDataIDWise} orderid={e.oid} hideStatus={true} />
                                 </div>
                             </div>
                         )

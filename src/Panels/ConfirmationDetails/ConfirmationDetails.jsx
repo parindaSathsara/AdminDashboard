@@ -13,6 +13,12 @@ function ConfirmationDetails(props) {
     const [toggle, setToggle] = useState(true);
     const [productData, setProductData] = useState([])
 
+    const [lifestylesData, setLifestylesData] = useState([])
+    const [essNEssData, setEssNEssData] = useState([])
+    const [hotelData, setHotelData] = useState([])
+    const [educationData, setEducationData] = useState([])
+    const [flightsData, setFlightsData] = useState([])
+
     function generateRandom() {
         var length = 8,
             charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -135,20 +141,17 @@ function ConfirmationDetails(props) {
         ],
         rows: props.dataset?.map((value) => {
             return {
-                id: value.MainTId,
-                category: value.CategoryType,
-                service_date: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.delivery_date : value.CategoryType == 'Lifestyle' ? value.LifeStylePrefDate
-                    : value.CategoryType == 'Education' ? 'Days: ' + value.course_day + ', ' + 'Start Time: ' + value.start_time + ', ' + 'End Time: ' + value.end_time
-                        : value.CategoryType == 'Hotels' ? 'Check-in: ' + value.HotelCheckin + ' | ' + 'Check-out: ' + value.HotelCheckout : value.flight_id,
+                id: value.checkoutID,
+                category: value.category,
+                service_date: value.service_date,
                 // order_status: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.StatusCheck : value.CategoryType == 'Lifestyle' ? value.LifeStyleBookStatus
                 //     : value.CategoryType == 'Education' ? value.StatusCheck : value.CategoryType == 'Hotels' ? value.StatusCheck : value.flight_id,
                 voucher_status: '-',
                 reconfirm_deadline: '-',
                 reconfirm_status: '-',
                 del_mode: 'N/A',
-                del_contact: value['contact_number'],
-                del_status: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.delivery_status : value.CategoryType == 'Lifestyle' ? 'N/A'
-                    : value.CategoryType == 'Education' ? value.status : value.CategoryType == 'Hotels' ? value.StatusCheck : value.flight_id,
+                del_contact: "",
+                del_status: "",
 
             }
         })

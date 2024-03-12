@@ -1,4 +1,5 @@
 import React from 'react'
+import VendorList from './views/VendorList/VendorList'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -62,6 +63,8 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+
+  { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
   { path: '/sales', name: 'Sales', element: Sales, exact: true },
   { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
@@ -69,7 +72,7 @@ const routes = [
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
-  { path: '/theme/typography', name: 'Typography', element: Typography },
+  { path: '/customers', name: 'Customers', element: Typography },
   { path: '/theme/AccountSystem', name: 'AccountSystem', element: AccountSystem },
   { path: '/base', name: 'Base', element: Cards, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },

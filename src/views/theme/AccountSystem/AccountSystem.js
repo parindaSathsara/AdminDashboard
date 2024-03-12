@@ -99,7 +99,7 @@ const AccountSystem = () => {
               <div className='mainContainerTables'>
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
                   {/* Assuming ProductDetails is a component that takes orderDataIDWise and orderid as props */}
-                  <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
+                  <ProductDetails dataset={orderDataIDWise} orderid={e.oid} hideStatus={true} />
                 </div>
               </div>
             )

@@ -362,7 +362,7 @@ const Typography = () => {
 
       <ThemeProvider theme={defaultMaterialTheme}>
         <MaterialTable
-          title="Best Customer"
+          title="Best Customers"
           data={data.rows}
           columns={[
             { title: 'Customer Name', field: 'user_name' },
@@ -381,16 +381,7 @@ const Typography = () => {
               ),
             },
           ]}
-          detailPanel={(e) => {
-            return (
-              <div className='mainContainerTables'>
-                <div className="col-md-12 mb-4 sub_box materialTableDP">
-                  {/* Assuming ProductDetails is a component that takes orderDataIDWise and orderid as props */}
-                  <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
-                </div>
-              </div>
-            )
-          }}
+
           options={{
             sorting: true,
             search: true,

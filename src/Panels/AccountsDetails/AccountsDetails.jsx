@@ -3,8 +3,9 @@ import './AccountsDetails.css';
 // import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import discountTotal from '../dcalculator';
 import moment from 'moment';
-import { PaymentStatusChange } from '../../service/api_calls';
+import { PaymentStatusChange, getPaymentStatusById } from '../../service/api_calls';
 import MaterialTable from 'material-table';
+import { CCol } from '@coreui/react';
 
 
 function AccountsDetails(props) {
@@ -13,6 +14,19 @@ function AccountsDetails(props) {
     // useMemo(() => {
     //     props.dataset
     // }, [])
+
+    console.log(props.dataset, "Dataset data value is 1233333")
+
+    const [dataset, setDataSet] = useState([])
+
+
+    useEffect(() => {
+        getPaymentStatusById(props.dataset?.oid, props.dataset?.oid, props.dataset?.pay_type, props.dataset?.pay_category).then((res) => {
+            setDataSet(res.data[0])
+
+        })
+
+    }, [props.dataset])
 
 
 
@@ -47,101 +61,62 @@ function AccountsDetails(props) {
         // props.relord();
     }
 
-    const columns = [
-        // { field: 'order', headerName: 'Payment Status', align: 'center', },
-        {
-            field: 'pay_status', headerName: 'Payment Status', editable: true, align: 'left', renderEditCell: (e) => {
-                return (
-                    <>
-                        <select className='form-select required' name='pay_status' onChange={(value) => handlePaymentStatusChange(e, value)}>
-                            <option value="">--</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Confirmed">Confirmed</option>
-                        </select>
-                    </>
-                )
-            }
-        },
-        { field: 'pay_mode', headerName: 'PaymentMode', align: 'left', },
-        { field: 'pay_type', headerName: 'PaymentType', align: 'left', },
-        { field: 'receivable_amount', headerName: 'ReceivableAmount', align: 'left', },
-        { field: 'paid_amount', headerName: 'PaidAmount', align: 'left', },
-        { field: 'balance_amount', headerName: 'BalanceAmount', align: 'left', },
-        { field: 'receivable_dead', headerName: 'ReceivableDeadline', align: 'left', },
-        { field: 'payment_proof', headerName: 'PaymentProof', align: 'left', renderCell: (e) => (<><button type='button' className='btn btn_payment_proof_view' onClick={() => handlePaymentProof(e)}>View Details</button></>) },
-    ]
 
-    const rows = {
-        data: props.dataset?.filter(id => id.OrderId == props.orderid)?.map((value) => {
-            return {
-                id: value.MainTId,
-                oid: value.OrderId,
-                pay_status: value.MainPayStatus,
-                pay_mode: value.payment_type,
-                pay_type: value.pay_category,
-                receivable_amount: value.ItemCurrency + parseFloat(value.TotalAmount).toFixed(2),
-                paid_amount: value.ItemCurrency + parseFloat(value.PaidAmount).toFixed(2),
-                balance_amount: value.ItemCurrency + parseFloat(value.BalanceAmount).toFixed(2),
-                receivable_dead: 'N/A',
-                payment_proof: '-',
+    // const data = {
+    //     columns: [
+    //         // {
+    //         //     title: '#ID', field: 'id', align: 'center', editable: 'never',
+    //         // },
+    //         {
+    //             field: 'pay_status', title: 'Payment Status', editable: true, align: 'left', render: (e) => {
 
-            }
-        })
-    }
+    //                 return (
+    //                     <>
+    //                         <select className='form-select required' name='delivery_status' onChange={(value) => handlePaymentStatusChange(e, value)}>
+    //                             {e.del_status == "Pending" ?
+    //                                 <option value="Pending" selected>Pending</option>
+    //                                 :
+    //                                 <option value="Pending">Pending</option>
+    //                             }
+    //                             {e.del_status == "Confirmed" ?
+    //                                 <option value="Confirmed" selected>Confirmed</option>
+    //                                 :
+    //                                 <option value="Confirmed">Confirmed</option>
+    //                             }
+    //                         </select>
+    //                     </>
+    //                 )
+    //             }
+    //         },
+    //         { field: 'pay_mode', title: 'PaymentMode', align: 'left', },
+    //         { field: 'pay_type', title: 'PaymentType', align: 'left', },
+    //         { field: 'receivable_amount', title: 'ReceivableAmount', align: 'left', },
+    //         { field: 'paid_amount', title: 'PaidAmount', align: 'left', },
+    //         { field: 'balance_amount', title: 'BalanceAmount', align: 'left', },
+    //         { field: 'receivable_dead', title: 'ReceivableDeadline', align: 'left', },
+    //         { field: 'payment_proof', title: 'PaymentProof', align: 'left', render: (e) => (<><button type='button' className='btn btn_payment_proof_view' onClick={() => handlePaymentProof(e)}>View Details</button></>) },
 
 
-    const data = {
-        columns: [
-            // {
-            //     title: '#ID', field: 'id', align: 'center', editable: 'never',
-            // },
-            {
-                field: 'pay_status', title: 'Payment Status', editable: true, align: 'left', render: (e) => {
+    //     ],
+    //     rows: props.dataset?.map((value) => {
+    //         return {
+    //             id: value.MainTId,
+    //             oid: value.OrderId,
+    //             pay_status: value.MainPayStatus,
+    //             pay_mode: value.payment_type,
+    //             pay_type: value.pay_category,
+    //             receivable_amount: value.ItemCurrency + parseFloat(value.TotalAmount).toFixed(2),
+    //             paid_amount: value.ItemCurrency + parseFloat(value.PaidAmount).toFixed(2),
+    //             balance_amount: value.ItemCurrency + parseFloat(value.BalanceAmount).toFixed(2),
+    //             receivable_dead: 'N/A',
+    //             payment_proof: '-',
 
-                    return (
-                        <>
-                            <select className='form-select required' name='delivery_status' onChange={(value) => handlePaymentStatusChange(e, value)}>
-                                {e.del_status == "Pending" ?
-                                    <option value="Pending" selected>Pending</option>
-                                    :
-                                    <option value="Pending">Pending</option>
-                                }
-                                {e.del_status == "Confirmed" ?
-                                    <option value="Confirmed" selected>Confirmed</option>
-                                    :
-                                    <option value="Confirmed">Confirmed</option>
-                                }
-                            </select>
-                        </>
-                    )
-                }
-            },
-            { field: 'pay_mode', title: 'PaymentMode', align: 'left', },
-            { field: 'pay_type', title: 'PaymentType', align: 'left', },
-            { field: 'receivable_amount', title: 'ReceivableAmount', align: 'left', },
-            { field: 'paid_amount', title: 'PaidAmount', align: 'left', },
-            { field: 'balance_amount', title: 'BalanceAmount', align: 'left', },
-            { field: 'receivable_dead', title: 'ReceivableDeadline', align: 'left', },
-            { field: 'payment_proof', title: 'PaymentProof', align: 'left', render: (e) => (<><button type='button' className='btn btn_payment_proof_view' onClick={() => handlePaymentProof(e)}>View Details</button></>) },
+    //         }
+    //     })
 
 
-        ],
-        rows: props.dataset?.map((value) => {
-            return {
-                id: value.MainTId,
-                oid: value.OrderId,
-                pay_status: value.MainPayStatus,
-                pay_mode: value.payment_type,
-                pay_type: value.pay_category,
-                receivable_amount: value.ItemCurrency + parseFloat(value.TotalAmount).toFixed(2),
-                paid_amount: value.ItemCurrency + parseFloat(value.PaidAmount).toFixed(2),
-                balance_amount: value.ItemCurrency + parseFloat(value.BalanceAmount).toFixed(2),
-                receivable_dead: 'N/A',
-                payment_proof: '-',
 
-            }
-        })
-    }
+    // }
 
 
     return (
@@ -168,28 +143,83 @@ function AccountsDetails(props) {
 
                             /> */}
 
-                            <MaterialTable
-                                data={data.rows}
-                                columns={data.columns}
-                                title="Product Details"
-                                options={{
 
-                                    sorting: true, search: true,
-                                    searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                    filtering: false, paging: false, pageSize: 3,
-                                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                    showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                    grouping: false, columnsButton: false,
-                                    rowStyle: { fontSize: "12px", width: "100%", color: "#000" },
-                                    editCellStyle: { width: "100%" },
-                                    headerStyle: { fontSize: "13px", backgroundColor: '#D8EFFF' }
+                            {console.log(dataset, "Dataset manage data is")}
+                            <CCol xs={12} sm={12} lg={12}>
+                                <div className='mainContainerTables'>
+                                    <div className="col-md-12 mb-4 sub_box materialTableDP">
 
-                                    // fixedColumns: {
-                                    //     left: 6
-                                    // }
-                                }}
-                            />
+                                        <h6 className="cardHeader">Payment Type - {dataset?.['pay_category']}</h6>
+                                        {
+                                            dataset?.['pay_category'] == 'Online Transfer' ?
+                                                <>
+
+                                                    <table class="table">
+                                                        <thead className="thead-dark">
+                                                            <tr>
+                                                                <th scope="col">Reference No</th>
+                                                                <th scope="col">Reference E-mail</th>
+                                                                <th scope="col">Reference Image</th>
+                                                                <th scope="col">Checkout Date</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        {console.log(dataset, "DataSet data is ")}
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>{dataset['reference_no']}</b></td>
+                                                                <td>{dataset['reference_email']}</td>
+                                                                <td><a target="_blank" href={'https://gateway.aahaas.com/' + dataset['reference_Image']}>
+                                                                    <img src={'https://gateway.aahaas.com/' + dataset['reference_Image']} width="150"
+                                                                        height="150"
+                                                                        style={{ objectFit: 'cover' }} />
+                                                                </a></td>
+                                                                <td>{dataset['checkout_date']}</td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </>
+                                                :
+                                                dataset?.['pay_category'] == 'Card Payment' ?
+                                                    <>
+                                                        <table className='table table-bordered table__PayentProf'>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Payment Status</th>
+                                                                    <th scope="col">Payment Result</th>
+                                                                    <th scope="col">Transaction Token</th>
+                                                                    <th scope="col">Authentication Status</th>
+                                                                    <th scope="col">Checkout Date</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    {
+                                                                        dataset['result'] == 'SUCCESS' ?
+                                                                            <td className='status_success'>{dataset['result']}</td>
+                                                                            :
+                                                                            <td>{dataset['result']}</td>
+                                                                    }
+                                                                    <td>{dataset['trans_token']}</td>
+                                                                    <td>{dataset['auth_status']}</td>
+                                                                    <td>{dataset['checkout_date']}</td>
+                                                                </tr>
+
+                                                            </tbody>
+
+                                                        </table>
+                                                    </>
+                                                    :
+                                                    null
+                                        }
+
+                                    </div>
+                                </div>
+                            </CCol>
                         </div>
                     )
                 }
