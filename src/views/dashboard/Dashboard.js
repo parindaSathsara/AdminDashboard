@@ -10,6 +10,9 @@ import {
   CCardBody,
   CCardFooter,
   CCardHeader,
+  CCardImage,
+  CCardText,
+  CCardTitle,
   CCol,
   CProgress,
   CRow,
@@ -57,6 +60,7 @@ import PaymentModal from 'src/Panels/PaymentModal/PaymentModal'
 import AdditionalData from 'src/Panels/AdditionalData/AdditionalData'
 import MailBox from 'src/Panels/MailBox/MailBox'
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
+import Cards from '../base/cards/Cards'
 
 
 
@@ -153,9 +157,9 @@ const Dashboard = () => {
       {
         title: 'Additional Information', field: 'additional_data', align: 'center', editable: 'never',
       },
-      {
-        title: 'Actions', field: 'actions', align: 'center', editable: 'never',
-      },
+      // {
+      //   title: 'Actions', field: 'actions', align: 'center', editable: 'never',
+      // },
 
     ],
     rows: orderData?.map((value, idx) => {
@@ -328,6 +332,7 @@ const Dashboard = () => {
             // }}
 
             />
+
           </ThemeProvider>
 
         </CCardBody>

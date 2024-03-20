@@ -15,7 +15,8 @@ import {
   cilUser,
   cilAddressBook,
   cilCarAlt,
-  cilUserPlus
+  cilUserPlus,
+  cilGrain
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -51,6 +52,26 @@ const _nav = [
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
 
+  {
+    component: CNavGroup,
+    name: 'Products',
+    to: '/products',
+    icon: <CIcon icon={cilGrain} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Products',
+        to: '/products/',
+      },
+      {
+        component: CNavItem,
+        name: 'Product Analytics',
+        to: 'products/analytics',
+      },
+
+    ],
+  },
+
 
   {
     component: CNavGroup,
@@ -72,18 +93,21 @@ const _nav = [
     ],
   },
 
-  {
-    component: CNavItem,
-    name: 'Delivery',
-    to: '/delivery',
-    icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Testing',
-    to: '/theme/Testing',
-    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
-  },
+
+
+
+  // {
+  //   component: CNavItem,
+  //   name: 'Delivery',
+  //   to: '/delivery',
+  //   icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'Testing',
+  //   to: '/theme/Testing',
+  //   icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: 'Chat',

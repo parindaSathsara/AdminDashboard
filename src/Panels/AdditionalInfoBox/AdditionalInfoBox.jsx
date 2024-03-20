@@ -5,6 +5,7 @@ import PDFView from './PDFView/PDFView';
 import { getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId } from '../../service/api_calls';
 import './AdditionalInfoBox.css';
 import circle_loader_ from '../../assets/brand/aahaas.png';
+import axios from 'axios';
 // import tick from '../../../../assets/tik_gif.gif';
 
 function AdditionalInfoBox(props) {
@@ -75,7 +76,7 @@ function AdditionalInfoBox(props) {
                                     upadting == true ?
                                         <img src={circle_loader_} className='loading__loader' />
                                         :
-                                            null
+                                        null
                                 }
                             </div>
                             : null
@@ -158,7 +159,7 @@ function AdditionalInfoBox(props) {
                                                     {
                                                         val.flight_details.split(',')?.map((value, index) => (
                                                             <>
-                                                                <a href={'../../../' + value} className='link' target='_blank' key={index} >Flight Detail {index + 1}</a> <br />
+                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Flight Detail {index + 1}</a> <br />
                                                             </>
                                                         ))
                                                     }
@@ -167,7 +168,7 @@ function AdditionalInfoBox(props) {
                                                     {
                                                         val.passport_copies.split(',')?.map((value, index) => (
                                                             <>
-                                                                <a href={'../../../' + value} className='link' target='_blank' key={index} >Passport Detail {index + 1}</a> <br />
+                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Passport Detail {index + 1}</a> <br />
                                                             </>
                                                         ))
                                                     }
@@ -176,7 +177,7 @@ function AdditionalInfoBox(props) {
                                                     {
                                                         val.vaccine_certificate.split(',')?.map((value, index) => (
                                                             <>
-                                                                <a href={'../../../' + value} className='link' target='_blank' key={index} >Vaccination Detail {index + 1}</a> <br />
+                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Vaccination Detail {index + 1}</a> <br />
                                                             </>
                                                         ))
                                                     }
@@ -186,7 +187,7 @@ function AdditionalInfoBox(props) {
                                                     {
                                                         val.supplier_confirmation.split(',')?.map((value, index) => (
                                                             <>
-                                                                <a href={'../../../' + value} className='link' target='_blank' key={index} >Supplier Detail {index + 1}</a> <br />
+                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Supplier Detail {index + 1}</a> <br />
                                                             </>
                                                         ))
                                                     }
@@ -196,7 +197,7 @@ function AdditionalInfoBox(props) {
                                                     {
                                                         val.special_notes.split(',')?.map((value, index) => (
                                                             <>
-                                                                <a href={'../../../' + value} className='link' target='_blank' key={index} >Special Detail {index + 1}</a> <br />
+                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Special Detail {index + 1}</a> <br />
                                                             </>
                                                         ))
                                                     }

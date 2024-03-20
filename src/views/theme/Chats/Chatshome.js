@@ -11,11 +11,12 @@ function Chatshome() {
 
   return (
     <div className='testing'>
-      {!user ? (
+      {/* {!user ? (
         <Welcome />
       ) : (
         <ChatBox />
-      )}
+      )} */}
+      <ChatBox />
     </div>
   );
 

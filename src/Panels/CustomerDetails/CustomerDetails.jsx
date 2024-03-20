@@ -34,6 +34,8 @@ function CustomerDetails(props) {
     // }
 
 
+    console.log(props.dataset, "Dataset data props value is")
+
     const data = {
         columns: [
             { field: 'customer_fname', title: 'First Name', align: 'left' },

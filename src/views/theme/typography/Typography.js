@@ -4,7 +4,7 @@ import { DocsLink } from 'src/components'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table'
 import { useState, useEffect } from 'react'
-// import loogo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
+import loogo from '../../../assets/brand/aahaas.png';
 import axios from 'axios'
 
 
@@ -369,17 +369,17 @@ const Typography = () => {
             { title: 'Order Count', field: 'checkouts_count' },
             { title: 'totalprice', field: 'checkouts_sum_total_price' }, // Make sure this matches your API response key
             { title: 'Email', field: 'email' },
-            {
-              title: 'User Profile',
-              field: 'customer_profilepic',
-              render: (rowData) => (
-                <img
-                  src={rowData.customer_profilepic || loogo} // Adjust the path accordingly
-                  alt="Profile Pic"
-                  style={{ width: 50, height: 50, borderRadius: '50%' }}
-                />
-              ),
-            },
+            // {
+            //   title: 'User Profile',
+            //   field: 'customer_profilepic',
+            //   render: (rowData) => (
+            //     <img
+            //       src={rowData?.customer_profilepic || loogo} // Adjust the path accordingly
+            //       alt="Profile Pic"
+            //       style={{ width: 50, height: 50, borderRadius: '50%' }}
+            //     />
+            //   ),
+            // },
           ]}
 
           options={{

@@ -183,6 +183,25 @@ async function getDashboardOrdersIdWise(id) {
     }
 }
 
+
+
+async function getAllProducts() {
+
+    var productData = []
+    try {
+        await axios.get('get_all_products').then((res) => {
+            if (res.data.status == 200) {
+                productData = res.data.productList
+            }
+        })
+    }
+    catch (err) {
+        throw new Error(err)
+    }
+
+    return productData;
+}
+
 ///////////////////////////////
 
 async function getPaymentStatusById(rowid, orderid, paymentmood, paymenttype) {
@@ -228,6 +247,8 @@ async function updateDeliveryStatus(id, value, type) {
             type: type
 
         }
+
+        console.log(data, "DataSet is Updated")
 
         await axios.post('/update_delivery_status_by_product', data).then((res) => {
 
@@ -479,7 +500,7 @@ async function updateAdditionalInfoDataByOrderId(dataset, id) {
 }
 
 export {
-    getAllRefundRequests, getAllFeedbacks, getVendorDetails,
+    getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts,
     getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
     availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId
 }

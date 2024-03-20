@@ -15,6 +15,11 @@ import FeebackDetails from '../FeebackDetails/FeebackDetails';
 import PaymentModal from '../PaymentModal/PaymentModal';
 import { CButton, CCol, CImage, CRow } from '@coreui/react';
 import CustomerDetails from '../CustomerDetails/CustomerDetails';
+import CheckIcon from '@mui/icons-material/Check';
+import { cibAboutMe, cibAbstract, cilCheck, cilCheckAlt, cilCheckCircle, cilXCircle } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import Swal from 'sweetalert2';
+import DeliveryDetails from '../DeliveryDetails/DeliveryDetails';
 
 function ProductDetails(props) {
 
@@ -117,6 +122,8 @@ function ProductDetails(props) {
             setProductData(res.productData)
 
             setCustomerData(res.customerData)
+
+            console.log(res.customerData, "CustomerData value is data ")
         })
 
     }, [props.orderid, props.orderData])
@@ -134,6 +141,8 @@ function ProductDetails(props) {
             setFlightsData(res.flightsData)
             setHotelData(res.hotelData)
             setProductData(res.productData)
+
+            setCustomerData(res.customerData)
         })
     }
 
@@ -210,28 +219,46 @@ function ProductDetails(props) {
             { field: 'product_title', title: 'Product Title' },
             { field: 'adultCount', title: 'Adult Count', align: 'left' },
             { field: 'childCount', title: 'Child Count', align: 'left' },
-            { field: 'booking_date', title: 'Booking Date', align: 'left' },
+            { field: 'service_date', title: 'Service Date', align: 'left' },
+            { field: 'pickup_time', title: 'Pickup Time', align: 'left' },
+            { field: 'location', title: 'Location', align: 'left' },
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
             {
-                field: 'del_status', title: 'Order Status', align: 'left', hidden: props.hideStatus, render: (e) => {
+                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
                     return (
                         <>
-                            <select className='form-select required' name='delivery_status' onChange={(value) => handleDelStatusChange(e, value)}>
-                                {e.del_status == "Pending" ?
-                                    <option value="Pending" selected>Pending</option>
-                                    :
-                                    <option value="Pending">Pending</option>
-                                }
-                                {e.del_status == "Confirmed" ?
-                                    <option value="Confirmed" selected>Confirmed</option>
-                                    :
-                                    <option value="Confirmed">Confirmed</option>
-                                }
+                            {e.supplier_order === 'Pending' ? (
+                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+                            ) : (
+                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+                            )}
+                        </>
+                    );
+                }
+            },
+            {
+                field: 'status',
+                title: 'Order Status',
+                align: 'left',
+                hidden: props.hideStatus,
+                render: (e) => {
+                    console.log(e, "Data set delivery is")
+                    console.log(e.status, "Delivery status")
+                    return (
+                        <>
+                            <select
+                                className='form-select required'
+                                name='delivery_status'
+                                onChange={(value) => handleDelStatusChange(e, value)}
+                                value={e.status} // Set the selected value here
+                            >
+                                <option value="Approved">Confirm Order</option>
+                                <option value="Cancelled">Cancel Order</option>
                             </select>
                         </>
-                    )
+                    );
                 }
             },
         ],
@@ -241,41 +268,74 @@ function ProductDetails(props) {
             product_title: value.product_title,
             childCount: value.childCount,
             adultCount: value.adultCount,
+            service_date: value.service_date,
             balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
             paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
             total_amount: value.currency + " " + (value.total_amount || "0.00"),
             booking_date: value.booking_date,
-            del_status: "-" // Default value
+            supplier_order: value.supplier_status,
+            status: value.status,
+            pickup_time: value.pickupTime,
+            location: value.location
         }))
     }
+
+
 
     const educations = {
         columns: [
             // { field: 'id', title: 'ID' },
             { field: 'product_title', title: 'Product Title' },
             { field: 'student_type', title: 'Student Type', align: 'left' },
-            { field: 'booking_date', title: 'Booking Date', align: 'left' },
+
+            { field: 'inven_start_date', title: 'Start Date', align: 'left' },
+            { field: 'inven_end_date', title: 'End Date', align: 'left' },
+
+            { field: 'course_startime', title: 'Start Time', align: 'left' },
+            { field: 'course_endtime', title: 'End Time', align: 'left' },
+
+
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
+
+
+
+
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
             {
-                field: 'del_status', title: 'Order Status', align: 'left', hidden: props.hideStatus, render: (e) => {
+                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
                     return (
                         <>
-                            <select className='form-select required' name='delivery_status' onChange={(value) => handleDelStatusChange(e, value)}>
-                                {e.del_status == "Pending" ?
-                                    <option value="Pending" selected>Pending</option>
-                                    :
-                                    <option value="Pending">Pending</option>
-                                }
-                                {e.del_status == "Confirmed" ?
-                                    <option value="Confirmed" selected>Confirmed</option>
-                                    :
-                                    <option value="Confirmed">Confirmed</option>
-                                }
+                            {e.supplier_order === 'Pending' ? (
+                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+                            ) : (
+                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+                            )}
+                        </>
+                    );
+                }
+            },
+            {
+                field: 'status',
+                title: 'Order Status',
+                align: 'left',
+                hidden: props.hideStatus,
+                render: (e) => {
+
+                    return (
+                        <>
+                            <select
+                                className='form-select required'
+                                name='delivery_status'
+                                onChange={(value) => handleDelStatusChange(e, value)}
+                                value={e.status} // Set the selected value here
+                            >
+
+                                <option value="Approved">Confirm Order</option>
+                                <option value="Cancelled">Cancel Order</option>
                             </select>
                         </>
-                    )
+                    );
                 }
             },
         ],
@@ -288,7 +348,13 @@ function ProductDetails(props) {
             paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
             total_amount: value.currency + " " + (value.total_amount || "0.00"),
             booking_date: value.preffered_booking_date,
-            del_status: "-" // Default value
+            supplier_order: value.supplier_status,
+            status: value.status,
+            inven_start_date: value.course_inv_startdate,
+            inven_end_date: value.course_inv_enddate,
+
+            course_startime: value.course_startime,
+            course_endtime: value.course_endtime,
         }))
     }
 
@@ -297,27 +363,47 @@ function ProductDetails(props) {
             { field: 'product_title', title: 'Product Title' },
             { field: 'quantity', title: 'Quantity', align: 'left' },
             { field: 'preffered_date', title: 'Preferred Date', align: 'left' },
+            { field: 'features', title: 'Features', align: 'left' }, // New column for variations
+            { field: 'address', title: 'Address', align: 'left' },
+
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
+
             {
-                field: 'del_status', title: 'Order Status', align: 'left', hidden: props.hideStatus, render: (e) => {
+                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
                     return (
                         <>
-                            <select className='form-select required' name='delivery_status' onChange={(value) => handleDelStatusChange(e, value)}>
-                                {e.del_status == "Pending" ?
-                                    <option value="Pending" selected>Pending</option>
-                                    :
-                                    <option value="Pending">Pending</option>
-                                }
-                                {e.del_status == "Confirmed" ?
-                                    <option value="Confirmed" selected>Confirmed</option>
-                                    :
-                                    <option value="Confirmed">Confirmed</option>
-                                }
+                            {e.supplier_order === 'Pending' ? (
+                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+                            ) : (
+                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+                            )}
+                        </>
+                    );
+                }
+            },
+            {
+                field: 'status',
+                title: 'Order Status',
+                align: 'left',
+                hidden: props.hideStatus,
+                render: (e) => {
+                    console.log(e.status, "Delivery status")
+                    return (
+                        <>
+                            <select
+                                className='form-select required'
+                                name='delivery_status'
+                                onChange={(value) => handleDelStatusChange(e, value)}
+                                value={e.status} // Set the selected value here
+                            >
+
+                                <option value="Approved">Confirm Order</option>
+                                <option value="Cancelled">Cancel Order</option>
                             </select>
                         </>
-                    )
+                    );
                 }
             },
         ],
@@ -327,11 +413,25 @@ function ProductDetails(props) {
             product_title: value.product_title,
             quantity: value.quantity,
             preffered_date: value.preffered_date,
+            address: value.location,
             balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
             paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
             total_amount: value.currency + " " + (value.total_amount || "0.00"),
-            del_status: "-" // Default value
+            features: renderVariations(value), // Render variations
+            supplier_order: value.supplier_status,
+            status: value.status // Default value
         }))
+    }
+
+    // Function to render variations
+    function renderVariations(value) {
+        let variations = [];
+        for (let i = 1; i <= 5; i++) {
+            if (value[`variation_type${i}`] && value[`variant_type${i}`]) {
+                variations.push(`${value[`variation_type${i}`]} - ${value[`variant_type${i}`]}`);
+            }
+        }
+        return variations.length > 0 ? variations.join(', ') : '-';
     }
 
     const flights = {
@@ -433,10 +533,47 @@ function ProductDetails(props) {
 
 
     const handleDelStatusChange = (e, val) => {
-        console.log(e, "Value Data set is")
+        console.log(e, "Value Data set is 123")
+        console.log(val.target.value, "Target Value is")
+
+        var title = ""
 
 
-        updateDeliveryStatus(e.id, val.target.value, e.category)
+
+        if (val.target.value == "Approved") {
+            title = "Do You Want to Confirm This Order"
+        }
+        else {
+            title = "Do You Want to Cancel This Order"
+        }
+
+        // Swal.fire({
+        //     title: "Are you sure?",
+        //     text: title,
+        //     icon: "question",
+        //     showCancelButton: true,
+        //     confirmButtonColor: "#2eb85c",
+        //     cancelButtonColor: "#d33",
+        //     confirmButtonText: "Yes"
+        // }).then((result) => {
+        //     console.log(result, "IS Confirmed")
+
+        //     if (result.isConfirmed) {
+
+        updateDeliveryStatus(e.id, val.target.value, e.category).then(result => {
+            console.log(result)
+            reload()
+            Swal.fire({
+                title: "Order " + e.id + " Confirmed",
+                text: "Order - " + e.id + " Order Confirmed",
+                icon: "success"
+            });
+        })
+
+        //     }
+        // });
+
+
 
         // props.relord();
     }
@@ -453,23 +590,37 @@ function ProductDetails(props) {
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
             {
-                field: 'del_status', title: 'Order Status', align: 'left', hidden: props.hideStatus, render: (e) => {
+                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
                     return (
                         <>
-                            <select className='form-select required' name='delivery_status' onChange={(value) => handleDelStatusChange(e, value)}>
-                                {e.del_status == "Pending" ?
-                                    <option value="Pending" selected>Pending</option>
-                                    :
-                                    <option value="Pending">Pending</option>
-                                }
-                                {e.del_status == "Confirmed" ?
-                                    <option value="Confirmed" selected>Confirmed</option>
-                                    :
-                                    <option value="Confirmed">Confirmed</option>
-                                }
+                            {e.supplier_order === 'Pending' ? (
+                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+                            ) : (
+                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+                            )}
+                        </>
+                    );
+                }
+            },
+            {
+                field: 'status',
+                title: 'Order Status',
+                align: 'left',
+                hidden: props.hideStatus,
+                render: (e) => {
+                    return (
+                        <>
+                            <select
+                                className='form-select required'
+                                name='delivery_status'
+                                onChange={(value) => handleDelStatusChange(e, value)}
+                                value={e.status} // Set the selected value here
+                            >
+                                <option value="Approved">Confirm Order</option>
+                                <option value="Cancelled">Cancel Order</option>
                             </select>
                         </>
-                    )
+                    );
                 }
             },
         ],
@@ -484,7 +635,8 @@ function ProductDetails(props) {
             balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
             paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
             total_amount: value.currency + " " + (value.total_amount || "0.00"),
-            del_status: value
+            supplier_order: value.supplier_status,
+            status: value.status
         }))
     }
 
@@ -655,7 +807,7 @@ function ProductDetails(props) {
                 </div>
 
                 {console.log("product data value is ", productData)}
-
+                {console.log(customerData, "Customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")}
                 {props?.accounts ?
                     null :
                     <>
@@ -675,9 +827,19 @@ function ProductDetails(props) {
                                 <SupDetails dataset={productData} orderid={props.orderid} />
                             </Tab>
 
+
+
                             <Tab eventKey="customer" title="Customer Details">
                                 <CustomerDetails dataset={customerData} orderid={props.orderid} />
                             </Tab>
+
+                            <Tab eventKey="location" title="Location Details">
+                                <DeliveryDetails dataset={productData} />
+                            </Tab>
+
+
+
+
 
                             {/* <Tab eventKey="feedback" title="Feedback Details">
                                 <FeebackDetails dataset={productData} orderid={props.orderid} />
