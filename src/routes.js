@@ -2,6 +2,7 @@ import React from 'react'
 import VendorList from './views/VendorList/VendorList'
 import ProductList from './views/Products/ProductsList'
 import ProductAnalytics from './views/Products/ProductAnalytics'
+import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -68,12 +69,14 @@ const routes = [
 
   { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
-  { path: '/sales', name: 'Sales', element: Sales, exact: true },
+  // { path: '/sales', name: 'Sales', element: Sales, exact: true },
   { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
 
   { path: '/products', name: 'Products', element: ProductList },
   { path: '/products/analytics', name: 'Product Analytics', element: ProductAnalytics },
+  { path: '/sales', name: 'Sales Analytics', element: SalesAnalytics, exact: true },
+
 
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },

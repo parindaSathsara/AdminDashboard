@@ -45,12 +45,23 @@ const _nav = [
     icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
   },
 
+
   {
     component: CNavItem,
     name: 'Customers',
     to: '/customers',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
+
+
+
+  {
+    component: CNavItem,
+    name: 'Sales Analytics',
+    to: '/sales',
+    icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
+  },
+
 
   {
     component: CNavGroup,
