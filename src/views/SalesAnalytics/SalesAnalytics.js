@@ -9,10 +9,9 @@ import {
   CChartPolarArea,
   CChartRadar,
 } from '@coreui/react-chartjs'
-import { DocsCallout } from 'src/components'
-import { error } from 'jquery'
 import { createTheme, ThemeProvider } from '@mui/material'
 import MaterialTable from 'material-table'
+
 
 const Charts = () => {
   const random = () => Math.round(Math.random() * 100)
@@ -55,26 +54,45 @@ const Charts = () => {
     } 
   }
 
-  const getSalesChart = async() => {
-      try{
-        const response = await axios.get('get_all_sales_total');
-        console.log(response);
-        if(response.data.status === 200){
-          setSales(response.data.sales);
-        }
-      }catch (error) {
-        console.log(error);
-      }
+  const handleChangeSales = async (event) => {
+    const time = event.target.value;
+    console.log(time);
+    getSalesChart(time);
+  };
+
+  const handleChangeProducts = async (event) => {
+    const time = event.target.value;
+    console.log(time);
+    getProductCount(time);
   }
 
-  const getProductCount = async () => {
+  async function getSalesChart(time) {
     try {
-        const response = await axios.get('get_all_category_products');
+
+        await axios.get(`get_all_sales_total/${time}`).then((response) => {
+
+          console.log(response);
+          if(response.data.status === 200){
+            setSales(response.data.sales);
+          }
+
+
+        }).catch((err) => {
+          console.log(err);
+        })
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+  const getProductCount = async (time) => {
+    try {
+        const response = await axios.get(`get_all_category_products/${time}`);
         if (response.data.status === 200) {
             setProductCounts(response.data.productCounts);
         }
     } catch (error) {
-        console.error('Error fetching product counts:', error);
+        console.log('Error fetching product counts:', error);
     }
   };
 
@@ -91,7 +109,7 @@ const Charts = () => {
       console.log(error);
     }
   };
- 
+
   useEffect(() => {
     getSalesChart()
     getProductCount()
@@ -130,14 +148,12 @@ const Charts = () => {
       }else {
         $category = 'Flight';
       }
-      console.log(value, 'productsCountttttttt');
+
       return {
           order_id: value.id,
           category: $category,
           total_amount: value.total_price,
           checkout_date: value.checkout_date,
-          // total_amount: value.payment_type,
-          // checkout_date: value.pay_category,
       }
   })
 }
@@ -148,6 +164,12 @@ const Charts = () => {
         <CCard className="mb-4">
           <CCardHeader>Product Category Chart</CCardHeader>
           <CCardBody>
+          <select name="selectedFruit" style={{ border: "none"}} onChange={handleChangeProducts}>
+            <option style={{ border: "none"}} value="3_months">Three Months</option>
+            <option style={{ border: "none"}} value="weekly">This Week</option>
+            <option style={{ border: "none"}} value="monthly">This Month</option>
+            <option style={{ border: "none"}} value="yearly">This Year</option>
+          </select>
             <CChartBar
               data={{
                 labels: ['Lifestyle', 'Essential', 'Non Essential', 'Hotel', 'Education'],
@@ -176,7 +198,7 @@ const Charts = () => {
           <CCardBody>
 
           {console.log(monthlyProducts.hotels,"LS PRODUCTS")}
-            <CChartLine 
+            <CChartLine className='mt-4'
               data={{
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Set', 'Oct', 'Nov', 'Dec'],
                 datasets: [
@@ -248,6 +270,12 @@ const Charts = () => {
         <CCard className="mb-4">
           <CCardHeader>Sales Total Chart - USD</CCardHeader>
           <CCardBody>
+            <select name="selectedFruit" style={{ border: "none"}} onChange={handleChangeSales}>
+              <option style={{ border: "none"}} value="3 months">Three Months</option>
+              <option style={{ border: "none"}} value="weekly">This Week</option>
+              <option style={{ border: "none"}} value="monthly">This Month</option>
+              <option style={{ border: "none"}} value="yearly">This Year</option>
+            </select>
             <CChartPie
               data={{
                 labels: ['Essential', 'Non Essential', 'Lifestyle', 'Education', 'Hotel'],
