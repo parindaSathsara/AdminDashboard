@@ -61,6 +61,7 @@ import AdditionalData from 'src/Panels/AdditionalData/AdditionalData'
 import MailBox from 'src/Panels/MailBox/MailBox'
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
 import Cards from '../base/cards/Cards'
+import OrderDetails from 'src/Panels/OrderDetails/OrderDetails'
 
 
 
@@ -285,7 +286,7 @@ const Dashboard = () => {
                 return (
                   <div className='mainContainerTables'>
                     <div className="col-md-12 mb-4 sub_box materialTableDP">
-                      <ProductDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
+                      <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
                     </div>
 
 

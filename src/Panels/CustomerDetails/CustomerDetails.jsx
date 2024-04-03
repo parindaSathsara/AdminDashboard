@@ -97,9 +97,9 @@ function CustomerDetails(props) {
                                     exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                                     grouping: false, columnsButton: false,
-                                    rowStyle: { fontSize: "12px", width: "100%", color: "#000" },
+                                    rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
                                     editCellStyle: { width: "100%" },
-                                    headerStyle: { fontSize: "13px", backgroundColor: '#D8EFFF' }
+                                    headerStyle: { fontSize: "16px", backgroundColor: '#D8EFFF' }
 
                                     // fixedColumns: {
                                     //     left: 6
