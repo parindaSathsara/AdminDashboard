@@ -125,7 +125,6 @@ const routes = [
   { path: "/login", name: 'login', element: Login },
   { path: "/register", name: 'register', element: Register }
 
-
 ]
 
 export default routes
