@@ -1,0 +1,32 @@
+.prod_details_title{
+    /* text-align: center; */
+    margin: 5px;
+    font-size: 18px;
+    text-transform: uppercase;
+    /* text-decoration: underline; */
+}
+
+.prod_container{
+    /* margin: 10px; */
+    /* width: 700px; */
+}
+
+.data_grid{
+    background-color: #fff;
+}
+
+.Essential{
+    background-color: #c0d8c1 !important;
+}
+
+.Lifestyle{
+    background-color: #f1c0c0 !important;
+}
+
+.Non{
+    background-color: #b3dbf1 !important;
+}
+
+.Flight{
+    background-color: #b3b4f9 !important;
+}
