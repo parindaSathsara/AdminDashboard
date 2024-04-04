@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom'
+
 import {
   CButton,
   CCard,
@@ -10,11 +13,49 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilLockLocked, cilUser } from '@coreui/icons';
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [role, setRole] = useState('');  
+
+  const handleRegister = () => {
+   
+    if (password !== repeatPassword) {
+      alert("Passwords don't match");
+      return;
+    }
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Include CSRF token in the request headers
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': csrfToken
+    };
+    axios.post('http://192.168.1.4:8000/api/create_admin_user', {
+      name: username,
+      email: email,
+      password: password,
+      role: role, 
+    }, { headers: headers })
+    .then(response => {
+      console.log(response.data);
+      alert('Registration successful');
+      navigate('/login'); // Redirect to login page
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Registration failed');
+    });
+  };
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -29,34 +70,65 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Username" autoComplete="username" />
+                    <CFormInput 
+                      placeholder="Username" 
+                      autoComplete="username"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autoComplete="email" />
+                    <CFormInput 
+                      placeholder="Email" 
+                      autoComplete="email" 
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Password"
+                    <CFormInput 
+                      type="password" 
+                      placeholder="Password" 
                       autoComplete="new-password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Repeat password"
+                    <CFormInput 
+                      type="password" 
+                      placeholder="Repeat password" 
                       autoComplete="new-password"
+                      value={repeatPassword}
+                      onChange={e => setRepeatPassword(e.target.value)}
                     />
                   </CInputGroup>
+                  {/* Role selection dropdown */}
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                    <CIcon icon={cilUser} />
+                    </CInputGroupText>
+                    <select
+                      className="form-select"
+                      value={role}
+                      onChange={e => setRole(e.target.value)}
+                    >
+                      <option value="">Select Role</option>
+                      <option value="admin">Admin</option>
+                      <option value="accountant">Accountant</option>
+                      <option value="supplier">Supplier</option>
+                      <option value="booking">Booking</option>
+                    </select>
+                  </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success">Create Account</CButton>
+                    <CButton color="success" onClick={handleRegister}>Create Account</CButton>
                   </div>
                 </CForm>
               </CCardBody>
@@ -65,7 +137,7 @@ const Register = () => {
         </CRow>
       </CContainer>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;

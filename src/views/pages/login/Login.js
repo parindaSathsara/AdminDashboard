@@ -29,7 +29,7 @@ const Login = () => {
   const { http_call, setToken } = AuthUser();
 
   const [loginInput, setLoginInput] = useState({
-    username: '',
+    email: '',
     password: ''
   });
 
@@ -41,36 +41,58 @@ const Login = () => {
   }
 
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const formdata = new FormData();
-    // formdata.append('_token', csrfToken); // Make sure to replace csrfToken with the actual token.
-    formdata.append('username', loginInput.username);
-    formdata.append('password', loginInput.password);
+    // const formdata = new FormData();
+    // formdata.append('_token', csrfToken);
+    // formdata.append('email', loginInput.username);
+    // formdata.append('password', loginInput.password);
 
-    console.log(...formdata)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': csrfToken
+    };
 
     // axios.get('/sanctum/csrf-cookie', { withCredentials: true }).then((response) => {
-    axios.post('/user_login', formdata).then((res) => {
-      console.log(res)
-      if (res.data.status === 200) {
-        console.log("login completed")
-        setToken(res.data.user, res.data.access_token);
-        navigate('/dashboard')
-      }
-      if (res.data.status === 401) {
-        // toast.error('Unauthorized User | Please check the credentials again!', {
-        //     style: {
-        //         background: '#333',
-        //         color: '#fff',
-        //     }
-        // })
-      }
-    }).catch((err) => {
-     console.log(err,"Error is")
-      throw new Error(err);
-    });
+    // console.log(formdata)
+
+    console.log(csrfToken)
+    console.log(loginInput)
+
+    try {
+
+      await axios.post('http://192.168.1.4:8000/api/user_login', loginInput,
+        {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        }
+      ).then((res) => {
+        console.log(res)
+        if (res.data.status === 200) {
+          setToken(res.data.user, res.data.access_token);
+          localStorage.setItem('user',res.data.user);
+          localStorage.setItem('token',res.data.access_token);
+          navigate('/dashboard')
+        }
+        if (res.data.status === 401) {
+          // toast.error('Unauthorized User | Please check the credentials again!', {
+          //     style: {
+          //         background: '#333',
+          //         color: '#fff',
+          //     }
+          // })
+        }
+      }).catch((err) => {
+        console.log(err, "Error is")
+        // throw new Error(err);
+      });
+
+
+    } catch (error) {
+      console.log(error)
+    }
     // })
   }
 
@@ -100,7 +122,7 @@ const Login = () => {
                         <CInputGroupText>
                           <CIcon icon={cilUser} />
                         </CInputGroupText>
-                        <CFormInput placeholder="Username" autoComplete="username" name='username' onChange={handleInputChange} />
+                        <CFormInput placeholder="Username" autoComplete="username" name='email' onChange={handleInputChange} />
                       </CInputGroup>
                       <CInputGroup className="mb-4">
                         <CInputGroupText>
