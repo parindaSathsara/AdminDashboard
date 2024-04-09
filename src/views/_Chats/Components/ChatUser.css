@@ -1,0 +1,14 @@
+.chat-user{
+  /* border: 1px solid lightgray; */
+  height: 8vh;
+  border-radius: 5px;
+  transition: 100ms;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 20px;
+}
+.chat-user:hover{
+  background: rgba(211, 211, 211, 0.401);
+  cursor: pointer;
+}
