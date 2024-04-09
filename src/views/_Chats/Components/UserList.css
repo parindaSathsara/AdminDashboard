@@ -3,9 +3,10 @@
   padding: 5px;
   background: white;
   border-radius: 5px;
+  height: 73vh;
 }
 .search{
-  padding: 30px;
+  padding: 3vh;
 }
 .search-input{
   border-radius: 20px;;
@@ -30,7 +31,7 @@
 .chat-group{
   overflow-y: scroll;
   overflow-x: hidden;
-  max-height: 60vh;
+  height: 50vh;
 }
 
 .chat-group::-webkit-scrollbar {
