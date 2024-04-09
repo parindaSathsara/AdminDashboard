@@ -1,7 +1,16 @@
 .message-list{
   /* flex:3; */
-  padding: 10px;
   background: white;
   margin-left: 10px;
   border-radius: 5px;
+  height: 73vh;
+  display: flex;
+  flex-direction: column;
+}
+.message-list-header-bar{
+  /* height: 5vh; */
+  background: #002c66;
+  border-radius: 5px;
+  margin-left: 1px;
+  margin-right: 1px;
 }
