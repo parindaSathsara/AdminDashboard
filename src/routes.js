@@ -14,7 +14,7 @@ const DeliveryDepartment = React.lazy(() => import('./views/Departments/Delivery
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 const AccountSystem = React.lazy(() => import('./views/theme/AccountSystem/AccountSystem'))
-const ChatsHome = React.lazy(() => import('./views/theme/Chats/Chatshome'))
+const ChatsHome = React.lazy(() => import('./views/Chats/Chatshome'))
 
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
