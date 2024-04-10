@@ -14,3 +14,22 @@
   margin-left: 1px;
   margin-right: 1px;
 }
+.message-container{
+  overflow-y: auto;
+  /* scroll-behavior: smooth; */
+}
+.message-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.message-container::-webkit-scrollbar-thumb {
+  background-color: #88888863;
+}
+
+.cmessage-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.message-container::-webkit-scrollbar-corner {
+  background-color: transparent;
+}

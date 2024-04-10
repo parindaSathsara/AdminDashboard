@@ -24,15 +24,25 @@ const ConversationsList = (props) => {
 
   const [conversationType, setConversationType] = useState('private');
 
-
   const sendActivateConversation = (conversation) => {
     props.sendActivateConversation(conversation);
   };
 
+  const [searchText, setSearchText] = useState('');
+
+  const filterConversations = (conversations) => {
+    return conversations.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+  }
+
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  }
+
   return (
+
     <div className='user-list'>
       <div className='search'>
-        <CFormInput type="text" className='search-input' placeholder="Search" />
+        <CFormInput type="text" className='search-input' placeholder="Search" onChange={handleSearch} />
       </div>
       <CRow className='p-3'>
         <CCol className={`d-flex justify-content-center align-items-center custom-button ${conversationType === "private" ? "custom-button-active" : ""}`} onClick={() => { setConversationType('private') }}>Private</CCol>
@@ -40,10 +50,10 @@ const ConversationsList = (props) => {
       </CRow>
 
       <CListGroup className='chat-group'>
-        {conversationType === "private" && privateConversations.map((conversation, index) => (
+        {conversationType === "private" && filterConversations(privateConversations).map((conversation, index) => (
           <Conversation activatedConversation={props.activatedConversation} key={index} id={conversation.id} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
         ))}
-        {conversationType === "group" && groupConversations.map((conversation, index) => (
+        {conversationType === "group" && filterConversations(groupConversations).map((conversation, index) => (
           <Conversation activatedConversation={props.activatedConversation} key={index} id={conversation.id} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
         ))}
       </CListGroup>
