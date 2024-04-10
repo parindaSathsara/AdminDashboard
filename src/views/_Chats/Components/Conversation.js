@@ -5,7 +5,7 @@ import { CRow, CCol, CAvatar, CCardText } from '@coreui/react';
 
 const Conversation = (props) => {
   return (
-    <div>
+    <div onClick={props.onClick}>
       <CRow className='chat-user d-flex align-items-center'>
         <CCol sm={3} className='text-center'>
           <CAvatar color="primary" textColor="white" size="lg">AV</CAvatar>
