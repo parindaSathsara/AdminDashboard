@@ -1,9 +1,9 @@
 import React from 'react';
-import './ChatUser.css';
+import './Conversation.css';
 import { CRow, CCol, CAvatar, CCardText } from '@coreui/react';
 
 
-const ChatUser = (props) => {
+const Conversation = (props) => {
   return (
     <div>
       <CRow className='chat-user d-flex align-items-center'>
@@ -18,4 +18,4 @@ const ChatUser = (props) => {
   )
 }
 
-export default ChatUser
+export default Conversation
