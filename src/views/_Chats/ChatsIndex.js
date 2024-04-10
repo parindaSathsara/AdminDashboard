@@ -16,7 +16,7 @@ const ChatsIndex = () => {
     <div className='chat-index'>
       <CRow>
         <CCol xs={4}>
-          <ConversationsList sendActivateConversation={receiveActivateConversation}></ConversationsList>
+          <ConversationsList activatedConversation={activatedConversation} sendActivateConversation={receiveActivateConversation}></ConversationsList>
         </CCol>
         <CCol xs={8}>
           <MessageList conversation={activatedConversation}></MessageList>
