@@ -13,7 +13,7 @@ const textColor = {
   color: 'white'
 }
 
-const MessageList = () => {
+const MessageList = (props) => {
   return (
     <div className='message-list'>
       <CRow className='message-list-header-bar p-3'>
@@ -21,7 +21,7 @@ const MessageList = () => {
           <CAvatar color="primary" textColor="white" size="m">UM</CAvatar>
         </CCol>
         <CCol style={textColor} className='d-flex align-items-center' sm={9}>
-          Umayanga Vidunuwan
+          {props.conversation && props.conversation.name}
         </CCol>
         <CCol className='d-flex justify-content-between align-items-center' style={textColor} sm={2}>
           <FontAwesomeIcon icon={faUserPlus} />

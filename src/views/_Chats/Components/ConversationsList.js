@@ -5,7 +5,7 @@ import Conversation from './Conversation';
 import { id } from 'date-fns/locale';
 
 
-const ConversationsList = () => {
+const ConversationsList = (props) => {
 
   const privateConversations = [
     { id: 1, name: "Umayanga" },
@@ -24,6 +24,11 @@ const ConversationsList = () => {
 
   const [conversationType, setConversationType] = useState('private');
 
+
+  const sendActivateConversation = (conversation) => {
+    props.sendActivateConversation(conversation);
+  };
+
   return (
     <div className='user-list'>
       <div className='search'>
@@ -33,12 +38,13 @@ const ConversationsList = () => {
         <CCol className={`d-flex justify-content-center align-items-center custom-button ${conversationType === "private" ? "custom-button-active" : ""}`} onClick={() => { setConversationType('private') }}>Private</CCol>
         <CCol className={`d-flex justify-content-center align-items-center custom-button ${conversationType === "group" ? "custom-button-active" : ""}`} onClick={() => { setConversationType('group') }}>Group</CCol>
       </CRow>
+
       <CListGroup className='chat-group'>
-        {conversationType === "private" && privateConversations.map((conversation) => (
-          <Conversation name={conversation.name} />
+        {conversationType === "private" && privateConversations.map((conversation, index) => (
+          <Conversation key={index} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
         ))}
-        {conversationType === "group" && groupConversations.map((conversation) => (
-          <Conversation name={conversation.name} />
+        {conversationType === "group" && groupConversations.map((conversation, index) => (
+          <Conversation key={index} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
         ))}
       </CListGroup>
     </div >
