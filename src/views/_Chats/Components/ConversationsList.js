@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ConversationsList.css';
 import { CRow, CCol, CFormInput, CListGroup, CListGroupItem, CButtonGroup, CButton } from '@coreui/react';
-import ChatUser from './ChatUser';
+import Conversation from './Conversation';
 import { id } from 'date-fns/locale';
 
 
@@ -35,10 +35,10 @@ const ConversationsList = () => {
       </CRow>
       <CListGroup className='chat-group'>
         {conversationType === "private" && privateConversations.map((conversation) => (
-          <ChatUser name={conversation.name} />
+          <Conversation name={conversation.name} />
         ))}
         {conversationType === "group" && groupConversations.map((conversation) => (
-          <ChatUser name={conversation.name} />
+          <Conversation name={conversation.name} />
         ))}
       </CListGroup>
     </div >
