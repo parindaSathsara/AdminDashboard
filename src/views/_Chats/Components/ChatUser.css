@@ -1,12 +1,9 @@
 .chat-user{
   /* border: 1px solid lightgray; */
-  height: 8vh;
+  height: 9vh;
   border-radius: 5px;
   transition: 100ms;
-  display: flex;
-  /* justify-content: center; */
-  align-items: center;
-  padding: 20px;
+  /* padding-left: 20px; */
 }
 .chat-user:hover{
   background: rgba(211, 211, 211, 0.401);

@@ -1,17 +1,17 @@
 import React from 'react';
 import './ChatUser.css';
-import {CRow,CCol,CAvatar} from '@coreui/react';
+import { CRow, CCol, CAvatar, CCardText } from '@coreui/react';
 
 
-const ChatUser = () => {
+const ChatUser = (props) => {
   return (
-    <div className='chat-user'>
-      <CRow>
-        <CCol xs={4}>
-          <CAvatar color="primary" textColor="white" size="lg">UM</CAvatar>
+    <div>
+      <CRow className='chat-user d-flex align-items-center'>
+        <CCol sm={3} className='text-center'>
+          <CAvatar color="primary" textColor="white" size="lg">AV</CAvatar>
         </CCol>
-        <CCol className='align-self-center' xs={8}>
-          Umayanga
+        <CCol sm={9}>
+          <CCardText>{props.name}</CCardText>
         </CCol>
       </CRow>
     </div>
