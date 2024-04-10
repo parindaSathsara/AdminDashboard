@@ -41,10 +41,10 @@ const ConversationsList = (props) => {
 
       <CListGroup className='chat-group'>
         {conversationType === "private" && privateConversations.map((conversation, index) => (
-          <Conversation key={index} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
+          <Conversation activatedConversation={props.activatedConversation} key={index} id={conversation.id} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
         ))}
         {conversationType === "group" && groupConversations.map((conversation, index) => (
-          <Conversation key={index} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
+          <Conversation activatedConversation={props.activatedConversation} key={index} id={conversation.id} name={conversation.name} onClick={() => sendActivateConversation(conversation)} />
         ))}
       </CListGroup>
     </div >

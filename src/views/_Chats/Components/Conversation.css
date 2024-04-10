@@ -6,6 +6,9 @@
   /* padding-left: 20px; */
 }
 .chat-user:hover{
-  background: rgba(211, 211, 211, 0.401);
+  background: rgba(211, 211, 211, 0.286);
   cursor: pointer;
+}
+.chat-user-active{
+  background: rgba(211, 211, 211, 0.553);
 }
