@@ -38,6 +38,6 @@
   color: white;
   transition: 100ms;
 }
-.message-content:hover ~ .fa-icons{
+.message-main:hover .fa-icons{
   color: black;
 }
