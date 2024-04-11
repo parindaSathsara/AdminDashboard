@@ -1,5 +1,4 @@
 .message-content{
-  background: rgba(227, 224, 224, 0.438);
   border-radius: 10px;
   padding: 10px;
   max-width: 200px;
@@ -7,6 +6,8 @@
 .Supplier{
   display: flex;
   justify-content: end;
+  flex-direction: row-reverse;
+  align-items: center;
 }
 .Supplier div{
   background: rgba(11, 173, 188, 0.319);
@@ -15,8 +16,28 @@
 .Customer{
   display: flex;
   justify-content: end;
+  flex-direction: row-reverse;
+  align-items: center;
 }
 .Customer div{
   background: rgb(67, 92, 217);
   color: white;
+  margin-left:5px;
+}
+.Admin{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.Admin div{
+  background: rgba(227, 224, 224, 0.438);
+  margin-right:5px;
+}
+.fa-icons{
+  margin: 1px;
+  color: white;
+  transition: 100ms;
+}
+.message-content:hover ~ .fa-icons{
+  color: black;
 }
