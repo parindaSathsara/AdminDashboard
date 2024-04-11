@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Message = (props) => {
   return (
     <div className='p-1'>
-      <CRow className={`${props.messageData && props.messageData.role != 'Admin' ? 'flex-row-reverse' : ''}`}>
+      <CRow className={`message-main ${props.messageData && props.messageData.role != 'Admin' ? 'flex-row-reverse' : ''}`}>
         <CCol sm={1} className='text-center'>
           <CAvatar color="primary" textColor="white" size="m">AV</CAvatar>
         </CCol>
