@@ -62,6 +62,7 @@ import MailBox from 'src/Panels/MailBox/MailBox'
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
 import Cards from '../base/cards/Cards'
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails'
+import BookingExperience from 'src/Panels/OrderDetails/DepartmentWise/BookingExperience'
 
 
 
@@ -270,6 +271,9 @@ const Dashboard = () => {
             </CCol>
 
           </CRow>
+
+
+          {/* <BookingExperience></BookingExperience> */}
 
 
 
