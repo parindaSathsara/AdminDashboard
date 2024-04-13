@@ -190,8 +190,8 @@ function AccountsDetails(props) {
                                                                 <tr>
                                                                     <th scope="col">Payment Status</th>
                                                                     <th scope="col">Payment Result</th>
-                                                                    <th scope="col">Transaction Token</th>
-                                                                    <th scope="col">Authentication Status</th>
+                                                                    <th scope="col">Gateway</th>
+
                                                                     <th scope="col">Checkout Date</th>
 
                                                                 </tr>
@@ -205,8 +205,8 @@ function AccountsDetails(props) {
                                                                             <td>{dataset['result']}</td>
                                                                     }
                                                                     <td>{dataset['trans_token']}</td>
-                                                                    <td>{dataset['auth_status']}</td>
-                                                                    <td>{dataset['checkout_date']}</td>
+                                                                    <td>{dataset['gateway_type']}</td>
+                                                                    <td>{dataset['created_at']}</td>
                                                                 </tr>
 
                                                             </tbody>
