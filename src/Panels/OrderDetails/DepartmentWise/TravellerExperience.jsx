@@ -1,12 +1,15 @@
 
 
 
-import React from 'react'
+import React, { useState } from 'react'
 import MaterialTable from 'material-table';
-import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
+import { CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilInfo } from '@coreui/icons';
+import Modal from 'react-bootstrap/Modal';
+import DeliveryDetails from 'src/Panels/DeliveryDetails/DeliveryDetails';
 
-
-export default function BookingExperience(props) {
+export default function TravellerExperience(props) {
 
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
@@ -108,57 +111,78 @@ export default function BookingExperience(props) {
                         <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.MaxChildOccupancy}</h6></CCol>
                     </CRow>
 
-
-
-
-
-
                 </CCol>
             )
         }
 
     }
 
+
+    const qcValues = ['Approved', 'Pending'];
+    const deliveryStatusValues = ['Delivered', 'Pending'];
+
+   
+    const [mapView, setMapView] = useState(false)
+
+    const [mapViewData, setMapViewData] = useState([])
+
+    const getMapView = async (data) => {
+
+
+        setMapView(true)
+        setMapViewData(data)
+
+        
+
+       
+    }
+
+
     const columns = [
-        { title: 'Product ID', field: 'pid' },
-        { title: 'Name', field: 'name' },
-        {
-            title: 'QTY', field: 'qty', render: rowData =>
-                <CPopover
-                    content={<QuantityContainer data={rowData.qty} />}
-                    placement="top"
-                    title="Quantity Data"
-                    style={customPopoverStyle}
-                >
-                    <CButton color="success" style={{ fontSize: 14,color:'white' }}>View</CButton>
-                </CPopover>
+        { title: 'PID', field: 'pid' },
+        { title: 'Delivery Date', field: 'deliveryDate', type: 'date' },
+        { title: 'Location', field: 'location', render: rowData =>  <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
+        { title: 'Reconfirmation Date', field: 'reconfirmationDate', type: 'date', render: rowData => <CFormInput type="date" value={rowData.reconfirmationDate} onChange={(e) => handleReconfirmationDateChange(e.target.value, rowData)} /> },
+        { title: 'Q/C', field: 'qc', render: rowData => <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
+        { title: 'Delivery Status', field: 'deliveryStatus', render: rowData => <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect> },
+        // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
+    ];
 
-        },
-        { title: 'Date', field: 'date' },
-        { title: 'Address', field: 'address' },
+    // Function to handle changes to the Reconfirmation Date
+    const handleReconfirmationDateChange = (date, rowData) => {
+        // You can handle the date change here, e.g., update rowData.reconfirmationDate
+    };
 
-        { title: 'Total Amount', field: 'total_amount' },
-        { title: 'Paid Amount', field: 'paid_amount' },
-        { title: 'Balance Amount', field: 'balance_amount' }
-    ]
-
-
+    // Prepare the data for the Material Table
     const data = productData.map(value => ({
         pid: value?.['PID'],
-        name: value?.['PName'],
-        qty: value,
-        date: value?.['DDate'],
-        address: value?.['DAddress'],
-        total_amount: value.currency+ " "+value?.['total_amount'],
-        paid_amount: value.currency+ " "+value?.['paid_amount'],
-        balance_amount: value.currency+" "+ value?.['balance_amount']
-    }))
+        deliveryDate: value?.service_date,
+        location: value?.location,
+        reconfirmationDate: value?.reconfirmationDate,
+        qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
+        deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
+        data:value
+        // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
+    }));
 
 
     return (
         <>
+          
+          <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen">
+                <Modal.Header closeButton>
+                    <Modal.Title>Location Data</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <DeliveryDetails dataset={mapViewData}></DeliveryDetails>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+
             <MaterialTable
-                title="Booking Experience"
+                title="Traveller Experience"
                 columns={columns}
                 data={data}
                 options={{
@@ -172,7 +196,9 @@ export default function BookingExperience(props) {
                     search: false,
                     columnsButton: true,
                     exportButton: true,
+                    grouping: true,
                 }}
+
 
             />
         </>

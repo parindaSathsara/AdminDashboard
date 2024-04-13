@@ -26,6 +26,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt, faChevronDown, faExpand } from '@fortawesome/free-solid-svg-icons';
 import BookingExperience from './DepartmentWise/BookingExperience';
 import SupplierExperience from './DepartmentWise/SupplierExperience';
+import DateWiseSummary from './DateWiseSummary/DateWiseSummary';
+import TravellerExperience from './DepartmentWise/TravellerExperience';
 
 function OrderDetails(props) {
 
@@ -36,6 +38,8 @@ function OrderDetails(props) {
     const [productData, setProductData] = useState([])
     const [showModal, setShowModal] = useState(false);
     const [rowDetails, setRowDetails] = useState([])
+
+    const [dates, setDates] = useState([])
 
 
 
@@ -128,6 +132,7 @@ function OrderDetails(props) {
             setHotelData(res.hotelData)
             setProductData(res.productData)
             setCustomerData(res.customerData)
+            setDates(res.dates)
 
             console.log(res.customerData, "CustomerData value is data ")
         })
@@ -201,6 +206,8 @@ function OrderDetails(props) {
                 }
             },
 
+            { field: 'pid', title: 'Product ID' },
+
             { field: 'product_title', title: 'Product Title' },
             { field: 'adultCount', title: 'Adult Count', align: 'left' },
             { field: 'childCount', title: 'Child Count', align: 'left' },
@@ -251,6 +258,7 @@ function OrderDetails(props) {
         rows: lifestylesData?.map(value => ({
 
             id: value.checkoutID,
+            pid: value.PID,
             product_title: value.product_title,
             childCount: value.childCount,
             adultCount: value.adultCount,
@@ -299,6 +307,7 @@ function OrderDetails(props) {
 
             },
 
+            { field: 'pid', title: 'Product ID' },
 
             { field: 'product_title', title: 'Product Title' },
             { field: 'student_type', title: 'Student Type', align: 'left' },
@@ -357,6 +366,7 @@ function OrderDetails(props) {
 
         rows: educationData?.map(value => ({
             id: value.checkoutID,
+            pid: value.PID,
             product_title: value.product_title,
             student_type: value.student_type,
             balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
@@ -389,6 +399,8 @@ function OrderDetails(props) {
                     );
                 }
             },
+
+            { field: 'pid', title: 'Product ID' },
             { field: 'product_title', title: 'Product Title' },
             { field: 'quantity', title: 'Quantity', align: 'left' },
             { field: 'preffered_date', title: 'Preferred Date', align: 'left' },
@@ -399,19 +411,19 @@ function OrderDetails(props) {
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
 
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
             {
                 field: 'status',
                 title: 'Order Status',
@@ -439,6 +451,8 @@ function OrderDetails(props) {
 
         rows: essNEssData?.map(value => ({
             id: value.checkoutID,
+
+            pid: value.PID,
             product_title: value.product_title,
             quantity: value.quantity,
             preffered_date: value.preffered_date,
@@ -675,6 +689,152 @@ function OrderDetails(props) {
 
 
 
+    const ServiceWiseSummary = () => {
+        return (
+            <>
+                {lifestylesData?.length > 0 ?
+                    <MaterialTable
+                        data={lifestyles.rows}
+                        columns={lifestyles.columns}
+                        title="Lifestyles Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+
+                <br></br>
+
+
+                {educationData?.length > 0 ?
+                    <MaterialTable
+                        data={educations.rows}
+                        columns={educations.columns}
+                        title="Education Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+
+                <br></br>
+
+                {essNEssData?.length > 0 ?
+                    <MaterialTable
+                        data={essNEss.rows}
+                        columns={essNEss.columns}
+                        title="Essentials/Non Essentials Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+
+
+                {hotelData?.length > 0 ?
+                    <MaterialTable
+                        data={hotels.rows}
+                        columns={hotels.columns}
+                        title="Hotels Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+
+                }
+
+
+
+                {flightsData?.length > 0 ?
+                    <MaterialTable
+                        data={flights.rows}
+                        columns={flights.columns}
+                        title="Flights Details"
+                        options={{
+                            tableLayout: "auto",
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+            </>
+        )
+    }
+
 
 
     return (
@@ -714,146 +874,25 @@ function OrderDetails(props) {
 
 
                     <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
-                    {lifestylesData?.length > 0 ?
-                        <MaterialTable
-                            data={lifestyles.rows}
-                            columns={lifestyles.columns}
-                            title="Lifestyles Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
 
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
+                    <Tabs
+                        defaultActiveKey="service"
+                        id="uncontrolled-tab-example"
+                        className="mt-4"
+                        style={{
+                            fontSize: 16
+                        }}
+                    >
 
-                    <br></br>
+                        <Tab eventKey="service" title="Service Wise">
+                            <ServiceWiseSummary></ServiceWiseSummary>
+                        </Tab>
+                        <Tab eventKey="date" title="Day Wise">
+                            <DateWiseSummary dataset={productData} orderid={props.orderid} dates={dates} handleMoreInfoModal={handleMoreInfoModal} />
+                        </Tab>
 
 
-                    {educationData?.length > 0 ?
-                        <MaterialTable
-                            data={educations.rows}
-                            columns={educations.columns}
-                            title="Education Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
-
-                    <br></br>
-
-                    {essNEssData?.length > 0 ?
-                        <MaterialTable
-                            data={essNEss.rows}
-                            columns={essNEss.columns}
-                            title="Essentials/Non Essentials Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
-
-
-                    {hotelData?.length > 0 ?
-                        <MaterialTable
-                            data={hotels.rows}
-                            columns={hotels.columns}
-                            title="Hotels Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-
-                    }
-
-
-
-                    {flightsData?.length > 0 ?
-                        <MaterialTable
-                            data={flights.rows}
-                            columns={flights.columns}
-                            title="Flights Details"
-                            options={{
-                                tableLayout: "auto",
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
-
+                    </Tabs>
 
 
 
@@ -861,8 +900,7 @@ function OrderDetails(props) {
 
                 </div>
 
-                {console.log("product data value is ", productData)}
-                {console.log(customerData, "Customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")}
+
                 {props?.accounts ?
                     null :
                     <>
@@ -871,49 +909,43 @@ function OrderDetails(props) {
 
 
 
+                            <button onClick={() => setDetailExpander(true)} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', float: 'right', top: '20px' }}>
+                                <FontAwesomeIcon icon={faExpand} size={30} />
+                            </button>
+
 
                             <Tabs
-                                defaultActiveKey="acc"
+                                defaultActiveKey="bookingexperience"
                                 id="uncontrolled-tab-example"
                                 className="mt-4"
                             >
-                                {/* <Tab eventKey="confirmation" title="Confirmation Details">
-                                <ConfirmationDetails dataset={productData} orderid={props.orderid} relord={() => reload()} />
-                            </Tab> */}
+
+                                <Tab eventKey="bookingexperience" title="Booking Experience">
+                                    <BookingExperience dataset={productData} orderid={props.orderid} />
+                                </Tab>
+
+                                <Tab eventKey="supplierexperience" title="Supplier Experience">
+                                    <SupplierExperience dataset={productData} orderid={props.orderid} />
+                                </Tab>
+
+                                <Tab eventKey="travellerExperience" title="Traveller Experience">
+                                    <TravellerExperience dataset={productData} orderid={props.orderid} />
+                                </Tab>
+
 
                                 <Tab eventKey="acc" title="Accounts Details">
                                     <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                 </Tab>
-                                <Tab eventKey="sup" title="Supplier Details">
-                                    <SupDetails dataset={productData} orderid={props.orderid} />
-                                </Tab>
-
-
-
-                                <Tab eventKey="customer" title="Customer Details">
-                                    <CustomerDetails dataset={customerData} orderid={props.orderid} />
-                                </Tab>
-
+                                {/* 
                                 <Tab eventKey="location" title="Location Details">
                                     <DeliveryDetails dataset={productData} />
-                                </Tab>
+                                </Tab> */}
 
 
 
-
-
-                                {/* <Tab eventKey="feedback" title="Feedback Details">
-                                <FeebackDetails dataset={productData} orderid={props.orderid} />
-                            </Tab> */}
 
                             </Tabs>
 
-
-                            <div style={{ position: 'relative', top: 5, right: 5 }}>
-                                <button onClick={() => setDetailExpander(true)} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
-                                    <FontAwesomeIcon icon={faExpand} size={30} />
-                                </button>
-                            </div>
 
 
 
@@ -942,6 +974,7 @@ function OrderDetails(props) {
                         <DetailExpander
                             show={detailExpander}
                             onHide={() => setDetailExpander(false)}
+                            orderid={props.orderid}
 
                             component={
                                 <Tabs
@@ -959,21 +992,21 @@ function OrderDetails(props) {
                                         <SupplierExperience dataset={productData} orderid={props.orderid} />
                                     </Tab>
 
-                                    {/* <Tab eventKey="acc" title="Accounts Details">
-                                        <AccountsDetails dataset={productData} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
+                                    <Tab eventKey="travellerExperience" title="Traveller Experience">
+                                        <TravellerExperience dataset={productData} orderid={props.orderid} />
                                     </Tab>
 
-                                    <Tab eventKey="sup" title="Supplier Details">
-                                        <SupDetails dataset={productData} orderid={props.orderid} />
-                                    </Tab>
 
-                                    <Tab eventKey="customer" title="Customer Details">
-                                        <CustomerDetails dataset={customerData} orderid={props.orderid} />
+                                    <Tab eventKey="acc" title="Accounts Details">
+                                        <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                     </Tab>
-
+                                    {/* 
                                     <Tab eventKey="location" title="Location Details">
                                         <DeliveryDetails dataset={productData} />
-                                    </Tab> */}
+                                    </Tab>
+ */}
+
+
 
                                 </Tabs>
                             }

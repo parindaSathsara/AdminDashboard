@@ -4,9 +4,11 @@
 import React from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilInfo } from '@coreui/icons';
 
 
-export default function BookingExperience(props) {
+export default function DateWiseSummary(props) {
 
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
@@ -17,8 +19,8 @@ export default function BookingExperience(props) {
         '--cui-popover-body-padding-y': '.5rem',
     }
 
-    const productData = props.dataset
-
+    const productData = props?.dataset
+    const groupedDates = props?.dates
 
 
     const QuantityContainer = ({ data }) => {
@@ -27,9 +29,13 @@ export default function BookingExperience(props) {
         console.log(data, "Data Value is")
 
 
-        if (data.category == "Education") {
+        if (data?.category == "Education") {
             return (
                 <CCol style={{ width: '320px' }}>
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Student Type</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.student_type}</h6></CCol>
+                    </CRow>
                     <CRow>
                         <CCol style={{ flex: 2 }}><h6>Max Adult Occupancy</h6></CCol>
                         <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.MaxAdultOccupancy}</h6></CCol>
@@ -46,7 +52,7 @@ export default function BookingExperience(props) {
             )
         }
 
-        else if (data.category == "Essentials/Non Essentials") {
+        else if (data?.category == "Essentials/Non Essentials") {
             return (
                 <CCol style={{ width: '320px' }}>
                     <CRow>
@@ -65,10 +71,15 @@ export default function BookingExperience(props) {
             )
         }
 
-        else if (data.category == "Lifestyles") {
+        else if (data?.category == "Lifestyles") {
             return (
                 <CCol style={{ width: '320px' }}>
 
+
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Time Slot</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.pickupTime}</h6></CCol>
+                    </CRow>
                     <CRow>
                         <CCol style={{ flex: 2 }}><h6>Adult Count</h6></CCol>
                         <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.AdultCount}</h6></CCol>
@@ -119,22 +130,41 @@ export default function BookingExperience(props) {
 
     }
 
+
+
     const columns = [
-        { title: 'Product ID', field: 'pid' },
-        { title: 'Name', field: 'name' },
         {
-            title: 'QTY', field: 'qty', render: rowData =>
+
+            field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                return (
+                    <>
+                        <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => props.handleMoreInfoModal(e.ext, e.ext.catid)}>
+                            <CIcon icon={cilInfo} className="text-info" size="xl" />
+                        </CButton>
+
+                    </>
+                );
+            }
+
+        },
+
+
+        { title: 'Product ID', field: 'pid' },
+        { title: 'Category', field: 'category' },
+        { title: 'Product Title', field: 'name' },
+        {
+            title: 'Extra Details', field: 'ext', render: rowData =>
                 <CPopover
-                    content={<QuantityContainer data={rowData.qty} />}
+                    content={<QuantityContainer data={rowData.ext} />}
                     placement="top"
                     title="Quantity Data"
                     style={customPopoverStyle}
                 >
-                    <CButton color="success" style={{ fontSize: 14,color:'white' }}>View</CButton>
+                    <CButton color="info" style={{ fontSize: 14, color:'white'}}>View</CButton>
                 </CPopover>
 
         },
-        { title: 'Date', field: 'date' },
+
         { title: 'Address', field: 'address' },
 
         { title: 'Total Amount', field: 'total_amount' },
@@ -143,38 +173,52 @@ export default function BookingExperience(props) {
     ]
 
 
-    const data = productData.map(value => ({
-        pid: value?.['PID'],
-        name: value?.['PName'],
-        qty: value,
-        date: value?.['DDate'],
-        address: value?.['DAddress'],
-        total_amount: value.currency+ " "+value?.['total_amount'],
-        paid_amount: value.currency+ " "+value?.['paid_amount'],
-        balance_amount: value.currency+" "+ value?.['balance_amount']
-    }))
 
+    const getProductData = (date) => {
+        return productData?.filter(dateFil => dateFil?.DDate == date)?.map(value => ({
+            pid: value?.['PID'],
+            name: value?.['PName'],
+            ext: value,
+            category: value?.['category'],
+            address: value?.['DAddress'],
+            total_amount: value.currency + " " + value?.['total_amount'],
+            paid_amount: value.currency + " " + value?.['paid_amount'],
+            balance_amount: value.currency + " " + value?.['balance_amount'],
+            
+        }))
+    }
 
     return (
         <>
-            <MaterialTable
-                title="Booking Experience"
-                columns={columns}
-                data={data}
-                options={{
-                    headerStyle: {
-                        fontSize: '14px', // Adjust the header font size here
-                    },
-                    cellStyle: {
-                        fontSize: '14px', // Adjust the column font size here
-                    },
-                    paging: false,
-                    search: false,
-                    columnsButton: true,
-                    exportButton: true,
-                }}
 
-            />
+            {groupedDates?.map(data => {
+                return (
+                    <MaterialTable
+                        title={data}
+                        columns={columns}
+                        data={getProductData(data)}
+
+
+                        options={{
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' },
+
+
+                            cellStyle: {
+                                fontSize: '14px', // Adjust the column font size here
+                            },
+                            paging: false,
+                            search: false,
+                            columnsButton: true,
+                            exportButton: true,
+                        }}
+
+                    />
+                )
+
+            })}
+
         </>
     )
 }

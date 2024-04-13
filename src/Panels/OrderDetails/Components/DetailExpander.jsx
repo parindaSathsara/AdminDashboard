@@ -12,7 +12,7 @@ export default function DetailExpander(props) {
 
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Order Details
+                    Order Details - {props.orderid}
                 </Modal.Title>
             </Modal.Header>
 

@@ -33,8 +33,8 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 //   console.error('CSRF token meta tag not found');
 // }
 
-axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
-axios.defaults.data = 'http://172.16.26.238:8000'
+axios.defaults.baseURL = 'http://192.168.8.110:8000/api/'
+axios.defaults.data = 'http://192.168.8.110:8000'
 
 const loading = (
   <div className="pt-3 text-center">

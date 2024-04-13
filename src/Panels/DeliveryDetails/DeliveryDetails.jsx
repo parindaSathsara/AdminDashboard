@@ -7,8 +7,8 @@ import { CImage } from '@coreui/react';
 export default function DeliveryDetails(props) {
     const libraries = ['places'];
     const mapContainerStyle = {
-        width: '100vw',
-        height: '60vh',
+        width: '98vw',
+        height: '80vh',
     };
 
     const { isLoaded, loadError } = useLoadScript({
@@ -40,7 +40,7 @@ export default function DeliveryDetails(props) {
 
 
     useEffect(() => {
-        setProductData(props.dataset)
+        setProductData([props.dataset])
     }, [props.dataset]);
 
     if (loadError) {
