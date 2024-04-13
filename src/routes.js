@@ -3,6 +3,7 @@ import VendorList from './views/VendorList/VendorList'
 import ProductList from './views/Products/ProductsList'
 import ProductAnalytics from './views/Products/ProductAnalytics'
 import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
+import MoreOrderView from './Panels/OrderDetails/MoreOrderView/MoreOrderView'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -83,7 +84,7 @@ const routes = [
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/customers', name: 'Customers', element: Typography },
   { path: '/theme/AccountSystem', name: 'AccountSystem', element: AccountSystem },
-  { path: '/base', name: 'Base', element: Cards, exact: true },
+  { path: '/base', name: 'Base', element: MoreOrderView, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
   { path: '/base/cards', name: 'Cards', element: Cards },

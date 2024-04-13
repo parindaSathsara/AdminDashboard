@@ -160,6 +160,7 @@ async function getDashboardOrders() {
 
 //
 async function getDashboardOrdersIdWise(id) {
+
     try {
 
         var dataArray = [];
@@ -167,11 +168,9 @@ async function getDashboardOrdersIdWise(id) {
         await axios.get(`/fetch_all_orders_userwise_id_wise/${id}`).then((res) => {
 
             console.log(res)
-
             if (res.data.status === 200) {
                 dataArray = res.data
             }
-
 
         }).catch((err) => {
             throw new Error(err);
@@ -179,10 +178,10 @@ async function getDashboardOrdersIdWise(id) {
 
         return dataArray
 
-
     } catch (err) {
         throw new Error(err);
     }
+
 }
 
 
@@ -216,7 +215,7 @@ async function getPaymentStatusById(rowid, orderid, paymentmood, paymenttype) {
             'paymenttype': paymenttype
         }
 
-        console.log(data);
+        console.log(data, "Get Payment Status");
         var dataset = [];
 
         await axios.post('/fetch_order_wise_payment_details', data).then((res) => {
