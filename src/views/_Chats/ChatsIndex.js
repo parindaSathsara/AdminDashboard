@@ -19,7 +19,7 @@ const ChatsIndex = () => {
           <ConversationsList activatedConversation={activatedConversation} sendActivateConversation={receiveActivateConversation}></ConversationsList>
         </CCol>
         <CCol xs={8}>
-          <MessageList conversation={activatedConversation}></MessageList>
+          <MessageList conversation_data={activatedConversation}></MessageList>
         </CCol>
       </CRow>
     </div>

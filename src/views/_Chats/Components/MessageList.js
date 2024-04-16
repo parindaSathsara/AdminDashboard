@@ -8,42 +8,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfo, faUserPlus, faUserMinus, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import Message from './Message';
 import { event } from 'jquery';
-
-// import { cibFacebook, cibLinkedin, cibTwitter, cilCalendar } from '@coreui/icons'
+import { db } from 'src/firebase';
+import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 
 const textColor = {
   color: 'white'
 }
 
-const messageList = [
-  { id: 1, text: 'Hi', role: 'Admin' },
-  { id: 2, text: 'Hi', role: 'Supplier' },
-  { id: 3, text: 'Hi', role: 'Customer' },
-  { id: 4, text: 'What the reson', role: 'Admin' },
-  { id: 5, text: 'How are You', role: 'Admin' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 6, text: 'How are You', role: 'Customer' },
-  { id: 4, text: 'What the reson', role: 'Admin' },
-  { id: 4, text: 'What the reson', role: 'Admin' },
-  { id: 4, text: 'What the reson', role: 'Admin' },
-  { id: 4, text: 'What the reson', role: 'Admin' },
-  { id: 4, text: 'What the reson', role: 'Admin' },
-];
-
 const MessageList = (props) => {
+
+  const [messageList, setMessageList] = useState([]);
 
   const messageContailerRef = useRef(null);
 
   useEffect(() => {
+
+    if (props.conversation_data) {
+      fetchMessages(props.conversation_data.customer_collection_id);
+    }
+
     if (messageContailerRef.current) {
       messageContailerRef.current.scrollTop = messageContailerRef.current.scrollHeight;
     }
-  }, []);
+
+  }, [props.conversation_data, messageList]);
 
   const [message, setMessage] = useState('');
 
@@ -53,7 +41,17 @@ const MessageList = (props) => {
 
   const sendMessage = () => {
     setMessage('')
+  }
 
+  const fetchMessages = (id) => {
+    const q = query(collection(db, "chats/chats_dats/" + id), orderBy("createdAt", "asc"), limit(50))
+    const getMessages = onSnapshot(q, (querySnapshot) => {
+      const fetchedMessages = [];
+      querySnapshot.forEach(doc => {
+        fetchedMessages.push({ ...doc.data(), id: doc.id });
+      });
+      setMessageList(fetchedMessages);
+    })
   }
 
   return (
@@ -63,7 +61,7 @@ const MessageList = (props) => {
           <CAvatar color="primary" textColor="white" size="m">UM</CAvatar>
         </CCol>
         <CCol style={textColor} className='d-flex align-items-center' sm={9}>
-          {props.conversation && props.conversation.name}
+          {props.conversation_data && props.conversation_data.chat_name}
         </CCol>
         <CCol className='d-flex justify-content-between align-items-center' style={textColor} sm={2}>
           <FontAwesomeIcon icon={faUserPlus} />
