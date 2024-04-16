@@ -21,17 +21,22 @@ const MessageList = (props) => {
 
   const messageContailerRef = useRef(null);
 
-  useEffect(() => {
-
-    if (props.conversation_data) {
-      fetchMessages(props.conversation_data.customer_collection_id);
-    }
-
+  const scrollDown = () => {
     if (messageContailerRef.current) {
       messageContailerRef.current.scrollTop = messageContailerRef.current.scrollHeight;
     }
+  }
 
-  }, [props.conversation_data, messageList]);
+  useEffect(() => {
+    if (props.conversation_data) {
+      fetchMessages(props.conversation_data.customer_collection_id);
+    }
+  }, [props.conversation_data]);
+
+
+  useEffect(() => {
+    scrollDown();
+  }, [messageList]);
 
   const [message, setMessage] = useState('');
 
