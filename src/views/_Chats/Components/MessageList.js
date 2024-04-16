@@ -21,13 +21,19 @@ const MessageList = (props) => {
   const [messageList, setMessageList] = useState([]);
   const [message, setMessage] = useState('');
   const [collection_id, setCollection_id] = useState(null);
+  const [isMessageDelete, setIsMessageDelete] = useState(false);
 
   const messageContailerRef = useRef(null);
 
+  const updateMessageDeleteStatus = () => {
+    setIsMessageDelete(true);
+  }
+
   const scrollDown = () => {
-    if (messageContailerRef.current) {
+    if (!isMessageDelete && messageContailerRef.current) {
       messageContailerRef.current.scrollTop = messageContailerRef.current.scrollHeight;
     }
+    setIsMessageDelete(false);
   }
 
   useEffect(() => {
@@ -104,7 +110,7 @@ const MessageList = (props) => {
 
       <CContainer className='mt-auto message-container' ref={messageContailerRef}>
         {messageList.map((messageData, index) => (
-          <Message key={index} messageData={messageData} ></Message>
+          <Message key={index} messageData={messageData} conversation_id={props.conversation_data.customer_collection_id} updateMessageDeleteStatus={updateMessageDeleteStatus} ></Message>
         ))}
       </CContainer>
 
