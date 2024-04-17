@@ -63,6 +63,7 @@ const Message = (props) => {
 
   const updateMessage = async () => {
 
+    props.handleEditStatus(true);
     if (editText.trim() == "") {
       return;
     }
@@ -73,11 +74,8 @@ const Message = (props) => {
         editedAt: serverTimestamp(),
         editedBy: 'Admin'
       })
-      setEditMessage(null);
-
     } catch (error) {
       console.log(error);
-      setEditMessage(null);
 
       Swal.fire({
         icon: "error",
@@ -85,7 +83,16 @@ const Message = (props) => {
         text: "Something went wrong!",
       });
     }
+    setEditMessage(null);
+    props.handleEditStatus(true);
   }
+
+  const updateMessageByEnter = (event) => {
+    if (event.keyCode === 13) {
+      updateMessage();
+    }
+  }
+
   return (
     <div className='p-1'>
       <CRow className={`message-main ${props.messageData && props.messageData.role != 'Admin' ? 'flex-row-reverse' : ''}`}>
@@ -94,7 +101,7 @@ const Message = (props) => {
         </CCol>
         <CCol sm={11} className={`d-flex align-items-center ${props.messageData.role}`}>
           {(editMessage && editMessage.id == props.messageData.id) ? (
-            <CFormInput className='message-content' value={editText} onChange={() => handleEditText(event)}></CFormInput>
+            <CFormInput className='message-content' value={editText} onChange={() => handleEditText(event)} onKeyDown={updateMessageByEnter}></CFormInput>
           ) : (
             <div className='message-content'>
               {props.messageData.text}
