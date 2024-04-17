@@ -11,6 +11,7 @@ import { event } from 'jquery';
 import { db } from 'src/firebase';
 import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { text } from '@fortawesome/fontawesome-svg-core';
+import MessageListDetails from './MessageListDetails';
 
 const textColor = {
   color: 'white'
@@ -22,8 +23,13 @@ const MessageList = (props) => {
   const [message, setMessage] = useState('');
   const [collection_id, setCollection_id] = useState(null);
   const [isMessageDelete, setIsMessageDelete] = useState(false);
+  const [detailsModelVisibility, setdetailsModelVisibility] = useState(false);
 
   const messageContailerRef = useRef(null);
+
+  const handleMessageDetailsvisibility = (visibility) => {
+    setdetailsModelVisibility(visibility);
+  }
 
   const updateMessageDeleteStatus = () => {
     setIsMessageDelete(true);
@@ -85,43 +91,52 @@ const MessageList = (props) => {
       setMessageList(fetchedMessages);
     })
   }
+  console.log(props.conversation_data);
 
   return (
     <div className='message-list'>
-      <CRow className='message-list-header-bar p-3'>
-        <CCol sm={1}>
-          {props.conversation_data && (props.conversation_data.chat_avatar ? (
-            <CContainer className='avatar-cover'>
-              <img className='chat-avatar' src={props.conversation_data.chat_avatar} alt='Avatar' />
-            </CContainer>
-          ) : (
-            <CAvatar color="primary" textColor="white" size='lg'>{props.conversation_data.chat_name ? (props.conversation_data.chat_name.toUpperCase().slice(0, 2)) : ''}</CAvatar>
-          ))}
-        </CCol>
-        <CCol style={textColor} className='d-flex align-items-center' sm={9}>
-          {props.conversation_data && props.conversation_data.chat_name}
-        </CCol>
-        <CCol className='d-flex justify-content-between align-items-center' style={textColor} sm={2}>
-          <FontAwesomeIcon icon={faUserPlus} />
-          <FontAwesomeIcon icon={faUserMinus} />
-          <FontAwesomeIcon icon={faInfo} />
-        </CCol>
-      </CRow>
+      {props.conversation_data ? (
+        <>
+          <CRow className='message-list-header-bar p-3'>
+            <CCol sm={1}>
+              {props.conversation_data && (props.conversation_data.chat_avatar ? (
+                <CContainer className='avatar-cover' style={{ width: '40px', height: '40px' }}>
+                  <img className='chat-avatar' src={props.conversation_data.chat_avatar} alt='Avatar' />
+                </CContainer>
+              ) : (
+                <CAvatar color="primary" textColor="white" size='lg'>{props.conversation_data.chat_name ? (props.conversation_data.chat_name.toUpperCase().slice(0, 2)) : ''}</CAvatar>
+              ))}
+            </CCol>
+            <CCol style={textColor} className='d-flex align-items-center' sm={9}>
+              {props.conversation_data && props.conversation_data.chat_name}
+            </CCol>
+            <CCol className='d-flex justify-content-between align-items-center' style={textColor} sm={2}>
+              <FontAwesomeIcon icon={faUserPlus} />
+              <FontAwesomeIcon icon={faUserMinus} />
+              <FontAwesomeIcon icon={faInfo} onClick={() => handleMessageDetailsvisibility(true)} />
+            </CCol>
+          </CRow>
 
-      <CContainer className='mt-auto message-container' ref={messageContailerRef}>
-        {messageList.map((messageData, index) => (
-          <Message key={index} messageData={messageData} conversation_id={props.conversation_data.customer_collection_id} updateMessageDeleteStatus={updateMessageDeleteStatus} ></Message>
-        ))}
-      </CContainer>
+          <CContainer className='mt-auto message-container' ref={messageContailerRef}>
+            {messageList.map((messageData, index) => (
+              <Message key={index} messageData={messageData} conversation_id={props.conversation_data.customer_collection_id} updateMessageDeleteStatus={updateMessageDeleteStatus} ></Message>
+            ))}
+          </CContainer>
 
-      <CRow className='p-2' style={textColor}>
-        <CCol sm={11}>
-          <CFormInput type="text" placeholder="Type a message" onChange={handleMessageChange} value={message} onKeyDown={(event) => sendMessageByEnter(event)} />
-        </CCol>
-        <CCol sm={1} style={{ padding: 0 }}>
-          <CButton color="light"><FontAwesomeIcon icon={faPaperPlane} onClick={sendMessage} /></CButton>
-        </CCol>
-      </CRow>
+          <CRow className='p-2' style={textColor}>
+            <CCol sm={11}>
+              <CFormInput type="text" placeholder="Type a message" onChange={handleMessageChange} value={message} onKeyDown={(event) => sendMessageByEnter(event)} />
+            </CCol>
+            <CCol sm={1} style={{ padding: 0 }}>
+              <CButton color="light"><FontAwesomeIcon icon={faPaperPlane} onClick={sendMessage} /></CButton>
+            </CCol>
+          </CRow>
+
+          <MessageListDetails conversation_data={props.conversation_data} visibility={detailsModelVisibility} handleVisibility={handleMessageDetailsvisibility}></MessageListDetails>
+        </>) : (
+        <div className='d-flex align-items-center justify-content-center' style={{ height: '100%' }}>
+          <h4 style={{ color: "gray" }}>Please Select any Conversation</h4>
+        </div>)}
     </div >
   )
 }

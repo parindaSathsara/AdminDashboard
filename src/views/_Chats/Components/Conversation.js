@@ -18,7 +18,8 @@ const Conversation = (props) => {
           )}
         </CCol>
         <CCol sm={9}>
-          <CCardText>{props.chat_data.chat_name}</CCardText>
+          <CCardText className='m-0'>{props.chat_data.customer_name}</CCardText>
+          <span className='small' style={{ color: 'gray' }}>{props.chat_data.chat_name}</span>
         </CCol>
       </CRow>
     </div >
