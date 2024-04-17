@@ -33,3 +33,11 @@
 .message-container::-webkit-scrollbar-corner {
   background-color: transparent;
 }
+.message-details-model{
+ background: #002c66;
+ color: white;
+}
+.message-details-model button{
+  /* background: #002c66; */
+  color: white;
+ }

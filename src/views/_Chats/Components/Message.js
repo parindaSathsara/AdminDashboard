@@ -9,7 +9,6 @@ import { db } from 'src/firebase';
 
 
 const Message = (props) => {
-  console.log(props.messageData);
 
   const [editMessage, setEditMessage] = useState(null);
   const [editText, setEditText] = useState('');
@@ -105,7 +104,7 @@ const Message = (props) => {
           {(editMessage && editMessage.id == props.messageData.id) ? (
             <div style={{ background: 'transparent', display: 'flex', alignItems: 'center' }} >
               <FontAwesomeIcon className='fa-icons m-1' icon={faSave} onClick={updateMessage} />
-              <FontAwesomeIcon className='fa-icons mb-1' icon={faTimesCircle} onClick={cancelEditMessage} />
+              <FontAwesomeIcon className='fa-icons ' icon={faTimesCircle} onClick={cancelEditMessage} />
             </div>
           ) : (
             <div style={{ background: 'transparent' }}>
