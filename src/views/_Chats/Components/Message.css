@@ -41,3 +41,34 @@
 .message-main:hover .fa-icons{
   color: black;
 }
+.message-details{
+  background: transparent !important;
+  color: transparent !important;
+  color: gray !important;
+  font-size: 8pt;
+  transition: 100ms;
+}
+.message-main:hover .message-details{
+  color: gray !important;
+}
+.message-details-Admin{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-left: 5px;
+}
+.message-details-Customer{
+  display: flex;
+  justify-content: end;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-right: 5px;
+
+}
+.message-details-Supplier{
+  display: flex;
+  justify-content: end;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-right: 5px;
+}
