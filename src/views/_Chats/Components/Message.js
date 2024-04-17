@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CAvatar, CCol, CFormInput, CRow } from '@coreui/react';
+import { CAvatar, CCol, CFormInput, CFormTextarea, CRow } from '@coreui/react';
 import './Message.css'
 import { faEdit, faTrash, faSave, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -101,7 +101,7 @@ const Message = (props) => {
         </CCol>
         <CCol sm={11} className={`d-flex align-items-center ${props.messageData.role}`}>
           {(editMessage && editMessage.id == props.messageData.id) ? (
-            <CFormInput className='message-content' value={editText} onChange={() => handleEditText(event)} onKeyDown={updateMessageByEnter}></CFormInput>
+            <CFormTextarea className='message-content' value={editText} onChange={() => handleEditText(event)} onKeyDown={updateMessageByEnter}></CFormTextarea>
           ) : (
             <div className='message-content'>
               {props.messageData.text}
