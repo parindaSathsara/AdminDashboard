@@ -23,9 +23,14 @@ const MessageList = (props) => {
   const [message, setMessage] = useState('');
   const [collection_id, setCollection_id] = useState(null);
   const [isMessageDelete, setIsMessageDelete] = useState(false);
+  const [isMessageEdit, setisMessageEdit] = useState(false);
   const [detailsModelVisibility, setdetailsModelVisibility] = useState(false);
 
   const messageContailerRef = useRef(null);
+
+  const handleMessageEditStatus = (status) => {
+    setisMessageEdit(status);
+  }
 
   const handleMessageDetailsvisibility = (visibility) => {
     setdetailsModelVisibility(visibility);
@@ -36,10 +41,11 @@ const MessageList = (props) => {
   }
 
   const scrollDown = () => {
-    if (!isMessageDelete && messageContailerRef.current) {
+    if (!(isMessageDelete || isMessageEdit) && messageContailerRef.current) {
       messageContailerRef.current.scrollTop = messageContailerRef.current.scrollHeight;
     }
     setIsMessageDelete(false);
+    setisMessageEdit(false);
   }
 
   useEffect(() => {
@@ -118,7 +124,7 @@ const MessageList = (props) => {
 
           <CContainer className='mt-auto message-container' ref={messageContailerRef}>
             {messageList.map((messageData, index) => (
-              <Message key={index} messageData={messageData} conversation_id={props.conversation_data.customer_collection_id} updateMessageDeleteStatus={updateMessageDeleteStatus} ></Message>
+              <Message key={index} messageData={messageData} handleEditStatus={handleMessageEditStatus} conversation_id={props.conversation_data.customer_collection_id} updateMessageDeleteStatus={updateMessageDeleteStatus} ></Message>
             ))}
           </CContainer>
 
