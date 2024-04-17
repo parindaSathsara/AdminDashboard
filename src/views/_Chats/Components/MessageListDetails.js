@@ -3,10 +3,7 @@ import { CModal, CModalHeader, CModalBody, CModalFooter, CModalTitle, CButton } 
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-
-
 const MessageListDetails = (props) => {
-  console.log(props.conversation_data);
   return (
     <div>
       <CModal

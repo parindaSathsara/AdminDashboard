@@ -91,7 +91,6 @@ const MessageList = (props) => {
       setMessageList(fetchedMessages);
     })
   }
-  console.log(props.conversation_data);
 
   return (
     <div className='message-list'>
