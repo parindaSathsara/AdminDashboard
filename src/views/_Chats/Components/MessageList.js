@@ -12,6 +12,7 @@ import { db } from 'src/firebase';
 import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { text } from '@fortawesome/fontawesome-svg-core';
 import MessageListDetails from './MessageListDetails';
+import AddUserModel from './AddUserModel';
 
 const textColor = {
   color: 'white'
@@ -25,6 +26,8 @@ const MessageList = (props) => {
   const [isMessageDelete, setIsMessageDelete] = useState(false);
   const [isMessageEdit, setisMessageEdit] = useState(false);
   const [detailsModelVisibility, setdetailsModelVisibility] = useState(false);
+  const [addUserModelVisibility, serAddUserModelVisibility] = useState(false);
+
 
   const messageContailerRef = useRef(null);
 
@@ -32,13 +35,18 @@ const MessageList = (props) => {
     setisMessageEdit(status);
   }
 
+  const updateMessageDeleteStatus = () => {
+    setIsMessageDelete(true);
+  }
+
   const handleMessageDetailsvisibility = (visibility) => {
     setdetailsModelVisibility(visibility);
   }
 
-  const updateMessageDeleteStatus = () => {
-    setIsMessageDelete(true);
+  const handleAddUservisibility = (visibility) => {
+    serAddUserModelVisibility(visibility);
   }
+
 
   const scrollDown = () => {
     if (!(isMessageDelete || isMessageEdit) && messageContailerRef.current) {
@@ -117,7 +125,7 @@ const MessageList = (props) => {
             </CCol>
             <CCol className='d-flex justify-content-end align-items-center' style={textColor} sm={2}>
               {/* <FontAwesomeIcon icon={faUserMinus} /> */}
-              <FontAwesomeIcon icon={faUserPlus} className='m-2' />
+              <FontAwesomeIcon icon={faUserPlus} className='m-2' onClick={() => handleAddUservisibility(true)} />
               <FontAwesomeIcon icon={faInfo} onClick={() => handleMessageDetailsvisibility(true)} className='m-1' />
             </CCol>
           </CRow>
@@ -138,6 +146,8 @@ const MessageList = (props) => {
           </CRow>
 
           <MessageListDetails conversation_data={props.conversation_data} visibility={detailsModelVisibility} handleVisibility={handleMessageDetailsvisibility}></MessageListDetails>
+          <AddUserModel conversation_data={props.conversation_data} visibility={addUserModelVisibility} handleVisibility={handleAddUservisibility} ></AddUserModel>
+
         </>) : (
         <div className='d-flex align-items-center justify-content-center' style={{ height: '100%' }}>
           <h4 style={{ color: "gray" }}>Please Select any Conversation</h4>
