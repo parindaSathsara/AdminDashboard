@@ -1,17 +1,23 @@
-import React, { useState } from 'react'
-import { CAvatar, CCol, CRow } from '@coreui/react';
+import React, { useEffect, useState } from 'react'
+import { CAvatar, CCol, CFormInput, CRow } from '@coreui/react';
 import './Message.css'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faSave, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
-import { deleteDoc, doc } from 'firebase/firestore';
+import { deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from 'src/firebase';
 
 
 const Message = (props) => {
+  console.log(props.messageData);
+
+  const [editMessage, setEditMessage] = useState(null);
+  const [editText, setEditText] = useState('');
+
+  // const time = props.messageData.createdAt.seconds * 1000 + Math.round(props.messageData.createdAt.seconds / 1000000);
+  // const date = new Date(time).toLocaleTimeString(undefined, { hour12: false, hour: '2-digit', minute: '2-digit' });
 
   const deleteMessage = async () => {
-
     props.updateMessageDeleteStatus();
 
     const result = await Swal.fire({
@@ -43,18 +49,78 @@ const Message = (props) => {
     }
 
   }
+  const handleMessageEdit = (message) => {
+    setEditMessage(message);
+    setEditText(message.text);
+  }
+
+  const handleEditText = (e) => {
+    setEditText(e.target.value)
+  }
+
+  const cancelEditMessage = () => {
+    setEditMessage(null);
+  }
+
+  const updateMessage = async () => {
+
+    if (editText.trim() == "") {
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "chats/chats_dats/" + props.conversation_id, props.messageData.id), {
+        text: editText,
+        editedAt: serverTimestamp(),
+        editedBy: 'Admin'
+      })
+      setEditMessage(null);
+
+    } catch (error) {
+      console.log(error);
+      setEditMessage(null);
+
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
+    }
+  }
   return (
     <div className='p-1'>
       <CRow className={`message-main ${props.messageData && props.messageData.role != 'Admin' ? 'flex-row-reverse' : ''}`}>
         <CCol sm={1} className='text-center'>
           <CAvatar color="primary" textColor="white" size="m">AV</CAvatar>
         </CCol>
-        <CCol className={`d-flex align-items-center ${props.messageData.role}`}>
-          <div className='message-content'>
-            {props.messageData.text}
+        <CCol sm={11} className={`d-flex align-items-center ${props.messageData.role}`}>
+          {(editMessage && editMessage.id == props.messageData.id) ? (
+            <CFormInput className='message-content' value={editText} onChange={() => handleEditText(event)}></CFormInput>
+          ) : (
+            <div className='message-content'>
+              {props.messageData.text}
+            </div>
+          )}
+
+          {(editMessage && editMessage.id == props.messageData.id) ? (
+            <div style={{ background: 'transparent', display: 'flex', alignItems: 'center' }} >
+              <FontAwesomeIcon className='fa-icons m-1' icon={faSave} onClick={updateMessage} />
+              <FontAwesomeIcon className='fa-icons mb-1' icon={faTimesCircle} onClick={cancelEditMessage} />
+            </div>
+          ) : (
+            <div style={{ background: 'transparent' }}>
+              <FontAwesomeIcon className='fa-icons' icon={faEdit} onClick={() => handleMessageEdit(props.messageData)} />
+              <FontAwesomeIcon className='fa-icons' icon={faTrash} onClick={deleteMessage} />
+            </div>
+          )}
+        </CCol>
+        <CCol sm={1}>
+        </CCol>
+        <CCol sm={11}>
+          <div className={`message-details message-details-${props.messageData.role}`}>
+            {/* {date + " "} */}
+            {props.messageData.editedAt ? ("Edited by " + props.messageData.editedBy) : ''}
           </div>
-          <FontAwesomeIcon className='fa-icons' icon={faEdit} />
-          <FontAwesomeIcon className='fa-icons' icon={faTrash} onClick={deleteMessage} />
         </CCol>
       </CRow>
     </div >
