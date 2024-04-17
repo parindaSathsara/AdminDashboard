@@ -110,10 +110,10 @@ const MessageList = (props) => {
             <CCol style={textColor} className='d-flex align-items-center' sm={9}>
               {props.conversation_data && props.conversation_data.chat_name}
             </CCol>
-            <CCol className='d-flex justify-content-between align-items-center' style={textColor} sm={2}>
-              <FontAwesomeIcon icon={faUserPlus} />
-              <FontAwesomeIcon icon={faUserMinus} />
-              <FontAwesomeIcon icon={faInfo} onClick={() => handleMessageDetailsvisibility(true)} />
+            <CCol className='d-flex justify-content-end align-items-center' style={textColor} sm={2}>
+              {/* <FontAwesomeIcon icon={faUserMinus} /> */}
+              <FontAwesomeIcon icon={faUserPlus} className='m-2' />
+              <FontAwesomeIcon icon={faInfo} onClick={() => handleMessageDetailsvisibility(true)} className='m-1' />
             </CCol>
           </CRow>
 
