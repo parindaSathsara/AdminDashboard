@@ -5,9 +5,12 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import './AddUserModel.css'
 import { event } from 'jquery';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 const AddUserModel = (props) => {
+
+  var baseURL = "https://gateway.aahaas.com/api";
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchText, setSearchText] = useState('');
@@ -16,7 +19,6 @@ const AddUserModel = (props) => {
 
   const handleSelectUser = (user) => {
     setSelectedUser(user)
-    console.log(selectedUser);
   }
 
   const handleSearch = (e) => {
@@ -28,29 +30,63 @@ const AddUserModel = (props) => {
   }
 
   const fetchUsers = async () => {
-    var baseURL = "https://gateway.aahaas.com/api";
 
     try {
       axios.get(baseURL + '/getvendors').then(response => {
         if (response.status == 200) {
           const users = response.data.data;
           setUsers(users);
-          // console.log(users);
         }
       })
     }
     catch (error) {
       console.log(error);
     }
+
+  }
+  //Add supplier to conversation
+  const updateConversation = () => {
+
+    if (!selectedUser) {
+      return
+    }
+    const dataSet = props.conversation_data;
+
+    dataSet.supplier_id = selectedUser.vendor_id;
+    dataSet.supplier_name = selectedUser.username;
+    dataSet.group_chat = true;
+    dataSet.supplier_mail_id = selectedUser.email;
+    dataSet.supplier_added_date = new Date();
+
+    try {
+      axios.post(baseURL + '/updatechat/' + props.conversation_data.chat_id, dataSet).then(res => {
+        console.log(res);
+        if (res.data.status === 200) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Supplier Added",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          props.handleVisibility(false)
+        } else {
+
+        }
+      })
+    } catch (error) {
+      console.log(error);
+      throw new Error(error)
+    }
   }
 
   useEffect(() => {
     fetchUsers();
+    // console.log(props.conversation_data);
     // setSelectedUser(props.conversation_data.supplier_id);
-    console.log(props.conversation_data.supplier_id);
-    handleSelectUser(props.conversation_data.supplier_id);
+    // console.log(props.conversation_data.supplier_id);
+    // handleSelectUser(props.conversation_data.supplier_id);
     // console.log(selectedUser);
-
   }, [props.conversation_data])
 
   return (
@@ -61,7 +97,7 @@ const AddUserModel = (props) => {
         size='lg'
       >
         <CModalHeader onClose={() => props.handleVisibility(false)} className='message-details-model'>
-          <CModalTitle className='d-flex align-items-center'> <FontAwesomeIcon icon={faUserPlus} className='m-2' /> <div>Add User to Chat</div></CModalTitle>
+          <CModalTitle className='d-flex align-items-center'> <FontAwesomeIcon icon={faUserPlus} className='m-2' /> <div>Add Supplier to Chat</div></CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CContainer>
@@ -69,8 +105,8 @@ const AddUserModel = (props) => {
           </CContainer>
           <CContainer className='users-container p-2'>
             {searchUsers(users).map((user, index) => (
-              <CRow key={index} className={`user ${(selectedUser && selectedUser == user.id) ? 'active-select_user' : ''}`} >
-                <CCol className='d-flex align-items-center' onClick={() => handleSelectUser(user.id)}>
+              <CRow key={index} className={`user ${(selectedUser && selectedUser.id == user.id) ? 'active-select_user' : ''}`} >
+                <CCol className='d-flex align-items-center' onClick={() => handleSelectUser(user)}>
                   {user.username + "(" + user.email + ")"}
                 </CCol>
               </CRow>
@@ -78,7 +114,7 @@ const AddUserModel = (props) => {
           </CContainer>
         </CModalBody>
         <CModalFooter>
-          <CButton color="primary">Add</CButton>
+          <CButton color="primary" onClick={updateConversation}>Add</CButton>
         </CModalFooter>
       </CModal>
     </div >

@@ -13,12 +13,17 @@ import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverT
 import { text } from '@fortawesome/fontawesome-svg-core';
 import MessageListDetails from './MessageListDetails';
 import AddUserModel from './AddUserModel';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const textColor = {
   color: 'white'
 }
 
 const MessageList = (props) => {
+
+  var baseURL = "https://gateway.aahaas.com/api";
+
 
   const [messageList, setMessageList] = useState([]);
   const [message, setMessage] = useState('');
@@ -106,6 +111,50 @@ const MessageList = (props) => {
     })
   }
 
+  const removeSupplier = () => {
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Remove supplier from this chat",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        const dataSet = props.conversation_data;
+
+        dataSet.supplier_id = null;
+        dataSet.supplier_name = null;
+        dataSet.group_chat = false;
+        dataSet.private_chat = true;
+        dataSet.supplier_mail_id = null;
+        dataSet.supplier_removed_date = new Date();
+
+        try {
+          axios.post(baseURL + '/updatechat/' + props.conversation_data.chat_id, dataSet).then(res => {
+            if (res.data.status === 200) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Supplier Removed",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            } else {
+
+            }
+          })
+        } catch (error) {
+          console.log(error);
+          throw new Error(error)
+        }
+      }
+    });
+  }
+
   return (
     <div className='message-list'>
       {props.conversation_data ? (
@@ -124,8 +173,11 @@ const MessageList = (props) => {
               {props.conversation_data && props.conversation_data.chat_name}
             </CCol>
             <CCol className='d-flex justify-content-end align-items-center' style={textColor} sm={2}>
-              {/* <FontAwesomeIcon icon={faUserMinus} /> */}
-              <FontAwesomeIcon icon={faUserPlus} className='m-2' onClick={() => handleAddUservisibility(true)} />
+              {props.conversation_data.supplier_id ? (
+                <FontAwesomeIcon icon={faUserMinus} className='m-2' onClick={removeSupplier} />
+              ) : (
+                <FontAwesomeIcon icon={faUserPlus} className='m-2' onClick={() => handleAddUservisibility(true)} />
+              )}
               <FontAwesomeIcon icon={faInfo} onClick={() => handleMessageDetailsvisibility(true)} className='m-1' />
             </CCol>
           </CRow>
