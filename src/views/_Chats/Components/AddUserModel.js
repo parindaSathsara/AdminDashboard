@@ -58,6 +58,7 @@ const AddUserModel = (props) => {
     dataSet.group_chat = true;
     dataSet.supplier_mail_id = selectedUser.email;
     dataSet.supplier_added_date = new Date();
+    dataSet.supplier_removed_date = null;
 
     try {
       axios.post(baseURL + '/updatechat/' + props.conversation_data.chat_id, dataSet).then(res => {
