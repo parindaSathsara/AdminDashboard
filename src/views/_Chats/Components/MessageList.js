@@ -126,11 +126,11 @@ const MessageList = (props) => {
 
         const dataSet = props.conversation_data;
 
-        dataSet.supplier_id = null;
-        dataSet.supplier_name = null;
-        dataSet.group_chat = false;
-        dataSet.private_chat = true;
-        dataSet.supplier_mail_id = null;
+        // dataSet.supplier_id = null;
+        // dataSet.supplier_name = null;
+        // dataSet.group_chat = false;
+        // dataSet.private_chat = true;
+        // dataSet.supplier_mail_id = null;
         dataSet.supplier_removed_date = new Date();
 
         try {
@@ -173,7 +173,7 @@ const MessageList = (props) => {
               {props.conversation_data && props.conversation_data.chat_name}
             </CCol>
             <CCol className='d-flex justify-content-end align-items-center' style={textColor} sm={2}>
-              {props.conversation_data.supplier_id ? (
+              {!props.conversation_data.supplier_removed_date ? (
                 <FontAwesomeIcon icon={faUserMinus} className='m-2' onClick={removeSupplier} />
               ) : (
                 <FontAwesomeIcon icon={faUserPlus} className='m-2' onClick={() => handleAddUservisibility(true)} />
