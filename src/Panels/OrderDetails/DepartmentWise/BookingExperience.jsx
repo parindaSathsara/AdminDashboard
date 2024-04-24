@@ -227,7 +227,6 @@ export default function BookingExperience(props) {
             align: 'left',
             hidden: props.hideStatus,
             render: (e) => {
-                console.log(e.status, "Delivery status")
                 return (
                     <>
                         <select
@@ -237,8 +236,8 @@ export default function BookingExperience(props) {
                             value={e.status} // Set the selected value here
                         >
                             <option>Select</option>
-                            <option value="Approved">Confirm Order</option>
-                            <option value="Cancel">Cancel Order</option>
+                            <option value="Approved" selected={e.qty.status === "Approved" ? true : false} >Confirm Order</option>
+                            <option value="Cancel" selected={e.qty.status === "Cancel" ? true : false} >Cancel Order</option>
                         </select>
                     </>
                 );
