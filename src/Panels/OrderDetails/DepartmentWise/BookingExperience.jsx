@@ -5,7 +5,7 @@ import React from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
-import { updateDeliveryStatus } from 'src/service/api_calls';
+import { updateDeliveryStatus,candelOrder } from 'src/service/api_calls';
 
 
 export default function BookingExperience(props) {
@@ -131,39 +131,69 @@ export default function BookingExperience(props) {
 
         if (val.target.value == "Approved") {
             title = "Do You Want to Confirm This Order"
+            Swal.fire({
+              title: "Are you sure?",
+              text: title,
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#2eb85c",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes"
+          }).then((result) => {
+              console.log(result, "IS Confirmed")
+
+              if (result.isConfirmed) {
+
+                  updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
+                      console.log(result)
+                      // reload()
+                      Swal.fire({
+                          title: "Order " + e.checkoutID + " Confirmed",
+                          text: "Order - " + e.checkoutID + " Order Confirmed",
+                          icon: "success"
+                      });
+                  })
+
+              }
+          });
         }
-        else {
-            title = "Do You Want to Cancel This Order"
+        else if(val.target.value=="Cancel") {
+            title = "Do You Want to Cancel"
+            Swal.fire({
+              title: title,
+              text:"Please Enter the reason for cancel",
+              input: "text",
+              icon: "question",
+              inputAttributes: {
+                autocapitalize: "off"
+              },
+              showCancelButton: true,
+              confirmButtonText: "Yes,Cancel",
+              cancelButtonText:"No",
+              confirmButtonColor: "#d33",
+              showLoaderOnConfirm: true,
+              preConfirm: async (reason) => {
+                try {
+                  if (!reason) {
+                    return Swal.showValidationMessage(`Reason is required`);
+                  }
+
+                  let data={
+                    reason:reason,
+                    id:e.checkoutID,
+                    value:val.target.value,
+                  };
+                  candelOrder(data);
+
+                } catch (error) {
+                  Swal.showValidationMessage(`
+                    Request failed: ${error}
+                  `);
+                }
+              },
+              allowOutsideClick: () => !Swal.isLoading()
+            });
         }
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: title,
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#2eb85c",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes"
-        }).then((result) => {
-            console.log(result, "IS Confirmed")
-
-            if (result.isConfirmed) {
-
-                updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
-                    console.log(result)
-                    // reload()
-                    Swal.fire({
-                        title: "Order " + e.checkoutID + " Confirmed",
-                        text: "Order - " + e.checkoutID + " Order Confirmed",
-                        icon: "success"
-                    });
-                })
-
-            }
-        });
-
-
-
         // props.relord();
     }
 
