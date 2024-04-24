@@ -217,42 +217,42 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
-                    console.log(e, "Data set delivery is")
-                    console.log(e.status, "Delivery status")
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
+            //         console.log(e, "Data set delivery is")
+            //         console.log(e.status, "Delivery status")
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: lifestylesData?.map(value => ({
@@ -326,42 +326,42 @@ function OrderDetails(props) {
 
 
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
 
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
 
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: educationData?.map(value => ({
@@ -424,29 +424,29 @@ function OrderDetails(props) {
             //         );
             //     }
             // },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
-                    console.log(e.status, "Delivery status")
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
+            //         console.log(e.status, "Delivery status")
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
 
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: essNEssData?.map(value => ({
@@ -635,40 +635,40 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: hotelData?.map(value => ({

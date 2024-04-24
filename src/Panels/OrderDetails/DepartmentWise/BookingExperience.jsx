@@ -4,6 +4,8 @@
 import React from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
+import Swal from 'sweetalert2';
+import { updateDeliveryStatus } from 'src/service/api_calls';
 
 
 export default function BookingExperience(props) {
@@ -119,6 +121,54 @@ export default function BookingExperience(props) {
 
     }
 
+    const handleDelStatusChange = (e, val) => {
+        console.log(e, "Value Data set is 123")
+        console.log(val.target.value, "Target Value is")
+
+        var title = ""
+
+
+
+        if (val.target.value == "Approved") {
+            title = "Do You Want to Confirm This Order"
+        }
+        else {
+            title = "Do You Want to Cancel This Order"
+        }
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: title,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#2eb85c",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            console.log(result, "IS Confirmed")
+
+            if (result.isConfirmed) {
+
+                updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
+                    console.log(result)
+                    // reload()
+                    Swal.fire({
+                        title: "Order " + e.checkoutID + " Confirmed",
+                        text: "Order - " + e.checkoutID + " Order Confirmed",
+                        icon: "success"
+                    });
+                })
+
+            }
+        });
+
+
+
+        // props.relord();
+    }
+
+
+
     const columns = [
         { title: 'Product ID', field: 'pid' },
         { title: 'Name', field: 'name' },
@@ -130,7 +180,7 @@ export default function BookingExperience(props) {
                     title="Quantity Data"
                     style={customPopoverStyle}
                 >
-                    <CButton color="success" style={{ fontSize: 14,color:'white' }}>View</CButton>
+                    <CButton color="success" style={{ fontSize: 14, color: 'white' }}>View</CButton>
                 </CPopover>
 
         },
@@ -139,7 +189,31 @@ export default function BookingExperience(props) {
 
         { title: 'Total Amount', field: 'total_amount' },
         { title: 'Paid Amount', field: 'paid_amount' },
-        { title: 'Balance Amount', field: 'balance_amount' }
+        { title: 'Balance Amount', field: 'balance_amount' },
+
+        {
+            field: 'status',
+            title: 'Order Status',
+            align: 'left',
+            hidden: props.hideStatus,
+            render: (e) => {
+                console.log(e.status, "Delivery status")
+                return (
+                    <>
+                        <select
+                            className='form-select required'
+                            name='delivery_status'
+                            onChange={(value) => handleDelStatusChange(e, value)}
+                            value={e.status} // Set the selected value here
+                        >
+                            <option>Select</option>
+                            <option value="Approved">Confirm Order</option>
+                            <option value="Cancel">Cancel Order</option>
+                        </select>
+                    </>
+                );
+            }
+        },
     ]
 
 
@@ -149,9 +223,10 @@ export default function BookingExperience(props) {
         qty: value,
         date: value?.['DDate'],
         address: value?.['DAddress'],
-        total_amount: value.currency+ " "+value?.['total_amount'],
-        paid_amount: value.currency+ " "+value?.['paid_amount'],
-        balance_amount: value.currency+" "+ value?.['balance_amount']
+        total_amount: value.currency + " " + value?.['total_amount'],
+        paid_amount: value.currency + " " + value?.['paid_amount'],
+        balance_amount: value.currency + " " + value?.['balance_amount'],
+        checkoutID: value?.checkoutID
     }))
 
 

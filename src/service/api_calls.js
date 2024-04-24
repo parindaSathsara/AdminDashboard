@@ -239,17 +239,18 @@ async function getPaymentStatusById(rowid, orderid, paymentmood, paymenttype) {
 async function updateDeliveryStatus(id, value, type) {
 
     try {
-
         console.log(id, value, type)
-
         const data = {
             rowid: id,
             status: value,
             type: type
 
         }
-
         console.log(data, "DataSet is Updated")
+
+
+
+
 
         await axios.post('/update_delivery_status_by_product', data).then((res) => {
 
@@ -262,6 +263,20 @@ async function updateDeliveryStatus(id, value, type) {
         }).catch((err) => {
             throw new Error(err);
         })
+
+        await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
+
+            console.log(res)
+
+            if (res.data.status === 200) {
+
+            }
+
+        }).catch((err) => {
+            throw new Error(err);
+        })
+
+
     } catch (error) {
         throw new Error(error);
     }
