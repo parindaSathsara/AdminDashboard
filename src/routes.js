@@ -14,7 +14,9 @@ const DeliveryDepartment = React.lazy(() => import('./views/Departments/Delivery
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 const AccountSystem = React.lazy(() => import('./views/theme/AccountSystem/AccountSystem'))
-const ChatsHome = React.lazy(() => import('./views/theme/Chats/Chatshome'))
+const ChatsHome = React.lazy(() => import('./views/Chats/Chatshome'))
+const ChatsIndex = React.lazy(() => import('./views/_Chats/ChatsIndex'))
+
 
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -80,6 +82,7 @@ const routes = [
 
 
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
+  { path: '/chats', name: 'chats', element: ChatsIndex, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/customers', name: 'Customers', element: Typography },
