@@ -1,5 +1,6 @@
 import React from 'react'
 import VendorList from './views/VendorList/VendorList'
+import VendorAnalytic from './views/VendorList/VendorAnalytics'
 import ProductList from './views/Products/ProductsList'
 import ProductAnalytics from './views/Products/ProductAnalytics'
 import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
@@ -68,6 +69,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
 
   { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
+  { path: '/vendors/analytics', name: 'Vendor Analytics', element: VendorAnalytic },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
   { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
