@@ -25,6 +25,8 @@ axios.defaults.data = 'https://admin-api.aahaas.com'
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/'
 // axios.defaults.data = 'http://192.168.1.4:8000'
 
+//
+
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
