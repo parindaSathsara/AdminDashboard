@@ -1,5 +1,6 @@
 import React from 'react'
 import VendorList from './views/VendorList/VendorList'
+import VendorAnalytic from './views/VendorList/VendorAnalytics'
 import ProductList from './views/Products/ProductsList'
 import ProductAnalytics from './views/Products/ProductAnalytics'
 import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
@@ -14,7 +15,9 @@ const DeliveryDepartment = React.lazy(() => import('./views/Departments/Delivery
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 const AccountSystem = React.lazy(() => import('./views/theme/AccountSystem/AccountSystem'))
-const ChatsHome = React.lazy(() => import('./views/theme/Chats/Chatshome'))
+const ChatsHome = React.lazy(() => import('./views/Chats/Chatshome'))
+const ChatsIndex = React.lazy(() => import('./views/_Chats/ChatsIndex'))
+
 
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -69,6 +72,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
 
   { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
+  { path: '/vendors/analytics', name: 'Vendor Analytics', element: VendorAnalytic },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
   { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
@@ -80,6 +84,7 @@ const routes = [
 
 
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
+  { path: '/chats', name: 'chats', element: ChatsIndex, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/customers', name: 'Customers', element: Typography },

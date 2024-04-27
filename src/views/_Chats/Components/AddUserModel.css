@@ -1,0 +1,40 @@
+.user{
+  height: 40px;
+  /* border:1px solid gray; */
+  border-radius: 10px;
+  background: rgba(211, 211, 211, 0.319);
+  transition: 100ms;
+  margin: 4px;
+  overflow-wrap: break-word;
+  word-wrap:break-word;
+}
+.user:hover{
+  background: rgba(211, 211, 211, 0.534);
+  color: black;
+
+}
+.active-select_user{
+  background: #002c66;
+  color: white;
+}
+.users-container{
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.users-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.users-container::-webkit-scrollbar-thumb {
+  background-color: #88888863;
+}
+
+.users-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.users-container::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
