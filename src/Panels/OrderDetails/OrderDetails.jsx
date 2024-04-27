@@ -16,10 +16,18 @@ import PaymentModal from '../PaymentModal/PaymentModal';
 import { CAlert, CButton, CCard, CCardBody, CCardImage, CCardText, CCardTitle, CCol, CImage, CRow } from '@coreui/react';
 import CustomerDetails from '../CustomerDetails/CustomerDetails';
 import CheckIcon from '@mui/icons-material/Check';
-import { cibAboutMe, cibAbstract, cilCheck, cilCheckAlt, cilCheckCircle, cilXCircle } from '@coreui/icons';
+import { cibAboutMe, cibAbstract, cilCheck, cilCheckAlt, cilCheckCircle, cilDescription, cilInfo, cilViewColumn, cilViewModule, cilXCircle } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import Swal from 'sweetalert2';
 import DeliveryDetails from '../DeliveryDetails/DeliveryDetails';
+import MoreOrderView from './MoreOrderView/MoreOrderView';
+import DetailExpander from './Components/DetailExpander';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsAlt, faChevronDown, faExpand } from '@fortawesome/free-solid-svg-icons';
+import BookingExperience from './DepartmentWise/BookingExperience';
+import SupplierExperience from './DepartmentWise/SupplierExperience';
+import DateWiseSummary from './DateWiseSummary/DateWiseSummary';
+import TravellerExperience from './DepartmentWise/TravellerExperience';
 
 function OrderDetails(props) {
 
@@ -30,6 +38,8 @@ function OrderDetails(props) {
     const [productData, setProductData] = useState([])
     const [showModal, setShowModal] = useState(false);
     const [rowDetails, setRowDetails] = useState([])
+
+    const [dates, setDates] = useState([])
 
 
 
@@ -112,6 +122,7 @@ function OrderDetails(props) {
         // setProductData(props.dataset)
         setOrderMainDetails(props.orderData)
         setDetailsLoading(true)
+
         getDashboardOrdersIdWise(props.orderid).then((res) => {
             setDetailsLoading(false)
             setLifestylesData(res.lifestyleData)
@@ -120,8 +131,8 @@ function OrderDetails(props) {
             setFlightsData(res.flightsData)
             setHotelData(res.hotelData)
             setProductData(res.productData)
-
             setCustomerData(res.customerData)
+            setDates(res.dates)
 
             console.log(res.customerData, "CustomerData value is data ")
         })
@@ -148,74 +159,55 @@ function OrderDetails(props) {
 
 
 
-    // const data = {
-    //     columns: [
-    //         // {
-    //         //     title: '#ID', field: 'id', align: 'center', editable: 'never',
-    //         // },
-    //         { field: 'id', title: '#ID', width: 50 },
-    //         { field: 'prod_type', title: 'Product Type', },
-    //         { field: 'prod_id', title: 'Product Id', align: 'left', },
-    //         { field: 'prod_name', title: 'Product Name', align: 'left', width: 300 },
-    //         { field: 'qty', title: 'Qty', align: 'left', },
-    //         { field: 'unit_price', title: 'Unit Price', align: 'left', },
-    //         { field: 'discount', title: 'Discounts', align: 'left', },
-    //         { field: 'total', title: 'Total', align: 'left', },
-    //         { field: 'session', title: 'Session', align: 'left', },
-    //         { field: 'location', title: 'Location', align: 'left', width: 400 },
-    //         { field: 'stock', title: 'Stock', align: 'left', },
-    //         { field: 'cancel_dead', title: 'CancelDeadline', align: 'left', },
-    //         { field: 'cancel_policy', title: 'CancelPolicy', align: 'left', },
 
 
-    //     ],
-    //     rows: productData?.map((value) => {
-    //         return {
-    //             id: value.MainTId,
-    //             prod_type: value.CategoryType,
-    //             // oid: value.OrderId,
-    //             prod_id: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.essential_listing_id : value.CategoryType == 'Lifestyle' ? value.lifestyle_id
-    //                 : value.CategoryType == 'Education' ? value.education_id : value.CategoryType == 'Hotels' ? value.hotel_id : value.flight_id,
-    //             prod_name: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.listing_title : value.CategoryType == 'Lifestyle' ? value.lifestyle_name
-    //                 : value.CategoryType == 'Education' ? value.course_name : value.CategoryType == 'Hotels' ? value.hotel_name
-    //                     : value.CategoryType == 'Flight' ? 'From: ' + filterJson(value.ori_loccation?.split(',')[0])['city'] + ' - ' + filterJson(value.ori_loccation?.split(',')[0])['airport'] + ' | ' + 'To: ' + filterJson(value.dest_loccation?.split(',')[1])['city'] + ' - ' + filterJson(value.dest_loccation?.split(',')[1])['airport'] : null,
-    //             qty: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.ReqQTy :
-    //                 value.CategoryType == 'Lifestyle' ? 'Adult Count: ' + value.lifestyle_adult_count + ',' + 'Child Count: ' + value.lifestyle_children_count
-    //                     : value.CategoryType == 'Education' ? value['adult_rate'] > 0.00 ? 'Adult: 1 | Child: 0' : value['child_rate'] > 0.00 ? 'Adult: 0 | Child: 1' : value['adult_rate'] || value['child_rate'] > 0.00 ? 'Adult: 1 | Child: 1' : '-'
-    //                         : value.CategoryType == 'Hotels' ? 'Single: ' + value.HotelRoomTypes?.split(',')[0] + ', ' + 'Double: ' + value.HotelRoomTypes?.split(',')[1] + ', ' + 'Triple: ' + value.HotelRoomTypes?.split(',')[2]
-    //                             + ', ' + 'Quad: ' + value.HotelRoomTypes?.split(',')[3] + ' | ' + 'Total Pax: ' + value.HotelPxCount + ', ' + 'Adult: ' + value.HotelAdtCount + ', ' + 'Child: ' + value.HotelChldCount : value.CategoryType == 'Flight' ? 'Total Pax: ' + value.pax_count : null,
-    //             unit_price: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.ESSCurrency + value.mrp
-    //                 : value.CategoryType == 'Lifestyle' ? 'Adult Rate: ' + value.LSCurrency + value.adult_rate + ', ' + 'Child Rate: ' + value.LSCurrency + value.child_rate
-    //                     : value.CategoryType == 'Education' ? 'Adult Rate: ' + value.EduCurrency + value.adult_course_fee + ', ' + 'Child Rate: ' + value.EduCurrency + value.child_course_fee
-    //                         : value.CategoryType == 'Hotels' ? 'N/A' : value.CategoryType == 'Flight' ? value.currency + value.total_amount : null,
-    //             discount: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.ESDiscountType == 'fps' ? value.ESSCurrency + value.ESDiscountAmount : value.ESDiscountType == 'ps' ? value.ESDiscountPrecentage.split('.')[0] + '%' : value.ESDiscountType == 'bogof' ? value.ESDiscountOfferTitle : 'N/A'
-    //                 : value.CategoryType == 'Lifestyle' ? value.LSDiscountType == 'Amount' ? value.LSCurrency + parseFloat(value.LSDiscountValue).toFixed(2) : value.LSDiscountType == '%' ? value.LSDiscountValue + '%' : 'N/A'
-    //                     : value.CategoryType == 'Education' ?
-    //                         value.EduDiscountType == '%' ?
-    //                             Math.round(value.EduDisValue) + '%' :
-    //                             value.EduDiscountType == 'Amount' ?
-    //                                 value.EduCurrency + value.EduDisValue : '-' : value.CategoryType == 'Hotels' ? 'N/A' : value.CategoryType == 'Flight' ? 'N/A' : null,
-    //             total: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.ItemCurrency + discountTotal(value.ReqQTy, value)['discount_amount'] : value.CategoryType == 'Lifestyle' ? value.ItemCurrency + value.CartEachItemPrice
-    //                 : value.CategoryType == 'Education' ? value.EduCurrency + value.CartEachItemPrice : value.CategoryType == 'Hotels' ? value.ItemCurrency + value.CartEachItemPrice : value.CategoryType == 'Flight' ? value.currency + value.total_amount : null,
-    //             session: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? 'N/A' : value.CategoryType == 'Lifestyle' ? value.pickup_time
-    //                 : value.CategoryType == 'Education' ? value.session_no + ' Sessions' : value.CategoryType == 'Hotels' ? HotelNightdays(value.HotelCheckin, value.HotelCheckout) + ' Night(s)'
-    //                     : value.CategoryType == 'Flight' ? calculateHours(value.departure_time, value.arrival_time) + 'hrs' : 'N/A',
-    //             location: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.delivery_address : value.CategoryType == 'Lifestyle' ? value.pickup_location
-    //                 : value.CategoryType == 'Education' ? value.session_no + ' Sessions' : value.CategoryType == 'Hotels' ? 'N/A' : value.CategoryType == 'Flight' ? filterJson(value.dest_loccation?.split(',')[1])['city'] : null,
-    //             stock: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.qty : value.CategoryType == 'Lifestyle' ? value.LSAllotments
-    //                 : value.CategoryType == 'Education' ? 'Total: ' + value.total_inventory + ', ' + 'Used: ' + value.used_inventory : value.CategoryType == 'Hotels' ? 'N/A' : value.CategoryType == 'Flight' ? 'N/A' : null,
-    //             cancel_dead: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? moment(value.delivery_date).add(parseInt(value.cancellationDay) + 1, 'days').format("YYYY-MM-DD")
-    //                 : value.CategoryType == 'Lifestyle' ? moment(value.LifeStylePrefDate).add(parseInt(value.LifeStyleCancel), 'days').format("YYYY-MM-DD")
-    //                     : value.CategoryType == 'Education' ? moment(value.booking_date).add(parseInt(value.deadline_no_ofdays), 'days').format('YYYY-MM-DD') : value.CategoryType == 'Hotels' ? value.HotelCancelDeadline : 'N/A',
-    //             cancel_policy: value.CategoryType == 'Essential' || value.CategoryType == 'Non Essential' ? value.EssRefundPolicy == null ? 'N/A' : value.EssRefundPolicy : value.CategoryType == 'Lifestyle' ? value.LSCancelPolicy
-    //                 : value.CategoryType == 'Education' ? value.cancel_policy : value.CategoryType == 'Hotels' ? 'N/A' : 'N/A',
-    //         }
-    //     })
-    // }
+    const [moreOrderDetails, setMoreOrderDetails] = useState("")
+    const [moreOrderModal, setMoreOrderModal] = useState(false)
+    const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
+
+    const handleMoreInfoModal = (e, category) => {
+        console.log("More Info Modal", e)
+
+        setMoreOrderModalCategory(category)
+        if (category == 3) {
+            setMoreOrderDetails(e.lifestyle_booking_id)
+            setMoreOrderModal(true)
+        }
+        else if (category == 1) {
+            setMoreOrderDetails(e.essential_pre_order_id)
+            setMoreOrderModal(true)
+        }
+
+        else if (category == 5) {
+            setMoreOrderDetails(e.booking_id)
+            setMoreOrderModal(true)
+        }
+
+
+
+
+    }
+
 
 
     const lifestyles = {
         columns: [
+
+            {
+                field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                    return (
+                        <>
+                            <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 3)}>
+                                <CIcon icon={cilInfo} className="text-info" size="xl" />
+                            </CButton>
+
+                        </>
+                    );
+                }
+            },
+
+            { field: 'pid', title: 'Product ID' },
+
             { field: 'product_title', title: 'Product Title' },
             { field: 'adultCount', title: 'Adult Count', align: 'left' },
             { field: 'childCount', title: 'Child Count', align: 'left' },
@@ -225,46 +217,48 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
-                    console.log(e, "Data set delivery is")
-                    console.log(e.status, "Delivery status")
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
+            //         console.log(e, "Data set delivery is")
+            //         console.log(e.status, "Delivery status")
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: lifestylesData?.map(value => ({
+
             id: value.checkoutID,
+            pid: value.PID,
             product_title: value.product_title,
             childCount: value.childCount,
             adultCount: value.adultCount,
@@ -276,15 +270,45 @@ function OrderDetails(props) {
             supplier_order: value.supplier_status,
             status: value.status,
             pickup_time: value.pickupTime,
-            location: value.location
+            location: value.location,
+
+
+
+            lifestyle_inventory_id: value.lifestyle_inventory_id,
+            lifestyle_rate_id: value.lifestyle_rate_id,
+            package_id: value.package_id,
+            lifestyle_booking_id: value.lifestyle_booking_id,
+            lifestyle_id: value.lifestyle_id
         }))
     }
+
+    console.log(lifestylesData, "Lifestyle Dataaaaaaa")
 
 
 
     const educations = {
         columns: [
             // { field: 'id', title: 'ID' },
+
+
+
+            {
+
+                field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                    return (
+                        <>
+                            <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 5)}>
+                                <CIcon icon={cilInfo} className="text-info" size="xl" />
+                            </CButton>
+
+                        </>
+                    );
+                }
+
+            },
+
+            { field: 'pid', title: 'Product ID' },
+
             { field: 'product_title', title: 'Product Title' },
             { field: 'student_type', title: 'Student Type', align: 'left' },
 
@@ -302,46 +326,47 @@ function OrderDetails(props) {
 
 
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
 
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
 
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: educationData?.map(value => ({
             id: value.checkoutID,
+            pid: value.PID,
             product_title: value.product_title,
             student_type: value.student_type,
             balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
@@ -355,11 +380,27 @@ function OrderDetails(props) {
 
             course_startime: value.course_startime,
             course_endtime: value.course_endtime,
+            booking_id: value.booking_id
+
         }))
     }
 
     const essNEss = {
         columns: [
+            {
+                field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                    return (
+                        <>
+                            <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 1)}>
+                                <CIcon icon={cilInfo} className="text-info" size="xl" />
+                            </CButton>
+
+                        </>
+                    );
+                }
+            },
+
+            { field: 'pid', title: 'Product ID' },
             { field: 'product_title', title: 'Product Title' },
             { field: 'quantity', title: 'Quantity', align: 'left' },
             { field: 'preffered_date', title: 'Preferred Date', align: 'left' },
@@ -370,46 +411,48 @@ function OrderDetails(props) {
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
 
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
-                    console.log(e.status, "Delivery status")
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
+            //         console.log(e.status, "Delivery status")
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
 
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: essNEssData?.map(value => ({
             id: value.checkoutID,
+
+            pid: value.PID,
             product_title: value.product_title,
             quantity: value.quantity,
             preffered_date: value.preffered_date,
@@ -419,9 +462,13 @@ function OrderDetails(props) {
             total_amount: value.currency + " " + (value.total_amount || "0.00"),
             features: renderVariations(value), // Render variations
             supplier_order: value.supplier_status,
-            status: value.status // Default value
+            status: value.status, // Default value
+            essential_pre_order_id: value.essential_pre_order_id
         }))
     }
+
+
+
 
     // Function to render variations
     function renderVariations(value) {
@@ -464,11 +511,11 @@ function OrderDetails(props) {
                                     <h6 style={{ textAlign: 'right', fontWeight: 'bold' }}>Departure Date</h6>
                                 </CCol>
 
-
                             </CRow>
 
                             {originData?.map((origin, indexOrigin) => (
                                 <CRow>
+
                                     <CCol lg={3}>
                                         <h6>{origin}</h6>
 
@@ -489,10 +536,6 @@ function OrderDetails(props) {
                                     <CCol lg={3}>
                                         <h6 style={{ textAlign: 'right' }}>{depDates[indexOrigin]}</h6>
                                     </CCol>
-
-
-
-
 
                                 </CRow>
                             ))}
@@ -531,6 +574,9 @@ function OrderDetails(props) {
         })
     }
 
+
+
+    const [detailExpander, setDetailExpander] = useState(false)
 
     const handleDelStatusChange = (e, val) => {
         console.log(e, "Value Data set is 123")
@@ -589,40 +635,40 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            {
-                field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-                    return (
-                        <>
-                            {e.supplier_order === 'Pending' ? (
-                                <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-                            ) : (
-                                <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-                            )}
-                        </>
-                    );
-                }
-            },
-            {
-                field: 'status',
-                title: 'Order Status',
-                align: 'left',
-                hidden: props.hideStatus,
-                render: (e) => {
-                    return (
-                        <>
-                            <select
-                                className='form-select required'
-                                name='delivery_status'
-                                onChange={(value) => handleDelStatusChange(e, value)}
-                                value={e.status} // Set the selected value here
-                            >
-                                <option value="Approved">Confirm Order</option>
-                                <option value="Cancelled">Cancel Order</option>
-                            </select>
-                        </>
-                    );
-                }
-            },
+            // {
+            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
+            //         return (
+            //             <>
+            //                 {e.supplier_order === 'Pending' ? (
+            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
+            //                 ) : (
+            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
+            //                 )}
+            //             </>
+            //         );
+            //     }
+            // },
+            // {
+            //     field: 'status',
+            //     title: 'Order Status',
+            //     align: 'left',
+            //     hidden: props.hideStatus,
+            //     render: (e) => {
+            //         return (
+            //             <>
+            //                 <select
+            //                     className='form-select required'
+            //                     name='delivery_status'
+            //                     onChange={(value) => handleDelStatusChange(e, value)}
+            //                     value={e.status} // Set the selected value here
+            //                 >
+            //                     <option value="Approved">Confirm Order</option>
+            //                     <option value="Cancelled">Cancel Order</option>
+            //                 </select>
+            //             </>
+            //         );
+            //     }
+            // },
         ],
 
         rows: hotelData?.map(value => ({
@@ -642,6 +688,152 @@ function OrderDetails(props) {
 
 
 
+
+    const ServiceWiseSummary = () => {
+        return (
+            <>
+                {lifestylesData?.length > 0 ?
+                    <MaterialTable
+                        data={lifestyles.rows}
+                        columns={lifestyles.columns}
+                        title="Lifestyles Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+
+                <br></br>
+
+
+                {educationData?.length > 0 ?
+                    <MaterialTable
+                        data={educations.rows}
+                        columns={educations.columns}
+                        title="Education Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+
+                <br></br>
+
+                {essNEssData?.length > 0 ?
+                    <MaterialTable
+                        data={essNEss.rows}
+                        columns={essNEss.columns}
+                        title="Essentials/Non Essentials Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+
+
+                {hotelData?.length > 0 ?
+                    <MaterialTable
+                        data={hotels.rows}
+                        columns={hotels.columns}
+                        title="Hotels Details"
+                        options={{
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+
+                }
+
+
+
+                {flightsData?.length > 0 ?
+                    <MaterialTable
+                        data={flights.rows}
+                        columns={flights.columns}
+                        title="Flights Details"
+                        options={{
+                            tableLayout: "auto",
+                            sorting: true, search: true,
+                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                            filtering: false, paging: false, pageSize: 3,
+                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                            showSelectAllCheckbox: false, showTextRowsSelected: false,
+                            grouping: false, columnsButton: false,
+                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                            editCellStyle: { width: "100%" },
+                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
+
+                            // fixedColumns: {
+                            //     left: 6
+                            // }
+                        }}
+                    />
+                    :
+                    null
+                }
+            </>
+        )
+    }
 
 
 
@@ -682,146 +874,25 @@ function OrderDetails(props) {
 
 
                     <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
-                    {lifestylesData?.length > 0 ?
-                        <MaterialTable
-                            data={lifestyles.rows}
-                            columns={lifestyles.columns}
-                            title="Lifestyles Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
 
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
+                    <Tabs
+                        defaultActiveKey="service"
+                        id="uncontrolled-tab-example"
+                        className="mt-4"
+                        style={{
+                            fontSize: 16
+                        }}
+                    >
 
-                    <br></br>
+                        <Tab eventKey="service" title="Service Wise">
+                            <ServiceWiseSummary></ServiceWiseSummary>
+                        </Tab>
+                        <Tab eventKey="date" title="Day Wise">
+                            <DateWiseSummary dataset={productData} orderid={props.orderid} dates={dates} handleMoreInfoModal={handleMoreInfoModal} />
+                        </Tab>
 
 
-                    {educationData?.length > 0 ?
-                        <MaterialTable
-                            data={educations.rows}
-                            columns={educations.columns}
-                            title="Education Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
-
-                    <br></br>
-
-                    {essNEssData?.length > 0 ?
-                        <MaterialTable
-                            data={essNEss.rows}
-                            columns={essNEss.columns}
-                            title="Essentials/Non Essentials Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
-
-
-                    {hotelData?.length > 0 ?
-                        <MaterialTable
-                            data={hotels.rows}
-                            columns={hotels.columns}
-                            title="Hotels Details"
-                            options={{
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-
-                    }
-
-
-
-                    {flightsData?.length > 0 ?
-                        <MaterialTable
-                            data={flights.rows}
-                            columns={flights.columns}
-                            title="Flights Details"
-                            options={{
-                                tableLayout: "auto",
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: false, pageSize: 3,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: false, columnsButton: false,
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                                editCellStyle: { width: "100%" },
-                                headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-                        />
-                        :
-                        null
-                    }
-
+                    </Tabs>
 
 
 
@@ -829,46 +900,56 @@ function OrderDetails(props) {
 
                 </div>
 
-                {console.log("product data value is ", productData)}
-                {console.log(customerData, "Customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")}
+
                 {props?.accounts ?
                     null :
                     <>
-                        <Tabs
-                            defaultActiveKey="acc"
-                            id="uncontrolled-tab-example"
-                            className="mt-4"
-                        >
-                            {/* <Tab eventKey="confirmation" title="Confirmation Details">
-                                <ConfirmationDetails dataset={productData} orderid={props.orderid} relord={() => reload()} />
-                            </Tab> */}
 
-                            <Tab eventKey="acc" title="Accounts Details">
-                                <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
-                            </Tab>
-                            <Tab eventKey="sup" title="Supplier Details">
-                                <SupDetails dataset={productData} orderid={props.orderid} />
-                            </Tab>
+                        <CCol style={{ width: '100%' }}>
 
 
 
-                            <Tab eventKey="customer" title="Customer Details">
-                                <CustomerDetails dataset={customerData} orderid={props.orderid} />
-                            </Tab>
-
-                            <Tab eventKey="location" title="Location Details">
-                                <DeliveryDetails dataset={productData} />
-                            </Tab>
+                            <button onClick={() => setDetailExpander(true)} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', float: 'right', top: '20px' }}>
+                                <FontAwesomeIcon icon={faExpand} size={30} />
+                            </button>
 
 
+                            <Tabs
+                                defaultActiveKey="bookingexperience"
+                                id="uncontrolled-tab-example"
+                                className="mt-4"
+                            >
+
+                                <Tab eventKey="bookingexperience" title="Booking Experience">
+                                    <BookingExperience dataset={productData} orderid={props.orderid} />
+                                </Tab>
+
+                                <Tab eventKey="supplierexperience" title="Supplier Experience">
+                                    <SupplierExperience dataset={productData} orderid={props.orderid} />
+                                </Tab>
+
+                                <Tab eventKey="travellerExperience" title="Traveller Experience">
+                                    <TravellerExperience dataset={productData} orderid={props.orderid} />
+                                </Tab>
+
+
+                                <Tab eventKey="acc" title="Accounts Details">
+                                    <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
+                                </Tab>
+                                {/* 
+                                <Tab eventKey="location" title="Location Details">
+                                    <DeliveryDetails dataset={productData} />
+                                </Tab> */}
 
 
 
-                            {/* <Tab eventKey="feedback" title="Feedback Details">
-                                <FeebackDetails dataset={productData} orderid={props.orderid} />
-                            </Tab> */}
 
-                        </Tabs>
+                            </Tabs>
+
+
+
+
+                        </CCol>
 
                         {showModal == true ?
                             <PaymentModal
@@ -879,9 +960,67 @@ function OrderDetails(props) {
                             :
                             null
                         }
+
+
+
+                        <MoreOrderView
+                            show={moreOrderModal}
+                            onHide={() => setMoreOrderModal(false)}
+                            preID={moreOrderDetails}
+                            category={moreOrderModalCategory}
+                        >
+                        </MoreOrderView>
+
+                        <DetailExpander
+                            show={detailExpander}
+                            onHide={() => setDetailExpander(false)}
+                            orderid={props.orderid}
+
+                            component={
+                                <Tabs
+                                    defaultActiveKey="bookingexperience"
+                                    id="uncontrolled-tab-example"
+                                    className="mt-4"
+                                >
+
+
+                                    <Tab eventKey="bookingexperience" title="Booking Experience">
+                                        <BookingExperience dataset={productData} orderid={props.orderid} />
+                                    </Tab>
+
+                                    <Tab eventKey="supplierexperience" title="Supplier Experience">
+                                        <SupplierExperience dataset={productData} orderid={props.orderid} />
+                                    </Tab>
+
+                                    <Tab eventKey="travellerExperience" title="Traveller Experience">
+                                        <TravellerExperience dataset={productData} orderid={props.orderid} />
+                                    </Tab>
+
+
+                                    <Tab eventKey="acc" title="Accounts Details">
+                                        <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
+                                    </Tab>
+                                    {/* 
+                                    <Tab eventKey="location" title="Location Details">
+                                        <DeliveryDetails dataset={productData} />
+                                    </Tab>
+ */}
+
+
+
+                                </Tabs>
+                            }
+                        >
+
+                        </DetailExpander>
+
+
                     </>
 
                 }
+
+
+
 
             </>
     )
