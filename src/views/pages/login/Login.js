@@ -150,7 +150,11 @@ const Login = () => {
                         <CButton type='submit' color="primary" className="px-4" onClick={handleFormSubmit}>
                           Login
                         </CButton>
-
+                        <Link to="/register" style={{ marginLeft: '10px' }}> {/* Link to the Register page */}
+                          <CButton color="link" className="px-0">
+                           Don't Have an account? Register !
+                          </CButton>
+                        </Link>
                         {/* <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
                           Forgot password?
