@@ -10,6 +10,29 @@ axios.defaults.withCredentials = true;
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
+//  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+// axios.defaults.baseURL = 'http://172.16.26.67:8000/api/'
+// axios.defaults.data = 'http://172.16.26.67:8000'
+
+axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+axios.defaults.data = 'https://admin-api.aahaas.com'
+
+// axios.defaults.baseURL = 'http://192.168.1.4:8000/api/'
+// axios.defaults.data = 'http://192.168.1.4:8000'
+
+//
+
+
+// const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+// if (csrfTokenMeta) {
+//   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfTokenMeta.getAttribute('content');
+// } else {
+//   console.error('CSRF token meta tag not found');
+// }
+
+// axios.defaults.baseURL = 'http://192.168.8.110:8000/api/'
+// axios.defaults.data = 'http://192.168.8.110:8000'
 axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
 
 const loading = (

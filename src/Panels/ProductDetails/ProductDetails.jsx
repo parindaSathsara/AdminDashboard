@@ -254,6 +254,7 @@ function ProductDetails(props) {
                                 onChange={(value) => handleDelStatusChange(e, value)}
                                 value={e.status} // Set the selected value here
                             >
+
                                 <option value="Approved">Confirm Order</option>
                                 <option value="Cancelled">Cancel Order</option>
                             </select>

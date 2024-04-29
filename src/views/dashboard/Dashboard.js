@@ -62,6 +62,9 @@ import MailBox from 'src/Panels/MailBox/MailBox'
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
 import Cards from '../base/cards/Cards'
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails'
+import BookingExperience from 'src/Panels/OrderDetails/DepartmentWise/BookingExperience'
+import SupplierExperience from 'src/Panels/OrderDetails/DepartmentWise/SupplierExperience'
+import DateWiseSummary from 'src/Panels/OrderDetails/DateWiseSummary/DateWiseSummary'
 
 
 
@@ -198,6 +201,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <WidgetsDropdown /> */}
+      
 
 
       <CRow>
@@ -270,6 +274,9 @@ const Dashboard = () => {
             </CCol>
 
           </CRow>
+
+
+          {/* <BookingExperience></BookingExperience> */}
 
 
 
