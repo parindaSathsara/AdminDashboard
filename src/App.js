@@ -17,7 +17,7 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 axios.defaults.data = 'https://admin-api.aahaas.com'
-
+a
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/'
 // axios.defaults.data = 'http://192.168.1.4:8000'
 
