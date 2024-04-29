@@ -16,6 +16,7 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
+import Swal from 'sweetalert2';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -23,10 +24,10 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [role, setRole] = useState('');  
+  const [role, setRole] = useState('');
 
   const handleRegister = () => {
-   
+
     if (password !== repeatPassword) {
       alert("Passwords don't match");
       return;
@@ -39,21 +40,31 @@ const Register = () => {
       'Accept': 'application/json',
       'X-CSRF-TOKEN': csrfToken
     };
-    axios.post('http://192.168.1.4:8000/api/create_admin_user', {
+    axios.post('create_admin_user', {
       name: username,
       email: email,
       password: password,
-      role: role, 
+      role: role,
     }, { headers: headers })
-    .then(response => {
-      console.log(response.data);
-      alert('Registration successful');
-      navigate('/login'); // Redirect to login page
-    })
-    .catch(error => {
-      console.error(error);
-      alert('Registration failed');
-    });
+      .then(response => {
+
+        Swal.fire({
+          title: "Success: Account Created",
+          text: "Your account has been created successfully!",
+          icon: "success"
+        });
+
+        navigate('/login'); // Redirect to login page
+      })
+      .catch(error => {
+        console.error(error);
+        Swal.fire({
+          title: "Account Creation Failed",
+          text: "Invalid username or password. Please try again.",
+          icon: "error"
+        });
+
+      });
   };
 
   return (
@@ -63,15 +74,15 @@ const Register = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm> 
+                <CForm>
                   <h1>Register</h1>
                   <p className="text-medium-emphasis">Create your account</p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput 
-                      placeholder="Username" 
+                    <CFormInput
+                      placeholder="Username"
                       autoComplete="username"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
@@ -79,9 +90,9 @@ const Register = () => {
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput 
-                      placeholder="Email" 
-                      autoComplete="email" 
+                    <CFormInput
+                      placeholder="Email"
+                      autoComplete="email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                     />
@@ -90,9 +101,9 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
-                    <CFormInput 
-                      type="password" 
-                      placeholder="Password" 
+                    <CFormInput
+                      type="password"
+                      placeholder="Password"
                       autoComplete="new-password"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
@@ -102,9 +113,9 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
-                    <CFormInput 
-                      type="password" 
-                      placeholder="Repeat password" 
+                    <CFormInput
+                      type="password"
+                      placeholder="Repeat password"
                       autoComplete="new-password"
                       value={repeatPassword}
                       onChange={e => setRepeatPassword(e.target.value)}
@@ -113,7 +124,7 @@ const Register = () => {
                   {/* Role selection dropdown */}
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
-                    <CIcon icon={cilUser} />
+                      <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <select
                       className="form-select"

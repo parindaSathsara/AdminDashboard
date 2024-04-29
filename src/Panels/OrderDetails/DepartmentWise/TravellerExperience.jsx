@@ -121,7 +121,7 @@ export default function TravellerExperience(props) {
     const qcValues = ['Approved', 'Pending'];
     const deliveryStatusValues = ['Delivered', 'Pending'];
 
-   
+
     const [mapView, setMapView] = useState(false)
 
     const [mapViewData, setMapViewData] = useState([])
@@ -132,16 +132,16 @@ export default function TravellerExperience(props) {
         setMapView(true)
         setMapViewData(data)
 
-        
 
-       
+
+
     }
 
 
     const columns = [
         { title: 'PID', field: 'pid' },
         { title: 'Delivery Date', field: 'deliveryDate', type: 'date' },
-        { title: 'Location', field: 'location', render: rowData =>  <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
+        { title: 'Location', field: 'location', render: rowData => <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
         { title: 'Reconfirmation Date', field: 'reconfirmationDate', type: 'date', render: rowData => <CFormInput type="date" value={rowData.reconfirmationDate} onChange={(e) => handleReconfirmationDateChange(e.target.value, rowData)} /> },
         { title: 'Q/C', field: 'qc', render: rowData => <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
         { title: 'Delivery Status', field: 'deliveryStatus', render: rowData => <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect> },
@@ -154,22 +154,22 @@ export default function TravellerExperience(props) {
     };
 
     // Prepare the data for the Material Table
-    const data = productData.map(value => ({
+    const data = productData?.map(value => ({
         pid: value?.['PID'],
         deliveryDate: value?.service_date,
         location: value?.location,
         reconfirmationDate: value?.reconfirmationDate,
         qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
         deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
-        data:value
+        data: value
         // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
     }));
 
 
     return (
         <>
-          
-          <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen">
+
+            <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen">
                 <Modal.Header closeButton>
                     <Modal.Title>Location Data</Modal.Title>
                 </Modal.Header>

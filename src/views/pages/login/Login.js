@@ -21,6 +21,11 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import logo from '../../../assets/brand/logo.png'
 import AuthUser from 'src/service/authenticator'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+import { Carousel } from 'react-bootstrap'
+
+
+
 
 const Login = () => {
 
@@ -63,26 +68,29 @@ const Login = () => {
 
     try {
 
-      await axios.post('http://192.168.1.4:8000/api/user_login', loginInput,
+      await axios.post('user_login', loginInput,
         {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': csrfToken
         }
       ).then((res) => {
-        console.log(res)
+
+        console.log(res.data)
         if (res.data.status === 200) {
+
           setToken(res.data.user, res.data.access_token);
-          localStorage.setItem('user',res.data.user);
-          localStorage.setItem('token',res.data.access_token);
-          navigate('/dashboard')
+          localStorage.setItem('user', res.data);
+          localStorage.setItem('token', res.data.access_token);
+
+          navigate("/dashboard")
         }
-        if (res.data.status === 401) {
-          // toast.error('Unauthorized User | Please check the credentials again!', {
-          //     style: {
-          //         background: '#333',
-          //         color: '#fff',
-          //     }
-          // })
+
+        if (res.data.status === 403) {
+          Swal.fire({
+            title: "Login Failed",
+            text: "Invalid username or password. Please try again.",
+            icon: "error"
+          });
         }
       }).catch((err) => {
         console.log(err, "Error is")
@@ -105,7 +113,7 @@ const Login = () => {
 
 
           <CRow className="justify-content-center">
-            <CCol md={6}>
+            <CCol md={5}>
               <CCardGroup>
 
                 <CCard className="p-4">
@@ -156,22 +164,38 @@ const Login = () => {
                   </CCardBody>
                 </CCard>
 
-                <div className="text-white  loginCard" style={{ width: '40%' }}>
 
-                  {/* <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div> */}
+                {/* <CCard className="text-white bg-primary">
+                  <CCardBody className="text-center">
+                    <Carousel style={{ height: '100%' }}>
+                      <Carousel.Item style={{ height: '100%' }}>
+                        <img
+                          className="d-block w-100"
+                          src="https://cdn-production.checkfront.com/wp-content/uploads/2021/07/marketing-tours-online-with-woman-traveling-by-boat-in-thailand.jpeg"
+                          alt="First slide"
+                          style={{ objectFit: 'cover', height: '100%' }}
+                        />
+                      </Carousel.Item>
+                      <Carousel.Item>
+                        <img
+                          className="d-block w-100"
+                          src="https://wallpaper.dog/large/20402632.jpg"
+                          alt="Second slide"
+                          style={{ objectFit: 'cover', height: '100%' }}
+                        />
+                      </Carousel.Item>
+                      <Carousel.Item>
+                        <img
+                          className="d-block w-100"
+                          src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2N1YmElMjBkaXZpbmd8ZW58MHx8MHx8fDA%3D"
+                          alt="Third slide"
+                          style={{ objectFit: 'cover', height: '100%' }}
+                        />
+                      </Carousel.Item>
+                    </Carousel>
+                  </CCardBody>
+                </CCard> */}
 
-                </div>
 
               </CCardGroup>
             </CCol>

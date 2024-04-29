@@ -3,7 +3,7 @@
 
 import React from 'react'
 import MaterialTable from 'material-table';
-import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
+import { CBadge, CButton, CCard, CCardBody, CCardText, CCol, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
 import { updateDeliveryStatus, candelOrder } from 'src/service/api_calls';
 
@@ -128,73 +128,74 @@ export default function BookingExperience(props) {
     var title = ""
 
 
+    if (val.target.value != "") {
+      if (val.target.value == "Approved") {
+        title = "Do You Want to Confirm This Order"
+        Swal.fire({
+          title: "Are you sure?",
+          text: title,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#2eb85c",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes"
+        }).then((result) => {
+          console.log(result, "IS Confirmed")
 
-    if (val.target.value == "Approved") {
-      title = "Do You Want to Confirm This Order"
-      Swal.fire({
-        title: "Are you sure?",
-        text: title,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#2eb85c",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes"
-      }).then((result) => {
-        console.log(result, "IS Confirmed")
+          if (result.isConfirmed) {
 
-        if (result.isConfirmed) {
+            updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
+              console.log(result)
+              // reload()
+              Swal.fire({
+                title: "Order " + e.checkoutID + " Confirmed",
+                text: "Order - " + e.checkoutID + " Order Confirmed",
+                icon: "success"
+              });
+            })
 
-          updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
-            console.log(result)
-            // reload()
-            Swal.fire({
-              title: "Order " + e.checkoutID + " Confirmed",
-              text: "Order - " + e.checkoutID + " Order Confirmed",
-              icon: "success"
-            });
-          })
-
-        }
-      });
-    }
-    else if (val.target.value == "Cancel") {
-      title = "Do You Want to Cancel"
-      Swal.fire({
-        title: title,
-        text: "Please Enter the reason for cancel",
-        input: "text",
-        icon: "question",
-        inputAttributes: {
-          autocapitalize: "off"
-        },
-        showCancelButton: true,
-        confirmButtonText: "Yes,Cancel",
-        cancelButtonText: "No",
-        confirmButtonColor: "#d33",
-        showLoaderOnConfirm: true,
-        preConfirm: async (reason) => {
-          try {
-            if (!reason) {
-              return Swal.showValidationMessage(`Reason is required`);
-            }
-
-            let data = {
-              reason: reason,
-              id: e.checkoutID,
-              value: val.target.value,
-            };
-
-            await candelOrder(data);
-
-          } catch (error) {
-            Swal.showValidationMessage(`
-                    Request failed: ${error}
-                  `);
           }
-        },
-        allowOutsideClick: () => !Swal.isLoading()
-      });
+        });
+      }
+      else if (val.target.value == "Cancel") {
+        title = "Do You Want to Cancel"
+        Swal.fire({
+          title: title,
+          text: "Please Enter the reason for cancel",
+          input: "text",
+          icon: "question",
+          inputAttributes: {
+            autocapitalize: "off"
+          },
+          showCancelButton: true,
+          confirmButtonText: "Yes,Cancel",
+          cancelButtonText: "No",
+          confirmButtonColor: "#d33",
+          showLoaderOnConfirm: true,
+          preConfirm: async (reason) => {
+            try {
+              if (!reason) {
+                return Swal.showValidationMessage(`Reason is required`);
+              }
+
+              let data = {
+                reason: reason,
+                id: e.checkoutID,
+                value: val.target.value,
+              };
+
+              await candelOrder(data);
+
+            } catch (error) {
+              Swal.showValidationMessage(`
+                    Request failed: ${error}`);
+            }
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        });
+      }
     }
+
     // props.relord();
   }
 
@@ -222,6 +223,9 @@ export default function BookingExperience(props) {
     { title: 'Paid Amount', field: 'paid_amount' },
     { title: 'Balance Amount', field: 'balance_amount' },
 
+    { title: 'Supplier Confirmed', field: 'supplier_status', render: rowData => rowData?.supplier_status == "Pending" ? <CBadge color="danger">Pending</CBadge> : <CBadge color="success">Confirmed</CBadge> },
+
+
     {
       field: 'status',
       title: 'Order Status',
@@ -236,7 +240,7 @@ export default function BookingExperience(props) {
               onChange={(value) => handleDelStatusChange(e, value)}
               value={e.status} // Set the selected value here
             >
-              <option>Select</option>
+              <option value="" >Select</option>
               <option value="Approved" selected={e.qty.status === "Approved" ? true : false} >Confirm Order</option>
               <option value="Cancel" selected={e.qty.status === "Cancel" ? true : false} >Cancel Order</option>
             </select>
@@ -247,7 +251,7 @@ export default function BookingExperience(props) {
   ]
 
 
-  const data = productData.map(value => ({
+  const data = productData?.map(value => ({
     pid: value?.['PID'],
     name: value?.['PName'],
     qty: value,
@@ -256,7 +260,8 @@ export default function BookingExperience(props) {
     total_amount: value.currency + " " + value?.['total_amount'],
     paid_amount: value.currency + " " + value?.['paid_amount'],
     balance_amount: value.currency + " " + value?.['balance_amount'],
-    checkoutID: value?.checkoutID
+    checkoutID: value?.checkoutID,
+    supplier_status: value?.supplier_status
   }))
 
 

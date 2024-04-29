@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react'
 import MaterialTable from 'material-table';
-import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
+import { CButton, CCard, CCardBody, CCol, CPopover, CRow, CSpinner } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
@@ -124,11 +124,11 @@ export default function SupplierExperience(props) {
 
     const getSupplierVoucher = async (data) => {
 
-        console.log(data,"Voucher ID")
+        console.log(data, "Voucher ID")
 
         setSupplierVoucherView(true)
 
-        
+
         var apiUrl = `https://gateway.aahaas.com/api/displaySupplierVoucher/${data.checkout_id}`
 
         try {
@@ -170,7 +170,7 @@ export default function SupplierExperience(props) {
     ]
 
 
-    const data = productData.map(value => ({
+    const data = productData?.map(value => ({
         pid: value?.['PID'],
         sid: value?.supplier_id,
         name: value?.['PName'],
@@ -182,14 +182,34 @@ export default function SupplierExperience(props) {
     }))
 
 
+    const [voucherSending, setVoucherSending] = useState(false)
+
+
+    const resendVoucher = () => {
+        setVoucherSending(true)
+
+
+    }
+
+
     return (
         <>
-            <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)}     size="xl">
+            <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl">
                 <Modal.Header closeButton>
                     <Modal.Title>Supplier Voucher</Modal.Title>
+                    <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher}>
+                        Resend Voucher
+
+                        {voucherSending == true ?
+                            <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
+                            :
+                            null
+                        }
+
+                    </CButton>
                 </Modal.Header>
                 <Modal.Body>
-                <div dangerouslySetInnerHTML={{ __html: supplierVoucherData }} />
+                    <div dangerouslySetInnerHTML={{ __html: supplierVoucherData }} />
                 </Modal.Body>
                 <Modal.Footer>
 

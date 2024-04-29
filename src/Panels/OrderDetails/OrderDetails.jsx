@@ -857,10 +857,8 @@ function OrderDetails(props) {
 
                     <CCard style={{ maxWidth: '100vw' }}>
                         <CRow className="g-0">
-                            <CCol md={1}>
-                                <CCardImage src={"https://gateway.aahaas.com/" + customerData.customer_profilepic} style={{ height: '100%', objectFit: 'cover' }} />
-                            </CCol>
-                            <CCol md={11}>
+
+                            <CCol md={12}>
                                 <CCardBody>
                                     <h4 style={{ fontWeight: 'bold' }}>Customer Details</h4>
                                     <CustomerDetails dataset={customerData} orderid={props.orderid} />

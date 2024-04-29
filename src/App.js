@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { Component, Suspense } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -16,11 +16,11 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// axios.defaults.baseURL = 'http://172.16.26.67:8000/api/'
-// axios.defaults.data = 'http://172.16.26.67:8000'
+axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
+axios.defaults.data = 'http://172.16.26.238:8000'
 
-axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-axios.defaults.data = 'https://admin-api.aahaas.com'
+// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://admin-api.aahaas.com'
 
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/'
 // axios.defaults.data = 'http://192.168.1.4:8000'
@@ -55,24 +55,29 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
 
-class App extends Component {
-  render() {
-    return (
-      <HashRouter>
-        <Suspense fallback={loading}>
-          <Routes>
-            <Route exact path="/login" name="Login Page" element={<Login />} />
-            <Route exact path="/register" name="Register Page" element={<Register />} />
-            <Route exact path="/404" name="Page 404" element={<Page404 />} />
-            <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route exact path='' element={<Login />}></Route>
-            <Route exact path='*' element={<DefaultLayout />}></Route>
-            {/* <Route path="*" name="Home" element={<DefaultLayout />} /> */}
-          </Routes>
-        </Suspense>
-      </HashRouter>
-    )
-  }
+function App() {
+
+  const data = localStorage.getItem('token');
+
+  console.log(data, 'Data Value iss')
+
+  return (
+    <HashRouter>
+      <Suspense fallback={loading}>
+        <Routes>
+          {/* Route for the login page */}
+          <Route exact path="/login" name="Login Page" element={<Login />} />
+          {/* Route for the register page */}
+          <Route exact path="/register" name="Register Page" element={<Register />} />
+          {/* Routes accessible only when authenticated */}
+
+          <Route exact path="*" element={<DefaultLayout />} />
+
+        </Routes>
+      </Suspense>
+    </HashRouter>
+  );
+
 }
 
 export default App
