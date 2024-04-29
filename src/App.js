@@ -15,11 +15,9 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 // axios.defaults.baseURL = 'http://172.16.26.67:8000/api/'
 // axios.defaults.data = 'http://172.16.26.67:8000'
 
-// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-// axios.defaults.data = 'https://admin-api.aahaas.com'
+axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+axios.defaults.data = 'https://admin-api.aahaas.com'
 
-axios.defaults.baseURL = 'http://172.16.26.245:8000/api/'
-axios.defaults.data = 'http://172.16.26.245:8000'
 
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -31,7 +29,7 @@ axios.defaults.data = 'http://172.16.26.245:8000'
 
 // axios.defaults.baseURL = 'http://192.168.8.110:8000/api/'
 // axios.defaults.data = 'http://192.168.8.110:8000'
-axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
+// axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
 
 const loading = (
   <div className="pt-3 text-center">
