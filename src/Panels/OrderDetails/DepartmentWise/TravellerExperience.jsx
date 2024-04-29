@@ -1,6 +1,3 @@
-
-
-
 import React, { useState } from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
@@ -8,6 +5,8 @@ import CIcon from '@coreui/icons-react';
 import { cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
 import DeliveryDetails from 'src/Panels/DeliveryDetails/DeliveryDetails';
+import axios from 'axios';
+import Swal from 'sweetalert2'
 
 export default function TravellerExperience(props) {
 
@@ -22,12 +21,69 @@ export default function TravellerExperience(props) {
 
     const productData = props.dataset
 
+    const [travellerData,setTravellerData] = useState({
+        pid: '',
+        delivery_date:'',
+        reconfirmation_date:'',
+        qc: '',
+        delivery_status: '',
+        location1: ''
+      })
+
+    const handleInputFields=(name,value)=>{
+        console.log([name,value], 'hjhjhjhjhjh');
+        setTravellerData({...travellerData,[name]:value})
+        // console.log(travellerData.reconfirmationDate);
+    }
+
+    // const createTravellerExperience = async (travellerData) => {
+
+    //     console.log(travellerData, 'traveller new data');
+    //     var returnData = []
+    
+    //     await axios.post(`/create_traveller_experience`, travellerData).then((res) => {
+    //         console.log(res, 'traveller Experience')
+    //         if (res.data.status === 200) {
+    //             returnData = res.data
+    //         }
+    
+    //     }).catch((err) => {
+    //         throw new Error(err);
+    //     })
+    
+    //     // return returnData
+    
+    // }
+
+    const createTravellerExperience = async () => {
+        console.log(travellerData);
+        try {
+            const response = await axios.post(`/create_traveller_experience`, travellerData);
+            if (response.data.status == 200) {
+                Swal.fire({
+                    title: "Good job!",
+                    text: response.data.message,
+                    icon: "success"
+                });
+            }else{
+                Swal.fire({
+                    text: "Please Fill Details",
+                    icon: "error"
+                });
+            }
+           
+        } catch (error) {
+            console.error('Error creating traveller experience:', error);
+            throw error; // Rethrow the error to handle it at a higher level if necessary
+        }
+    };
+    
 
 
     const QuantityContainer = ({ data }) => {
 
 
-        console.log(data, "Data Value is")
+        // console.log(data, "Data Value is")
 
 
         if (data.category == "Education") {
@@ -137,20 +193,38 @@ export default function TravellerExperience(props) {
        
     }
 
-
+    // console.log(value, 'fgf');
     const columns = [
         { title: 'PID', field: 'pid' },
-        { title: 'Delivery Date', field: 'deliveryDate', type: 'date' },
-        { title: 'Location', field: 'location', render: rowData =>  <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
-        { title: 'Reconfirmation Date', field: 'reconfirmationDate', type: 'date', render: rowData => <CFormInput type="date" value={rowData.reconfirmationDate} onChange={(e) => handleReconfirmationDateChange(e.target.value, rowData)} /> },
-        { title: 'Q/C', field: 'qc', render: rowData => <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
-        { title: 'Delivery Status', field: 'deliveryStatus', render: rowData => <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect> },
+        { title: 'Delivery Date', field: 'delivery_date', type: 'date'  },
+        { title: 'Location', field: 'location1', render: rowData => <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton>},
+        { title: 'Reconfirmation Date', field: 'reconfirmation_date', type: 'date', render: rowData => <CFormInput type="date" value={rowData.reconfirmation_date} onChange={e=>handleInputFields('reconfirmation_date',e.target.value)} />},
+        { title: 'Q/C', field: 'qc', render: rowData => <CFormSelect custom onChange={e=>handleInputFields('qc',e.target.value)} value={rowData.qc}><option>Select Q/C</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>},
+        { title: 'Delivery Status', field: 'delivery_status', render: rowData => <CFormSelect custom onChange={e=>handleInputFields('delivery_status',e.target.value)} value={rowData.delivery_status}><option>Select Status</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect> },
+        {
+        title: '',
+        render: rowData => (
+            <div onClick={createTravellerExperience}>
+                <CPopover>
+                    <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
+                </CPopover>
+            </div>
+        )
+        }
+
         // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
     ];
+
+
+
+
+    const [formData,setFormData] = useState({})
 
     // Function to handle changes to the Reconfirmation Date
     const handleReconfirmationDateChange = (date, rowData) => {
         // You can handle the date change here, e.g., update rowData.reconfirmationDate
+
+
     };
 
     // Prepare the data for the Material Table
@@ -198,7 +272,6 @@ export default function TravellerExperience(props) {
                     exportButton: true,
                     grouping: true,
                 }}
-
 
             />
         </>
