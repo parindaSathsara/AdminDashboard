@@ -65,9 +65,9 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav> */}
-        <CHeaderNav className="ms-3">
+        {/* <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
-        </CHeaderNav>
+        </CHeaderNav> */}
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>

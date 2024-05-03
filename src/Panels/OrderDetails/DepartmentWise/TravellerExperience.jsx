@@ -21,6 +21,8 @@ export default function TravellerExperience(props) {
 
     const productData = props.dataset
 
+    console.log(productData, "Productttttttt")
+
     const [travellerData, setTravellerData] = useState({
         pid: '',
         delivery_date: '',
@@ -58,11 +60,11 @@ export default function TravellerExperience(props) {
     const createTravellerExperience = async () => {
         console.log(travellerData);
         try {
-            const response = await axios.post(`/create_traveller_experience`, travellerData);
+            const response = await axios.post(`/createTraveller`, travellerData);
             if (response.data.status == 200) {
                 Swal.fire({
-                    title: "Good job!",
-                    text: response.data.message,
+                    title: "Traveller Details Updated Successfully",
+                    text: "",
                     icon: "success"
                 });
             } else {
@@ -205,9 +207,9 @@ export default function TravellerExperience(props) {
             title: '',
             render: rowData => (
                 <div onClick={createTravellerExperience}>
-                    <CPopover>
-                        <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
-                    </CPopover>
+                    {/* <CPopover> */}
+                    <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
+                    {/* </CPopover> */}
                 </div>
             )
         }
@@ -230,7 +232,7 @@ export default function TravellerExperience(props) {
     // Prepare the data for the Material Table
     const data = productData?.map(value => ({
         pid: value?.['PID'],
-        deliveryDate: value?.service_date,
+        delivery_date: value?.service_date,
         location: value?.location,
         reconfirmationDate: value?.reconfirmationDate,
         qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,

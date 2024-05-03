@@ -1,5 +1,7 @@
 import { CButton, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CFormCheck, CRow, CWidgetStatsA, CWidgetStatsB, CWidgetStatsC, CWidgetStatsD } from "@coreui/react";
 import { useEffect, useState } from "react";
+import AccountsDetails from "src/Panels/AccountsDetails/AccountsDetails";
+import OrderDetails from "src/Panels/OrderDetails/OrderDetails";
 import ProductDetails from "src/Panels/ProductDetails/ProductDetails";
 import { getPaymentStatusById } from "src/service/api_calls";
 
@@ -68,9 +70,12 @@ function OrderDetailsAccounts(props) {
             <div className='mainContainerTables'>
 
 
+                <AccountsDetails dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
+
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
-                    <ProductDetails orderid={props.orderid} orderData={props.paymentDataSet} hideStatus={true} />
+                    <OrderDetails dataset={props?.paymentDataSet} orderid={props.orderid} orderData={props?.paymentDataSet} hideStatus={false} accounts />
                 </div>
+
             </div>
 
 

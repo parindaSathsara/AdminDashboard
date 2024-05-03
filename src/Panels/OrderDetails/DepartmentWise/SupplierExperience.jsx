@@ -197,7 +197,7 @@ export default function SupplierExperience(props) {
             <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl">
                 <Modal.Header closeButton>
                     <Modal.Title>Supplier Voucher</Modal.Title>
-                    <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher}>
+                    {/* <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher}>
                         Resend Voucher
 
                         {voucherSending == true ?
@@ -206,7 +206,7 @@ export default function SupplierExperience(props) {
                             null
                         }
 
-                    </CButton>
+                    </CButton> */}
                 </Modal.Header>
                 <Modal.Body>
                     <div dangerouslySetInnerHTML={{ __html: supplierVoucherData }} />

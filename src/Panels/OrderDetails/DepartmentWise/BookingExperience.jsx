@@ -223,7 +223,7 @@ export default function BookingExperience(props) {
     { title: 'Paid Amount', field: 'paid_amount' },
     { title: 'Balance Amount', field: 'balance_amount' },
 
-    { title: 'Supplier Confirmed', field: 'supplier_status', render: rowData => rowData?.supplier_status == "Pending" ? <CBadge color="danger">Pending</CBadge> : <CBadge color="success">Confirmed</CBadge> },
+    { title: 'Supplier Confirmation', field: 'supplier_status', render: rowData => rowData?.supplier_status == "Pending" ? <CBadge color="danger" style={{ padding: 5 }}>Pending</CBadge> : <CBadge color="success" style={{ padding: 5 }}>Confirmed</CBadge> },
 
 
     {

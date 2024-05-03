@@ -75,7 +75,7 @@ const routes = [
   { path: '/vendors/analytics', name: 'Vendor Analytics', element: VendorAnalytic },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
-  { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
+  { path: '/accounts', name: 'Sales', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
 
   { path: '/products', name: 'Products', element: ProductList },
@@ -84,7 +84,7 @@ const routes = [
 
 
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
-  { path: '/chats', name: 'chats', element: ChatsIndex, exact: true },
+  { path: '/Chats', name: 'Chats', element: ChatsIndex, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/customers', name: 'Customers', element: Typography },

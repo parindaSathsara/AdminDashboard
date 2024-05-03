@@ -85,7 +85,7 @@ export default function DeliveryDetails(props) {
                         else {
                             markers = [
                                 { address: "Product - " + data.product_title, lat: latitude, lng: longitude, image: data.product_image?.split(',')[0] },
-                                { address: "Supplier - " + data.company_name, lat: cusLat, lng: cusLon, image: data.product_image?.split(',')[0] }
+                                { address: "Customer", lat: cusLat, lng: cusLon, image: data.product_image?.split(',')[0] }
                             ];
                         }
 

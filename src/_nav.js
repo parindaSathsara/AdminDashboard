@@ -40,23 +40,23 @@ const _nav = [
   //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
   // },
   {
-    component: CNavGroup,
+    component: CNavItem,
     name: 'Vendors',
     to: '/vendors',
     icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Vendors',
-        to: '/vendors/',
-      },
-      {
-        component: CNavItem,
-        name: 'Vendor Analytics',
-        to: 'vendors/analytics',
-      },
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Vendors',
+    //     to: '/vendors/',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Vendor Analytics',
+    //     to: 'vendors/analytics',
+    //   },
 
-    ],
+    // ],
   },
 
 
@@ -78,44 +78,44 @@ const _nav = [
 
 
   {
-    component: CNavGroup,
+    component: CNavItem,
     name: 'Products',
     to: '/products',
     icon: <CIcon icon={cilGrain} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Products',
-        to: '/products/',
-      },
-      {
-        component: CNavItem,
-        name: 'Product Analytics',
-        to: 'products/analytics',
-      },
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Products',
+    //     to: '/products/',
+    //   },
+    //   // {
+    //   //   component: CNavItem,
+    //   //   name: 'Product Analytics',
+    //   //   to: 'products/analytics',
+    //   // },
 
-    ],
+    // ],
   },
 
 
   {
-    component: CNavGroup,
+    component: CNavItem,
     name: 'Accounts',
     to: '/accounts',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Customer Orders',
-        to: '/accounts/customerOrders',
-      },
-      {
-        component: CNavItem,
-        name: 'Refund Requests',
-        to: '/accounts/refundRequests',
-      },
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Customer Orders',
+    //     to: '/accounts/customerOrders',
+    //   },
+    //   // {
+    //   //   component: CNavItem,
+    //   //   name: 'Refund Requests',
+    //   //   to: '/accounts/refundRequests',
+    //   // },
 
-    ],
+    // ],
   },
 
 
@@ -136,7 +136,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Chat',
-    to: '/theme/Chats',
+    to: '/Chats',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
   // {

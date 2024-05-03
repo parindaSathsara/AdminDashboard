@@ -201,7 +201,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <WidgetsDropdown /> */}
-      
+
 
 
       <CRow>
@@ -220,7 +220,7 @@ const Dashboard = () => {
         <CCol xs={12} sm={6} lg={3}>
           <CWidgetStatsB
             className="mb-4"
-            value={cardData.salesCount + ""}
+            value={cardData.salesCount.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ""}
             title="Sales"
             color="danger"
             inverse

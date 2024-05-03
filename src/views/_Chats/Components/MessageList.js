@@ -36,6 +36,9 @@ const MessageList = (props) => {
 
   const messageContailerRef = useRef(null);
 
+
+
+
   const handleMessageEditStatus = (status) => {
     setisMessageEdit(status);
   }
@@ -181,6 +184,8 @@ const MessageList = (props) => {
               <FontAwesomeIcon icon={faInfo} onClick={() => handleMessageDetailsvisibility(true)} className='m-1' />
             </CCol>
           </CRow>
+
+
 
           <CContainer className='mt-auto message-container' ref={messageContailerRef}>
             {messageList.map((messageData, index) => (

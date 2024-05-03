@@ -25,6 +25,10 @@ import ReactImg from 'src/assets/images/react.jpg'
 import { getAllProducts } from 'src/service/api_calls'
 import Pagination from "react-js-pagination";
 import MaterialTable from 'material-table'
+import moment from 'moment'
+import CIcon from '@coreui/icons-react'
+import { cilInfo } from '@coreui/icons'
+import MoreProductView from './MoreProductView/MoreProductView'
 
 
 function ProductList() {
@@ -56,18 +60,37 @@ function ProductList() {
         return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
     }
 
+    const handleOnClick = (data) => {
+        console.log(data)
+
+        setMoreProductModal(true)
+        setMoreData(data)
+    }
+
     const data = {
         columns: [
+            {
+                field: 'view', align: 'left', editable: 'never', filtering: false, render: (e) => {
+                    return (
+                        <>
+                            <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleOnClick(e)}>
+                                <CIcon icon={cilInfo} className="text-info" size="xl" />
+                            </CButton>
+                        </>
+                    );
+                }
+            },
+
             {
                 title: 'Product Image',
                 field: 'product_image',
                 align: 'left',
                 editable: 'never',
                 render: rowData => (
-                    <div style={{ width: "150px", height: "150px", borderRadius: 20 }}>
+                    <div style={{ width: "120px", height: "120px", borderRadius: 20 }}>
                         <CCardImage
                             src={rowData.product_image?.split(",")[0]}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 20 }}
                         />
                     </div>
                 ),
@@ -104,16 +127,51 @@ function ProductList() {
                 editable: 'never',
                 lookup: { "Essentials": 'Essentials', "Lifestyles": 'Lifestyles', "Hotels": 'Hotels', "Educations": 'Educations' },
             },
+            {
+                title: 'Created Date',
+                field: 'created_date',
+                align: 'left',
+                editable: 'never',
+            }
         ],
         rows: productList.map(product => ({
             product_title: product.title,
             product_description: product.description,
             product_image: product.image,
-            category: toTitleCase(product.category)
+            category: toTitleCase(product.category),
+            created_date: moment(product.dateCreated).format("YYYY-MM-DD"),
+            product_id: product?.product_id
         })),
-    };
+    }
+
+
+    const [moreData, setMoreData] = useState([])
+    const [moreProductsModal, setMoreProductModal] = useState(false)
+
+
+
     return (
         <div>
+
+            {/* <MoreOrderView
+                show={moreOrderModal}
+                onHide={() => setMoreOrderModal(false)}
+                preID={moreOrderDetails}
+                category={moreOrderModalCategory}
+            >
+            </MoreOrderView> */}
+
+
+            <MoreProductView
+                show={moreProductsModal}
+                onHide={() => setMoreProductModal(false)}
+
+                productData={moreData}
+            >
+
+            </MoreProductView>
+
+
             <MaterialTable
                 title="Products List"
                 // tableRef={tableRef}
@@ -141,38 +199,7 @@ function ProductList() {
 
             />
 
-            {/* <CRow>
-                {currentItems.map((data, dataIndex) => (
-                    <CCol xs={6} key={dataIndex}>
-                        <CCard className="mb-3" md={12} lg={12} style={{ padding: 10 }}>
-                            <CRow className="g-0">
-                                <CCol md={2} style={{ height: "150px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <div style={{ width: "100%", height: "100%" }}>
-                                        <CCardImage src={data.image?.split(",")[0]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                    </div>
-                                </CCol>
-                                <CCol md={9}>
-                                    <CCardBody>
-                                        <CCardTitle>{data.title}</CCardTitle>
-                                        <CCardText style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
-                                            {data.description}
-                                        </CCardText>
-                                    </CCardBody>
-                                </CCol>
-                            </CRow>
-                        </CCard>
-                    </CCol>
-                ))}
-            </CRow>
-            <Pagination
-                activePage={activePage}
-                itemsCountPerPage={itemsPerPage}
-                totalItemsCount={productList.length}
-                pageRangeDisplayed={5}
-                onChange={handlePageChange}
-                itemClass="page-item"
-                linkClass="page-link"
-            /> */}
+
         </div>
     );
 }

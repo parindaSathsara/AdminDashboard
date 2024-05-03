@@ -1,7 +1,3 @@
-import React, { Component, Suspense } from 'react';
-import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
-import './scss/style.scss';
-import axios from 'axios';
 
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
@@ -21,8 +17,6 @@ axios.defaults.data = 'http://172.16.26.238:8000'
 
 // axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 // axios.defaults.data = 'https://admin-api.aahaas.com'
-
-
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {

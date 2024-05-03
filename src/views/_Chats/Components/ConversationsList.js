@@ -20,7 +20,7 @@ const ConversationsList = (props) => {
   const [searchText, setSearchText] = useState('');
 
   const filterConversations = (conversations) => {
-    return conversations.filter(item => item.chat_name.toLowerCase().includes(searchText.toLowerCase()));
+    return conversations.filter(item => item.chat_name?.toLowerCase().includes(searchText?.toLowerCase()));
   }
 
   const handleSearch = (e) => {
