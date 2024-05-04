@@ -200,14 +200,14 @@ function ProductList() {
     const [audio] = useState(new Audio(productSound));
 
     useEffect(() => {
-     
+
         if (newlyAddedColumns.length > 0) {
             audio.play();
         } else {
             audio.pause();
-            audio.currentTime = 0;  
+            audio.currentTime = 0;
         }
- 
+
     }, [newlyAddedColumns]);
 
     // newlyAddedColumns.push("asd")
@@ -268,9 +268,6 @@ function ProductList() {
             // }}
 
             />
-
-
-
 
         </div>
     );
