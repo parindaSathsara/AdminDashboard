@@ -67,6 +67,7 @@ import SupplierExperience from 'src/Panels/OrderDetails/DepartmentWise/SupplierE
 import DateWiseSummary from 'src/Panels/OrderDetails/DateWiseSummary/DateWiseSummary'
 import { io } from 'socket.io-client'
 import productSound from '../../assets/productSound.mp3'
+import ProductWiseOrders from './MainComponents/ProductWiseOrders'
 
 
 const Dashboard = () => {
@@ -121,7 +122,7 @@ const Dashboard = () => {
 
 
 
-  const socket = io('http://172.16.26.244:5000');
+  const socket = io('http://172.16.26.238:5000');
   // const socket = io('https://socket.aa');
 
   useEffect(() => {
@@ -151,9 +152,9 @@ const Dashboard = () => {
     const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(rowData.oid);
 
     return {
-      fontSize: isRowNewlyAdded?"17px":"15px",
+      fontSize: isRowNewlyAdded ? "17px" : "15px",
       width: "100%",
-      color: isRowNewlyAdded?"#002c4a":"#000",
+      color: isRowNewlyAdded ? "#002c4a" : "#000",
       fontWeight: isRowNewlyAdded ? 'normal' : 'normal',
       backgroundColor: isRowNewlyAdded ? '#bfe5ff' : 'white', // You can adjust the background color here
     };
@@ -365,73 +366,74 @@ const Dashboard = () => {
           </CRow>
 
 
-          {/* <BookingExperience></BookingExperience> */}
+
+
+
+          <Tabs
+            defaultActiveKey="group"
+            id="uncontrolled-tab-example"
+            className="mt-4"
+            style={{
+              fontSize: 16
+            }}
+          >
+
+            <Tab eventKey="group" title="Group Wise">
+              <ThemeProvider theme={defaultMaterialTheme}>
+                <MaterialTable
+                  title=""
+                  // tableRef={tableRef}
+                  data={data.rows}
+                  columns={data.columns}
+
+
+                  detailPanel={(e) => {
+                    return (
+                      <div className='mainContainerTables'>
+                        <div className="col-md-12 mb-4 sub_box materialTableDP">
+                          <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
+                        </div>
+
+
+                      </div>
+                    )
+
+                  }
+                  }
+
+
+
+                  options={{
+
+                    sorting: true, search: true,
+                    searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                    filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                    showSelectAllCheckbox: false, showTextRowsSelected: false,
+                    grouping: true, columnsButton: true,
+                    headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+
+                    rowStyle: rowStyle,
+
+                    // fixedColumns: {
+                    //     left: 6
+                    // }
+                  }}
+                />
+
+              </ThemeProvider>
+            </Tab>
+            <Tab eventKey="product" title="Product Wise">
+              <ProductWiseOrders />
+            </Tab>
+
+
+          </Tabs>
 
 
 
 
-          <ThemeProvider theme={defaultMaterialTheme}>
-            <MaterialTable
-              title=""
-              // tableRef={tableRef}
-              data={data.rows}
-              columns={data.columns}
-
-
-              detailPanel={(e) => {
-                return (
-                  <div className='mainContainerTables'>
-                    <div className="col-md-12 mb-4 sub_box materialTableDP">
-                      <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
-                    </div>
-
-
-                  </div>
-                )
-
-              }
-              }
-
-
-
-              options={{
-
-                sorting: true, search: true,
-                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                grouping: true, columnsButton: true,
-                headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-   
-                rowStyle: rowStyle,
-
-                // fixedColumns: {
-                //     left: 6
-                // }
-              }}
-            // editable={{
-            //     onRowUpdate: (selectedRow) => new Promise((resolve, reject) => {
-            //         deleteShippingAddress(selectedRow['id']);
-            //         setTimeout(() => resolve(), 500);
-            //         getShippingData();
-            //     }),
-
-
-            // }}
-            // cellEditable={{
-            //     onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
-            //         return new Promise((resolve, reject) => {
-            //             handleOrderStatus(rowData, newValue, oldValue, columnDef)
-            //             setTimeout(resolve, 1000);
-            //         });
-            //     }
-            // }}
-
-            />
-
-          </ThemeProvider>
 
         </CCardBody>
 
