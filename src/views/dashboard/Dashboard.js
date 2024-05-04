@@ -121,7 +121,7 @@ const Dashboard = () => {
 
 
 
-  const socket = io('http://172.16.26.244:5000');
+  const socket = io('http://192.168.62.168:5000');
   // const socket = io('https://socket.aa');
 
   useEffect(() => {
