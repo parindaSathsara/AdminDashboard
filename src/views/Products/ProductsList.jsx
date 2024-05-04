@@ -29,18 +29,40 @@ import moment from 'moment'
 import CIcon from '@coreui/icons-react'
 import { cilInfo } from '@coreui/icons'
 import MoreProductView from './MoreProductView/MoreProductView'
+import { io } from 'socket.io-client'
 
 
 function ProductList() {
 
     const [productList, setProductList] = useState([])
 
+    const socket = io('http://172.16.26.238:5000');
+
     useEffect(() => {
-        getAllProducts().then(data => {
-            setProductList(data)
-            console.log(data, "Dataset product list")
-        })
+
+        socket.on('initialData', (initialData) => {
+            getAllProducts().then(data => {
+                setProductList(data)
+                // console.log(data, "Dataset product list")
+            })
+        });
+
+        socket.on('change', (changedRow) => {
+            getAllProducts().then(data => {
+                setProductList(data)
+                // console.log(data, "Dataset product list")
+            })
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+
     }, [])
+
+
+
+
 
 
 
@@ -89,7 +111,7 @@ function ProductList() {
                 render: rowData => (
                     <div style={{ width: "120px", height: "120px", borderRadius: 20 }}>
                         <CCardImage
-                            src={rowData.product_image?.split(",")[0]}
+                            src={rowData.product_image?.split(",")[0]?.includes("http") ? rowData.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + rowData.product_image?.split(",")[0]}
                             style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 20 }}
                         />
                     </div>
