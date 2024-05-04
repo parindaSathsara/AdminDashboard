@@ -31,34 +31,47 @@ import { cilInfo } from '@coreui/icons'
 import MoreProductView from './MoreProductView/MoreProductView'
 import { io } from 'socket.io-client'
 
+import productSound from '../../assets/productSound.mp3'
 
 function ProductList() {
 
     const [productList, setProductList] = useState([])
 
-    const socket = io('http://172.16.26.238:5000');
+    const socket = io('http://172.16.26.244:5000');
+    // const socket = io('https://socket.aa');
 
     useEffect(() => {
+        socket.on('initial', initialDataHandler);
 
-        socket.on('initialData', (initialData) => {
-            getAllProducts().then(data => {
-                setProductList(data)
-                // console.log(data, "Dataset product list")
-            })
-        });
-
-        socket.on('change', (changedRow) => {
-            getAllProducts().then(data => {
-                setProductList(data)
-                // console.log(data, "Dataset product list")
-            })
-        });
+        socket.on('change', changedRowHandler);
 
         return () => {
             socket.disconnect();
         };
+    }, []);
 
-    }, [])
+    const [newlyAddedColumns, setNewlyAddedColumns] = useState([]);
+
+    const initialDataHandler = (initialData) => {
+        getAllProducts().then((data) => {
+            setProductList(data);
+        });
+    };
+
+    const changedRowHandler = (changedRow) => {
+        getAllProducts().then((data) => {
+            setProductList(data);
+            const newlyAddedColumn = changedRow?.lastId;
+            if (newlyAddedColumn) {
+                setNewlyAddedColumns([...newlyAddedColumns, newlyAddedColumn]);
+                // After 5 seconds, remove the newly added column from the list
+                setTimeout(() => {
+                    setNewlyAddedColumns([]);
+                }, 5000);
+            }
+        });
+    };
+
 
 
 
@@ -167,9 +180,37 @@ function ProductList() {
     }
 
 
+
     const [moreData, setMoreData] = useState([])
     const [moreProductsModal, setMoreProductModal] = useState(false)
+    const rowStyle = (rowData) => {
+        const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(rowData.product_id);
 
+
+
+        return {
+            fontSize: "16px",
+            width: "100%",
+            color: "#000",
+            fontWeight: isRowNewlyAdded ? 'normal' : 'normal',
+            backgroundColor: isRowNewlyAdded ? '#E6F9EF' : 'white', // You can adjust the background color here
+        };
+    };
+
+    const [audio] = useState(new Audio(productSound));
+
+    useEffect(() => {
+     
+        if (newlyAddedColumns.length > 0) {
+            audio.play();
+        } else {
+            audio.pause();
+            audio.currentTime = 0;  
+        }
+ 
+    }, [newlyAddedColumns]);
+
+    // newlyAddedColumns.push("asd")
 
 
     return (
@@ -212,14 +253,23 @@ function ProductList() {
                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                     grouping: true, columnsButton: true,
                     headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-                    rowStyle: { fontSize: "16px", width: "100%", color: "#000", fontWeight: '500' },
+                    rowStyle: rowStyle,
 
                     // fixedColumns: {
                     //     left: 6
                     // }
                 }}
+            // components={{
+            //     // Component overrides
+            //     Row: (props) => {
+            //         const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(props.data.id);
+            //         return <MaterialTable.Row {...props} className={isRowNewlyAdded ? 'newly-added-row' : ''} />;
+            //     },
+            // }}
 
             />
+
+
 
 
         </div>
