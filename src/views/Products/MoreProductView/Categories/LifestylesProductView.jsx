@@ -440,7 +440,7 @@ export default function LifestylesProductView(props) {
                 <CCol xs="12" lg="4">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.[0]?.["image"]}
+                            src={basicDetails?.[0]?.["image"]?.split(",")[0]}
                             fluid
                             style={{
                                 position: 'absolute',
@@ -451,6 +451,8 @@ export default function LifestylesProductView(props) {
                                 objectFit: 'cover',
                             }}
                         />
+
+
                     </div>
                 </CCol>
 
