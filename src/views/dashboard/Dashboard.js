@@ -65,7 +65,8 @@ import OrderDetails from 'src/Panels/OrderDetails/OrderDetails'
 import BookingExperience from 'src/Panels/OrderDetails/DepartmentWise/BookingExperience'
 import SupplierExperience from 'src/Panels/OrderDetails/DepartmentWise/SupplierExperience'
 import DateWiseSummary from 'src/Panels/OrderDetails/DateWiseSummary/DateWiseSummary'
-
+import { io } from 'socket.io-client'
+import productSound from '../../assets/productSound.mp3'
 
 
 const Dashboard = () => {
@@ -78,7 +79,7 @@ const Dashboard = () => {
   const [showMailModal, setShowMailModal] = useState(false);
   const [showAddtitionalModal, setShowAdditionalModal] = useState(false);
   const [rowDetails, setRowDetails] = useState([]);
-
+  const [newlyAddedColumns, setNewlyAddedColumns] = useState([])
   const handleSendMail = (e) => {
     setShowMailModal(true)
     setOrderId(e)
@@ -110,7 +111,31 @@ const Dashboard = () => {
   })
   const [orderDataIDWise, setOrderDataIdWise] = useState([])
 
+  // useEffect(() => {
+
+  //   // setOrderData(getAllDataUserWise());
+
+  // }, []);
+
+
+
+
+
+  const socket = io('http://172.16.26.244:5000');
+  // const socket = io('https://socket.aa');
+
   useEffect(() => {
+    socket.on('checkoutInitial', initialDataHandler);
+
+    socket.on('changeCheckout', changedRowHandler);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+
+  const initialDataHandler = (initialData) => {
     getAllDataUserWise().then(res => {
       setOrderData(res)
     })
@@ -119,9 +144,73 @@ const Dashboard = () => {
       console.log(res)
       setCardData(res)
     })
-    // setOrderData(getAllDataUserWise());
+  };
 
-  }, []);
+
+  const rowStyle = (rowData) => {
+    const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(rowData.oid);
+
+    return {
+      fontSize: isRowNewlyAdded?"17px":"15px",
+      width: "100%",
+      color: isRowNewlyAdded?"#002c4a":"#000",
+      fontWeight: isRowNewlyAdded ? 'normal' : 'normal',
+      backgroundColor: isRowNewlyAdded ? '#bfe5ff' : 'white', // You can adjust the background color here
+    };
+  };
+
+
+  const [audio] = useState(new Audio(productSound));
+
+  useEffect(() => {
+
+    if (newlyAddedColumns.length > 0) {
+      audio.play();
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+  }, [newlyAddedColumns]);
+
+
+
+
+  const changedRowHandler = (changedRow) => {
+    // getAllProducts().then((data) => {
+    //   setProductList(data);
+    //   const newlyAddedColumn = changedRow?.lastId;
+    //   if (newlyAddedColumn) {
+    //     setNewlyAddedColumns([...newlyAddedColumns, newlyAddedColumn]);
+    //     // After 5 seconds, remove the newly added column from the list
+    //     setTimeout(() => {
+    //       setNewlyAddedColumns([]);
+    //     }, 5000);
+    //   }
+    // });
+
+
+    const newlyAddedColumn = changedRow?.lastId
+    getAllDataUserWise().then(res => {
+      setOrderData(res)
+
+      if (newlyAddedColumn) {
+        setNewlyAddedColumns([...newlyAddedColumns, newlyAddedColumn]);
+
+        setTimeout(() => {
+          setNewlyAddedColumns([])
+        }, 6000)
+      }
+    })
+
+    getAllCardData().then(res => {
+      console.log(res)
+      setCardData(res)
+    })
+
+  };
+
+
 
 
 
@@ -315,7 +404,8 @@ const Dashboard = () => {
                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                 grouping: true, columnsButton: true,
                 headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+   
+                rowStyle: rowStyle,
 
                 // fixedColumns: {
                 //     left: 6
