@@ -272,7 +272,7 @@ export default function TravellerExperience(props) {
                     search: false,
                     columnsButton: true,
                     exportButton: true,
-                    grouping: true,
+                    grouping: false,
                 }}
 
             />

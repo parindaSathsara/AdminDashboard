@@ -123,19 +123,39 @@ function OrderDetails(props) {
         setOrderMainDetails(props.orderData)
         setDetailsLoading(true)
 
-        getDashboardOrdersIdWise(props.orderid).then((res) => {
-            setDetailsLoading(false)
-            setLifestylesData(res.lifestyleData)
-            setEssNEssData(res.essNEssData)
-            setEducationData(res.educationData)
-            setFlightsData(res.flightsData)
-            setHotelData(res.hotelData)
-            setProductData(res.productData)
-            setCustomerData(res.customerData)
-            setDates(res.dates)
 
-            console.log(res.customerData, "CustomerData value is data ")
-        })
+        if (props?.productViewData) {
+            setProductData([props.orderData?.info])
+            setCustomerData(props.orderData?.customerData)
+
+            if (props?.orderData?.info?.catid == "3") {
+                setLifestylesData([props.orderData?.info])
+            }
+            else if (props?.orderData?.info?.catid == "1") {
+                setEssNEssData([props.orderData?.info])
+            }
+            else if (props?.orderData?.info?.catid == "5") {
+                setEducationData([props.orderData?.info])
+            }
+
+            setDetailsLoading(false)
+        }
+        else {
+            getDashboardOrdersIdWise(props.orderid).then((res) => {
+                setDetailsLoading(false)
+                setLifestylesData(res.lifestyleData)
+                setEssNEssData(res.essNEssData)
+                setEducationData(res.educationData)
+                setFlightsData(res.flightsData)
+                setHotelData(res.hotelData)
+                setProductData(res.productData)
+                setCustomerData(res.customerData)
+                setDates(res.dates)
+
+                console.log(res.customerData, "CustomerData value is data ")
+            })
+        }
+
 
     }, [props.orderid, props.orderData])
 
@@ -183,9 +203,6 @@ function OrderDetails(props) {
             setMoreOrderModal(true)
         }
 
-
-
-
     }
 
 
@@ -194,7 +211,7 @@ function OrderDetails(props) {
         columns: [
 
             {
-                field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                field: 'view', width: 5, title: '', align: 'left', hidden: props?.productViewData ? true : false, render: (e) => {
                     return (
                         <>
                             <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 3)}>
@@ -284,8 +301,6 @@ function OrderDetails(props) {
 
     console.log(lifestylesData, "Lifestyle Dataaaaaaa")
 
-
-
     const educations = {
         columns: [
             // { field: 'id', title: 'ID' },
@@ -294,7 +309,7 @@ function OrderDetails(props) {
 
             {
 
-                field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                field: 'view', width: 5, title: '', align: 'left', hidden: props?.productViewData ? true : false, render: (e) => {
                     return (
                         <>
                             <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 5)}>
@@ -388,7 +403,7 @@ function OrderDetails(props) {
     const essNEss = {
         columns: [
             {
-                field: 'view', width: 5, title: '', align: 'left', render: (e) => {
+                field: 'view', width: 5, title: '', align: 'left', hidden: props?.productViewData ? true : false, render: (e) => {
                     return (
                         <>
                             <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 1)}>
@@ -466,10 +481,6 @@ function OrderDetails(props) {
             essential_pre_order_id: value.essential_pre_order_id
         }))
     }
-
-
-
-
     // Function to render variations
     function renderVariations(value) {
         let variations = [];
@@ -484,7 +495,7 @@ function OrderDetails(props) {
     const flights = {
         columns: [
             {
-                field: 'flightData', title: 'Flight Data', align: 'left', width: 500,
+                field: 'flightData', title: 'Flight Data', hidden: props?.productViewData ? true : false, align: 'left', width: 500,
                 render: (e) => {
                     var originData = e.flightData.ori_loccation?.split(',')
                     var destData = e.flightData.dest_loccation?.split(',')
@@ -574,8 +585,6 @@ function OrderDetails(props) {
         })
     }
 
-
-
     const [detailExpander, setDetailExpander] = useState(false)
 
     const handleDelStatusChange = (e, val) => {
@@ -623,7 +632,6 @@ function OrderDetails(props) {
 
         // props.relord();
     }
-
 
     const hotels = {
         columns: [
@@ -686,10 +694,10 @@ function OrderDetails(props) {
         }))
     }
 
-
-
-
     const ServiceWiseSummary = () => {
+
+
+        console.log(lifestylesData, "LIFESTYLESSS")
         return (
             <>
                 {lifestylesData?.length > 0 ?
@@ -835,6 +843,9 @@ function OrderDetails(props) {
         )
     }
 
+    // return (
+    //     <div></div>
+    // )
 
 
     return (
@@ -851,48 +862,59 @@ function OrderDetails(props) {
             <>
                 <div className="prod_container">
 
-                    <CAlert color="success" style={{ fontSize: 22, fontWeight: "bold" }}>
-                        Order ID - {props.orderid}
-                    </CAlert>
+                    {props?.productViewData ?
+                        null
+                        :
+                        <CAlert color="success" style={{ fontSize: 22, fontWeight: "bold" }}>
+                            Order ID - {props.orderid}
+                        </CAlert>
+
+                    }
+
 
                     <CCard style={{ maxWidth: '100vw' }}>
                         <CRow className="g-0">
 
                             <CCol md={12}>
                                 <CCardBody>
-                                    <h4 style={{ fontWeight: 'bold' }}>Customer Details</h4>
-                                    <CustomerDetails dataset={customerData} orderid={props.orderid} />
+                                    <h4 style={{ fontWeight: '500', color: 'black' }}>Customer Details</h4>
+                                    <CustomerDetails dataset={customerData} />
                                 </CCardBody>
                             </CCol>
+
                         </CRow>
                     </CCard>
 
 
                     <hr></hr>
 
+                    {props?.productViewData ?
+                        <ServiceWiseSummary></ServiceWiseSummary>
+                        :
 
-                    <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
+                        <>
+                            <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
 
-                    <Tabs
-                        defaultActiveKey="service"
-                        id="uncontrolled-tab-example"
-                        className="mt-4"
-                        style={{
-                            fontSize: 16
-                        }}
-                    >
+                            <Tabs
+                                defaultActiveKey="service"
+                                id="uncontrolled-tab-example"
+                                className="mt-4"
+                                style={{
+                                    fontSize: 16
+                                }}
+                            >
 
-                        <Tab eventKey="service" title="Service Wise">
-                            <ServiceWiseSummary></ServiceWiseSummary>
-                        </Tab>
-                        <Tab eventKey="date" title="Day Wise">
-                            <DateWiseSummary dataset={productData} orderid={props.orderid} dates={dates} handleMoreInfoModal={handleMoreInfoModal} />
-                        </Tab>
+                                <Tab eventKey="service" title="Service Wise">
+                                    <ServiceWiseSummary></ServiceWiseSummary>
+                                </Tab>
+                                <Tab eventKey="date" title="Day Wise">
+                                    <DateWiseSummary dataset={productData} orderid={props.orderid} dates={dates} handleMoreInfoModal={handleMoreInfoModal} />
+                                </Tab>
 
+                            </Tabs>
+                        </>
 
-                    </Tabs>
-
-
+                    }
 
 
 
@@ -935,17 +957,12 @@ function OrderDetails(props) {
                                     <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                 </Tab>
                                 {/* 
-                                <Tab eventKey="location" title="Location Details">
-                                    <DeliveryDetails dataset={productData} />
-                                </Tab> */}
-
-
-
+                                    <Tab eventKey="location" title="Location Details">
+                                        <DeliveryDetails dataset={productData} />
+                                    </Tab> 
+                                    */}
 
                             </Tabs>
-
-
-
 
                         </CCol>
 
@@ -999,12 +1016,10 @@ function OrderDetails(props) {
                                         <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                     </Tab>
                                     {/* 
-                                    <Tab eventKey="location" title="Location Details">
-                                        <DeliveryDetails dataset={productData} />
-                                    </Tab>
- */}
-
-
+                                        <Tab eventKey="location" title="Location Details">
+                                            <DeliveryDetails dataset={productData} />
+                                        </Tab>
+                                    */}
 
                                 </Tabs>
                             }
@@ -1015,6 +1030,15 @@ function OrderDetails(props) {
 
                     </>
 
+                }
+
+                {props?.productViewData ?
+
+                    <CCol style={{ paddingBottom: 60 }}>
+
+                    </CCol>
+                    :
+                    null
                 }
 
 
