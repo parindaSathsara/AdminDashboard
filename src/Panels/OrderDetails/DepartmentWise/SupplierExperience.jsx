@@ -233,7 +233,7 @@ export default function SupplierExperience(props) {
                     search: false,
                     columnsButton: true,
                     exportButton: true,
-                    grouping: true,
+                    grouping: false,
                 }}
 
 

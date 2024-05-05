@@ -5,6 +5,7 @@ import { getLifestylesDataSet, getMoreDataSet } from './functions/getCheckoutPro
 import EssentialsOrderView from './Categories/EssentialsOrderView';
 import EducationOrderView from './Categories/EducationOrderView';
 import PleaseWaitLoader from 'src/Panels/PleaseWaitLoader/PleaseWaitLoader';
+import { Tab, Tabs } from 'react-bootstrap';
 
 export default function MoreOrderView(props) {
 
@@ -65,34 +66,70 @@ export default function MoreOrderView(props) {
                     <PleaseWaitLoader></PleaseWaitLoader>
                     :
 
-
-
                     <>
 
-                        {category == 3 ?
-                            <LifestylesOrderView productData={productDataSet}></LifestylesOrderView>
+                        {props.productViewData ?
+                            <Tabs
+                                defaultActiveKey="orderdetails"
+                                id="uncontrolled-tab-example"
+                                className="mt-4"
+                            >
 
+                                <Tab eventKey="basicdetails" title="Basic Info">
+                                    <>
+                                        {category == 3 ?
+                                            <LifestylesOrderView productData={productDataSet}></LifestylesOrderView>
+
+                                            :
+                                            null
+                                        }
+                                        {category == 1 ?
+                                            <EssentialsOrderView productData={productDataSet}></EssentialsOrderView>
+
+                                            :
+                                            null
+                                        }
+                                        {category == 5 ?
+                                            <EducationOrderView productData={productDataSet}></EducationOrderView>
+
+                                            :
+                                            null
+                                        }
+
+                                    </>
+                                </Tab>
+
+                                <Tab eventKey="orderdetails" title="Order Info">
+                                    {props?.productViewComponent}
+                                </Tab>
+
+
+                            </Tabs>
                             :
-                            null
+                            <>
+                                {category == 3 ?
+                                    <LifestylesOrderView productData={productDataSet}></LifestylesOrderView>
+
+                                    :
+                                    null
+                                }
+                                {category == 1 ?
+                                    <EssentialsOrderView productData={productDataSet}></EssentialsOrderView>
+
+                                    :
+                                    null
+                                }
+                                {category == 5 ?
+                                    <EducationOrderView productData={productDataSet}></EducationOrderView>
+
+                                    :
+                                    null
+                                }
+
+                            </>
+
+
                         }
-
-
-
-                        {category == 1 ?
-                            <EssentialsOrderView productData={productDataSet}></EssentialsOrderView>
-
-                            :
-                            null
-                        }
-
-                        {category == 5 ?
-                            <EducationOrderView productData={productDataSet}></EducationOrderView>
-
-                            :
-                            null
-                        }
-
-
 
                     </>
 

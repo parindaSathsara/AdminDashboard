@@ -122,7 +122,7 @@ const Dashboard = () => {
 
 
 
-  const socket = io('http://192.168.62.168:5000');
+  const socket = io('http://172.16.26.238:5000');
   // const socket = io('https://socket.aa');
 
   useEffect(() => {
@@ -389,17 +389,12 @@ const Dashboard = () => {
 
                   detailPanel={(e) => {
                     return (
-                      <div className='mainContainerTables'>
-                        <div className="col-md-12 mb-4 sub_box materialTableDP">
-                          <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
-                        </div>
-
-
+                      <div className="col-md-12 mb-4 sub_box materialTableDP">
+                        <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
                       </div>
-                    )
 
-                  }
-                  }
+                    )
+                  }}
 
 
 
