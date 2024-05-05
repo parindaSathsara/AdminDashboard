@@ -49,7 +49,7 @@ export default function ProductWiseOrders() {
             },
             { title: 'Name', field: 'product_title' },
             { title: 'Category', field: 'category' },
-
+            { title: 'Service Date', field: 'service_date' },
             { title: 'Service Location', field: 'service_location' },
 
         ],
@@ -58,10 +58,13 @@ export default function ProductWiseOrders() {
             product_image: result?.product_image,
             service_location: result?.location,
             product_title: result?.product_title,
-            category: result?.category
+            category: result?.category,
+            service_date:result?.service_date
         }))
     };
 
+
+    //
     return (
         <CCol>
             <ThemeProvider theme={defaultMaterialTheme}>
