@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   CAvatar,
@@ -161,8 +161,6 @@ const Dashboard = () => {
       setLoading(false)
     })
 
-
-
   };
 
 
@@ -306,6 +304,22 @@ const Dashboard = () => {
   const [tabIndex, setTabIndex] = useState("")
 
 
+  const tableRef = useRef()
+
+
+
+  useEffect(() => {
+    tableRef.current.state.data = tableRef.current.state.data.map(data => {
+      console.log(data, "112Dataaa");
+      data.tableData.showDetailPanel = tableRef.current.props.detailPanel;
+
+      return data;
+    });
+
+
+  }, []);
+
+
   const handleChange = (e) => {
     console.log(e)
   }
@@ -409,7 +423,11 @@ const Dashboard = () => {
                   <MaterialTable
                     title=""
                     // tableRef={tableRef}
+                    tableRef={tableRef}
                     data={data.rows}
+
+
+
                     columns={data.columns}
 
 
@@ -432,6 +450,7 @@ const Dashboard = () => {
                       headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
 
                       rowStyle: rowStyle,
+                      defaultExpanded: true
 
                     }}
                   />
