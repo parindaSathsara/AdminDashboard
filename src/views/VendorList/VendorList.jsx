@@ -55,6 +55,7 @@ import Swal from 'sweetalert2'
 import LoadingBar from 'react-top-loading-bar'
 import VendorDetails from './VendorDetails'
 import axios from 'axios'
+import LoaderPanel from 'src/Panels/LoaderPanel'
 // import CustomerFeedbacks from './CustomerFeedbacks'
 
 const VendorList = () => {
@@ -94,12 +95,14 @@ const VendorList = () => {
 
 
     const [vendorDetails, setVendorDetails] = useState([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
 
-
+        setLoading(true)
         getVendorDetails().then(res => {
             setVendorDetails(res)
+            setLoading(false)
         })
         // setOrderData(getAllDataUserWise());
 
@@ -358,72 +361,78 @@ const VendorList = () => {
     const [rejectionReason, setRejectionReason] = useState("")
 
 
-    return (
-        <>
-            {/* <WidgetsDropdown /> */}
-            <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} />
+    if (loading == true) {
+        return (
+            <LoaderPanel message={"Loading Vendors"} />
+        )
+    }
+    else {
+        return (
+            <>
+                {/* <WidgetsDropdown /> */}
+                <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} />
 
 
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered size="fullscreen"
-                aria-labelledby="contained-modal-title-vcenter" >
-                <Modal.Header closeButton>
+                <Modal show={showModal} onHide={() => setShowModal(false)} centered size="fullscreen"
+                    aria-labelledby="contained-modal-title-vcenter" >
+                    <Modal.Header closeButton>
 
-                    <Modal.Title style={{ marginRight: 15 }}>Vendor Details</Modal.Title>
+                        <Modal.Title style={{ marginRight: 15 }}>Vendor Details</Modal.Title>
 
-                    {vendorData?.status == 1 ?
-                        null :
-                        <CButton color="success" onClick={handleAcceptVendor}>Accept Document</CButton>
-                    }
+                        {vendorData?.status == 1 ?
+                            null :
+                            <CButton color="success" onClick={handleAcceptVendor}>Accept Document</CButton>
+                        }
 
-                    <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleRejectDocuments}>Reject Document</CButton>
+                        <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleRejectDocuments}>Reject Document</CButton>
 
-                </Modal.Header>
+                    </Modal.Header>
 
-                <Modal.Body className="modalBodyDef">
-                    <VendorDetails vendorId={vendorId} vendorData={vendorData} onStatusChange={handleStatusChange} rejectDocuments={handleRejectDocuments}></VendorDetails>
-                </Modal.Body>
+                    <Modal.Body className="modalBodyDef">
+                        <VendorDetails vendorId={vendorId} vendorData={vendorData} onStatusChange={handleStatusChange} rejectDocuments={handleRejectDocuments}></VendorDetails>
+                    </Modal.Body>
 
-                <Modal.Footer className="mainFooterModal">
+                    <Modal.Footer className="mainFooterModal">
 
-                </Modal.Footer>
-            </Modal>
-
-
-            <Modal show={rejectPaymentModal} onHide={() => setRejectPaymentModal(false)} centered
-                aria-labelledby="contained-modal-title-vcenter" size='lg'>
-                <Modal.Header closeButton>
-
-                    <Modal.Title style={{ marginRight: 15 }}>Reject Document</Modal.Title>
-
-                </Modal.Header>
-
-                <Modal.Body className="modalBodyDef">
-
-                    <CCol md={12}>
-                        <CFormLabel>Reason For Rejection</CFormLabel>
-                        <CFormTextarea id="exampleFormControlTextarea1" onChange={(e) => setRejectionReason(e.target.value)} value={rejectionReason} rows={3}></CFormTextarea>
-                    </CCol>
-
-                </Modal.Body>
-
-                <Modal.Footer className="mainFooterModal">
-                    <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleReject}>Reject Document</CButton>
-                </Modal.Footer>
-            </Modal>
+                    </Modal.Footer>
+                </Modal>
 
 
+                <Modal show={rejectPaymentModal} onHide={() => setRejectPaymentModal(false)} centered
+                    aria-labelledby="contained-modal-title-vcenter" size='lg'>
+                    <Modal.Header closeButton>
 
+                        <Modal.Title style={{ marginRight: 15 }}>Reject Document</Modal.Title>
 
-            <CCard className="mb-4">
-                <CCardBody>
-                    <CRow>
-                        <CCol sm={5}>
-                            <h4 id="traffic" className="card-title mb-0">
-                                Vendors
-                            </h4>
+                    </Modal.Header>
+
+                    <Modal.Body className="modalBodyDef">
+
+                        <CCol md={12}>
+                            <CFormLabel>Reason For Rejection</CFormLabel>
+                            <CFormTextarea id="exampleFormControlTextarea1" onChange={(e) => setRejectionReason(e.target.value)} value={rejectionReason} rows={3}></CFormTextarea>
                         </CCol>
 
-                    </CRow>
+                    </Modal.Body>
+
+                    <Modal.Footer className="mainFooterModal">
+                        <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleReject}>Reject Document</CButton>
+                    </Modal.Footer>
+                </Modal>
+
+
+
+
+                <CCard className="mb-4">
+                    <CCardBody>
+                        <CRow>
+                            <CCol sm={5}>
+                                <h4 id="traffic" className="card-title mb-0">
+                                    Vendors
+                                </h4>
+                            </CCol>
+
+                        </CRow>
 
 
 
@@ -431,43 +440,45 @@ const VendorList = () => {
 
 
 
-                    <ThemeProvider theme={defaultMaterialTheme}>
-                        <MaterialTable
-                            title=""
-                            // tableRef={tableRef}
-                            data={data.rows}
-                            columns={data.columns}
+                        <ThemeProvider theme={defaultMaterialTheme}>
+                            <MaterialTable
+                                title=""
+                                // tableRef={tableRef}
+                                data={data.rows}
+                                columns={data.columns}
 
 
-                            options={{
+                                options={{
 
-                                sorting: true, search: true,
-                                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                                grouping: true, columnsButton: true,
-                                headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-                                rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
+                                    sorting: true, search: true,
+                                    searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                                    filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                                    showSelectAllCheckbox: false, showTextRowsSelected: false,
+                                    grouping: true, columnsButton: true,
+                                    headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                    rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
 
-                                // fixedColumns: {
-                                //     left: 6
-                                // }
-                            }}
-
-
-                        />
-                    </ThemeProvider>
-
-                </CCardBody>
-
-            </CCard>
+                                    // fixedColumns: {
+                                    //     left: 6
+                                    // }
+                                }}
 
 
+                            />
+                        </ThemeProvider>
 
-        </>
-    )
+                    </CCardBody>
+
+                </CCard>
+
+
+
+            </>
+        )
+    }
+
 }
 
 export default VendorList

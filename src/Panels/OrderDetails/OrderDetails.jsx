@@ -162,10 +162,10 @@ function OrderDetails(props) {
 
     const reload = () => {
 
-        setDetailsLoading(true)
+        // setDetailsLoading(true)
 
         getDashboardOrdersIdWise(props.orderid).then((res) => {
-            setDetailsLoading(false)
+            // setDetailsLoading(false)
             setLifestylesData(res.lifestyleData)
             setEssNEssData(res.essNEssData)
             setEducationData(res.educationData)
@@ -850,7 +850,7 @@ function OrderDetails(props) {
 
     return (
         detailsLoading == true ?
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center py-5">
                 <div class="d-flex align-items-center">
 
                     <div class="spinner-border text-secondary ml-auto" style={{ marginRight: 15 }} role="status" aria-hidden="true"></div>
@@ -861,7 +861,7 @@ function OrderDetails(props) {
             :
             <>
                 <div className="prod_container">
-
+                    <br></br>
                     {props?.productViewData ?
                         null
                         :
@@ -940,22 +940,30 @@ function OrderDetails(props) {
                                 className="mt-4"
                             >
 
+                                <CCol>
+                                    <CCardTitle>Test</CCardTitle>
+                                </CCol>
+
                                 <Tab eventKey="bookingexperience" title="Booking Experience">
-                                    <BookingExperience dataset={productData} orderid={props.orderid} />
+                                    <BookingExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                 </Tab>
 
                                 <Tab eventKey="supplierexperience" title="Supplier Experience">
-                                    <SupplierExperience dataset={productData} orderid={props.orderid} />
+                                    <SupplierExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                 </Tab>
 
                                 <Tab eventKey="travellerExperience" title="Traveller Experience">
-                                    <TravellerExperience dataset={productData} orderid={props.orderid} />
+                                    <TravellerExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                 </Tab>
 
+                                {props?.productViewData ?
+                                    null
+                                    :
+                                    <Tab eventKey="acc" title="Accounts Details">
+                                        <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
+                                    </Tab>
+                                }
 
-                                <Tab eventKey="acc" title="Accounts Details">
-                                    <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
-                                </Tab>
                                 {/* 
                                     <Tab eventKey="location" title="Location Details">
                                         <DeliveryDetails dataset={productData} />
@@ -1008,7 +1016,7 @@ function OrderDetails(props) {
                                     </Tab>
 
                                     <Tab eventKey="travellerExperience" title="Traveller Experience">
-                                        <TravellerExperience dataset={productData} orderid={props.orderid} />
+                                        <TravellerExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
 
 

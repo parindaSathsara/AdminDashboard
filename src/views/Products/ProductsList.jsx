@@ -32,30 +32,39 @@ import MoreProductView from './MoreProductView/MoreProductView'
 import { io } from 'socket.io-client'
 
 import productSound from '../../assets/productSound.mp3'
+import LoaderPanel from 'src/Panels/LoaderPanel'
 
 function ProductList() {
 
     const [productList, setProductList] = useState([])
 
-    const socket = io('http://172.16.26.244:5000');
+    // const socket = io('http://172.16.26.244:5000');
     // const socket = io('https://socket.aa');
 
     useEffect(() => {
-        socket.on('initial', initialDataHandler);
+        // socket.on('initial', initialDataHandler);
 
-        socket.on('change', changedRowHandler);
+        // socket.on('change', changedRowHandler);
 
-        return () => {
-            socket.disconnect();
-        };
+        // return () => {
+        //     socket.disconnect();
+        // };
+
+        initialDataHandler()
     }, []);
 
     const [newlyAddedColumns, setNewlyAddedColumns] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     const initialDataHandler = (initialData) => {
+
+        setLoading(true)
         getAllProducts().then((data) => {
             setProductList(data);
+            setLoading(false)
         });
+
+
     };
 
     const changedRowHandler = (changedRow) => {
@@ -201,22 +210,27 @@ function ProductList() {
 
     useEffect(() => {
 
-        if (newlyAddedColumns.length > 0) {
-            audio.play();
-        } else {
-            audio.pause();
-            audio.currentTime = 0;
-        }
+        // if (newlyAddedColumns.length > 0) {
+        //     audio.play();
+        // } else {
+        //     audio.pause();
+        //     audio.currentTime = 0;
+        // }
 
     }, [newlyAddedColumns]);
 
     // newlyAddedColumns.push("asd")
 
+    if (loading == true) {
+        return (
+            <LoaderPanel message={"Loading Products"} />
+        )
+    }
+    else {
+        return (
+            <div>
 
-    return (
-        <div>
-
-            {/* <MoreOrderView
+                {/* <MoreOrderView
                 show={moreOrderModal}
                 onHide={() => setMoreOrderModal(false)}
                 preID={moreOrderDetails}
@@ -225,52 +239,54 @@ function ProductList() {
             </MoreOrderView> */}
 
 
-            <MoreProductView
-                show={moreProductsModal}
-                onHide={() => setMoreProductModal(false)}
+                <MoreProductView
+                    show={moreProductsModal}
+                    onHide={() => setMoreProductModal(false)}
 
-                productData={moreData}
-            >
+                    productData={moreData}
+                >
 
-            </MoreProductView>
-
-
-            <MaterialTable
-                title="Products List"
-                // tableRef={tableRef}
-                data={data.rows}
-                columns={data.columns}
+                </MoreProductView>
 
 
+                <MaterialTable
+                    title="Products List"
+                    // tableRef={tableRef}
+                    data={data.rows}
+                    columns={data.columns}
 
-                options={{
 
-                    sorting: true, search: true,
-                    searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                    filtering: true, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 20,
-                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                    showSelectAllCheckbox: false, showTextRowsSelected: false,
-                    grouping: true, columnsButton: true,
-                    headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-                    rowStyle: rowStyle,
 
-                    // fixedColumns: {
-                    //     left: 6
-                    // }
-                }}
-            // components={{
-            //     // Component overrides
-            //     Row: (props) => {
-            //         const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(props.data.id);
-            //         return <MaterialTable.Row {...props} className={isRowNewlyAdded ? 'newly-added-row' : ''} />;
-            //     },
-            // }}
+                    options={{
 
-            />
+                        sorting: true, search: true,
+                        searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                        filtering: true, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 20,
+                        paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                        exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                        showSelectAllCheckbox: false, showTextRowsSelected: false,
+                        grouping: true, columnsButton: true,
+                        headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                        rowStyle: rowStyle,
 
-        </div>
-    );
+                        // fixedColumns: {
+                        //     left: 6
+                        // }
+                    }}
+                // components={{
+                //     // Component overrides
+                //     Row: (props) => {
+                //         const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(props.data.id);
+                //         return <MaterialTable.Row {...props} className={isRowNewlyAdded ? 'newly-added-row' : ''} />;
+                //     },
+                // }}
+
+                />
+
+            </div>
+        );
+    }
+
 }
 
 

@@ -1,11 +1,12 @@
 
 
 
-import React from 'react'
+import React, { useState } from 'react'
 import MaterialTable from 'material-table';
-import { CBadge, CButton, CCard, CCardBody, CCardText, CCol, CPopover, CRow } from '@coreui/react';
+import { CBadge, CButton, CCard, CCardBody, CCardText, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
 import { updateDeliveryStatus, candelOrder } from 'src/service/api_calls';
+import rowStyle from '../Components/rowStyle';
 
 
 export default function BookingExperience(props) {
@@ -121,6 +122,9 @@ export default function BookingExperience(props) {
 
   }
 
+
+
+
   const handleDelStatusChange = (e, val) => {
     console.log(e, "Value Data set is 123")
     console.log(val.target.value, "Target Value is")
@@ -143,20 +147,40 @@ export default function BookingExperience(props) {
           console.log(result, "IS Confirmed")
 
           if (result.isConfirmed) {
+            Swal.fire({
+              title: "Hold On!",
+              html: "Order is Updating",
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              onBeforeOpen: () => {
+                Swal.showLoading();
+              }
+            });
 
+            console.log("Show Loading")
             updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
               console.log(result)
-              // reload()
+
               Swal.fire({
                 title: "Order " + e.checkoutID + " Confirmed",
                 text: "Order - " + e.checkoutID + " Order Confirmed",
                 icon: "success"
-              });
-            })
+              })
 
+              props.reload();
+
+              Swal.close(); // Close the loading spinner
+            }).catch(error => {
+              Swal.fire({
+                title: "Error!",
+                text: "Failed to update order",
+                icon: "error"
+              });
+            });
           }
         });
       }
+
       else if (val.target.value == "Cancel") {
         title = "Do You Want to Cancel"
         Swal.fire({
@@ -184,7 +208,10 @@ export default function BookingExperience(props) {
                 value: val.target.value,
               };
 
+              Swal.showLoading()
               await candelOrder(data);
+              Swal.hideLoading()
+              props.reload()
 
             } catch (error) {
               Swal.showValidationMessage(`
@@ -199,6 +226,15 @@ export default function BookingExperience(props) {
     // props.relord();
   }
 
+
+
+  const [clickedStatus, setClickedStatus] = useState("")
+
+  const handleButtonClick = (data) => {
+    setClickedStatus(data)
+
+
+  }
 
 
   const columns = [
@@ -232,18 +268,28 @@ export default function BookingExperience(props) {
       align: 'left',
       hidden: props.hideStatus,
       render: (e) => {
+
+        var status = e?.data?.status
+
         return (
           <>
-            <select
-              className='form-select required'
-              name='delivery_status'
-              onChange={(value) => handleDelStatusChange(e, value)}
-              value={e.status} // Set the selected value here
-            >
-              <option value="" >Select</option>
-              <option value="Approved" selected={e.qty.status === "Approved" ? true : false} >Confirm Order</option>
-              <option value="Cancel" selected={e.qty.status === "Cancel" ? true : false} >Cancel Order</option>
-            </select>
+
+            {e?.data?.checkoutID == clickedStatus ?
+              <select
+                className='form-select required'
+                name='delivery_status'
+                onChange={(value) => handleDelStatusChange(e, value)}
+              // value={e?.data.status} // Set the selected value here
+              >
+                <option value="" >Select</option>
+                <option value="Approved">Confirm</option>
+                <option value="Cancel">Cancel</option>
+              </select>
+              :
+              <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
+
+            }
+
           </>
         );
       }
@@ -261,8 +307,12 @@ export default function BookingExperience(props) {
     paid_amount: value.currency + " " + value?.['paid_amount'],
     balance_amount: value.currency + " " + value?.['balance_amount'],
     checkoutID: value?.checkoutID,
-    supplier_status: value?.supplier_status
+    supplier_status: value?.supplier_status,
+    data: value
   }))
+
+
+
 
 
   return (
@@ -282,6 +332,7 @@ export default function BookingExperience(props) {
           search: false,
           columnsButton: true,
           exportButton: true,
+          rowStyle: rowStyle
         }}
 
       />

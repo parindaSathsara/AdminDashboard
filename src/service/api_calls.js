@@ -248,7 +248,7 @@ async function updateDeliveryStatus(id, value, type) {
       type: type
 
     }
-    console.log(data, "DataSet is Updated")
+    console.log(data, "DataSet is Updated123")
 
 
 
@@ -259,7 +259,7 @@ async function updateDeliveryStatus(id, value, type) {
       console.log(res)
 
       if (res.data.status === 200) {
-        toast.success('Updated!')
+        // toast.success('Updated!')
       }
 
     }).catch((err) => {

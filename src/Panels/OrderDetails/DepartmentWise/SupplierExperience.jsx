@@ -7,6 +7,7 @@ import { CButton, CCard, CCardBody, CCol, CPopover, CRow, CSpinner } from '@core
 import CIcon from '@coreui/icons-react';
 import { cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
+import rowStyle from '../Components/rowStyle';
 
 export default function SupplierExperience(props) {
 
@@ -178,7 +179,8 @@ export default function SupplierExperience(props) {
         company_name: value?.company_name,
         company_address: value?.address,
         contact: value?.phone,
-        checkout_id: value?.checkoutID
+        checkout_id: value?.checkoutID,
+        data: value
     }))
 
 
@@ -187,9 +189,9 @@ export default function SupplierExperience(props) {
 
     const resendVoucher = () => {
         setVoucherSending(true)
-
-
     }
+
+
 
 
     return (
@@ -234,6 +236,8 @@ export default function SupplierExperience(props) {
                     columnsButton: true,
                     exportButton: true,
                     grouping: false,
+
+                    rowStyle: rowStyle
                 }}
 
 

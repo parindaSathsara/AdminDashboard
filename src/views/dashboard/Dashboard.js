@@ -68,6 +68,7 @@ import DateWiseSummary from 'src/Panels/OrderDetails/DateWiseSummary/DateWiseSum
 import { io } from 'socket.io-client'
 import productSound from '../../assets/productSound.mp3'
 import ProductWiseOrders from './MainComponents/ProductWiseOrders'
+import LoaderPanel from 'src/Panels/LoaderPanel'
 
 
 const Dashboard = () => {
@@ -77,10 +78,16 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
 
+  const [loading, setLoading] = useState(false)
+
   const [showMailModal, setShowMailModal] = useState(false);
   const [showAddtitionalModal, setShowAdditionalModal] = useState(false);
   const [rowDetails, setRowDetails] = useState([]);
   const [newlyAddedColumns, setNewlyAddedColumns] = useState([])
+
+
+
+
   const handleSendMail = (e) => {
     setShowMailModal(true)
     setOrderId(e)
@@ -122,29 +129,40 @@ const Dashboard = () => {
 
 
 
-  const socket = io('http://172.16.26.238:5000');
+  // const socket = io('http://172.16.26.238:5000');
   // const socket = io('https://socket.aa');
 
   useEffect(() => {
-    socket.on('checkoutInitial', initialDataHandler);
+    // socket.on('checkoutInitial', initialDataHandler);
 
-    socket.on('changeCheckout', changedRowHandler);
+    // socket.on('changeCheckout', changedRowHandler);
 
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
+
+    initialDataHandler();
   }, []);
 
 
   const initialDataHandler = (initialData) => {
+    setLoading(true)
+
     getAllDataUserWise().then(res => {
       setOrderData(res)
+      setLoading(false)
     })
+
+    setLoading(true)
 
     getAllCardData().then(res => {
       console.log(res)
       setCardData(res)
+      setLoading(false)
     })
+
+
+
   };
 
 
@@ -240,6 +258,10 @@ const Dashboard = () => {
       {
         title: 'Paid Amount', field: 'paid_amount', align: 'right', editable: 'never',
       },
+      {
+        title: 'Balance Amount', field: 'balance_amount', align: 'right', editable: 'never',
+      },
+
 
 
       {
@@ -274,7 +296,8 @@ const Dashboard = () => {
           <div className='actions_box'>
             <button className="btn btn_actions" onClick={(e) => { handleSendMail(value.OrderId) }}><CIcon icon={cibGmail} size="lg" /></button>
           </div>
-        )
+        ),
+        balance_amount: value.ItemCurrency + " " + (value.balance_amount || "0.00")
       };
     })
   }
@@ -287,189 +310,187 @@ const Dashboard = () => {
     console.log(e)
   }
 
+  if (loading == true) {
+    return (
+      <LoaderPanel message={"Data processing in progress"} />
+    )
+  }
+  else {
+    return (
+      <>
 
-  return (
-    <>
-      {/* <WidgetsDropdown /> */}
+        <CRow>
+          <CCol xs={12} sm={6} lg={3}>
+
+            <CWidgetStatsB
+              color="success"
+              inverse
+              value={cardData.orderCount + ""}
+              title="Orders Count"
+              progress={{ value: 100.00 }}
+              text="Last 30 Days Order Count"
+            />
+
+          </CCol>
+          <CCol xs={12} sm={6} lg={3}>
+            <CWidgetStatsB
+              className="mb-4"
+              value={cardData.salesCount.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ""}
+              title="Sales"
+              color="danger"
+              inverse
+              progress={{ value: 100.0 }}
+              text="Last 30 Days Sales"
+            />
+          </CCol>
+          <CCol xs={12} sm={6} lg={3}>
+
+            <CWidgetStatsB
+              className="mb-4"
+              value={cardData.customerCount + ""}
+              title="Customers"
+              color="warning"
+              inverse
+              progress={{ value: 100.0 }}
+              text="Last 30 Days Customer Count"
+            />
+          </CCol>
+
+          <CCol xs={12} sm={6} lg={3}>
+
+
+            <CWidgetStatsB
+              className="mb-4"
+              value={cardData.suppliersCount + ""}
+              title="Suppliers"
+              color="info"
+              inverse
+              progress={{ value: 100.0 }}
+              text="Last 30 Days Supplier Count"
+            />
+
+
+          </CCol>
+
+        </CRow>
+
+
+        <CCard className="mb-4">
 
 
 
-      <CRow>
-        <CCol xs={12} sm={6} lg={3}>
+          <CCardBody>
+            <CRow>
+              <CCol sm={5}>
+                <h4 id="traffic" className="card-title mb-0">
+                  Customer Orders
+                </h4>
+                {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
+              </CCol>
 
-          <CWidgetStatsB
-            color="success"
-            inverse
-            value={cardData.orderCount + ""}
-            title="Orders Count"
-            progress={{ value: 100.00 }}
-            text="Last 30 Days Order Count"
+            </CRow>
+
+
+
+
+
+            <Tabs
+              defaultActiveKey="group"
+              id="uncontrolled-tab-example"
+              className="mt-4"
+              style={{
+                fontSize: 16
+              }}
+            >
+
+              <Tab eventKey="group" title="Group Wise">
+
+                <ThemeProvider theme={defaultMaterialTheme}>
+                  <MaterialTable
+                    title=""
+                    // tableRef={tableRef}
+                    data={data.rows}
+                    columns={data.columns}
+
+
+                    detailPanel={(e) => {
+                      return (
+                        <div className="col-md-12 mb-4 sub_box materialTableDP">
+                          <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
+                        </div>
+
+                      )
+                    }}
+                    options={{
+                      sorting: true, search: true,
+                      searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                      filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                      paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                      exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                      showSelectAllCheckbox: false, showTextRowsSelected: false,
+                      grouping: true, columnsButton: true,
+                      headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+
+                      rowStyle: rowStyle,
+
+                    }}
+                  />
+
+                </ThemeProvider>
+              </Tab>
+              <Tab eventKey="product" title="Product Wise">
+                <ProductWiseOrders />
+              </Tab>
+
+
+            </Tabs>
+
+
+
+
+
+          </CCardBody>
+
+        </CCard>
+
+
+
+
+
+        {showModalAdd == true ?
+          <AdditionalData
+            show={showModalAdd}
+            onHide={() => setShowModalAdd(false)}
+            orderid={orderid}
           />
+          :
+          null
+        }
 
-        </CCol>
-        <CCol xs={12} sm={6} lg={3}>
-          <CWidgetStatsB
-            className="mb-4"
-            value={cardData.salesCount.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ""}
-            title="Sales"
-            color="danger"
-            inverse
-            progress={{ value: 100.0 }}
-            text="Last 30 Days Sales"
+        {showMailModal == true ?
+          <MailBox
+            show={showMailModal}
+            onHide={() => setShowMailModal(false)}
+            orderid={orderid}
           />
-        </CCol>
-        <CCol xs={12} sm={6} lg={3}>
+          :
+          null
+        }
 
-          <CWidgetStatsB
-            className="mb-4"
-            value={cardData.customerCount + ""}
-            title="Customers"
-            color="warning"
-            inverse
-            progress={{ value: 100.0 }}
-            text="Last 30 Days Customer Count"
+        {showAddtitionalModal == true ?
+          <AdditionalInfoBox
+            show={showAddtitionalModal}
+            onHide={() => setShowAdditionalModal(false)}
+            orderid={orderid}
           />
-        </CCol>
+          :
+          null
+        }
 
-        <CCol xs={12} sm={6} lg={3}>
+      </>
+    )
+  }
 
-
-          <CWidgetStatsB
-            className="mb-4"
-            value={cardData.suppliersCount + ""}
-            title="Suppliers"
-            color="info"
-            inverse
-            progress={{ value: 100.0 }}
-            text="Last 30 Days Supplier Count"
-          />
-
-
-        </CCol>
-
-      </CRow>
-
-
-      <CCard className="mb-4">
-
-
-
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Customer Orders
-              </h4>
-              {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
-            </CCol>
-
-          </CRow>
-
-
-
-
-
-          <Tabs
-            defaultActiveKey="group"
-            id="uncontrolled-tab-example"
-            className="mt-4"
-            style={{
-              fontSize: 16
-            }}
-          >
-
-            <Tab eventKey="group" title="Group Wise">
-              <ThemeProvider theme={defaultMaterialTheme}>
-                <MaterialTable
-                  title=""
-                  // tableRef={tableRef}
-                  data={data.rows}
-                  columns={data.columns}
-
-
-                  detailPanel={(e) => {
-                    return (
-                      <div className="col-md-12 mb-4 sub_box materialTableDP">
-                        <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
-                      </div>
-
-                    )
-                  }}
-
-
-
-                  options={{
-
-                    sorting: true, search: true,
-                    searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                    filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                    showSelectAllCheckbox: false, showTextRowsSelected: false,
-                    grouping: true, columnsButton: true,
-                    headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-
-                    rowStyle: rowStyle,
-
-                    // fixedColumns: {
-                    //     left: 6
-                    // }
-                  }}
-                />
-
-              </ThemeProvider>
-            </Tab>
-            <Tab eventKey="product" title="Product Wise">
-              <ProductWiseOrders />
-            </Tab>
-
-
-          </Tabs>
-
-
-
-
-
-        </CCardBody>
-
-      </CCard>
-
-
-
-
-
-      {showModalAdd == true ?
-        <AdditionalData
-          show={showModalAdd}
-          onHide={() => setShowModalAdd(false)}
-          orderid={orderid}
-        />
-        :
-        null
-      }
-
-      {showMailModal == true ?
-        <MailBox
-          show={showMailModal}
-          onHide={() => setShowMailModal(false)}
-          orderid={orderid}
-        />
-        :
-        null
-      }
-
-      {showAddtitionalModal == true ?
-        <AdditionalInfoBox
-          show={showAddtitionalModal}
-          onHide={() => setShowAdditionalModal(false)}
-          orderid={orderid}
-        />
-        :
-        null
-      }
-
-    </>
-  )
 }
 
 export default Dashboard

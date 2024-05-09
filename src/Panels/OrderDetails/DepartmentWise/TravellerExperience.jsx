@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import MaterialTable from 'material-table';
-import { CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
+import { CBadge, CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilInfo } from '@coreui/icons';
+import { cilCheckCircle, cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
 import DeliveryDetails from 'src/Panels/DeliveryDetails/DeliveryDetails';
 import axios from 'axios';
 import Swal from 'sweetalert2'
+import rowStyle from '../Components/rowStyle';
 
 export default function TravellerExperience(props) {
 
@@ -57,19 +58,56 @@ export default function TravellerExperience(props) {
 
     // }
 
-    const createTravellerExperience = async () => {
-        console.log(travellerData);
+    const createTravellerExperience = async (rowData) => {
+        console.log(rowData?.data?.checkoutID, "ROWWW");
+
+        travellerData["pid"] = rowData?.data?.checkoutID
+
+
+        console.log(travellerData, "Travellll")
+
         try {
-            const response = await axios.post(`/createTraveller`, travellerData);
+            Swal.showLoading()
+            const response = await axios.post(`/create_traveller`, travellerData);
             if (response.data.status == 200) {
+
+
+                await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${rowData?.data?.checkoutID}/${"CompletedDelivery"}`).then((res) => {
+                    Swal.hideLoading()
+                    console.log(res)
+
+                    if (res.data.status === 200) {
+                        Swal.fire({
+                            title: "Traveller Details Updated Successfully",
+                            text: "",
+                            icon: "success"
+                        });
+
+                    }
+
+                }).catch((err) => {
+
+                    Swal.fire({
+                        title: "Traveller Details Updated Successfully",
+                        text: "",
+                        icon: "success"
+                    });
+
+                    throw new Error(err);
+                })
+
+                props.reload()
+            }
+            else if (response.data.status == 400) {
                 Swal.fire({
-                    title: "Traveller Details Updated Successfully",
-                    text: "",
-                    icon: "success"
+                    text: "Please Fill All Details",
+                    icon: "error"
                 });
-            } else {
+            }
+
+            else if (response.data.status == 410) {
                 Swal.fire({
-                    text: "Please Fill Details",
+                    text: "Failed to Proceed the Order",
                     icon: "error"
                 });
             }
@@ -201,21 +239,63 @@ export default function TravellerExperience(props) {
         { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
         { title: 'Location', field: 'location1', render: rowData => <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
         { title: 'Reconfirmation Date', field: 'reconfirmation_date', type: 'date', render: rowData => <CFormInput type="date" value={rowData.reconfirmation_date} onChange={e => handleInputFields('reconfirmation_date', e.target.value)} /> },
-        { title: 'Q/C', field: 'qc', render: rowData => <CFormSelect custom onChange={e => handleInputFields('qc', e.target.value)} value={rowData.qc}><option>Select Q/C</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
-        { title: 'Delivery Status', field: 'delivery_status', render: rowData => <CFormSelect custom onChange={e => handleInputFields('delivery_status', e.target.value)} value={rowData.delivery_status}><option>Select Status</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect> },
+        { title: 'QC', field: 'qc', render: rowData => <CFormSelect custom onChange={e => handleInputFields('qc', e.target.value)} ><option>Select QC</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
+        {
+            title: 'Delivery Status', field: 'delivery_status', render: rowData => {
+
+
+                return (
+                    <CFormSelect custom onChange={e => handleInputFields('delivery_status', e.target.value)} >
+                        <option>Select Status</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}
+                    </CFormSelect>
+                )
+
+
+            }
+        },
         {
             title: '',
-            render: rowData => (
-                <div onClick={createTravellerExperience}>
-                    {/* <CPopover> */}
-                    <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
-                    {/* </CPopover> */}
-                </div>
-            )
+            render: rowData => {
+                if (rowData?.data.status == "Approved") {
+                    return (
+                        <div onClick={() => createTravellerExperience(rowData)}>
+
+                            <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
+
+                        </div>
+                    )
+                }
+
+                else if (rowData?.data.status == "Completed") {
+                    return (
+                        <CIcon icon={cilCheckCircle} size="xxl" />
+                    )
+                }
+                else {
+                    return (
+                        <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>Waiting For Approval</CBadge>
+                    )
+                }
+
+
+            }
         }
 
         // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
     ];
+
+    // Prepare the data for the Material Table
+    const data = productData?.map(value => ({
+        pid: value?.['PID'],
+        delivery_date: value?.service_date,
+        location: value?.location,
+        reconfirmationDate: value?.reconfirmationDate,
+        qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
+        deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
+        data: value
+        // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
+    }));
+
 
 
 
@@ -229,17 +309,6 @@ export default function TravellerExperience(props) {
 
     };
 
-    // Prepare the data for the Material Table
-    const data = productData?.map(value => ({
-        pid: value?.['PID'],
-        delivery_date: value?.service_date,
-        location: value?.location,
-        reconfirmationDate: value?.reconfirmationDate,
-        qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
-        deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
-        data: value
-        // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
-    }));
 
 
     return (
@@ -273,6 +342,7 @@ export default function TravellerExperience(props) {
                     columnsButton: true,
                     exportButton: true,
                     grouping: false,
+                    rowStyle: rowStyle
                 }}
 
             />

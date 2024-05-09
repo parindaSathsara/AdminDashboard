@@ -8,6 +8,7 @@ import { cilInfo } from '@coreui/icons';
 import MoreOrderView from 'src/Panels/OrderDetails/MoreOrderView/MoreOrderView';
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import moment from 'moment';
+import LoaderPanel from 'src/Panels/LoaderPanel';
 
 export default function ProductWiseOrders() {
     const defaultMaterialTheme = createTheme();
@@ -17,13 +18,21 @@ export default function ProductWiseOrders() {
     const [allOrdersProducts, setAllOrdersProducts] = useState([])
     const [customerData, setCustomerData] = useState([])
 
+
+    const [loading, setLoading] = useState(false)
+
     const getAllProductsOrders = async () => {
+
+        setLoading(true)
         await axios.get("fetch_all_orders_product_wise").then(res => {
             if (res.data.status == 200) {
                 setAllOrdersProducts(res.data.productData)
                 setCustomerData(res.data.customerData)
                 console.log(res.data)
+                setLoading(false)
             }
+        }).catch(response => {
+            setLoading(false)
         })
     }
 
@@ -154,53 +163,59 @@ export default function ProductWiseOrders() {
             </MoreOrderView>
 
 
-
-            <CCol>
-                <ThemeProvider theme={defaultMaterialTheme}>
-                    <MaterialTable
-                        title=""
-                        // tableRef={tableRef}
-                        data={data.rows}
-                        columns={data.columns}
-
-
-                        // detailPanel={(e) => {
-
-                        //     return (
-                        //         <div className='mainContainerTables'>
-                        //             <div className="col-md-12 mb-4 sub_box materialTableDP">
-                        //                 <OrderDetails orderid={e} orderData={e} hideStatus={false} productViewData />
-                        //             </div>
-                        //         </div>
-                        //     )
-
-                        // }}
+            {
+                loading == true ?
+                    <LoaderPanel message={"All orders are being fetched"}></LoaderPanel>
+                    :
+                    <CCol>
+                        <ThemeProvider theme={defaultMaterialTheme}>
+                            <MaterialTable
+                                title=""
+                                // tableRef={tableRef}
+                                data={data.rows}
+                                columns={data.columns}
 
 
+                                // detailPanel={(e) => {
 
-                        options={{
+                                //     return (
+                                //         <div className='mainContainerTables'>
+                                //             <div className="col-md-12 mb-4 sub_box materialTableDP">
+                                //                 <OrderDetails orderid={e} orderData={e} hideStatus={false} productViewData />
+                                //             </div>
+                                //         </div>
+                                //     )
 
-                            sorting: true, search: true,
-                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                            filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                            showSelectAllCheckbox: false, showTextRowsSelected: false,
-                            grouping: true, columnsButton: true,
-                            headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-                            filtering: true,
+                                // }}
 
-                            rowStyle: rowStyle,
 
-                            // fixedColumns: {
-                            //     left: 6
-                            // }
-                        }}
 
-                    />
+                                options={{
 
-                </ThemeProvider>
-            </CCol>
+                                    sorting: true, search: true,
+                                    searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
+                                    filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                                    showSelectAllCheckbox: false, showTextRowsSelected: false,
+                                    grouping: true, columnsButton: true,
+                                    headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                    filtering: true,
+
+                                    rowStyle: rowStyle,
+
+                                    // fixedColumns: {
+                                    //     left: 6
+                                    // }
+                                }}
+
+                            />
+
+                        </ThemeProvider>
+                    </CCol>
+
+            }
+
         </>
     )
 }
