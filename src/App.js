@@ -1,8 +1,9 @@
 
-import React, { Component, Suspense } from 'react'
+import React, { Component, Suspense, useEffect, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 import axios from 'axios'
+import { UserLoginContext } from './Context/UserLoginContext'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
@@ -12,8 +13,8 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// axios.defaults.baseURL = 'http://192.168.62.168:8000/api/'
-// axios.defaults.data = 'http://192.168.62.168:8000'
+// axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
+// axios.defaults.data = 'http://172.16.26.238:8000'
 
 axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 axios.defaults.data = 'https://admin-api.aahaas.com'
@@ -45,25 +46,59 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 
 function App() {
 
-  const data = localStorage.getItem('token');
 
-  console.log(data, 'Data Value iss')
+
+  const [userLogin, setUserLogin] = useState(false)
+
+
+
+
+
+
+  useEffect(() => {
+    const userid = localStorage.getItem("userID");
+
+    if (userid) {
+      setUserLogin(true)
+    }
+
+  }, [])
+
 
   return (
-    <HashRouter>
-      <Suspense fallback={loading}>
-        <Routes>
-          {/* Route for the login page */}
-          <Route exact path="/login" name="Login Page" element={<Login />} />
-          {/* Route for the register page */}
-          <Route exact path="/register" name="Register Page" element={<Register />} />
-          {/* Routes accessible only when authenticated */}
 
-          <Route exact path="*" element={<DefaultLayout />} />
 
-        </Routes>
-      </Suspense>
-    </HashRouter>
+    <UserLoginContext.Provider value={{ userLogin, setUserLogin }}>
+      <HashRouter>
+        <Suspense fallback={loading}>
+          <Routes>
+
+            {!userLogin ?
+              <>
+                <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+
+                <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
+              </>
+
+              :
+
+              <>
+                {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
+
+                <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
+              </>
+
+
+            }
+
+
+
+
+          </Routes>
+        </Suspense>
+      </HashRouter>
+    </UserLoginContext.Provider>
   );
 
 }

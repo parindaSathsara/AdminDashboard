@@ -8,6 +8,8 @@ import CIcon from '@coreui/icons-react';
 import { cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
 import rowStyle from '../Components/rowStyle';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function SupplierExperience(props) {
 
@@ -122,22 +124,27 @@ export default function SupplierExperience(props) {
     const [supplierVoucherView, setSupplierVoucherView] = useState(false)
 
     const [supplierVoucherData, setSupplierVoucherData] = useState('')
+    const [selectedSupplierVoucherData, setSelectedSupplierVoucherData] = useState([])
+
 
     const getSupplierVoucher = async (data) => {
 
         console.log(data, "Voucher ID")
 
         setSupplierVoucherView(true)
+        setSelectedSupplierVoucherData(data)
 
 
         var apiUrl = `https://gateway.aahaas.com/api/displaySupplierVoucher/${data.checkout_id}`
-
+        console.log(apiUrl, "Voucher ID")
         try {
             const response = await fetch(apiUrl);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const dataVal = await response.text();
+
+            console.log(dataVal, "Index")
 
             setSupplierVoucherData(dataVal)
         } catch (error) {
@@ -152,6 +159,7 @@ export default function SupplierExperience(props) {
         { title: 'Supplier ID', field: 'sid' },
         { title: 'Name', field: 'name' },
         { title: 'Supplier Confirmation', field: 'sup_confirm' },
+        { title: 'Email', field: 'email' },
         { title: 'Company Name', field: 'company_name' },
         { title: 'Company Address', field: 'company_address' },
         { title: 'Contact', field: 'contact' },
@@ -180,7 +188,8 @@ export default function SupplierExperience(props) {
         company_address: value?.address,
         contact: value?.phone,
         checkout_id: value?.checkoutID,
-        data: value
+        data: value,
+        email: value?.email
     }))
 
 
@@ -188,10 +197,57 @@ export default function SupplierExperience(props) {
 
 
     const resendVoucher = () => {
+
+        console.log("resend calling")
         setVoucherSending(true)
+
+
+
+        var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`
+        console.log(email, "Supplier Data")
+
+
+        fetch(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .then(data => {
+                setVoucherSending(false)
+                if (data.status === 200) {
+                    Swal.fire({
+                        title: "Voucher Resent Successfully",
+                        text: "Voucher Sent",
+                        icon: "success"
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+
+
+        // axios.post()
     }
 
 
+    function decodeEmail(encoded) {
+        var key = 0x82;
+        var decoded = "";
+        for (var i = 0; i < encoded.length; i += 2) {
+            decoded += String.fromCharCode(parseInt(encoded.substr(i, 2), 16) ^ key);
+        }
+        return decoded;
+    }
 
 
     return (
@@ -199,16 +255,18 @@ export default function SupplierExperience(props) {
             <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl">
                 <Modal.Header closeButton>
                     <Modal.Title>Supplier Voucher</Modal.Title>
-                    {/* <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher}>
+                    <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher()}>
                         Resend Voucher
 
-                        {voucherSending == true ?
-                            <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
-                            :
+
+
+                        {voucherSending === false ?
                             null
+                            :
+                            <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
                         }
 
-                    </CButton> */}
+                    </CButton>
                 </Modal.Header>
                 <Modal.Body>
                     <div dangerouslySetInnerHTML={{ __html: supplierVoucherData }} />
@@ -235,7 +293,7 @@ export default function SupplierExperience(props) {
                     search: false,
                     columnsButton: true,
                     exportButton: true,
-                    grouping: false,
+                    grouping: true,
 
                     rowStyle: rowStyle
                 }}

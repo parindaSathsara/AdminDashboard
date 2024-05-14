@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -10,8 +10,10 @@ import {
   CFooter,
   CForm,
   CFormInput,
+  CImage,
   CInputGroup,
   CInputGroupText,
+  CLink,
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
@@ -23,6 +25,9 @@ import AuthUser from 'src/service/authenticator'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { Carousel } from 'react-bootstrap'
+
+import "./Login.css"
+import { UserLoginContext } from 'src/Context/UserLoginContext'
 
 
 
@@ -37,6 +42,13 @@ const Login = () => {
     email: '',
     password: ''
   });
+
+
+
+
+
+  const { userLogin, setUserLogin } = useContext(UserLoginContext);
+
 
   const handleInputChange = (e) => {
     e.persist();
@@ -55,12 +67,15 @@ const Login = () => {
     // formdata.append('password', loginInput.password);
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+
     const headers = {
       'Content-Type': 'application/json',
       'X-CSRF-TOKEN': csrfToken
     };
 
-    // axios.get('/sanctum/csrf-cookie', { withCredentials: true }).then((response) => {
+    // axios.get('/sanctum/csrf-cookie', { withCredentials: true }).then((response) => {h
     // console.log(formdata)
 
     console.log(csrfToken)
@@ -79,10 +94,14 @@ const Login = () => {
         if (res.data.status === 200) {
 
           setToken(res.data.user, res.data.access_token);
-          localStorage.setItem('user', res.data);
+
+          localStorage.setItem('user', res.data.user_data);
+          localStorage.setItem('userID', res.data.user_id);
           localStorage.setItem('token', res.data.access_token);
 
+          setUserLogin(true)
           navigate("/dashboard")
+
         }
 
         if (res.data.status === 403) {
@@ -107,118 +126,141 @@ const Login = () => {
 
 
   return (
-    <>
-      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-        <CContainer>
 
 
-          <CRow className="justify-content-center">
-            <CCol md={5}>
-              <CCardGroup>
+    <div className='lifestylePage'>
+      {/* Required meta tags */}
 
-                <CCard className="p-4">
-                  <CCardBody>
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
-                      <img src={logo} width={100} alt="Logo" />
-                    </div>
+      <div className="d-lg-flex half">
+        <div className="bg order-1 order-md-2" style={{ backgroundImage: 'url("https://wallpapers.com/images/hd/sri-lanka-ancient-city-sigiriya-yl2a01gga8ogmfpu.jpg")' }} />
+        <div className="contents order-2 order-md-1">
+          <div className="container">
+            <div className="row align-items-center justify-content-center">
+              <div className="col-md-7">
 
-                    <CForm>
-                      <h1 style={{ textAlign: 'center', fontSize: 28 }}>Login</h1>
-                      <p className="text-medium-emphasis" style={{ textAlign: 'center' }}>Sign In to your account</p>
-                      {/* <form className="row" onSubmit={handleFormSubmit}> */}
-                      <CInputGroup className="mb-3">
-                        <CInputGroupText>
-                          <CIcon icon={cilUser} />
-                        </CInputGroupText>
-                        <CFormInput placeholder="Username" autoComplete="username" name='email' onChange={handleInputChange} />
-                      </CInputGroup>
-                      <CInputGroup className="mb-4">
-                        <CInputGroupText>
-                          <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
-                        <CFormInput
-                          type="password"
-                          placeholder="Password"
-                          name='password'
-                          autoComplete="current-password"
-                          onChange={handleInputChange}
-                        />
-                      </CInputGroup>
-
-                      <CRow>
-
-                        <CButton type='submit' color="primary" className="px-4" onClick={handleFormSubmit}>
-                          Login
-                        </CButton>
-                        <Link to="/register" style={{ marginLeft: '10px' }}> {/* Link to the Register page */}
-                          <CButton color="link" className="px-0">
-                           Don't Have an account? Register !
-                          </CButton>
-                        </Link>
-                        {/* <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
-                      </CCol> */}
+                <CImage src='https://gateway.aahaas.com/aahaas.png' width={130} className='pb-3'></CImage>
 
 
-                      </CRow>
-                      {/* </form> */}
-                    </CForm>
-                  </CCardBody>
-                </CCard>
+                <h3>Login to <strong>Aahaas</strong></h3>
+                <p className="mb-4">Elevate your administrative processes to new heights of productivity and effectiveness with Aahaas, your key to seamless management.</p>
+
+                {/* <form action="#" method="post">
+                  <div className="form-group first">
+                    <label htmlFor="username">Username</label>
+                    <input type="text" className="form-control" placeholder="your-email@gmail.com" id="username" />
+                  </div>
+                  <div className="form-group last mb-3">
+                    <label htmlFor="password">Password</label>
+                    <input type="password" className="form-control" placeholder="Your Password" id="password" />
+                  </div>
+                  <div className="d-flex mb-5 align-items-center">
+                    <label className="control control--checkbox mb-0"><span className="caption">Remember me</span>
+                      <input type="checkbox" defaultChecked="checked" />
+                      <div className="control__indicator" />
+                    </label>
+                    <span className="ml-auto"><a href="#" className="forgot-pass">Forgot Password</a></span>
+                  </div>
+                  <input type="submit" defaultValue="Log In" className="btn btn-block btn-primary" />
+                </form> */}
 
 
-                {/* <CCard className="text-white bg-primary">
-                  <CCardBody className="text-center">
-                    <Carousel style={{ height: '100%' }}>
-                      <Carousel.Item style={{ height: '100%' }}>
-                        <img
-                          className="d-block w-100"
-                          src="https://cdn-production.checkfront.com/wp-content/uploads/2021/07/marketing-tours-online-with-woman-traveling-by-boat-in-thailand.jpeg"
-                          alt="First slide"
-                          style={{ objectFit: 'cover', height: '100%' }}
-                        />
-                      </Carousel.Item>
-                      <Carousel.Item>
-                        <img
-                          className="d-block w-100"
-                          src="https://wallpaper.dog/large/20402632.jpg"
-                          alt="Second slide"
-                          style={{ objectFit: 'cover', height: '100%' }}
-                        />
-                      </Carousel.Item>
-                      <Carousel.Item>
-                        <img
-                          className="d-block w-100"
-                          src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2N1YmElMjBkaXZpbmd8ZW58MHx8MHx8fDA%3D"
-                          alt="Third slide"
-                          style={{ objectFit: 'cover', height: '100%' }}
-                        />
-                      </Carousel.Item>
-                    </Carousel>
-                  </CCardBody>
-                </CCard> */}
+                <CForm>
+                  <CInputGroup className="mb-3">
+
+                    <CFormInput placeholder="Username" autoComplete="username" name='email' className="form-group first" onChange={handleInputChange} />
+                  </CInputGroup>
+                  <CInputGroup className="mb-4">
+
+                    <CFormInput
+                      type="password"
+                      placeholder="Password"
+                      name='password'
+                      autoComplete="current-password"
+                      onChange={handleInputChange}
+                      className="form-group first"
+                    />
+                  </CInputGroup>
+                  <CRow>
+                    <CCol xs="12" md="6" className="mb-3 mb-md-0">
+                      <CButton type='submit' color="primary" className="w-100" onClick={handleFormSubmit}>
+                        Login
+                      </CButton>
+                    </CCol>
+
+                  </CRow>
+
+                </CForm>
+
+                <br></br>
+
+                {/* <CLink color="primary" className="w-100" src=''>
+                  Don't Have an account? Register !
+                </CLink> */}
 
 
-              </CCardGroup>
-            </CCol>
-          </CRow>
-
-        </CContainer>
-
-
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <CFooter>
-        <small className="text-muted hint__Text">
-          Please contact Admin if forgot the password to login
-        </small>
-        <hr className='hr__' />
-        <small>&copy;2023 Apple Techlabs</small>
-      </CFooter>
+    // <>
 
-    </>
+
+    //   <CRow className='vh-100'>
+    //     <CCol className="p-4" md={4}>
+    //       <CCardBody style={{ height: '100%' }}>
+    //         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
+    //           <img src={logo} width={100} alt="Logo" />
+    //         </div>
+    // <CForm>
+    //   <h1 style={{ textAlign: 'center', fontSize: 28 }}>Login</h1>
+    //   <p className="text-medium-emphasis" style={{ textAlign: 'center' }}>Sign In to your account</p>
+    //   <CInputGroup className="mb-3">
+    //     <CInputGroupText>
+    //       <CIcon icon={cilUser} />
+    //     </CInputGroupText>
+    //     <CFormInput placeholder="Username" autoComplete="username" name='email' onChange={handleInputChange} />
+    //   </CInputGroup>
+    //   <CInputGroup className="mb-4">
+    //     <CInputGroupText>
+    //       <CIcon icon={cilLockLocked} />
+    //     </CInputGroupText>
+    //     <CFormInput
+    //       type="password"
+    //       placeholder="Password"
+    //       name='password'
+    //       autoComplete="current-password"
+    //       onChange={handleInputChange}
+    //     />
+    //   </CInputGroup>
+    //   <CRow>
+    //     <CCol xs="12" md="6" className="mb-3 mb-md-0">
+    //       <CButton type='submit' color="primary" className="w-100" onClick={handleFormSubmit}>
+    //         Login
+    //       </CButton>
+    //     </CCol>
+    //     <CCol xs="12" md="6">
+    //       <Link to="/register">
+    //         <CButton color="link" className="w-100">
+    //           Don't Have an account? Register !
+    //         </CButton>
+    //       </Link>
+    //     </CCol>
+    //   </CRow>
+    // </CForm>
+    //       </CCardBody>
+    //     </CCol>
+    //     <CCol className="text-white bg-primary" md={8}>
+    //       <CCardBody className="text-center">
+    //         <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dHJhdmVsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww" />
+    //       </CCardBody>
+    //     </CCol>
+    //   </CRow>
+
+
+    // </>
   )
 }
 

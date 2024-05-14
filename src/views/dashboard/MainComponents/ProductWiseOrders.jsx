@@ -169,6 +169,9 @@ export default function ProductWiseOrders() {
                     :
                     <CCol>
                         <ThemeProvider theme={defaultMaterialTheme}>
+
+
+                            {/* {React.memo(() => ( */}
                             <MaterialTable
                                 title=""
                                 // tableRef={tableRef}
@@ -201,8 +204,7 @@ export default function ProductWiseOrders() {
                                     grouping: true, columnsButton: true,
                                     headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                     filtering: true,
-
-                                    rowStyle: rowStyle,
+                                    rowStyle: rowStyle
 
                                     // fixedColumns: {
                                     //     left: 6
@@ -210,6 +212,8 @@ export default function ProductWiseOrders() {
                                 }}
 
                             />
+
+                            {/* ))} */}
 
                         </ThemeProvider>
                     </CCol>

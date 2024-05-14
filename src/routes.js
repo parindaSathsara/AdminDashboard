@@ -82,7 +82,6 @@ const routes = [
   { path: '/products/analytics', name: 'Product Analytics', element: ProductAnalytics },
   { path: '/sales', name: 'Sales Analytics', element: SalesAnalytics, exact: true },
 
-
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
   { path: '/Chats', name: 'Chats', element: ChatsIndex, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
@@ -127,9 +126,9 @@ const routes = [
   { path: '/notifications/badges', name: 'Badges', element: Badges },
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
-  { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: "/login", name: 'login', element: Login },
-  { path: "/register", name: 'register', element: Register }
+  { path: '/widgets', name: 'Widgets', element: Widgets }
+  // { path: "/login", name: 'login', element: Login },
+  // { path: "/register", name: 'register', element: Register }
 
 ]
 

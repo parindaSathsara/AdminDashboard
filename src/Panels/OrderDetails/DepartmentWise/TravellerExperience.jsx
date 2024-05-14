@@ -233,19 +233,33 @@ export default function TravellerExperience(props) {
 
     }
 
+
+
+    const getDisableStatus = (rowData) => {
+        if (rowData?.supplier_status == "Cancel") {
+            return true
+        }
+
+        if (rowData?.status == "Cancel") {
+            return true
+        }
+
+        return false
+    }
+
     // console.log(value, 'fgf');
     const columns = [
         { title: 'PID', field: 'pid' },
         { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
         { title: 'Location', field: 'location1', render: rowData => <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
-        { title: 'Reconfirmation Date', field: 'reconfirmation_date', type: 'date', render: rowData => <CFormInput type="date" value={rowData.reconfirmation_date} onChange={e => handleInputFields('reconfirmation_date', e.target.value)} /> },
-        { title: 'QC', field: 'qc', render: rowData => <CFormSelect custom onChange={e => handleInputFields('qc', e.target.value)} ><option>Select QC</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
+        { title: 'Reconfirmation Date', field: 'reconfirmation_date', type: 'date', render: rowData => <CFormInput disabled={getDisableStatus(rowData)} type="date" value={rowData.reconfirmation_date} onChange={e => handleInputFields('reconfirmation_date', e.target.value)} /> },
+        { title: 'QC', field: 'qc', render: rowData => <CFormSelect disabled={getDisableStatus(rowData)} custom onChange={e => handleInputFields('qc', e.target.value)} ><option>Select QC</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
         {
             title: 'Delivery Status', field: 'delivery_status', render: rowData => {
 
 
                 return (
-                    <CFormSelect custom onChange={e => handleInputFields('delivery_status', e.target.value)} >
+                    <CFormSelect custom onChange={e => handleInputFields('delivery_status', e.target.value)} disabled={getDisableStatus(rowData)}>
                         <option>Select Status</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}
                     </CFormSelect>
                 )
@@ -271,6 +285,7 @@ export default function TravellerExperience(props) {
                         <CIcon icon={cilCheckCircle} size="xxl" />
                     )
                 }
+
                 else {
                     return (
                         <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>Waiting For Approval</CBadge>
@@ -331,6 +346,8 @@ export default function TravellerExperience(props) {
                 columns={columns}
                 data={data}
                 options={{
+
+
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
                     },
@@ -341,9 +358,12 @@ export default function TravellerExperience(props) {
                     search: false,
                     columnsButton: true,
                     exportButton: true,
-                    grouping: false,
-                    rowStyle: rowStyle
+                    grouping: true,
+                    rowStyle: rowStyle,
+
+
                 }}
+
 
             />
         </>

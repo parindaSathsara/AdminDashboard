@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -12,7 +12,7 @@ import {
   CNavItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
+import { cilBell, cilEnvelopeOpen, cilExitToApp, cilList, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -21,6 +21,14 @@ import logo from '../assets/brand/aahaas.png'
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+
+
+
+
+  const handleLogout = () => {
+    nav
+  }
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -48,8 +56,8 @@ const AppHeader = () => {
             <CNavLink href="#">Settings</CNavLink>
           </CNavItem> */}
         </CHeaderNav>
-        {/* <CHeaderNav>
-          <CNavItem>
+        <CHeaderNav>
+          {/* <CNavItem>
             <CNavLink href="#">
               <CIcon icon={cilBell} size="lg" />
             </CNavLink>
@@ -58,13 +66,13 @@ const AppHeader = () => {
             <CNavLink href="#">
               <CIcon icon={cilList} size="lg" />
             </CNavLink>
-          </CNavItem>
+          </CNavItem> */}
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
+            <CNavLink onClick={handleLogout}>
+              <CIcon icon={cilExitToApp} size="lg" />
             </CNavLink>
           </CNavItem>
-        </CHeaderNav> */}
+        </CHeaderNav>
         {/* <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav> */}

@@ -939,10 +939,10 @@ function OrderDetails(props) {
                                 id="uncontrolled-tab-example"
                                 className="mt-4"
                             >
-
+                                {/* 
                                 <CCol>
                                     <CCardTitle>Test</CCardTitle>
-                                </CCol>
+                                </CCol> */}
 
                                 <Tab eventKey="bookingexperience" title="Booking Experience">
                                     <BookingExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
@@ -1046,7 +1046,9 @@ function OrderDetails(props) {
 
                     </CCol>
                     :
-                    null
+                    <CCol style={{ paddingBottom: 20 }}>
+
+                    </CCol>
                 }
 
 

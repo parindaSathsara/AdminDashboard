@@ -3,10 +3,13 @@
 
 import React, { useState } from 'react'
 import MaterialTable from 'material-table';
-import { CBadge, CButton, CCard, CCardBody, CCardText, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CPopover, CRow } from '@coreui/react';
+import { CBadge, CButton, CCard, CCardBody, CCardSubtitle, CCardText, CCardTitle, CCloseButton, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
 import { updateDeliveryStatus, candelOrder } from 'src/service/api_calls';
 import rowStyle from '../Components/rowStyle';
+import { cilInfo } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { Modal } from 'react-bootstrap';
 
 
 export default function BookingExperience(props) {
@@ -232,8 +235,18 @@ export default function BookingExperience(props) {
 
   const handleButtonClick = (data) => {
     setClickedStatus(data)
+  }
 
 
+  const [selectedCancellationModal, setSelectedCancellationModal] = useState([])
+  const [cancellationModalState, setCancellationModalState] = useState(false)
+
+
+  const handleMoreCancellationDetails = (data) => {
+    console.log(data)
+
+    setSelectedCancellationModal(data?.data)
+    setCancellationModalState(true)
   }
 
 
@@ -259,39 +272,72 @@ export default function BookingExperience(props) {
     { title: 'Paid Amount', field: 'paid_amount' },
     { title: 'Balance Amount', field: 'balance_amount' },
 
-    { title: 'Supplier Confirmation', field: 'supplier_status', render: rowData => rowData?.supplier_status == "Pending" ? <CBadge color="danger" style={{ padding: 5 }}>Pending</CBadge> : <CBadge color="success" style={{ padding: 5 }}>Confirmed</CBadge> },
+    {
+      title: 'Supplier Confirmation', field: 'supplier_status', render: rowData => rowData?.supplier_status == "Pending" ?
+        <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Pending</CBadge> : rowData?.supplier_status == "Cancel" ? <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Cancelled</CBadge> : <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Confirmed</CBadge>
+    },
 
 
     {
       field: 'status',
       title: 'Order Status',
       align: 'left',
-      hidden: props.hideStatus,
+      // hidden: rowData => console.log(rowData?.supplier_status, "Row Data"),
       render: (e) => {
 
         var status = e?.data?.status
+        var supplier_status = e?.data?.supplier_status
 
-        return (
-          <>
+        var cancel_role = e?.data?.cancel_role
 
-            {e?.data?.checkoutID == clickedStatus ?
-              <select
-                className='form-select required'
-                name='delivery_status'
-                onChange={(value) => handleDelStatusChange(e, value)}
-              // value={e?.data.status} // Set the selected value here
-              >
-                <option value="" >Select</option>
-                <option value="Approved">Confirm</option>
-                <option value="Cancel">Cancel</option>
-              </select>
-              :
-              <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
 
-            }
+        if (supplier_status == "Cancel") {
+          return (
+            <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Supplier Cancelled</CBadge>
+          )
+        }
+        else if (cancel_role == "CUSTOMER") {
+          return (
 
-          </>
-        );
+            <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+              <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Customer Cancelled</CCardText>
+
+              <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
+                <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
+                <CCardText>More Details</CCardText>
+              </CButton>
+              {/* <br></br>
+
+              <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Customer Cancelled</CBadge> */}
+
+            </CCol >
+          )
+        }
+        else {
+          return (
+            <>
+
+              {e?.data?.checkoutID == clickedStatus ?
+                <select
+                  className='form-select required'
+                  name='delivery_status'
+                  onChange={(value) => handleDelStatusChange(e, value)}
+                // value={e?.data.status} // Set the selected value here
+                >
+                  <option value="" >Select</option>
+                  <option value="Approved">Confirm</option>
+                  <option value="Cancel">Cancel</option>
+                </select>
+                :
+                <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
+
+              }
+
+            </>
+          );
+        }
+
       }
     },
   ]
@@ -317,6 +363,81 @@ export default function BookingExperience(props) {
 
   return (
     <>
+      {/* <Modal show={cancellationModalState} onHide={() => setCancellationModalState(false)} size="md">
+        <Modal.Header closeButton>
+          <Modal.Title>Cancellation Details</Modal.Title>
+
+        </Modal.Header>
+        <Modal.Body>
+
+        </Modal.Body>
+        <Modal.Footer>
+
+        </Modal.Footer>
+      </Modal> */}
+
+
+      <COffcanvas backdrop="static" placement="end" visible={cancellationModalState} onHide={() => setCancellationModalState(false)} >
+        <COffcanvasHeader>
+          <COffcanvasTitle style={{ fontWeight: 'bold' }}>Order Cancellation Details</COffcanvasTitle>
+          <CCloseButton className="text-reset" onClick={() => setCancellationModalState(false)} />
+        </COffcanvasHeader>
+        <COffcanvasBody>
+
+          <CCol>
+            <CCardTitle>Product Name</CCardTitle>
+            <CCardSubtitle>{selectedCancellationModal?.product_title}</CCardSubtitle>
+          </CCol>
+
+          <br></br>
+
+          <CCol>
+            <CCardTitle>Cancel Order Remarks</CCardTitle>
+            <CCardSubtitle>{selectedCancellationModal?.cancel_order_remarks}</CCardSubtitle>
+          </CCol>
+
+
+          <br></br>
+
+          <CCol>
+            <CCardTitle>Cancel Order Reason</CCardTitle>
+            <CCardSubtitle>{selectedCancellationModal?.cancel_reason}</CCardSubtitle>
+          </CCol>
+
+
+          <br></br>
+
+          {selectedCancellationModal?.cancel_ref_image == "" ?
+            <CCol>
+              <CCardTitle>Cancellation Reference Image</CCardTitle>
+
+
+              <CImage
+                src={"https://gateway.aahaas.com/" + selectedCancellationModal?.cancel_ref_image}
+                fluid
+                style={{
+
+
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  marginTop: 10
+                }}
+              />
+            </CCol>
+            :
+            null
+
+          }
+
+
+
+
+
+        </COffcanvasBody>
+      </COffcanvas>
+
+
       <MaterialTable
         title="Booking Experience"
         columns={columns}
@@ -332,7 +453,8 @@ export default function BookingExperience(props) {
           search: false,
           columnsButton: true,
           exportButton: true,
-          rowStyle: rowStyle
+          rowStyle: rowStyle,
+          grouping: true
         }}
 
       />

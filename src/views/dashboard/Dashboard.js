@@ -69,6 +69,7 @@ import { io } from 'socket.io-client'
 import productSound from '../../assets/productSound.mp3'
 import ProductWiseOrders from './MainComponents/ProductWiseOrders'
 import LoaderPanel from 'src/Panels/LoaderPanel'
+import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander'
 
 
 const Dashboard = () => {
@@ -324,6 +325,12 @@ const Dashboard = () => {
     console.log(e)
   }
 
+
+  const [detailExpander, setDetailExpander] = useState(false)
+  const [selectedOrderDetails, setSelectedOrderDetails] = useState([])
+
+
+
   if (loading == true) {
     return (
       <LoaderPanel message={"Data processing in progress"} />
@@ -422,14 +429,10 @@ const Dashboard = () => {
                 <ThemeProvider theme={defaultMaterialTheme}>
                   <MaterialTable
                     title=""
-                    // tableRef={tableRef}
+                    // tableRef={tableRef}                    
                     tableRef={tableRef}
                     data={data.rows}
-
-
-
                     columns={data.columns}
-
 
                     detailPanel={(e) => {
                       return (
@@ -444,7 +447,7 @@ const Dashboard = () => {
                       searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
                       filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
                       paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                      exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                      exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: 0, selection: false,
                       showSelectAllCheckbox: false, showTextRowsSelected: false,
                       grouping: true, columnsButton: true,
                       headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
@@ -453,6 +456,31 @@ const Dashboard = () => {
                       defaultExpanded: true
 
                     }}
+
+                    actions={[
+                      {
+                        icon: 'fullscreen',
+                        tooltip: 'Full Screen',
+                        onClick: (event, rowData) => {
+                          setSelectedOrderDetails(rowData)
+                          setDetailExpander(true)
+                        }
+                      }
+                    ]}
+
+                  // components={{
+                  //   Action: props => (
+                  //     <CButton
+                  //       onClick={(event) => props.action.onClick(event, props.data)}
+                  //       color="primary"
+                  //       variant="contained"
+                  //       style={{ textTransform: 'none' }}
+                  //       size="small"
+                  //     >
+                  //       My Button
+                  //     </CButton>
+                  //   ),
+                  // }}
                   />
 
                 </ThemeProvider>
@@ -471,6 +499,19 @@ const Dashboard = () => {
           </CCardBody>
 
         </CCard>
+
+
+        <DetailExpander
+          show={detailExpander}
+          onHide={() => setDetailExpander(false)}
+          orderid={selectedOrderDetails.oid}
+
+          component={
+            <OrderDetails dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} />
+          }
+        >
+
+        </DetailExpander>
 
 
 
