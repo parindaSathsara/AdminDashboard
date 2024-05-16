@@ -3,13 +3,14 @@
 
 import React, { useState } from 'react'
 import MaterialTable from 'material-table';
-import { CButton, CCard, CCardBody, CCol, CPopover, CRow, CSpinner } from '@coreui/react';
+import { CButton, CCard, CCardBody, CCloseButton, CCol, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow, CSpinner } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilInfo } from '@coreui/icons';
+import { cilCloudDownload, cilExitToApp, cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
 import rowStyle from '../Components/rowStyle';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import ResendVoucher from './ResendVoucher';
 
 export default function SupplierExperience(props) {
 
@@ -194,50 +195,53 @@ export default function SupplierExperience(props) {
 
 
     const [voucherSending, setVoucherSending] = useState(false)
+    const [downloadVoucher, setDownloadVoucher] = useState(false)
 
 
     const resendVoucher = () => {
 
         console.log("resend calling")
-        setVoucherSending(true)
 
 
+        setVisible(true)
+        // setVoucherSending(true)
+        // var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`
+        // console.log(email, "Supplier Data")
 
-        var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`
-        console.log(email, "Supplier Data")
 
-
-        fetch(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Network response was not ok.');
-                }
-            })
-            .then(data => {
-                setVoucherSending(false)
-                if (data.status === 200) {
-                    Swal.fire({
-                        title: "Voucher Resent Successfully",
-                        text: "Voucher Sent",
-                        icon: "success"
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+        // fetch(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        // })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             return response.json();
+        //         } else {
+        //             throw new Error('Network response was not ok.');
+        //         }
+        //     })
+        //     .then(data => {
+        //         setVoucherSending(false)
+        //         if (data.status === 200) {
+        //             Swal.fire({
+        //                 title: "Voucher Resent Successfully",
+        //                 text: "Voucher Sent",
+        //                 icon: "success"
+        //             });
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('There was a problem with the fetch operation:', error);
+        //     });
 
 
 
         // axios.post()
     }
+
+
 
 
     function decodeEmail(encoded) {
@@ -250,6 +254,24 @@ export default function SupplierExperience(props) {
     }
 
 
+    async function fetchPDF() {
+        try {
+            // Constructing the URL for the PDF download
+            const url = `https://gateway.aahaas.com/api/downloadIndividualPDF/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`;
+
+            // Open the URL in a new tab/window
+            window.open(url, '_blank');
+
+        } catch (error) {
+            console.error('Error fetching PDF:', error);
+            throw error;
+        }
+    }
+
+
+
+    const [visible, setVisible] = useState(false)
+
     return (
         <>
             <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl">
@@ -257,24 +279,40 @@ export default function SupplierExperience(props) {
                     <Modal.Title>Supplier Voucher</Modal.Title>
                     <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher()}>
                         Resend Voucher
-
-
-
                         {voucherSending === false ?
                             null
                             :
                             <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
                         }
-
                     </CButton>
+
+                    <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => fetchPDF()}>
+                        Download Voucher
+                    </CButton>
+
                 </Modal.Header>
                 <Modal.Body>
                     <div dangerouslySetInnerHTML={{ __html: supplierVoucherData }} />
+
+                    <COffcanvas backdrop="static" placement="end" visible={visible} onHide={() => setVisible(false)} style={{ zIndex: 500000 }}>
+                        <COffcanvasHeader>
+                            <COffcanvasTitle>Resend Voucher</COffcanvasTitle>
+                            <CCloseButton className="text-reset" onClick={() => setVisible(false)} />
+                        </COffcanvasHeader>
+
+                        <COffcanvasBody>
+                            <ResendVoucher voucherData={selectedSupplierVoucherData} orderID={props?.orderid}></ResendVoucher>
+                        </COffcanvasBody>
+                    </COffcanvas>
+
+
                 </Modal.Body>
                 <Modal.Footer>
 
                 </Modal.Footer>
             </Modal>
+
+
 
 
 

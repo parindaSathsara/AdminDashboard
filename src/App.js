@@ -13,8 +13,8 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
-// axios.defaults.data = 'http://172.16.26.238:8000'
+// axios.defaults.baseURL = 'http://172.16.26.238:8005/api/'
+// axios.defaults.data = 'http://172.16.26.238:8005'
 
 axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 axios.defaults.data = 'https://admin-api.aahaas.com'
@@ -75,8 +75,8 @@ function App() {
 
             {!userLogin ?
               <>
+                <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                 <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-
                 <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
               </>
 

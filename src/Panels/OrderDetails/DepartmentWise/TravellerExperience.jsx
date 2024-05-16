@@ -236,11 +236,13 @@ export default function TravellerExperience(props) {
 
 
     const getDisableStatus = (rowData) => {
-        if (rowData?.supplier_status == "Cancel") {
+        console.log(rowData, "Rowwwww")
+
+        if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered") {
             return true
         }
 
-        if (rowData?.status == "Cancel") {
+        if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered") {
             return true
         }
 

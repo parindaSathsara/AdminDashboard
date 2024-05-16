@@ -358,6 +358,9 @@ export default function BookingExperience(props) {
   }))
 
 
+  { console.log(data, "ROW BOOKINGGGGG") }
+
+
 
 
 
