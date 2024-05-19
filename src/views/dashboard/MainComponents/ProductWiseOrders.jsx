@@ -1,4 +1,4 @@
-import { CButton, CCardImage, CCol } from '@coreui/react'
+import { CBadge, CButton, CCardImage, CCol } from '@coreui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
@@ -9,6 +9,10 @@ import MoreOrderView from 'src/Panels/OrderDetails/MoreOrderView/MoreOrderView';
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import moment from 'moment';
 import LoaderPanel from 'src/Panels/LoaderPanel';
+import { Tab, Tabs } from 'react-bootstrap';
+
+
+import './ProductWiseOrders.css'
 
 export default function ProductWiseOrders() {
     const defaultMaterialTheme = createTheme();
@@ -47,6 +51,21 @@ export default function ProductWiseOrders() {
     const [moreOrderDetails, setMoreOrderDetails] = useState("")
 
 
+    const [currentFilters, setCurrentFilters] = useState("All")
+    const [allProductsFiltered, setAllProductsFiltered] = useState([])
+
+
+    const fetchFilteredProducts = () => {
+        var arrayData = [];
+        if (currentFilters == "All") {
+            arrayData = allOrdersProducts
+        }
+        else {
+            arrayData = allOrdersProducts.filter(filterData => filterData.status == currentFilters)
+        }
+        return arrayData;
+    }
+
     const [mainDataSet, setMainDataSet] = useState([])
 
     const handleMoreInfoModal = (row) => {
@@ -77,6 +96,9 @@ export default function ProductWiseOrders() {
 
     const data = {
         columns: [
+
+
+
             {
                 title: 'Info', field: 'info', render: rowData => (
                     <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(rowData)}>
@@ -84,6 +106,9 @@ export default function ProductWiseOrders() {
                     </CButton>
                 ),
                 filtering: false
+            },
+            {
+                title: 'Order ID', field: 'order_id', filtering: false
             },
 
             {
@@ -114,10 +139,22 @@ export default function ProductWiseOrders() {
             { title: 'Paid Amount', field: 'paid_amount', filtering: false },
             { title: 'Balance Amount', field: 'balance_amount', filtering: false },
 
-            { title: 'Booked Date', field: 'booked_date', filtering: false }
+            { title: 'Booked Date', field: 'booked_date', filtering: false },
+            {
+                title: 'Status', field: 'status', render: rowData => {
+                    if (rowData?.status == "Cancel") {
+                        return (
+                            <CBadge color="danger" shape="rounded-pill">Cancelled</CBadge>
+                        )
+                    }
+
+                },
+                filtering: false,
+                hidden: currentFilters == "All" ? false : true
+            },
 
         ],
-        rows: allOrdersProducts?.map((result, index) => ({
+        rows: fetchFilteredProducts()?.map((result, index) => ({
             product_id: result?.PID,
             product_image: result?.product_image,
             service_location: result?.location,
@@ -130,7 +167,9 @@ export default function ProductWiseOrders() {
             total_amount: result?.currency + " " + result?.total_amount,
             booked_date: result?.checkout_date,
             info: result,
-            customerData: result?.customerData
+            customerData: result?.customerData,
+            order_id: "AHS_" + result?.orderID,
+            status: result?.status
 
         }))
     };
@@ -150,6 +189,17 @@ export default function ProductWiseOrders() {
 
     }
 
+
+    console.log(allOrdersProducts, "ALLLLLL")
+
+
+
+
+
+    const handleSelect = (key) => {
+        setCurrentFilters(key)
+    };
+
     return (
         <>
             <MoreOrderView
@@ -162,6 +212,33 @@ export default function ProductWiseOrders() {
             >
             </MoreOrderView>
 
+
+
+            <Tabs
+                defaultActiveKey="All"
+                id="uncontrolled-tab-example"
+                className="mt-4"
+                style={{
+                    fontSize: 16,
+                }}
+                onSelect={handleSelect}
+            >
+                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders</span>} itemID='tabAll'>
+
+                </Tab>
+                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending</span>} itemID='tabPending'>
+
+                </Tab>
+                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing</span>} itemID='tabApproved'>
+
+                </Tab>
+                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed</span>} itemID='tabCompleted'>
+
+                </Tab>
+                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled</span>} itemID='tabCompleted'>
+
+                </Tab>
+            </Tabs >
 
             {
                 loading == true ?
@@ -219,6 +296,9 @@ export default function ProductWiseOrders() {
                     </CCol>
 
             }
+
+
+
 
         </>
     )
