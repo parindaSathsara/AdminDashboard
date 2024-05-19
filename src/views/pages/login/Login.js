@@ -29,6 +29,7 @@ import { Carousel } from 'react-bootstrap'
 import "./Login.css"
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
+import clip from '../../../assets/travelVid.mp4'; 
 
 
 
@@ -47,7 +48,7 @@ const Login = () => {
 
 
 
-  const { userLogin, setUserLogin } = useContext(UserLoginContext);
+  const { userLogin, setUserLogin, userData,setUserData } = useContext(UserLoginContext);
 
 
   const handleInputChange = (e) => {
@@ -95,7 +96,11 @@ const Login = () => {
 
           setToken(res.data.user, res.data.access_token);
 
-          localStorage.setItem('user', res.data.user_data);
+          console.log("Login Details is", res.data.user_data)
+
+          setUserData(res.data.user_data)
+
+          localStorage.setItem('user', JSON.stringify(res.data.user_data));
           localStorage.setItem('userID', res.data.user_id);
           localStorage.setItem('token', res.data.access_token);
 
@@ -132,7 +137,16 @@ const Login = () => {
       {/* Required meta tags */}
 
       <div className="d-lg-flex half">
-        <div className="bg order-1 order-md-2" style={{ backgroundImage: 'url("https://wallpapers.com/images/hd/sri-lanka-ancient-city-sigiriya-yl2a01gga8ogmfpu.jpg")' }} />
+
+      <div className="bg order-1 order-md-2" style={{ position: 'relative', overflow: 'hidden' }}>
+      <video autoPlay muted loop style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1 }}>
+        <source src={clip} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      {/* Other content can go here */}
+    </div>
+
+        {/* <div className="bg order-1 order-md-2" style={{ backgroundImage: 'url("https://wallpapers.com/images/hd/sri-lanka-ancient-city-sigiriya-yl2a01gga8ogmfpu.jpg")' }} /> */}
         <div className="contents order-2 order-md-1">
           <div className="container">
             <div className="row align-items-center justify-content-center">
@@ -141,7 +155,7 @@ const Login = () => {
                 <CImage src='https://gateway.aahaas.com/aahaas.png' width={130} className='pb-3'></CImage>
 
 
-                <h3>Login to <strong>Aahaas</strong></h3>
+                <h3 style={{color:'white'}}>Login to <strong>Aahaas</strong></h3>
                 <p className="mb-4">Elevate your administrative processes to new heights of productivity and effectiveness with Aahaas, your key to seamless management.</p>
 
                 {/* <form action="#" method="post">
@@ -182,7 +196,7 @@ const Login = () => {
                   </CInputGroup>
                   <CRow>
                     <CCol xs="12" md="6" className="mb-3 mb-md-0">
-                      <CButton type='submit' color="primary" className="w-100" onClick={handleFormSubmit}>
+                      <CButton type='submit' className="w-100" style={{backgroundColor:'#DB3232',fontWeight:'500',fontSize:18, borderWidth:0}} onClick={handleFormSubmit}>
                         Login
                       </CButton>
                     </CCol>

@@ -56,24 +56,23 @@
     .lifestylePage .half .container>.row {
         height: 70vh;
         min-height: 700px;
-
     }
-
-
-
 }
 
 .lifestylePage .half .contents {
-    background: #f6f7fc;
+    background: #11131d;
 }
 
-.lifestylePage .half .contents,
-.lifestylePage .half .bg {
-    width: 50%;
+.lifestylePage .half .contents {
+    width: 35%;
+}
+
+
+.lifestylePage .half .bg{
+    width: 65%;
 }
 
 @media (max-width: 1199.98px) {
-
     .lifestylePage .half .contents,
     .lifestylePage .half .bg {
         width: 100%;
