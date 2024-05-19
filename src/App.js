@@ -42,14 +42,14 @@ const Login = React.lazy(() => import('./views/pages/login/Login'));
 const Register = React.lazy(() => import('./views/pages/register/Register'));
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
+const Dashboard = React.lazy(() => import('./views/dashboard/Orders'));
 
 function App() {
 
 
 
   const [userLogin, setUserLogin] = useState(false)
-
+  const [userData, setUserData] = useState(false)
 
 
 
@@ -59,6 +59,8 @@ function App() {
     const userid = localStorage.getItem("userID");
 
     if (userid) {
+      const userDataVal = JSON.parse(localStorage.getItem('user'));
+      setUserData(userDataVal)
       setUserLogin(true)
     }
 
@@ -68,7 +70,7 @@ function App() {
   return (
 
 
-    <UserLoginContext.Provider value={{ userLogin, setUserLogin }}>
+    <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
       <HashRouter>
         <Suspense fallback={loading}>
           <Routes>

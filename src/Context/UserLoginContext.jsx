@@ -6,6 +6,6 @@ export const UserLoginContext = React.createContext({
     userLogin: false,
     setUserLogin: () => { },
 
-    guestState: false,
-    setGuestState: () => { },
+    userData: [],
+    setUserData: () => { },
 });
