@@ -4,6 +4,7 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 import axios from 'axios'
 import { UserLoginContext } from './Context/UserLoginContext'
+import InAppNotificationService from './service/InAppNotificationService'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
@@ -71,6 +72,7 @@ function App() {
 
 
     <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
+  
       <HashRouter>
         <Suspense fallback={loading}>
           <Routes>
@@ -88,6 +90,8 @@ function App() {
                 {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                 <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
 
+
+              
                 <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
               </>
 
