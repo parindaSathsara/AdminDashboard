@@ -28,6 +28,8 @@ export default function InAppNotificationService() {
         );
     };
 
+
+    //
     const addNewToast = () => {
         setToasts([...toasts, exampleToast()]);  // Add new toast to the array
     };
