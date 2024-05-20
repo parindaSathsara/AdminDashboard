@@ -4,7 +4,7 @@ import {
     CCol,
     CRow,
     CCard,
-    CCardBody 
+    CCardBody
 } from '@coreui/react'
 import { useEffect, useState } from 'react';
 import axios from 'axios'
@@ -14,14 +14,14 @@ function ProductAnalytics() {
 
     const [details, setDetails] = useState([]);
 
-    const getDetails = async() => {
-        try{
+    const getDetails = async () => {
+        try {
             const response = await axios.get('get_product_analytics');
             console.log(response, 'responseeee');
-            if(response.status === 200){
+            if (response.status === 200) {
                 setDetails(response.data);
             }
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
@@ -58,12 +58,12 @@ function ProductAnalytics() {
         rows: details.productData?.flatMap((value, idx) => {
             const rows = [];
             if (value) {
-                function truncateString(value, maxLength) { 
-                        return value.slice(0, maxLength - 3) + '...'; 
+                function truncateString(value, maxLength) {
+                    return value.slice(0, maxLength - 3) + '...';
                 }
                 rows.push({
                     name: value.product_title,
-                    description: (value.product_description && value.product_description !== '') ? truncateString(value.product_description, 150) : '' ,
+                    description: (value.product_description && value.product_description !== '') ? truncateString(value.product_description, 150) : '',
                     image: value.product_image,
                     // extra_details:[ 'Service Location : ' , value.location, ' | ' , 'Service Date : ' ,value.service_date, ' | ' , 'Pick up Time : ' ,value.pickupTime, ' | Course Duration : ' ,value.course_startime , '-', value.course_endtime, ' | ',
                     //                 'Variation : ', value.variant_type1, value.variant_type2, value.variant_type3, value.variant_type4, value.variant_type5]
@@ -80,8 +80,8 @@ function ProductAnalytics() {
                     ],
                     selling_count: value.count,
                     total_sales: value.sum
-                    
-                }); 
+
+                });
             }
             return rows;
         })
@@ -116,7 +116,7 @@ function ProductAnalytics() {
                                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                                 grouping: true, columnsButton: true,
-                                headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
                             }}
 
