@@ -4,7 +4,7 @@ import {
     CCol,
     CRow,
     CCard,
-    CCardBody 
+    CCardBody
 } from '@coreui/react'
 import { useEffect, useState } from 'react';
 import axios from 'axios'
@@ -14,14 +14,14 @@ function VendorAnalytics() {
 
     const [details, setDetails] = useState([]);
 
-    const getDetails = async() => {
-        try{
+    const getDetails = async () => {
+        try {
             const response = await axios.get('get_vendor_analytics');
             // console.log(response.data, 'vendor');
-            if(response.status === 200){
+            if (response.status === 200) {
                 setDetails(response.data);
             }
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
@@ -52,8 +52,8 @@ function VendorAnalytics() {
                     address: value.vendor_address,
                     selling_count: value.count,
                     total_amount: value.total_amount
-                    
-                }); 
+
+                });
             }
             return rows;
         })
@@ -87,7 +87,7 @@ function VendorAnalytics() {
                                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                                 grouping: true, columnsButton: true,
-                                headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
                             }}
 

@@ -331,6 +331,9 @@ const Orders = () => {
 
 
 
+
+
+
   if (loading == true) {
     return (
       <LoaderPanel message={"Data processing in progress"} />
@@ -442,6 +445,10 @@ const Orders = () => {
 
                       )
                     }}
+
+
+
+
                     options={{
                       sorting: true, search: true,
                       searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
@@ -450,7 +457,7 @@ const Orders = () => {
                       exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: 0, selection: false,
                       showSelectAllCheckbox: false, showTextRowsSelected: false,
                       grouping: true, columnsButton: true,
-                      headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                      headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
 
                       rowStyle: rowStyle,
                       defaultExpanded: true

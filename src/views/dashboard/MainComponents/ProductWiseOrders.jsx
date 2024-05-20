@@ -1,6 +1,6 @@
 import { CBadge, CButton, CCardImage, CCol } from '@coreui/react'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table';
 import CIcon from '@coreui/icons-react';
@@ -13,6 +13,8 @@ import { Tab, Tabs } from 'react-bootstrap';
 
 
 import './ProductWiseOrders.css'
+import { db } from 'src/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 export default function ProductWiseOrders() {
     const defaultMaterialTheme = createTheme();
@@ -25,9 +27,11 @@ export default function ProductWiseOrders() {
 
     const [loading, setLoading] = useState(false)
 
-    const getAllProductsOrders = async () => {
+    const getAllProductsOrders = async (val) => {
+        if (val != "realtime") {
+            setLoading(true)
+        }
 
-        setLoading(true)
         await axios.get("fetch_all_orders_product_wise").then(res => {
             if (res.data.status == 200) {
                 setAllOrdersProducts(res.data.productData)
@@ -42,8 +46,47 @@ export default function ProductWiseOrders() {
 
 
     useEffect(() => {
-        getAllProductsOrders()
+        getAllProductsOrders("load")
+
+
     }, [])
+
+
+
+    const [lastUpdatedId, setLastUpdatedId] = useState("")
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(
+            collection(db, 'order_ids'),
+            (querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+                    const lastOrder = { id: lastDocument.id, ...lastDocument.data() };
+                    setLastUpdatedId(lastDocument.id)
+
+                    setTimeout(() => {
+                        setLastUpdatedId("");
+                    }, 5000);
+
+                    getAllProductsOrders("realtime"); // Pass the last order to the function if needed
+
+
+                } else {
+                    console.log("No orders found.");
+                }
+                getAllProductsOrders("realtime")
+            },
+            (error) => {
+                console.error("Error fetching real-time data: ", error);
+            }
+        );
+
+
+
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+    }, [])
+
 
 
     const [moreOrderModal, setMoreOrderModal] = useState(false)
@@ -96,9 +139,6 @@ export default function ProductWiseOrders() {
 
     const data = {
         columns: [
-
-
-
             {
                 title: 'Info', field: 'info', render: rowData => (
                     <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(rowData)}>
@@ -140,18 +180,18 @@ export default function ProductWiseOrders() {
             { title: 'Balance Amount', field: 'balance_amount', filtering: false },
 
             { title: 'Booked Date', field: 'booked_date', filtering: false },
-            {
-                title: 'Status', field: 'status', render: rowData => {
-                    if (rowData?.status == "Cancel") {
-                        return (
-                            <CBadge color="danger" shape="rounded-pill">Cancelled</CBadge>
-                        )
-                    }
+            // {
+            //     title: 'Status', field: 'status', render: rowData => {
+            //         if (rowData?.status == "Cancel") {
+            //             return (
+            //                 <CBadge color="danger" shape="rounded-pill">Cancelled</CBadge>
+            //             )
+            //         }
 
-                },
-                filtering: false,
-                hidden: currentFilters == "All" ? false : true
-            },
+            //     },
+            //     filtering: false,
+            //     hidden: currentFilters == "All" ? false : true
+            // },
 
         ],
         rows: fetchFilteredProducts()?.map((result, index) => ({
@@ -169,7 +209,7 @@ export default function ProductWiseOrders() {
             info: result,
             customerData: result?.customerData,
             order_id: "AHS_" + result?.orderID,
-            status: result?.status
+
 
         }))
     };
@@ -179,13 +219,42 @@ export default function ProductWiseOrders() {
 
         console.log(data)
 
-        return {
-            fontSize: "15px",
-            width: "100%",
-            color: "#000",
-            fontWeight: 'normal',
-            backgroundColor: 'white',
+
+        if (data?.info?.orderID == lastUpdatedId) {
+            return ({
+                backgroundColor: '#C6E9FF',
+                color: '#234962',
+                fontSize: 18
+            })
         }
+
+        if (currentFilters == "All") {
+            if (data?.info?.status == "Approved") {
+                return ({
+                    backgroundColor: '#FFEEAF',
+                    color: '#372E10',
+                    fontSize: 16
+                })
+            }
+            else if (data?.info?.status == "Completed") {
+                return ({
+                    backgroundColor: '#CEF5D1',
+                    color: '#07420c',
+                    fontSize: 16
+                })
+            }
+            else if (data?.info?.status == "Cancel") {
+                return ({
+                    backgroundColor: '#FFD3D3',
+                    color: '#9C2525',
+                    fontSize: 16
+                })
+            }
+            else {
+
+            }
+        }
+
 
     }
 
@@ -199,6 +268,11 @@ export default function ProductWiseOrders() {
     const handleSelect = (key) => {
         setCurrentFilters(key)
     };
+
+
+    const materialTableRef = useRef()
+
+
 
     return (
         <>
@@ -251,24 +325,16 @@ export default function ProductWiseOrders() {
                             {/* {React.memo(() => ( */}
                             <MaterialTable
                                 title=""
-                                // tableRef={tableRef}
+
                                 data={data.rows}
                                 columns={data.columns}
 
-
-                                // detailPanel={(e) => {
-
-                                //     return (
-                                //         <div className='mainContainerTables'>
-                                //             <div className="col-md-12 mb-4 sub_box materialTableDP">
-                                //                 <OrderDetails orderid={e} orderData={e} hideStatus={false} productViewData />
-                                //             </div>
-                                //         </div>
-                                //     )
-
-                                // }}
+                                ref={materialTableRef}
 
 
+                                onFilterChange={(appliedFilters) => console.log(appliedFilters, "Filters Applied")}
+                                onTreeExpandChange={(tree) => console.log(tree, "Filters Applied 1")}
+                                onQueryChange={(query) => console.log(query, "Filters Applied is")}
 
                                 options={{
 
@@ -279,9 +345,12 @@ export default function ProductWiseOrders() {
                                     exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                                     grouping: true, columnsButton: true,
-                                    headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                    headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                     filtering: true,
-                                    rowStyle: rowStyle
+                                    rowStyle: rowStyle,
+
+
+
 
                                     // fixedColumns: {
                                     //     left: 6

@@ -60,19 +60,20 @@
 }
 
 .lifestylePage .half .contents {
-    background: #11131d;
+    background: #0e121b;
 }
 
 .lifestylePage .half .contents {
-    width: 35%;
+    width: 40%;
 }
 
 
-.lifestylePage .half .bg{
-    width: 65%;
+.lifestylePage .half .bg {
+    width: 60%;
 }
 
 @media (max-width: 1199.98px) {
+
     .lifestylePage .half .contents,
     .lifestylePage .half .bg {
         width: 100%;
