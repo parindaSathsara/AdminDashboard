@@ -4,6 +4,7 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+import InAppNotificationService from 'src/service/InAppNotificationService'
 
 //
 
@@ -28,6 +29,8 @@ const AppContent = () => {
           <Route path="/" element={<Navigate to="dashboard" replace />} />
         </Routes>
       </Suspense>
+
+      <InAppNotificationService></InAppNotificationService>
     </CContainer>
   )
 }
