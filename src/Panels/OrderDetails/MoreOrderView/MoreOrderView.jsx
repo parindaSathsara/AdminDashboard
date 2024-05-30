@@ -30,7 +30,6 @@ export default function MoreOrderView(props) {
             setProductDataSet(response)
             setLoading(false)
 
-            console.log(response, "Data Response Value is111")
         }).catch(response => {
             console.log(response, "Catch Response is")
             setLoading(false)
