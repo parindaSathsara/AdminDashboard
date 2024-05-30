@@ -23,7 +23,7 @@ const getMoreDataSet = async (id, preID) => {
     var returnData = []
 
 
-    console.log(preID, "Pre ID Value is")
+    console.log(`/fetch_more_order_data/${id}/${preID}`, "Pre ID Value is")
     await axios.post(`/fetch_more_order_data/${id}/${preID}`).then((res) => {
         console.log(res)
         if (res.data.status === 200) {
