@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -15,6 +15,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilEnvelopeOpen, cilExitToApp, cilList, cilMenu } from '@coreui/icons'
+import axios from 'axios'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -25,26 +26,45 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
-
   const navigate = useNavigate();
 
   const { userLogin, setUserLogin, userData, setUserData } = useContext(UserLoginContext);
 
+  const [status, setStatus] = useState('not_available');
+
+  useEffect(() => {
+    // Fetch the initial status from the API when the component mounts
+    const fetchStatus = async () => {
+      try {
+        const response = await axios.get('/admin/status'); // Adjust the endpoint as needed
+        setStatus(response.data.status);
+      } catch (error) {
+        console.error('Failed to fetch status', error);
+      }
+    };
+
+    fetchStatus();
+  }, []);
+
   const handleLogout = () => {
-    // Clear all user sessions
-    sessionStorage.clear(); // Clears session storage
-    localStorage.clear(); // Clears local storage
- 
+    sessionStorage.clear(); 
+    localStorage.clear(); 
+
     setUserLogin(false)
     navigate('/login');
   };
 
-
-  console.log("User Data is", userData)
-
-  
-
-
+  const handleToggleChange = async () => {
+    const newStatus = status === 'available' ? 'not_available' : 'available';
+    try {
+      const response = await axios.post('/admin/toggle-status', {
+        status: newStatus,
+      });
+      setStatus(response.data.data.status);
+    } catch (error) {
+      console.error('Failed to toggle status', error);
+    }
+  };
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -56,45 +76,23 @@ const AppHeader = () => {
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none" to="/">
-          {/* <CIcon icon={logo} height={48} alt="Logo" /> */}
-          <img src={logo} height={30}></img>
+          <img src={logo} height={30} alt="Logo" />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-          {/* <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink}>
-              Dashboard
-            </CNavLink>
-          </CNavItem> */}
-
-          
-          {/* <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
-          </CNavItem> */}
         </CHeaderNav>
         <CHeaderNav>
-          {/* <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem> */}
-
-
-          {/* <CNavItem>
-            <CNavLink onClick={handleLogout}>
-              <CIcon icon={cilExitToApp} size="lg" />
-            </CNavLink>
-          </CNavItem> */}
+            <input
+              type="checkbox"
+              checked={status === 'available'}
+              onChange={handleToggleChange}
+              style={{ transform: 'scale(1.5)', marginRight: '10px' }}
+            />
+            <label>{status === 'available' ? 'Available' : 'Not Available'}</label>
+          </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-3">
-          <AppHeaderDropdown handleLogout={handleLogout} userData={userData}/>
+          <AppHeaderDropdown handleLogout={handleLogout} userData={userData} />
         </CHeaderNav>
       </CContainer>
       <CHeaderDivider />
