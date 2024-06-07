@@ -3,7 +3,9 @@
 
 import axios from 'axios'
 import { error } from 'jquery';
+import { useContext } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 import Swal from 'sweetalert2';
 
 const getAllDataUserWise = async () => {
@@ -543,8 +545,24 @@ async function updateAdditionalInfoDataByOrderId(dataset, id) {
   }
 }
 
+const { userData, setUserData } = useContext(UserLoginContext);
+
+
+function adminToggleStatus(status) {
+  const data = {
+    user_id: userData?.id,
+    status: status
+  }
+
+  axios.post("admin/toggle-status", data).then(response => {
+    if (response.data.status == 200) {
+
+    }
+  })
+}
+
 export {
-  getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts,
+  getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus,
   getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, candelOrder, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
   availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId
 }

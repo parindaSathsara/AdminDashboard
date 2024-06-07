@@ -102,7 +102,7 @@ export default function InAppNotificationService() {
 
     return (
         <>
-            <CButton color="primary" onClick={addNewToast}>Send a toast</CButton>
+            {/* <CButton color="primary" onClick={addNewToast}>Send a toast</CButton> */}
             <div className="toast-container position-fixed top-0 end-0 p-3">
                 {toasts}
 
