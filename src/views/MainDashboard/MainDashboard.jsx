@@ -15,10 +15,9 @@ import {
 
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { DocsExample } from 'src/components'
+import BasicTable from './OrdersList.jsx/OrdersListAllocations'
 
 const MainDashboard = () => {
-
-
 
   const { userData, setUserData } = useContext(UserLoginContext);
 
@@ -34,14 +33,19 @@ const MainDashboard = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Orders in My Queue</strong>
+              <strong>All Orders</strong>
             </CCardHeader>
             <CCardBody>
               <p className="text-medium-emphasis small">
                 Pending customer orders awaiting processing, prioritization, and timely fulfillment.
               </p>
 
+              <BasicTable></BasicTable>
+
             </CCardBody>
+
+
+
           </CCard>
         </CCol>
         <CCol xs={12}>
@@ -54,40 +58,7 @@ const MainDashboard = () => {
                 Use the <code>&lt;CAlertLink&gt;</code> component to immediately give matching colored
                 links inside any alert.
               </p>
-              <DocsExample href="components/alert#link-color">
-                <CAlert color="primary">
-                  A simple primary alert with <CAlertLink href="#">an example link</CAlertLink>. Give
-                  it a click if you like.
-                </CAlert>
-                <CAlert color="secondary">
-                  A simple secondary alert with <CAlertLink href="#">an example link</CAlertLink>.
-                  Give it a click if you like.
-                </CAlert>
-                <CAlert color="success">
-                  A simple success alert with <CAlertLink href="#">an example link</CAlertLink>. Give
-                  it a click if you like.
-                </CAlert>
-                <CAlert color="danger">
-                  A simple danger alert with <CAlertLink href="#">an example link</CAlertLink>. Give
-                  it a click if you like.
-                </CAlert>
-                <CAlert color="warning">
-                  A simple warning alert with <CAlertLink href="#">an example link</CAlertLink>. Give
-                  it a click if you like.
-                </CAlert>
-                <CAlert color="info">
-                  A simple info alert with <CAlertLink href="#">an example link</CAlertLink>. Give it
-                  a click if you like.
-                </CAlert>
-                <CAlert color="light">
-                  A simple light alert with <CAlertLink href="#">an example link</CAlertLink>. Give it
-                  a click if you like.
-                </CAlert>
-                <CAlert color="dark">
-                  A simple dark alert with <CAlertLink href="#">an example link</CAlertLink>. Give it
-                  a click if you like.
-                </CAlert>
-              </DocsExample>
+
             </CCardBody>
           </CCard>
         </CCol>

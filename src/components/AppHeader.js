@@ -42,9 +42,9 @@ const AppHeader = () => {
 
     setUserLogin(false);
     navigate('/login');
+    //-----------------------//
   };
 
-  console.log('User Data is', userData);
 
   const [switchState, setSwitchState] = useState(false);
 
@@ -52,9 +52,15 @@ const AppHeader = () => {
     const newSwitchState = e.target.checked;
     setSwitchState(newSwitchState);
     localStorage.setItem('userActive', newSwitchState);
-    console.log(newSwitchState, 'Checked Value');
 
-    adminToggleStatus("Active")
+    var status = "";
+    if (e.target.checked == true) {
+      status = "Active"
+    }
+    else {
+      status = "Inactive"
+    }
+    adminToggleStatus(status, userData.id)
   };
 
   useEffect(() => {
@@ -65,6 +71,7 @@ const AppHeader = () => {
 
   return (
     <CHeader position="sticky" className="mb-4">
+
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
@@ -78,6 +85,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
         <CHeaderNav>
           <CRow>
+
             <CFormSwitch
               size="xl"
               label={switchState ? 'Active' : 'Inactive'}
@@ -85,9 +93,11 @@ const AppHeader = () => {
               onChange={handleToggleOnChange}
               checked={switchState}
             />
+
           </CRow>
         </CHeaderNav>
         <CHeaderNav className="ms-3">
+
           <AppHeaderDropdown handleLogout={handleLogout} userData={userData} />
         </CHeaderNav>
       </CContainer>

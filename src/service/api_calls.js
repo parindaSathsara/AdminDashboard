@@ -545,18 +545,20 @@ async function updateAdditionalInfoDataByOrderId(dataset, id) {
   }
 }
 
-const { userData, setUserData } = useContext(UserLoginContext);
 
 
-function adminToggleStatus(status) {
+
+function adminToggleStatus(status, userID) {
   const data = {
-    user_id: userData?.id,
+    user_id: userID,
     status: status
   }
 
+  console.log(data, "Data Testttt")
+
   axios.post("admin/toggle-status", data).then(response => {
     if (response.data.status == 200) {
-
+      console.log("Test")
     }
   })
 }
