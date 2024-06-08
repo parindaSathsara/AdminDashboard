@@ -25,8 +25,8 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { adminToggleStatus } from 'src/service/api_calls';
 
 const AppHeader = () => {
-  const dispatch = useDispatch();
-  const sidebarShow = useSelector((state) => state.sidebarShow);
+  const dispatch = useDispatch()
+  const sidebarShow = useSelector((state) => state.sidebarShow)
 
   const navigate = useNavigate();
 
@@ -95,7 +95,7 @@ const AppHeader = () => {
       <CContainer fluid>
         <AppBreadcrumb />
       </CContainer>
-    </CHeader>
+    </CHeader >
   );
 };
 
