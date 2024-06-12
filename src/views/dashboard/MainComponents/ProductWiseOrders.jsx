@@ -89,9 +89,7 @@ export default function ProductWiseOrders() {
 
 
 
-    const [moreOrderModal, setMoreOrderModal] = useState(false)
-    const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
-    const [moreOrderDetails, setMoreOrderDetails] = useState("")
+
 
 
     const [currentFilters, setCurrentFilters] = useState("All")
@@ -109,6 +107,11 @@ export default function ProductWiseOrders() {
         return arrayData;
     }
 
+
+
+    const [moreOrderModal, setMoreOrderModal] = useState(false)
+    const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
+    const [moreOrderDetails, setMoreOrderDetails] = useState("")
     const [mainDataSet, setMainDataSet] = useState([])
 
     const handleMoreInfoModal = (row) => {

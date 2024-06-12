@@ -6,6 +6,7 @@ import ProductAnalytics from './views/Products/ProductAnalytics'
 import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
 import MoreOrderView from './Panels/OrderDetails/MoreOrderView/MoreOrderView'
 import MainDashboard from './views/MainDashboard/MainDashboard'
+import OffersPromoDashboard from './views/OffersPromo/OffersPromoDashboard'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -71,6 +72,12 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+
+
+
+
+
+  { path: '/offers_promo', name: 'Promotions & Offers', element: OffersPromoDashboard, exact: true },
 
   { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
   { path: '/vendors/analytics', name: 'Vendor Analytics', element: VendorAnalytic },

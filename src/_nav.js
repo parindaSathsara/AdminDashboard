@@ -18,7 +18,8 @@ import {
   cilUserPlus,
   cilGrain,
   cilUserX,
-  cilCart
+  cilCart,
+  cilTag
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -49,6 +50,15 @@ const _nav = [
   //   to: '/sales',
   //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
   // },
+
+
+  {
+    component: CNavItem,
+    name: 'Promotions & Offers',
+    to: '/offers_promo',
+    icon: <CIcon icon={cilTag} customClassName="nav-icon" />,
+  },
+
   {
     component: CNavItem,
     name: 'Vendors',

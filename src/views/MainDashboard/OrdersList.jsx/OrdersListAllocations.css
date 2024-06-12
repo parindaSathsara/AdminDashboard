@@ -1,3 +1,8 @@
 .basic-single {
     z-index: 500 !important;
 }
+
+.select__menu {
+    background-color: red !important;
+    z-index: 100000000;
+}

@@ -2,10 +2,12 @@
 /* eslint-disable */
 
 import axios from 'axios'
+import { addDoc, collection, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { error } from 'jquery';
 import { useContext } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
+import { db } from 'src/firebase';
 import Swal from 'sweetalert2';
 
 const getAllDataUserWise = async () => {
@@ -169,7 +171,39 @@ async function getDashboardOrdersIdWise(id) {
 
     var dataArray = [];
 
+
+    console.log(id, "Fetch Orders ID is")
+
     await axios.get(`/fetch_all_orders_userwise_id_wise/${id}`).then((res) => {
+
+      console.log(res)
+      if (res.data.status === 200) {
+        dataArray = res.data
+      }
+
+    }).catch((err) => {
+      throw new Error(err);
+    })
+
+    return dataArray
+
+  } catch (err) {
+    throw new Error(err);
+  }
+
+}
+
+
+async function getDashboardOrdersIdWiseProduct(id) {
+
+  try {
+
+    var dataArray = [];
+
+
+    console.log(id, "Fetch Orders ID is")
+
+    await axios.get(`/fetch_all_orders_userwise_id_wise_product/${id}`).then((res) => {
 
       console.log(res)
       if (res.data.status === 200) {
@@ -410,7 +444,6 @@ async function getDataEmailPrev(id) {
 async function sendHotelConfirmationEmail(dataset) {
 
   try {
-
     await axios.post('/send_hotel_confirmation_email', dataset).then((res) => {
 
       if (res.data.status == 200) {
@@ -548,23 +581,44 @@ async function updateAdditionalInfoDataByOrderId(dataset, id) {
 
 
 
-function adminToggleStatus(status, userID) {
+async function adminToggleStatus(status, userID) {
   const data = {
     user_id: userID,
     status: status
   }
 
-  console.log(data, "Data Testttt")
+  const dataSet = {
+    user_id: userID,
+    status: status,
+    createdAt: serverTimestamp(),
+    readAt: null,
+  };
 
-  axios.post("admin/toggle-status", data).then(response => {
+
+  await axios.post("admin/toggle-status", data).then(response => {
     if (response.data.status == 200) {
-      console.log("Test")
+
     }
-  })
+  }).catch(error => {
+    console.error('Error toggling status:', error);
+  });
+
+  const employeeStatusRef = collection(db, 'employee_status');
+  const q = query(employeeStatusRef, where('user_id', '==', userID));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    querySnapshot.forEach(async (doc) => {
+      await setDoc(doc.ref, dataSet, { merge: true });
+    });
+  } else {
+    await addDoc(employeeStatusRef, dataSet);
+  }
+
 }
 
 export {
-  getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus,
+  getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus, getDashboardOrdersIdWiseProduct,
   getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, candelOrder, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
   availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId
 }

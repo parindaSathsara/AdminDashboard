@@ -15,11 +15,14 @@ import {
 
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { DocsExample } from 'src/components'
-import BasicTable from './OrdersList.jsx/OrdersListAllocations'
+import OrderAllocate from './OrdersList.jsx/OrdersListAllocations'
 
 const MainDashboard = () => {
 
   const { userData, setUserData } = useContext(UserLoginContext);
+
+
+  console.log(userData, "User Data is")
 
   return (
     <>
@@ -40,57 +43,22 @@ const MainDashboard = () => {
                 Pending customer orders awaiting processing, prioritization, and timely fulfillment.
               </p>
 
-              <BasicTable></BasicTable>
+              {console.log(userData, "User Data issssss")}
+
+              {userData.user_role == "super_admin" ?
+                <OrderAllocate normalUser={false}></OrderAllocate>
+                :
+                <OrderAllocate normalUser={true}></OrderAllocate>
+              }
+
 
             </CCardBody>
 
-
-
           </CCard>
         </CCol>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>React Alert</strong> <small>Link color</small>
-            </CCardHeader>
-            <CCardBody>
-              <p className="text-medium-emphasis small">
-                Use the <code>&lt;CAlertLink&gt;</code> component to immediately give matching colored
-                links inside any alert.
-              </p>
 
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>React Alert</strong> <small>Additional content</small>
-            </CCardHeader>
-            <CCardBody>
-              <p className="text-medium-emphasis small">
-                Alert can also incorporate supplementary components &amp; elements like heading,
-                paragraph, and divider.
-              </p>
-              <DocsExample href="components/alert#additional-content">
-                <CAlert color="success">
-                  <CAlertHeading tag="h4">Well done!</CAlertHeading>
-                  <p>
-                    Aww yeah, you successfully read this important alert message. This example text is
-                    going to run a bit longer so that you can see how spacing within an alert works
-                    with this kind of content.
-                  </p>
-                  <hr />
-                  <p className="mb-0">
-                    Whenever you need to, be sure to use margin utilities to keep things nice and
-                    tidy.
-                  </p>
-                </CAlert>
-              </DocsExample>
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={12}>
+
+        {/* <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
               <strong>React Alert</strong> <small>Dismissing</small>
@@ -112,7 +80,7 @@ const MainDashboard = () => {
               </DocsExample>
             </CCardBody>
           </CCard>
-        </CCol>
+        </CCol> */}
       </CRow>
 
 

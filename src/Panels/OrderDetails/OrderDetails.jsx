@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import discountTotal from '../dcalculator';
 import moment from 'moment';
 import './OrderDetails.css'
-import { getDashboardOrdersIdWise, updateDeliveryStatus } from '../../service/api_calls';
+import { getDashboardOrdersIdWise, getDashboardOrdersIdWiseProduct, updateDeliveryStatus } from '../../service/api_calls';
 // import { data } from '../../../Data/flight_airports';
 import data from '../../Data/flight_airports';
 import MaterialTable from 'material-table';
@@ -164,17 +164,37 @@ function OrderDetails(props) {
 
         // setDetailsLoading(true)
 
-        getDashboardOrdersIdWise(props.orderid).then((res) => {
-            // setDetailsLoading(false)
-            setLifestylesData(res.lifestyleData)
-            setEssNEssData(res.essNEssData)
-            setEducationData(res.educationData)
-            setFlightsData(res.flightsData)
-            setHotelData(res.hotelData)
-            setProductData(res.productData)
+        console.log(props?.orderid, "Order data id is val")
 
-            setCustomerData(res.customerData)
-        })
+
+        if (props?.productViewData) {
+            getDashboardOrdersIdWiseProduct(props.orderid?.info?.checkoutID).then((res) => {
+                // setDetailsLoading(false)
+                setLifestylesData(res.lifestyleData)
+                setEssNEssData(res.essNEssData)
+                setEducationData(res.educationData)
+                setFlightsData(res.flightsData)
+                setHotelData(res.hotelData)
+                setProductData(res.productData)
+
+                setCustomerData(res.customerData)
+            })
+        }
+        else {
+
+            getDashboardOrdersIdWise(props.orderid).then((res) => {
+                // setDetailsLoading(false)
+                setLifestylesData(res.lifestyleData)
+                setEssNEssData(res.essNEssData)
+                setEducationData(res.educationData)
+                setFlightsData(res.flightsData)
+                setHotelData(res.hotelData)
+                setProductData(res.productData)
+
+                setCustomerData(res.customerData)
+            })
+        }
+
     }
 
 
