@@ -1,6 +1,14 @@
 import React from 'react'
+import VendorList from './views/VendorList/VendorList'
+import VendorAnalytic from './views/VendorList/VendorAnalytics'
+import ProductList from './views/Products/ProductsList'
+import ProductAnalytics from './views/Products/ProductAnalytics'
+import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
+import MoreOrderView from './Panels/OrderDetails/MoreOrderView/MoreOrderView'
+import MainDashboard from './views/MainDashboard/MainDashboard'
+import OffersPromoDashboard from './views/OffersPromo/OffersPromoDashboard'
 
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
 
 const AccountsRefunds = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsRefund'))
@@ -9,7 +17,9 @@ const DeliveryDepartment = React.lazy(() => import('./views/Departments/Delivery
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 const AccountSystem = React.lazy(() => import('./views/theme/AccountSystem/AccountSystem'))
-const ChatsHome = React.lazy(() => import('./views/theme/Chats/Chatshome'))
+const ChatsHome = React.lazy(() => import('./views/Chats/Chatshome'))
+const ChatsIndex = React.lazy(() => import('./views/_Chats/ChatsIndex'))
+
 
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -62,16 +72,34 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
-  { path: '/sales', name: 'Sales', element: Sales, exact: true },
-  { path: '/accounts/customerOrders', name: 'Sales', element: AccountsDepartment },
+
+
+
+
+
+  { path: '/offers_promo', name: 'Promotions & Offers', element: OffersPromoDashboard, exact: true },
+
+  { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
+  { path: '/vendors/analytics', name: 'Vendor Analytics', element: VendorAnalytic },
+  { path: '/dashboard', name: 'Dashboard', element: MainDashboard, exact: true },
+
+  { path: '/orders', name: 'Orders', element: Dashboard, exact: true },
+
+  // { path: '/sales', name: 'Sales', element: Sales, exact: true },
+  { path: '/accounts', name: 'Sales', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
+
+  { path: '/products', name: 'Products', element: ProductList },
+  { path: '/products/analytics', name: 'Product Analytics', element: ProductAnalytics },
+  { path: '/sales', name: 'Sales Analytics', element: SalesAnalytics, exact: true },
+
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
+  { path: '/Chats', name: 'Chats', element: ChatsIndex, exact: true },
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
-  { path: '/theme/typography', name: 'Typography', element: Typography },
+  { path: '/customers', name: 'Customers', element: Typography },
   { path: '/theme/AccountSystem', name: 'AccountSystem', element: AccountSystem },
-  { path: '/base', name: 'Base', element: Cards, exact: true },
+  { path: '/base', name: 'Base', element: MoreOrderView, exact: true },
   { path: '/base/accordion', name: 'Accordion', element: Accordion },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
   { path: '/base/cards', name: 'Cards', element: Cards },
@@ -109,10 +137,9 @@ const routes = [
   { path: '/notifications/badges', name: 'Badges', element: Badges },
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
-  { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: "/login", name: 'login', element: Login },
-  { path: "/register", name: 'register', element: Register }
-
+  { path: '/widgets', name: 'Widgets', element: Widgets }
+  // { path: "/login", name: 'login', element: Login },
+  // { path: "/register", name: 'register', element: Register }
 
 ]
 

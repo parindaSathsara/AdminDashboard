@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { createNewOtherInfo } from '../../service/api_calls';
+import Swal from 'sweetalert2';
 
 function AdditionalData(props) {
 
@@ -87,7 +88,13 @@ function AdditionalData(props) {
 
         console.log(...form_data);
 
-        createNewOtherInfo(form_data)
+        createNewOtherInfo(form_data).then(RESULT => {
+            Swal.fire({
+                title: "Additional Information Submitted",
+                text: "Additional Information Updated Successfully",
+                icon: "success"
+            });
+        })
 
     }
 

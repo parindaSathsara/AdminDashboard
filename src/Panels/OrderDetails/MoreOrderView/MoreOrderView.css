@@ -1,0 +1,30 @@
+.productTitle {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+
+.desc {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+
+.travelerTitle {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 0px;
+}
+
+
+.colHeader {
+    font-weight: 600;
+    font-size: 13px;
+
+}
+
+
+.colCell {
+    font-weight: 500;
+    font-size: 12px;
+}

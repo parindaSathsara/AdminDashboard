@@ -14,7 +14,12 @@ import {
   cilStar,
   cilUser,
   cilAddressBook,
-  cilCarAlt
+  cilCarAlt,
+  cilUserPlus,
+  cilGrain,
+  cilUserX,
+  cilCart,
+  cilTag
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -26,60 +31,132 @@ const _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
 
   },
-  {
-    component: CNavTitle,
-    name: 'Sales',
-  },
+
   {
     component: CNavItem,
-    name: 'Sales',
-    to: '/sales',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    name: 'Orders',
+    to: '/orders',
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+
   },
+
+  {
+    component: CNavTitle,
+    name: 'Other',
+  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Sales',
+  //   to: '/sales',
+  //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+  // },
+
+
+  {
+    component: CNavItem,
+    name: 'Promotions & Offers',
+    to: '/offers_promo',
+    icon: <CIcon icon={cilTag} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'Vendors',
+    to: '/vendors',
+    icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Vendors',
+    //     to: '/vendors/',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Vendor Analytics',
+    //     to: 'vendors/analytics',
+    //   },
+
+    // ],
+  },
+
+
   {
     component: CNavItem,
     name: 'Customers',
-    to: '/theme/typography',
+    to: '/customers',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
 
 
+
   {
-    component: CNavGroup,
+    component: CNavItem,
+    name: 'Sales Analytics',
+    to: '/sales',
+    icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
+  },
+
+
+  {
+    component: CNavItem,
+    name: 'Products',
+    to: '/products',
+    icon: <CIcon icon={cilGrain} customClassName="nav-icon" />,
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Products',
+    //     to: '/products/',
+    //   },
+    //   // {
+    //   //   component: CNavItem,
+    //   //   name: 'Product Analytics',
+    //   //   to: 'products/analytics',
+    //   // },
+
+    // ],
+  },
+
+
+  {
+    component: CNavItem,
     name: 'Accounts',
     to: '/accounts',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Customer Orders',
-        to: '/accounts/customerOrders',
-      },
-      {
-        component: CNavItem,
-        name: 'Refund Requests',
-        to: '/accounts/refundRequests',
-      },
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Customer Orders',
+    //     to: '/accounts/customerOrders',
+    //   },
+    //   // {
+    //   //   component: CNavItem,
+    //   //   name: 'Refund Requests',
+    //   //   to: '/accounts/refundRequests',
+    //   // },
 
-    ],
+    // ],
   },
 
-  {
-    component: CNavItem,
-    name: 'Delivery',
-    to: '/delivery',
-    icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Testing',
-    to: '/theme/Testing',
-    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
-  },
+
+
+
+  // {
+  //   component: CNavItem,
+  //   name: 'Delivery',
+  //   to: '/delivery',
+  //   icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'Testing',
+  //   to: '/theme/Testing',
+  //   icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: 'Chat',
-    to: '/theme/Chats',
+    to: '/Chats',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
   // {

@@ -1,13 +1,17 @@
 import React from 'react'
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CAvatar,
   CBadge,
+  CCardText,
   CDropdown,
   CDropdownDivider,
   CDropdownHeader,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CNavTitle,
 } from '@coreui/react'
 import {
   cilBell,
@@ -24,11 +28,18 @@ import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 
-const AppHeaderDropdown = () => {
+import './AppHeader.css'
+
+const AppHeaderDropdown = (props) => {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+   props?.handleLogout()
+  };
   return (
     <CDropdown variant="nav-item">
-      <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+      <CDropdownToggle placement="bottom-end" className="py-0 toggleClassTop" caret={false} style={{display:'flex', flexDirection:'row'}}>
+        <CIcon icon={cilUser} className="me-2" size='xl' />
+        <CCardText>{props?.userData?.name}</CCardText>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
@@ -84,9 +95,9 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem onClick={handleLogout}>
           <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+          Logout
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

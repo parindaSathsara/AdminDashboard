@@ -1,0 +1,52 @@
+.user-list{
+  /* flex: 1; */
+  padding: 5px;
+  background: white;
+  border-radius: 5px;
+  height: 73vh;
+}
+.search{
+  padding: 3vh;
+}
+.search-input{
+  border-radius: 20px;;
+}
+.search-label{
+  padding-right: 12px;
+  padding-left: 15px;
+}
+.custom-button{
+  height: 4vh;
+  transition: 100ms;
+}
+.custom-button:hover{
+  background: rgba(211, 211, 211, 0.401);
+  cursor: pointer;
+  color: black;
+}
+.custom-button-active{
+  background: #002c66 ;
+  color: white;
+}
+.chat-group{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 50vh;
+}
+
+.chat-group::-webkit-scrollbar {
+  width: 2px;
+}
+
+.chat-group::-webkit-scrollbar-thumb {
+  background-color: #88888863;
+}
+
+.chat-group::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.chat-group::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+

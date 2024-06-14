@@ -4,7 +4,7 @@ import { DocsLink } from 'src/components'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table'
 import { useState, useEffect } from 'react'
-// import loogo from '/Users/Temp 1/Documents/Admin/AdminDashboard/src/assets/brand/logo.png';
+import loogo from '../../../assets/brand/aahaas.png';
 import axios from 'axios'
 
 
@@ -362,35 +362,26 @@ const Typography = () => {
 
       <ThemeProvider theme={defaultMaterialTheme}>
         <MaterialTable
-          title="Best Customer"
+          title="Best Customers"
           data={data.rows}
           columns={[
             { title: 'Customer Name', field: 'user_name' },
             { title: 'Order Count', field: 'checkouts_count' },
             { title: 'totalprice', field: 'checkouts_sum_total_price' }, // Make sure this matches your API response key
             { title: 'Email', field: 'email' },
-            {
-              title: 'User Profile',
-              field: 'customer_profilepic',
-              render: (rowData) => (
-                <img
-                  src={rowData.customer_profilepic || loogo} // Adjust the path accordingly
-                  alt="Profile Pic"
-                  style={{ width: 50, height: 50, borderRadius: '50%' }}
-                />
-              ),
-            },
+            // {
+            //   title: 'User Profile',
+            //   field: 'customer_profilepic',
+            //   render: (rowData) => (
+            //     <img
+            //       src={rowData?.customer_profilepic || loogo} // Adjust the path accordingly
+            //       alt="Profile Pic"
+            //       style={{ width: 50, height: 50, borderRadius: '50%' }}
+            //     />
+            //   ),
+            // },
           ]}
-          detailPanel={(e) => {
-            return (
-              <div className='mainContainerTables'>
-                <div className="col-md-12 mb-4 sub_box materialTableDP">
-                  {/* Assuming ProductDetails is a component that takes orderDataIDWise and orderid as props */}
-                  <ProductDetails dataset={orderDataIDWise} orderid={e.oid} />
-                </div>
-              </div>
-            )
-          }}
+
           options={{
             sorting: true,
             search: true,

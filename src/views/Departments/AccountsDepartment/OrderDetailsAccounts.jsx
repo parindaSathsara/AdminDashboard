@@ -1,5 +1,7 @@
 import { CButton, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CFormCheck, CRow, CWidgetStatsA, CWidgetStatsB, CWidgetStatsC, CWidgetStatsD } from "@coreui/react";
 import { useEffect, useState } from "react";
+import AccountsDetails from "src/Panels/AccountsDetails/AccountsDetails";
+import OrderDetails from "src/Panels/OrderDetails/OrderDetails";
 import ProductDetails from "src/Panels/ProductDetails/ProductDetails";
 import { getPaymentStatusById } from "src/service/api_calls";
 
@@ -18,9 +20,11 @@ function OrderDetailsAccounts(props) {
 
         console.log(props.paymentDataSet, "Payment Data Set")
 
-        getPaymentStatusById(props.paymentDataSet?.id, props.paymentDataSet?.OrderId, props.paymentDataSet?.payment_type, props.paymentDataSet?.pay_category).then((res) => {
-            setDataset(res.data[0])
-        })
+        // getPaymentStatusById(props.paymentDataSet?.id, props.paymentDataSet?.OrderId, props.paymentDataSet?.payment_type, props.paymentDataSet?.pay_category).then((res) => {
+        //     setDataset(res.data[0])
+
+        //     console.log("Res Data set  value is", res.data[0])
+        // })
 
 
 
@@ -66,13 +70,16 @@ function OrderDetailsAccounts(props) {
             <div className='mainContainerTables'>
 
 
+                <AccountsDetails dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
+
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
-                    <ProductDetails orderid={props.orderid} accounts />
+                    <OrderDetails dataset={props?.paymentDataSet} orderid={props.orderid} orderData={props?.paymentDataSet} hideStatus={false} accounts />
                 </div>
+
             </div>
 
 
-            <CRow>
+            {/* <CRow>
                 <CCol xs={9} sm={9} lg={9}>
                     <div className='mainContainerTables'>
                         <div className="col-md-12 mb-4 sub_box materialTableDP">
@@ -164,7 +171,7 @@ function OrderDetailsAccounts(props) {
                         </div>
                     </div>
                 </CCol>
-            </CRow>
+            </CRow> */}
 
 
 

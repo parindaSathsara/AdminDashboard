@@ -154,14 +154,15 @@ const Dashboard = () => {
         rows: orderData?.map((value, idx) => {
             return {
                 // id: value.MainTId,
+                data: value,
                 oid: value.OrderId,
                 booking_date: value.checkout_date,
                 pay_type: value.payment_type,
                 pay_category: value.pay_category,
-                total_amount: value.ItemCurrency + " " + value.total_amount,
-                paid_amount: value.ItemCurrency + " " + value.paid_amount,
-                discount_amount: value.ItemCurrency + " " + value.discount_price,
-                delivery_charge: value.ItemCurrency + " " + value.delivery_charge,
+                total_amount: value.ItemCurrency + " " + (value.total_amount || "0.00"), // Check for null or undefined
+                paid_amount: value.ItemCurrency + " " + (value.paid_amount || "0.00"), // Check for null or undefined
+                discount_amount: value.ItemCurrency + " " + (value.discount_price || "0.00"), // Check for null or undefined
+                delivery_charge: value.ItemCurrency + " " + (value.delivery_charge || "0.00"), // Check for null or undefined
                 actions:
                     <div className='actions_box'>
                         {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
@@ -178,6 +179,7 @@ const Dashboard = () => {
 
     const handleModalOpen = (value, dataSet) => {
 
+        dataSet["oid"] = value
         setOrderId(value)
         setPaymentDataSet(dataSet)
         setShowModal(true)
@@ -207,24 +209,24 @@ const Dashboard = () => {
 
 
                 setProgress(25)
-                axios.get(`sendInvoiceToCustomer/${orderid}`).then(res => {
-                    if (res.data.status == 200) {
-                        setProgress(100)
-                        Swal.fire({
-                            title: "Payment Approved!",
-                            text: "Order - " + orderid + " Payment Approved",
-                            icon: "success"
-                        });
+                fetch(`https://gateway.aahaas.com/api/receipt/create/mail/${orderid}`).then(res => {
 
-                    }
-                    else {
-                        setProgress(100)
-                        Swal.fire({
-                            title: "Error While Invoice Generation",
-                            text: "Order - " + orderid + " Failed to generate the invoice",
-                            icon: "error"
-                        });
-                    }
+                    setProgress(100)
+                    Swal.fire({
+                        title: "Payment Approved!",
+                        text: "Order - " + orderid + " Payment Approved",
+                        icon: "success"
+                    });
+
+                    // }
+                    // else {
+                    //     setProgress(100)
+                    //     Swal.fire({
+                    //         title: "Error While Invoice Generation",
+                    //         text: "Order - " + orderid + " Failed to generate the invoice",
+                    //         icon: "error"
+                    //     });
+                    // }
                 })
             }
         });
@@ -339,7 +341,7 @@ const Dashboard = () => {
                                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                                 grouping: true, columnsButton: true,
-                                headerStyle: { background: '#001b3f', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
 
                                 // fixedColumns: {

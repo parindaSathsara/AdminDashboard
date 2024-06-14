@@ -183,6 +183,29 @@ const Cards = () => {
           </CCardBody>
         </CCard>
       </CCol>
+
+
+      <CCard className="mb-3" md={12} lg={12}>
+        <CRow className="g-0">
+          <CCol md={1}>
+            <CCardImage src={"https://static.vecteezy.com/system/resources/thumbnails/026/727/695/small/female-looking-sky-space-background-free-photo.jpg"} />
+          </CCol>
+          <CCol md={11}>
+            <CCardBody>
+              <CCardTitle>Card title</CCardTitle>
+              <CCardText>
+                This is a wider card with supporting text below as a natural lead-in to additional
+                content. This content is a little bit longer.
+              </CCardText>
+              <CCardText>
+                <small className="text-body-secondary">Last updated 3 mins ago</small>
+              </CCardText>
+            </CCardBody>
+          </CCol>
+        </CRow>
+      </CCard>
+
+
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>

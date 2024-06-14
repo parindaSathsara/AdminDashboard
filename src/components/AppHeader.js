@@ -1,6 +1,6 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useContext, useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   CContainer,
   CHeader,
@@ -10,20 +10,68 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
+  CCardTitle,
+  CCardText,
+  CFormSwitch,
+  CRow,
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilBell, cilEnvelopeOpen, cilExitToApp, cilList, cilMenu } from '@coreui/icons';
 
-import { AppBreadcrumb } from './index'
-import { AppHeaderDropdown } from './header/index'
-import logo from '../assets/brand/aahaas.png'
+import { AppBreadcrumb } from './index';
+import { AppHeaderDropdown } from './header/index';
+import logo from '../assets/brand/aahaas.png';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
+import { adminToggleStatus } from 'src/service/api_calls';
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  const navigate = useNavigate();
+
+  const { userLogin, setUserLogin, userData, setUserData } = useContext(UserLoginContext);
+
+
+
+
+  const handleLogout = () => {
+    // Clear all user sessions
+    sessionStorage.clear(); // Clears session storage
+    localStorage.clear(); // Clears local storage
+
+    setUserLogin(false);
+    navigate('/login');
+    //-----------------------//
+  };
+
+
+  const [switchState, setSwitchState] = useState(false);
+
+  const handleToggleOnChange = (e) => {
+    const newSwitchState = e.target.checked;
+    setSwitchState(newSwitchState);
+    localStorage.setItem('userActive', newSwitchState);
+
+    var status = "";
+    if (e.target.checked == true) {
+      status = "Active"
+    }
+    else {
+      status = "Inactive"
+    }
+    adminToggleStatus(status, userData.id)
+  };
+
+  useEffect(() => {
+    const userActive = JSON.parse(localStorage.getItem('userActive'));
+    console.log('User Active status is', userActive);
+    setSwitchState(userActive);
+  }, []);
+
   return (
     <CHeader position="sticky" className="mb-4">
+
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
@@ -32,49 +80,33 @@ const AppHeader = () => {
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none" to="/">
-          {/* <CIcon icon={logo} height={48} alt="Logo" /> */}
-          <img src={logo} height={30}></img>
+          <img src={logo} height={30} alt="Logo" />
         </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto">
-          <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink}>
-              Dashboard
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
-          </CNavItem>
-        </CHeaderNav>
+        <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
         <CHeaderNav>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
+          <CRow>
+
+            <CFormSwitch
+              size="xl"
+              label={switchState ? 'Active' : 'Inactive'}
+              id="formSwitchCheckDefaultXL"
+              onChange={handleToggleOnChange}
+              checked={switchState}
+            />
+
+          </CRow>
         </CHeaderNav>
         <CHeaderNav className="ms-3">
-          <AppHeaderDropdown />
+
+          <AppHeaderDropdown handleLogout={handleLogout} userData={userData} />
         </CHeaderNav>
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>
         <AppBreadcrumb />
       </CContainer>
-    </CHeader>
-  )
-}
+    </CHeader >
+  );
+};
 
-export default AppHeader
+export default AppHeader;

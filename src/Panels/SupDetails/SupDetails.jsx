@@ -19,51 +19,31 @@ function SupDetails(props) {
         return retVal;
     }
 
+    console.log(props.dataset?.filter(vendor => vendor.category === "Education" || vendor.category === "Essentials/Non Essentials" || vendor.category === "Lifestyles" || vendor.category === "Lifestyles"), "Dataset value is")
 
-    const columns = [
-        { field: 'sup_contact', headerName: 'Sup.Contact', align: 'left', },
-        { field: 'sup_voucher', headerName: 'Sup.Voucher', align: 'left', },
-        { field: 'sup_pay_status', headerName: 'Sup.PayStatus', align: 'left', },
-        { field: 'sup_pay_mode', headerName: 'Sup.PayMode', align: 'left', },
-        { field: 'sup_pay_amount', headerName: 'Sup.PayAmount', align: 'left', },
-    ]
-
-    const rows = {
-        data: props.dataset?.filter(id => id.OrderId == props.orderid)?.map((value) => {
-            return {
-                sup_contact: '-',
-                sup_voucher: '-',
-                sup_pay_status: '-',
-                sup_pay_mode: '-',
-                sup_pay_amount: '-',
-
-            }
-        })
-    }
 
     const data = {
         columns: [
-            // {
-            //     title: '#ID', field: 'id', align: 'center', editable: 'never',
-            // },
-            { field: 'sup_contact', title: 'Sup.Contact', align: 'left', },
-            { field: 'sup_voucher', title: 'Sup.Voucher', align: 'left', },
-            { field: 'sup_pay_status', title: 'Sup.PayStatus', align: 'left', },
-            { field: 'sup_pay_mode', title: 'Sup.PayMode', align: 'left', },
-            { field: 'sup_pay_amount', title: 'Sup.PayAmount', align: 'left', },
-
+            { field: 'product_title', title: 'Product Title', align: 'left', },
+            { field: 'vendor_first_name', title: 'Vendor First Name', align: 'left', },
+            { field: 'vendor_last_name', title: 'Vendor Last Name', align: 'left', },
+            { field: 'vendor_email', title: 'Vendor Email', align: 'left', },
+            { field: 'vendor_address', title: 'Vendor Address', align: 'left', },
+            { field: 'vendor_company_name', title: 'Vendor Company Name', align: 'left', },
+            { field: 'vendor_phone', title: 'Vendor Phone', align: 'left', },
         ],
-        rows: props.dataset?.map((value) => {
+        rows: props.dataset?.filter(vendor => vendor.category === "Education" || vendor.category === "Essentials/Non Essentials" || vendor.category === "Lifestyles" || vendor.category === "Lifestyles")?.map((vendor) => {
             return {
-                sup_contact: '-',
-                sup_voucher: '-',
-                sup_pay_status: '-',
-                sup_pay_mode: '-',
-                sup_pay_amount: '-',
-
+                product_title: vendor.product_title,
+                vendor_first_name: vendor?.first_name,
+                vendor_last_name: vendor?.last_name,
+                vendor_email: vendor?.email,
+                vendor_address: vendor?.address,
+                vendor_company_name: vendor?.company_name,
+                vendor_phone: vendor?.phone,
             }
         })
-    }
+    };
 
     return (
         <div>
@@ -76,18 +56,7 @@ function SupDetails(props) {
                     toggle && (
 
                         <div className="confirmation_table mt-3 mb-2" id='confirmation_table'>
-                            {/* <DataGrid
-                                rows={rows.data}
-                                columns={columns}
-                                encodeHtml={false}
-                                getRowClassName={(e) => `type_class${e.row.product_type}`}
-                                getRowId={(row) => generateRandom()}
-                                pageSizeOptions={[5]}
-                                rowHeight={30}
-                                className='data_grid'
-                            // onCellClick={(e) => handleClick(e)}
 
-                            /> */}
 
                             <MaterialTable
                                 data={data.rows}
@@ -102,9 +71,9 @@ function SupDetails(props) {
                                     exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                                     grouping: false, columnsButton: false,
-                                    rowStyle: { fontSize: "12px", width: "100%", color: "#000" },
+                                    rowStyle: { fontSize: "13px", width: "100%", color: "#000" },
                                     editCellStyle: { width: "100%" },
-                                    headerStyle: { fontSize: "13px", backgroundColor: '#D8EFFF' }
+                                    headerStyle: { fontSize: "14px", backgroundColor: '#D8EFFF' }
 
                                     // fixedColumns: {
                                     //     left: 6
