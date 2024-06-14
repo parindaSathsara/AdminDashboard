@@ -120,4 +120,62 @@ async function deleteCouponByID(id) {
 }
 
 
-export { createDiscount, loadDiscountsTypes, loadAllDiscounts, deleteDiscountByID, editDiscount, createCoupon, loadAllCoupons, editCoupon, deleteCouponByID }
+
+
+
+
+
+async function loadAllPromotions() {
+    try {
+        const response = await axios.get("promotions");
+        return response;
+    }
+    catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+
+
+async function editPromotion(discountData) {
+
+    discountData["type"] = discountData?.type_id
+
+    try {
+        const response = await axios.put(`/promotions/${discountData?.id}`, discountData);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating discount:', error);
+        throw error; // Re-throw the error so it can be handled by the caller
+    }
+}
+
+async function deletePromotionByID(id) {
+    try {
+        const response = await axios.delete(`promotions/${id}`);
+        return response;
+    }
+    catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+
+
+async function createPromotion(discountData) {
+    try {
+        const response = await axios.post(`/promotions`, discountData);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating discount:', error);
+        throw error; // Re-throw the error so it can be handled by the caller
+    }
+}
+
+
+
+
+
+
+
+export { createDiscount, loadDiscountsTypes, loadAllDiscounts, deleteDiscountByID, editDiscount, createCoupon, loadAllCoupons, editCoupon, deleteCouponByID, createPromotion, deletePromotionByID, editPromotion, loadAllPromotions }
