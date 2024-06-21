@@ -15,6 +15,7 @@ import 'simplebar/dist/simplebar.min.css'
 // sidebar nav config
 import navigation from '../_nav'
 import logo from '../assets/brand/aahaas.png'
+import './AppSidebar.css';
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -31,17 +32,17 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-      <img src={logo} height={30}></img>
+        <img src={logo} height={30}></img>
       </CSidebarBrand>
-      <CSidebarNav>
+      <CSidebarNav className='sideBarSub'>
         <SimpleBar>
           <AppSidebarNav items={navigation} />
         </SimpleBar>
       </CSidebarNav>
-      <CSidebarToggler
+      {/* <CSidebarToggler
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-      />
+      /> */}
     </CSidebar>
   )
 }

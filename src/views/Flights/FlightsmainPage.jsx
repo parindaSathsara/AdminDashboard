@@ -2,7 +2,6 @@ import CIcon from '@coreui/icons-react'
 import React, { useEffect, useState } from 'react'
 
 import { cilFlightTakeoff, cilSortDescending, cilSortAscending, cilInfo } from '@coreui/icons'
-import { data } from 'jquery'
 
 function FlightsmainPage() {
 
