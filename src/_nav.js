@@ -1,7 +1,6 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilBell,
   cilCalculator,
   cilChartPie,
   cilCursor,
@@ -19,7 +18,9 @@ import {
   cilGrain,
   cilUserX,
   cilCart,
-  cilTag
+  cilTag,
+  cilFlightTakeoff,
+  cilBell
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -158,6 +159,18 @@ const _nav = [
     name: 'Chat',
     to: '/Chats',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Flights',
+    to: '/flights',
+    icon: <CIcon icon={cilFlightTakeoff} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Push notifications',
+    to: '/pushNotifications',
+    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
   },
   // {
   //   component: CNavItem,

@@ -32,9 +32,7 @@ const OffersPromoDashboard = () => {
                             <p className="text-body-secondary small">
                                 Maximizing Customer Engagement through Strategic Promotion & Offer Management
                             </p>
-
                             <MainDiscounts></MainDiscounts>
-
                         </CCardBody>
                     </CCard>
                 </CCol>
@@ -47,9 +45,7 @@ const OffersPromoDashboard = () => {
                             <p className="text-body-secondary small">
                                 Create limited-time discount coupons for selected products
                             </p>
-
                             <CouponPromotions></CouponPromotions>
-
                         </CCardBody>
                     </CCard>
                 </CCol>
@@ -64,9 +60,7 @@ const OffersPromoDashboard = () => {
                             <p className="text-body-secondary small">
                                 Manage promotional campaigns for various product lines
                             </p>
-
                             <ProductPromotions></ProductPromotions>
-
                         </CCardBody>
                     </CCard>
                 </CCol>
