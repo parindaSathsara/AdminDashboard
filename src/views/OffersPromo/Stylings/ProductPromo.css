@@ -1,0 +1,31 @@
+.image-uploader {
+    border: 1px dashed #465e77;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.image-dropzone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 16px;
+    color: #999;
+}
+
+.image-preview {
+    position: relative;
+}
+
+.image-preview-img {
+    width: 100%;
+    height: auto;
+}
+
+.image-preview button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}

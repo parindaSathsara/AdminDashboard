@@ -200,7 +200,6 @@ async function getDashboardOrdersIdWiseProduct(id) {
 
     var dataArray = [];
 
-
     console.log(id, "Fetch Orders ID is")
 
     await axios.get(`/fetch_all_orders_userwise_id_wise_product/${id}`).then((res) => {
