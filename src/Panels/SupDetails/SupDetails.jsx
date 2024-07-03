@@ -19,7 +19,7 @@ function SupDetails(props) {
         return retVal;
     }
 
-    console.log(props.dataset?.filter(vendor => vendor.category === "Education" || vendor.category === "Essentials/Non Essentials" || vendor.category === "Lifestyles" || vendor.category === "Lifestyles"), "Dataset value is")
+    // console.log(props.dataset?.filter(vendor => vendor.category === "Education" || vendor.category === "Essentials/Non Essentials" || vendor.category === "Lifestyles" || vendor.category === "Lifestyles"), "Dataset value is")
 
 
     const data = {

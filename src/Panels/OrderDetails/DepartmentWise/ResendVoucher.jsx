@@ -32,7 +32,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
             .then(data => {
                 setVoucherSending("");
 
-                console.log("Test", data);
+                // console.log("Test", data);
 
                 if (data.status === 200) {
                     Swal.fire({

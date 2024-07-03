@@ -10,14 +10,14 @@ import { Tab, Tabs } from 'react-bootstrap';
 export default function MoreOrderView(props) {
 
 
-    console.log(props.dataSet)
+    // console.log(props.dataSet)
     var category = props.category
     var orderData = []
 
     const [productDataSet, setProductDataSet] = useState([])
 
-    console.log(props.preID, "Pre ID 123")
-    console.log(props.category, "Category 123")
+    // console.log(props.preID, "Pre ID 123")
+    // console.log(props.category, "Category 123")
 
     const [loading, setLoading] = useState(false)
 
@@ -31,7 +31,7 @@ export default function MoreOrderView(props) {
             setLoading(false)
 
         }).catch(response => {
-            console.log(response, "Catch Response is")
+            // console.log(response, "Catch Response is")
             setLoading(false)
         })
 

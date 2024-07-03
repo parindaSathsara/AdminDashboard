@@ -15,7 +15,7 @@ function OfferProductSelect({ category, value, onChange, error }) {
     }, [category]);
 
 
-    console.log(category, "Category Data is")
+    // console.log(category, "Category Data is")
 
     const fetchOptions = async (searchTerm = '') => {
         setIsLoading(true);

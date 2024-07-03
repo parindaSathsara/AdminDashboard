@@ -23,13 +23,13 @@ function CustomerFeedbacks(props) {
         getAllFeedbacks(props.orderId).then(res => {
             setFeedbacks(res[0])
             setProduct(res[1])
-            console.log("Feedbacks are".res)
+            // console.log("Feedbacks are".res)
         })
 
         setOrderData(props.orderValue)
 
 
-        console.log(props.orderValue, "Order Value")
+        // console.log(props.orderValue, "Order Value")
 
         // setOrderData(getAllDataUserWise());
 
@@ -101,14 +101,14 @@ function CustomerFeedbacks(props) {
         }).then((result) => {
             if (result.isConfirmed) {
 
-                console.log(refundCustomerData, "Refund")
+                // console.log(refundCustomerData, "Refund")
                 const dataSet = {
                     refund_status: refundCustomerData.refund_status,
                     refund_type: refundCustomerData.refund_type,
                     refunding_amount: refundCustomerData.refunding_amount,
                 }
 
-                console.log("Dataset", dataSet)
+                // console.log("Dataset", dataSet)
 
                 try {
                     axios.post(`/approveRefund/${props.orderId}`, dataSet).then(res => {
@@ -136,15 +136,15 @@ function CustomerFeedbacks(props) {
             }
         });
 
-        // console.log("handle approve payment")
-        // console.log("Handle Approve Payment")
+        // // console.log("handle approve payment")
+        // // console.log("Handle Approve Payment")
 
     }
 
 
     const handleFormData = (e) => {
 
-        console.log(orderData.total_amount)
+        // console.log(orderData.total_amount)
         if (e.target.name == "refund_type") {
 
             if (e.target.value == "Reject Refund Request") {

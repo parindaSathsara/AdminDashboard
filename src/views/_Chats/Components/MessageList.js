@@ -151,7 +151,7 @@ const MessageList = (props) => {
             }
           })
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           throw new Error(error)
         }
       }

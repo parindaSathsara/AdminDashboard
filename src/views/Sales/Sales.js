@@ -84,7 +84,7 @@ const Sales = () => {
 
     const handleAdditionalModal = (e) => {
         setShowModalAdd(true)
-        console.log(e)
+        // // console.log(e)
         setOrderId(e)
     }
 
@@ -125,7 +125,7 @@ const Sales = () => {
 
 
         getAllChartsDataSales().then(res => {
-            console.log("Response data is", res)
+            // // console.log("Response data is", res)
             setChartData(res)
         })
         // setOrderData(getAllDataUserWise());
@@ -138,7 +138,7 @@ const Sales = () => {
 
 
     const handleChange = (e) => {
-        console.log(e)
+        // // console.log(e)
     }
 
     const [selectedOption, setSelectedOption] = useState('');
@@ -173,17 +173,17 @@ const Sales = () => {
 
 
     const handleSelectChange = (event) => {
-        console.log('Selected Option:', event.target.value);
+        // // console.log('Selected Option:', event.target.value);
         setSelectedOption(event.target.value);
     };
 
     const handleSelectLine = (event) => {
-        console.log('Selected Option:', event.target.value);
+        // // console.log('Selected Option:', event.target.value);
         setSelectedOptionLine(event.target.value);
     };
 
     const handleoptionBar = (event) => {
-        console.log('Selected Option:', event.target.value);
+        // // console.log('Selected Option:', event.target.value);
         setSelectedOptionBar(event.target.value);
     }
 
@@ -200,7 +200,7 @@ const Sales = () => {
             axios.get(apiUrl)
                 .then((response) => {
                     setChartData(response.data.data);
-                    console.log("Response data:", response.data.data);
+                    // // console.log("Response data:", response.data.data);
                 })
                 .catch((error) => {
                     console.error('No data for this date. Please try again.', error);
@@ -221,7 +221,7 @@ const Sales = () => {
             axios.get(apiUrl)
                 .then((response) => {
                     setChartData(response.data.data);
-                    console.log("Response data:", response.data.data);
+                    // // console.log("Response data:", response.data.data);
                 })
                 .catch((error) => {
                     console.error('Error fetching data for the selected date range.', error);
@@ -247,7 +247,7 @@ const Sales = () => {
             axios.get(apiUrl)
                 .then((response) => {
                     setBarData(response.data);
-                    console.log("Bar Chart Response data:", response.data);
+                    // // console.log("Bar Chart Response data:", response.data);
                 })
                 .catch((error) => {
                     console.error('Error fetching data for the selected date range:', error);
@@ -269,7 +269,7 @@ const Sales = () => {
             axios.get(apiUrl)
                 .then((response) => {
                     setBarData(response.data);
-                    console.log("Bar Chart Response data:", response.data);
+                    // // console.log("Bar Chart Response data:", response.data);
                 })
                 .catch((error) => {
                     console.error('Error fetching data for the selected date range:', error);
@@ -294,7 +294,7 @@ const Sales = () => {
             axios.get(apiUrl)
                 .then((res) => {
                     setLineData(res.data);
-                    console.log("Line Chart Response data:", res.data);
+                    // // console.log("Line Chart Response data:", res.data);
                 })
                 .catch((error) => {
                     console.error('Error fetching data for the selected date range:', error);
@@ -313,7 +313,7 @@ const Sales = () => {
             axios.get(apiUrl)
                 .then((res) => {
                     setLineData(res.data);
-                    console.log("Line Chart Response data:", res.data);
+                    // // console.log("Line Chart Response data:", res.data);
                 })
                 .catch((error) => {
                     console.error('Error fetching data for the selected date range:', error);

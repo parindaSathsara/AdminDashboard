@@ -14,7 +14,7 @@ function ProductIDSelect({ category, value, onChange, error }) {
 
 
 
-    console.log("Console", category)
+    // console.log("Console", category)
 
     const fetchOptions = async (searchTerm = '') => {
         setIsLoading(true);
@@ -25,7 +25,7 @@ function ProductIDSelect({ category, value, onChange, error }) {
             limit: 10
         }
 
-        console.log(params, "Params are")
+        // console.log(params, "Params are")
 
         try {
 

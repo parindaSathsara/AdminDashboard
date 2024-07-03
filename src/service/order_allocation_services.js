@@ -26,7 +26,7 @@ const getAvailableEmployees = async () => {
         }
     })
 
-    console.log(dataSet, "Data set is employee available")
+    // console.log(dataSet, "Data set is employee available")
 
     return dataSet
 }
@@ -34,14 +34,14 @@ const getAvailableEmployees = async () => {
 
 const handleEmployeeDeleteFromOrder = async (val) => {
     await axios.post(`orderallocations_remove/${val}`).then(response => {
-        console.log(response, "response value")
+        // console.log(response, "response value")
     })
 }
 
 
 const getAllProductsOrdersByEmployee = async (val) => {
     try {
-        console.log("User ID val is", val);
+        // console.log("User ID val is", val);
         const response = await axios.get(`fetch_all_orders_product_wise_allcation_by_id/${val}`);
         if (response.data.status === 200) {
             return response.data.productData;
@@ -92,7 +92,7 @@ const handleDeleteData = async (checkout_id, employee_id) => {
     try {
 
 
-        console.log("Delete Data Function print", checkout_id, employee_id)
+        // console.log("Delete Data Function print", checkout_id, employee_id)
         // Query the collection to find the document
         const q = query(
             collection(db, "order_employee_allocations"),
@@ -106,10 +106,10 @@ const handleDeleteData = async (checkout_id, employee_id) => {
             querySnapshot.forEach(async (docSnapshot) => {
                 // Delete the document
                 await deleteDoc(doc(db, "order_employee_allocations", docSnapshot.id));
-                console.log("Document deleted successfully");
+                // console.log("Document deleted successfully");
             });
         } else {
-            console.log("No document matches the criteria");
+            // console.log("No document matches the criteria");
         }
     } catch (error) {
         console.error("Error deleting document: ", error);

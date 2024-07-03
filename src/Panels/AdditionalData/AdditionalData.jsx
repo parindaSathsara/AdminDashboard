@@ -86,7 +86,7 @@ function AdditionalData(props) {
             form_data.append('special_data[]', otherData[i]);
         }
 
-        console.log(...form_data);
+        // console.log(...form_data);
 
         createNewOtherInfo(form_data).then(RESULT => {
             Swal.fire({

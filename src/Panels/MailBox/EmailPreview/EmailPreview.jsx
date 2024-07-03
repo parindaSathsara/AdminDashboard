@@ -10,7 +10,7 @@ function EmailPreview(props) {
     const [data, setData] = useState([])
     const [customerVoucher, setCustomerVoucher] = useState([]);
 
-    console.log(customerVoucher)
+    // console.log(customerVoucher)
 
     const fetchEmailPrev = () => {
 

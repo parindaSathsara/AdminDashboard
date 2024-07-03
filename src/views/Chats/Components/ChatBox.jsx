@@ -73,7 +73,7 @@ function Chatshome() {
                             }
                         })
                     } catch (error) {
-                        console.log(error);
+                        // console.log(error);
                         throw new Error(error)
                     }
 
@@ -255,7 +255,7 @@ function Chatshome() {
                 }
             })
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
 
         try {
@@ -266,7 +266,7 @@ function Chatshome() {
                 }
             })
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }, [])
 
@@ -478,7 +478,7 @@ function Chatshome() {
                             <p>Customer mail id :{infoDetails.customerChatID.customer_mail_id} </p>
                             <p>Query status : {infoDetails.customerChatID.status} </p>
 
-                            {/* {console.log(infoDetails)} */}
+                            {/* {// console.log(infoDetails)} */}
 
                             {/* need to add if it is necessary */}
 

@@ -1,6 +1,6 @@
 const rowStyle = (data) => {
 
-    console.log(data)
+    // console.log(data)
 
     if (data?.data?.status == "Approved") {
         return ({

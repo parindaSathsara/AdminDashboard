@@ -108,7 +108,7 @@ function PaymentRejection(props) {
             balanceAmountToPay: props.paymentDataSet?.paid_amount,
         });
 
-        console.log(props.paymentDataSet, "Payment Data set value is")
+        // console.log(props.paymentDataSet, "Payment Data set value is")
 
     }, [props.paymentDataSet])
 

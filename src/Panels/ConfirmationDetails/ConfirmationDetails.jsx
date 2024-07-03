@@ -8,7 +8,7 @@ import MaterialTable from 'material-table';
 
 function ConfirmationDetails(props) {
 
-    console.log(props)
+    // console.log(props)
 
     const [toggle, setToggle] = useState(true);
     const [productData, setProductData] = useState([])
@@ -30,7 +30,7 @@ function ConfirmationDetails(props) {
     }
 
     const handleDelStatusChange = (e, val) => {
-        console.log(e)
+        // console.log(e)
 
 
         updateDeliveryStatus(e.id, val.target.value, e.category)

@@ -65,7 +65,7 @@ const AppHeader = () => {
 
   useEffect(() => {
     const userActive = JSON.parse(localStorage.getItem('userActive'));
-    console.log('User Active status is', userActive);
+    // console.log('User Active status is', userActive);
     setSwitchState(userActive);
   }, []);
 

@@ -96,7 +96,7 @@ const CouponPromotions = () => {
     const handleFormSubmit = (newDiscount) => {
         setEditTrigger(false);
 
-        console.log(newDiscount, "New Discount")
+        // console.log(newDiscount, "New Discount")
 
         if (editTrigger) {
 

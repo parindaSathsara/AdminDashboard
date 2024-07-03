@@ -23,7 +23,7 @@ import DeliveryDetails from '../DeliveryDetails/DeliveryDetails';
 
 function ProductDetails(props) {
 
-    console.log(props.orderid)
+    // console.log(props.orderid)
 
     const [isLoading, setIsLoading] = useState(true)
 
@@ -41,7 +41,7 @@ function ProductDetails(props) {
 
     const handlePaymentProof = (e) => {
         setShowModal(true)
-        console.log(e)
+        // console.log(e)
         setRowDetails(e);
     }
 
@@ -103,11 +103,11 @@ function ProductDetails(props) {
     const [customerData, setCustomerData] = useState([])
 
 
-    console.log("Order Main Details DAtaqaaaaaaaaaaaaaa,", props.orderData)
+    // console.log("Order Main Details DAtaqaaaaaaaaaaaaaa,", props.orderData)
 
     useEffect(() => {
 
-        console.log("Order id", props.orderid)
+        // console.log("Order id", props.orderid)
 
         // setProductData(props.dataset)
         setOrderMainDetails(props.orderData)
@@ -123,7 +123,7 @@ function ProductDetails(props) {
 
             setCustomerData(res.customerData)
 
-            console.log(res.customerData, "CustomerData value is data ")
+            // console.log(res.customerData, "CustomerData value is data ")
         })
 
     }, [props.orderid, props.orderData])
@@ -244,8 +244,8 @@ function ProductDetails(props) {
                 align: 'left',
                 hidden: props.hideStatus,
                 render: (e) => {
-                    console.log(e, "Data set delivery is")
-                    console.log(e.status, "Delivery status")
+                    // console.log(e, "Data set delivery is")
+                    // console.log(e.status, "Delivery status")
                     return (
                         <>
                             <select
@@ -390,7 +390,7 @@ function ProductDetails(props) {
                 align: 'left',
                 hidden: props.hideStatus,
                 render: (e) => {
-                    console.log(e.status, "Delivery status")
+                    // console.log(e.status, "Delivery status")
                     return (
                         <>
                             <select
@@ -534,8 +534,8 @@ function ProductDetails(props) {
 
 
     const handleDelStatusChange = (e, val) => {
-        console.log(e, "Value Data set is 123")
-        console.log(val.target.value, "Target Value is")
+        // console.log(e, "Value Data set is 123")
+        // console.log(val.target.value, "Target Value is")
 
         var title = ""
 
@@ -557,12 +557,12 @@ function ProductDetails(props) {
         //     cancelButtonColor: "#d33",
         //     confirmButtonText: "Yes"
         // }).then((result) => {
-        //     console.log(result, "IS Confirmed")
+        //     // console.log(result, "IS Confirmed")
 
         //     if (result.isConfirmed) {
 
         updateDeliveryStatus(e.id, val.target.value, e.category).then(result => {
-            console.log(result)
+            // console.log(result)
             reload()
             Swal.fire({
                 title: "Order " + e.id + " Confirmed",
@@ -807,8 +807,8 @@ function ProductDetails(props) {
 
                 </div>
 
-                {console.log("product data value is ", productData)}
-                {console.log(customerData, "Customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")}
+                {/* {// console.log("product data value is ", productData)} */}
+                {/* {// console.log(customerData, "Customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")} */}
                 {props?.accounts ?
                     null :
                     <>

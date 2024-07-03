@@ -41,7 +41,7 @@ export default function EssentialsOrderView(props) {
     const bookData = props.productData?.essentialsBooking
 
 
-    console.log(basicDetails)
+    // console.log(basicDetails)
 
     function renderVariations(value) {
         let variations = [];

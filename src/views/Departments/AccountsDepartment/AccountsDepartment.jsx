@@ -102,7 +102,7 @@ const Dashboard = () => {
         })
 
         getAllCardData().then(res => {
-            console.log(res)
+            // console.log(res)
             setCardData(res)
         })
         // setOrderData(getAllDataUserWise());
@@ -185,7 +185,7 @@ const Dashboard = () => {
         setShowModal(true)
 
 
-        console.log("Value", value)
+        // console.log("Value", value)
     }
 
     const [progress, setProgress] = useState(0)
@@ -231,8 +231,8 @@ const Dashboard = () => {
             }
         });
 
-        // console.log("handle approve payment")
-        // console.log("Handle Approve Payment")
+        // // console.log("handle approve payment")
+        // // console.log("Handle Approve Payment")
 
     }
 

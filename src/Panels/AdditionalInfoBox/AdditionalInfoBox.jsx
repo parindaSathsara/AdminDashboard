@@ -17,7 +17,7 @@ function AdditionalInfoBox(props) {
     const inputRef = useRef();
 
     const handleSubmitValue = (e, x) => {
-        console.log(x)
+        // console.log(x)
         setUpdating(true)
         const form_data = new FormData();
 
@@ -46,7 +46,7 @@ function AdditionalInfoBox(props) {
         })
     }, [])
 
-    console.log(otherInfoData)
+    // console.log(otherInfoData)
 
     useEffect(() => {
         getOtherInforDataByOrderId(props?.orderid).then((res) => {

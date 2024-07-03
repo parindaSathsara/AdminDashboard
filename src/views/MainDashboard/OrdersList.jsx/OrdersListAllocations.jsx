@@ -65,7 +65,7 @@ const OrderAllocate = ({ normalUser = false }) => {
             const response = await getAllProductsOrdersByEmployee(userData?.id);
 
 
-            console.log(response, "Response dataaaaaaaaaa malik")
+            // console.log(response, "Response dataaaaaaaaaa malik")
 
             return response.map((result, index) => ({
                 id: index + 1,
@@ -152,10 +152,10 @@ const OrderAllocate = ({ normalUser = false }) => {
 
     const handleAssignEmployee = (rowData) => {
         // Implement the function to handle the assignment of the employee
-        // console.log("Assigned Employee:", selectedEmployee, "to Row:", selectedRow);
+        // // console.log("Assigned Employee:", selectedEmployee, "to Row:", selectedRow);
         // handleCloseModal();
 
-        console.log(rowData.info.checkoutID, "Row Data is")
+        // console.log(rowData.info.checkoutID, "Row Data is")
         setSelectedRow(rowData?.info);
         setShowModal(true);
 
@@ -166,7 +166,7 @@ const OrderAllocate = ({ normalUser = false }) => {
         label: response.name
     }));
 
-    console.log("Employees are", employeeOptions);
+    // console.log("Employees are", employeeOptions);
 
     const customStyles = {
         menuPortal: (base) => ({
@@ -203,7 +203,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
 
     const handleAllocateEmployee = async () => {
-        console.log(selectedEmployee, "Selected Employee Name iss");
+        // console.log(selectedEmployee, "Selected Employee Name iss");
 
         // Show confirmation message
         const confirmation = await Swal.fire({
@@ -217,7 +217,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
         if (confirmation.isConfirmed) {
 
-            console.log("Confirmed")
+            // console.log("Confirmed")
 
             assignEmployeesToOrders(selectedRow?.checkoutID, selectedEmployee).then(res => {
                 getRows();
@@ -281,7 +281,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
                 Cell: ({ cell }) => {
 
-                    console.log(cell.row.original, "Cell Value is")
+                    // console.log(cell.row.original, "Cell Value is")
                     var allocatedUsers = cell?.row?.original?.info?.allocatedUser
                     return (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -337,7 +337,7 @@ const OrderAllocate = ({ normalUser = false }) => {
     });
 
     const rowStyle = (data) => {
-        console.log(data);
+        // console.log(data);
 
         // if (data?.info?.orderID === lastUpdatedId) {
         //     return {
@@ -429,7 +429,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
     const handleMoreInfoModal = (row) => {
 
-        console.log(row, "Row Data iss Data set")
+        // console.log(row, "Row Data iss Data set")
 
         setMoreOrderModalCategory(row?.info.catid)
         if (row?.info.catid == 3) {

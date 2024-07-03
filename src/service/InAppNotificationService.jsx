@@ -12,18 +12,18 @@ export default function InAppNotificationService() {
             collection(db, 'orders'),
             (querySnapshot) => {
                 if (!querySnapshot.empty) {
-                    console.log("Inside Snap");
+                    // console.log("Inside Snap");
 
                     const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
                     const lastOrderData = lastDoc.data();
-                    console.log("Last Order: ", lastOrderData);
+                    // console.log("Last Order: ", lastOrderData);
 
                     var dataSet = {}
 
 
                     getMoreDataSet(lastOrderData?.category, lastOrderData?.related_id).then(response => {
 
-                        console.log(response, "Response Data Object")
+                        // console.log(response, "Response Data Object")
 
                         if (lastOrderData?.category == 3) {
                             addNewToast({
@@ -47,7 +47,7 @@ export default function InAppNotificationService() {
 
 
                     }).catch(response => {
-                        console.log(response, "Catch Response is")
+                        // console.log(response, "Catch Response is")
                         // setLoading(false)
                     })
 
@@ -59,7 +59,7 @@ export default function InAppNotificationService() {
 
 
                 } else {
-                    console.log("No orders found.");
+                    // console.log("No orders found.");
                 }
             },
             (error) => {

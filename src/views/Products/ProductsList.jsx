@@ -105,7 +105,7 @@ function ProductList() {
     }
 
     const handleOnClick = (data) => {
-        console.log(data)
+        // console.log(data)
 
         setMoreProductModal(true)
         setMoreData(data)

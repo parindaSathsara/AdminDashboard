@@ -23,23 +23,23 @@ const Typography = () => {
     //     if (!response.ok) {
     //       throw new Error('Network response was not ok');
     //     }
-    //     console.log(response);
+    //     // console.log(response);
     //     return response.json();
     //   })
     //   .then(data => {
     //     setData({ rows: data });
-    //     console.log("response", data);
+    //     // console.log("response", data);
     //   })
     //   .catch(error => console.error('Error fetching data:', error));
 
     axios.get('customer_orders_count')
       .then(response => {
-        console.log(response.data);  // Access the response data directly
+        // // console.log(response.data);  // Access the response data directly
         return response.data
       })
       .then(data => {
         setData({ rows: data });
-        console.log("response", data);
+        // // console.log("response", data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);

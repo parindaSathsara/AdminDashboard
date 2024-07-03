@@ -96,7 +96,7 @@ const Orders = () => {
 
   const handleAdditionalModal = (e) => {
     setShowModalAdd(true)
-    console.log(e)
+    // console.log(e)
     setOrderId(e)
   }
 
@@ -157,7 +157,7 @@ const Orders = () => {
     setLoading(true)
 
     getAllCardData().then(res => {
-      console.log(res)
+      // console.log(res)
       setCardData(res)
       setLoading(false)
     })
@@ -222,7 +222,7 @@ const Orders = () => {
     })
 
     getAllCardData().then(res => {
-      console.log(res)
+      // console.log(res)
       setCardData(res)
     })
 
@@ -311,7 +311,7 @@ const Orders = () => {
 
   useEffect(() => {
     tableRef.current.state.data = tableRef.current.state.data.map(data => {
-      console.log(data, "112Dataaa");
+      // console.log(data, "112Dataaa");
       data.tableData.showDetailPanel = tableRef.current.props.detailPanel;
 
       return data;
@@ -322,7 +322,7 @@ const Orders = () => {
 
 
   const handleChange = (e) => {
-    console.log(e)
+    // console.log(e)
   }
 
 

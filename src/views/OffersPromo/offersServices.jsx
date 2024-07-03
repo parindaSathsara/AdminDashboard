@@ -3,7 +3,7 @@ import axios from "axios";
 async function createDiscount(discountData) {
 
 
-    console.log(discountData, "Discount Data")
+    // console.log(discountData, "Discount Data")
     try {
         const response = await axios.post(`/discounts`, discountData);
         return response.data;
@@ -19,7 +19,7 @@ async function createDiscount(discountData) {
 async function createCoupon(discountData) {
 
 
-    console.log(discountData, "Discount Data")
+    // console.log(discountData, "Discount Data")
     try {
         const response = await axios.post(`/add_coupons`, discountData);
         return response.data;
@@ -66,7 +66,7 @@ async function loadDiscountsTypes() {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }
@@ -77,7 +77,7 @@ async function loadAllDiscounts() {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }
@@ -89,7 +89,7 @@ async function loadAllCoupons() {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }
@@ -102,7 +102,7 @@ async function deleteDiscountByID(id) {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }
@@ -114,7 +114,7 @@ async function deleteCouponByID(id) {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }
@@ -131,7 +131,7 @@ async function loadAllPromotions() {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }
@@ -156,7 +156,7 @@ async function deletePromotionByID(id) {
         return response;
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error;
     }
 }

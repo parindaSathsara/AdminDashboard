@@ -36,12 +36,12 @@ const AccountSystem = () => {
 
   const handleAccept = (id) => {
     // Implement logic for accepting the order with the given id
-    console.log(`Order ${id} accepted`);
+    // // console.log(`Order ${id} accepted`);
   };
 
   const handleDecline = (id) => {
     // Implement logic for declining the order with the given id
-    console.log(`Order ${id} declined`);
+    // // console.log(`Order ${id} declined`);
   };
 
   const handleStatusFilter = (status) => {

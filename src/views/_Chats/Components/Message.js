@@ -38,7 +38,7 @@ const Message = (props) => {
         //   icon: "success"
         // });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -75,7 +75,7 @@ const Message = (props) => {
         editedBy: 'Admin'
       })
     } catch (error) {
-      console.log(error);
+      // console.log(error);
 
       Swal.fire({
         icon: "error",

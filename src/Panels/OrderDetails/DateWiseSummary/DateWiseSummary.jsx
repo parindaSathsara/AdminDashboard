@@ -26,7 +26,7 @@ export default function DateWiseSummary(props) {
     const QuantityContainer = ({ data }) => {
 
 
-        console.log(data, "Data Value is")
+        // console.log(data, "Data Value is")
 
 
         if (data?.category == "Education") {

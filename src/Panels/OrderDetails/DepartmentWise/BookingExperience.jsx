@@ -30,7 +30,7 @@ export default function BookingExperience(props) {
   const QuantityContainer = ({ data }) => {
 
 
-    console.log(data, "Data Value is")
+    // console.log(data, "Data Value is")
 
 
     if (data.category == "Education") {
@@ -129,8 +129,8 @@ export default function BookingExperience(props) {
 
 
   const handleDelStatusChange = (e, val) => {
-    console.log(e, "Value Data set is 123")
-    console.log(val.target.value, "Target Value is")
+    // console.log(e, "Value Data set is 123")
+    // console.log(val.target.value, "Target Value is")
 
     var title = ""
 
@@ -147,7 +147,7 @@ export default function BookingExperience(props) {
           cancelButtonColor: "#d33",
           confirmButtonText: "Yes"
         }).then((result) => {
-          console.log(result, "IS Confirmed")
+          // console.log(result, "IS Confirmed")
 
           if (result.isConfirmed) {
             Swal.fire({
@@ -160,9 +160,9 @@ export default function BookingExperience(props) {
               }
             });
 
-            console.log("Show Loading")
+            // console.log("Show Loading")
             updateDeliveryStatus(e.checkoutID, val.target.value, "").then(result => {
-              console.log(result)
+              // console.log(result)
 
               Swal.fire({
                 title: "Order " + e.checkoutID + " Confirmed",
@@ -243,7 +243,7 @@ export default function BookingExperience(props) {
 
 
   const handleMoreCancellationDetails = (data) => {
-    console.log(data)
+    // console.log(data)
 
     setSelectedCancellationModal(data?.data)
     setCancellationModalState(true)
@@ -282,7 +282,7 @@ export default function BookingExperience(props) {
       field: 'status',
       title: 'Order Status',
       align: 'left',
-      // hidden: rowData => console.log(rowData?.supplier_status, "Row Data"),
+      // hidden: rowData => // console.log(rowData?.supplier_status, "Row Data"),
       render: (e) => {
 
         var status = e?.data?.status
@@ -356,12 +356,6 @@ export default function BookingExperience(props) {
     supplier_status: value?.supplier_status,
     data: value
   }))
-
-
-  { console.log(data, "ROW BOOKINGGGGG") }
-
-
-
 
 
   return (

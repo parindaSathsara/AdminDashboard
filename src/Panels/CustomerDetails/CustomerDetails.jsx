@@ -37,7 +37,7 @@ function CustomerDetails(props) {
     // }
 
 
-    console.log(props.dataset, "Dataset data props value is")
+    // console.log(props.dataset, "Dataset data props value is")
 
     const data = {
         columns: [
@@ -84,7 +84,7 @@ function CustomerDetails(props) {
     })
 
     const handleOnSelect = (e) => {
-        console.log(e.target.name)
+        // console.log(e.target.name)
         setContactDetail({ ...contactDetails, [e.target.name]: e.target.value })
     }
 
@@ -96,7 +96,7 @@ function CustomerDetails(props) {
             "content": contactDetails?.suggestion
         }
 
-        console.log(dataSet)
+        // console.log(dataSet)
 
         await axios.post("sendMesageToCustomer", dataSet).then(result => {
             if (result?.data?.status == 200) {
