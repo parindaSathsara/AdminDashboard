@@ -301,6 +301,9 @@ async function updateDeliveryStatus(id, value, type) {
       throw new Error(err);
     })
 
+    console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
+
+
     await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
 
       console.log(res)

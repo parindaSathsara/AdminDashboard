@@ -19,7 +19,10 @@ import {
   cilGrain,
   cilUserX,
   cilCart,
-  cilTag
+  cilTag,
+  cilBook,
+  cilEnvelopeLetter,
+  cilChatBubble
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -157,8 +160,25 @@ const _nav = [
     component: CNavItem,
     name: 'Chat',
     to: '/Chats',
-    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
+
+  {
+    component: CNavItem,
+    name: 'Reports',
+    to: '/reporting',
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
+
+
+  {
+    component: CNavItem,
+    name: 'Emails',
+    to: '/emails',
+    icon: <CIcon icon={cilEnvelopeLetter} customClassName="nav-icon" />,
+  },
+
+
   // {
   //   component: CNavItem,
   //   name: 'Testing',

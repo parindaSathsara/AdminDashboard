@@ -1,0 +1,104 @@
+.conversation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 4px 5px rgba(58, 58, 58, 0.062);
+    border: 1px solid rgba(0, 0, 0, 0.062);
+    transition: background-color 0.3s ease, border 0.3s ease, transform 0.3s ease;
+    margin: 12px;
+}
+
+.conversation-card:hover {
+    background-color: #e4efff;
+    border: 1px solid #cee1ff;
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+
+.conversation-card-active {
+    background-color: #e4efff;
+    border: 1px solid #cee1ff;
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+.conversation-card-active .conversation-img .default-img {
+    background-color: rgb(176, 205, 255);
+}
+
+.conversation-card:hover .conversation-img .default-img {
+    background-color: rgb(176, 205, 255);
+}
+
+
+.conversation-card .card-body {
+    padding: 5px;
+
+}
+
+.conversation-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.conversation-img img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px
+}
+
+.conversation-img .default-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    background-color: rgb(200, 220, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.conversation-info {
+    flex: 1;
+    margin-left: 1rem;
+}
+
+
+.conversation-info h6 {
+    margin-top: 3px;
+    font-size: 13px;
+}
+
+.conversation-info h5 {
+    margin-bottom: 2px;
+    margin-top: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.conversation-meta {
+    display: flex;
+    align-items: center;
+}
+
+.conversation-time {
+    margin-right: 0.5rem;
+    font-size: 14px;
+}
+
+.conversation-pin {
+    margin-right: 0.5rem;
+}
+
+.conversation-unread {
+    background-color: #ff0000;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}

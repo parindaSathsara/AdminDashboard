@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ChatsIndex.css';
 import ConversationsList from './Components/ConversationsList';
 import MessageList from './Components/MessageList';
-import { CRow, CCol } from '@coreui/react';
+import { CRow, CCol, CContainer } from '@coreui/react';
 import ChatMain from './ChatMain/ChatMain';
 
 const ChatsIndex = () => {
@@ -14,7 +14,7 @@ const ChatsIndex = () => {
   }
 
   return (
-    <div className='chat-index'>
+    <CContainer fluid>
       <CRow>
         <CCol xs={4}>
           <ConversationsList activatedConversation={activatedConversation} sendActivateConversation={receiveActivateConversation}></ConversationsList>
@@ -25,7 +25,7 @@ const ChatsIndex = () => {
       </CRow>
 
       {/* <ChatMain></ChatMain> */}
-    </div>
+    </CContainer>
   )
 }
 export default ChatsIndex

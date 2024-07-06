@@ -7,6 +7,9 @@ import SalesAnalytics from './views/SalesAnalytics/SalesAnalytics'
 import MoreOrderView from './Panels/OrderDetails/MoreOrderView/MoreOrderView'
 import MainDashboard from './views/MainDashboard/MainDashboard'
 import OffersPromoDashboard from './views/OffersPromo/OffersPromoDashboard'
+import ReportsMain from './views/Reports/ReportsMain'
+import EmailDashboard from './views/EmailDashboard/EmailDashboard'
+import ChatsMeta from './views/_Chats/ChatsMeta/ChatsMeta'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -94,7 +97,11 @@ const routes = [
   { path: '/sales', name: 'Sales Analytics', element: SalesAnalytics, exact: true },
 
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
-  { path: '/Chats', name: 'Chats', element: ChatsIndex, exact: true },
+  { path: '/Chats', name: 'Chats', element: ChatsMeta, exact: true },
+
+  { path: '/reporting', name: 'Reports', element: ReportsMain, exact: true },
+  { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
+
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/customers', name: 'Customers', element: Typography },

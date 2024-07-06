@@ -16,7 +16,7 @@ const rowStyle = (data) => {
             fontSize: 16
         })
     }
-    else if (data?.data?.status == "Cancel") {
+    else if (data?.data?.status == "Cancel" || data?.data?.supplier_status == "Cancel") {
         return ({
             backgroundColor: '#FFD3D3',
             color: '#9C2525',

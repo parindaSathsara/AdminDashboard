@@ -1,0 +1,32 @@
+.rdw-editor-toolbar {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+}
+
+.rdw-option-wrapper {
+    border: 1px solid #ccc;
+    background: #fff;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.rdw-option-wrapper:hover,
+.rdw-option-active {
+    background: #e6e6e6;
+    border-color: #aaa;
+}
+
+
+.rdw-editor-wrapper {
+    height: 300px !important;
+    overflow: auto;
+}
+
+.rdw-editor-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+
+.rdw-editor-wrapper {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

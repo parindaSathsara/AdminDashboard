@@ -1,4 +1,4 @@
-.prod_details_title{
+.prod_details_title {
     /* text-align: center; */
     margin: 5px;
     font-size: 18px;
@@ -6,27 +6,40 @@
     /* text-decoration: underline; */
 }
 
-.prod_container{
+.prod_container {
     /* margin: 10px; */
     /* width: 700px; */
 }
 
-.data_grid{
+.data_grid {
     background-color: #fff;
 }
 
-.Essential{
+.Essential {
     background-color: #c0d8c1 !important;
 }
 
-.Lifestyle{
+.Lifestyle {
     background-color: #f1c0c0 !important;
 }
 
-.Non{
+.Non {
     background-color: #b3dbf1 !important;
 }
 
-.Flight{
+.Flight {
     background-color: #b3b4f9 !important;
+}
+
+
+.title-table {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+
+
+.table-header-orders th {
+    background-color: #d7eefa;
 }

@@ -40,6 +40,24 @@ const getMoreDataSet = async (id, preID) => {
 
 
 
+const getMoreDataSetByID = async (id) => {
+
+    var returnData = [];
+
+    await axios.get(`fetch_all_orders_product_wise_by_id/${id}`).then(response => {
+        if (response?.data?.status == 200) {
+            returnData = response?.data?.productData
+        }
+    }).catch((err) => {
+        throw new Error(err)
+    })
+
+
+    return returnData
+}
+
+
+
 const getEssentialsNonessentialsDataSet = async (dataSet) => {
     var returnData = []
     await axios.post('/fetch_more_order_data/1', dataSet).then((res) => {
@@ -56,4 +74,4 @@ const getEssentialsNonessentialsDataSet = async (dataSet) => {
 }
 
 
-export { getLifestylesDataSet, getEssentialsNonessentialsDataSet, getMoreDataSet }
+export { getLifestylesDataSet, getEssentialsNonessentialsDataSet, getMoreDataSet, getMoreDataSetByID }

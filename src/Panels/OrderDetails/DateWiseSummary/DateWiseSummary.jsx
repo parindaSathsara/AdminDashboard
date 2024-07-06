@@ -160,7 +160,7 @@ export default function DateWiseSummary(props) {
                     title="Quantity Data"
                     style={customPopoverStyle}
                 >
-                    <CButton color="info" style={{ fontSize: 14, color:'white'}}>View</CButton>
+                    <CButton color="info" style={{ fontSize: 14, color: 'white' }}>View</CButton>
                 </CPopover>
 
         },
@@ -184,39 +184,43 @@ export default function DateWiseSummary(props) {
             total_amount: value.currency + " " + value?.['total_amount'],
             paid_amount: value.currency + " " + value?.['paid_amount'],
             balance_amount: value.currency + " " + value?.['balance_amount'],
-            
+
         }))
     }
 
     return (
         <>
 
-            {groupedDates?.map(data => {
+            {groupedDates?.map(date => {
+                const data = getProductData(date);
                 return (
-                    <MaterialTable
-                        title={data}
-                        columns={columns}
-                        data={getProductData(data)}
-
-
-                        options={{
-                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                            editCellStyle: { width: "100%" },
-                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' },
-
-
-                            cellStyle: {
-                                fontSize: '14px', // Adjust the column font size here
-                            },
-                            paging: false,
-                            search: false,
-                            columnsButton: true,
-                            exportButton: true,
-                        }}
-
-                    />
-                )
-
+                    <div className='py-4' key={date}>
+                        <h3 className='title-table'>{date}</h3>
+                        <table className="table">
+                            <thead className="table-header-orders">
+                                <tr>
+                                    {columns.map(col => (
+                                        <th key={col.field} scope="col" style={{ width: col.width || 'auto', textAlign: col.align || 'left' }}>
+                                            {col.title}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((row, rowIndex) => (
+                                    <tr key={row.pid}>
+                                        {columns.map(col => (
+                                            <td key={col.field} style={{ textAlign: col.align || 'left' }}>
+                                                {col.render ? col.render(row) : row[col.field]}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <br />
+                    </div>
+                );
             })}
 
         </>

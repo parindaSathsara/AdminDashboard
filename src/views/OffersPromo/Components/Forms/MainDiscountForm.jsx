@@ -13,6 +13,7 @@ const columns = [
 
 export default function MainDiscountForm({ show, handleCloseModal, onSubmit, modalData, edit }) {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
     const [discountTypes, setDiscountTypes] = useState([]);
     const [formData, setFormData] = useState({
         id: '',
@@ -20,7 +21,7 @@ export default function MainDiscountForm({ show, handleCloseModal, onSubmit, mod
         type: '',
         start_date: '',
         expiry_date: ''
-    });
+    })
 
     useEffect(() => {
         loadDiscountsTypes().then(response => {

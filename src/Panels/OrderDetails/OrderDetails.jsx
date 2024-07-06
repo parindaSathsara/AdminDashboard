@@ -34,14 +34,10 @@ function OrderDetails(props) {
     console.log(props.orderid)
 
     const [isLoading, setIsLoading] = useState(true)
-
     const [productData, setProductData] = useState([])
     const [showModal, setShowModal] = useState(false);
     const [rowDetails, setRowDetails] = useState([])
-
     const [dates, setDates] = useState([])
-
-
 
     const [lifestylesData, setLifestylesData] = useState([])
     const [essNEssData, setEssNEssData] = useState([])
@@ -86,15 +82,11 @@ function OrderDetails(props) {
                 city = value.city;
             }
         })
-
-
-
         return {
             'airport': airport,
             'city': city
         }
     }
-
     const calculateHours = (val1, val2) => {
 
         var startdate = moment(val1)
@@ -105,21 +97,15 @@ function OrderDetails(props) {
 
         return hours
     }
-
-
     const [detailsLoading, setDetailsLoading] = useState(false)
 
     const [orderMainDetails, setOrderMainDetails] = useState([])
     const [customerData, setCustomerData] = useState([])
 
-
-    console.log("Order Main Details DAtaqaaaaaaaaaaaaaa,", props.orderData)
-
     useEffect(() => {
 
         console.log("Order id", props.orderid)
 
-        // setProductData(props.dataset)
         setOrderMainDetails(props.orderData)
         setDetailsLoading(true)
 
@@ -158,15 +144,9 @@ function OrderDetails(props) {
 
 
     }, [props.orderid, props.orderData])
-
-
     const reload = () => {
-
-        // setDetailsLoading(true)
-
         console.log(props?.orderid, "Order data id is val")
-
-
+        props?.updatedData()
         if (props?.productViewData) {
             getDashboardOrdersIdWiseProduct(props.orderid?.info?.checkoutID).then((res) => {
                 // setDetailsLoading(false)
@@ -197,10 +177,6 @@ function OrderDetails(props) {
 
     }
 
-
-
-
-
     const [moreOrderDetails, setMoreOrderDetails] = useState("")
     const [moreOrderModal, setMoreOrderModal] = useState(false)
     const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
@@ -226,10 +202,37 @@ function OrderDetails(props) {
     }
 
 
+    const [detailExpander, setDetailExpander] = useState(false)
+
+    const handleDelStatusChange = (e, val) => {
+        console.log(e, "Value Data set is 123")
+        console.log(val.target.value, "Target Value is")
+
+        var title = ""
+
+
+
+        if (val.target.value == "Approved") {
+            title = "Do You Want to Confirm This Order"
+        }
+        else {
+            title = "Do You Want to Cancel This Order"
+        }
+        updateDeliveryStatus(e.id, val.target.value, e.category).then(result => {
+            console.log(result)
+            reload()
+            Swal.fire({
+                title: "Order " + e.id + " Confirmed",
+                text: "Order - " + e.id + " Order Confirmed",
+                icon: "success"
+            });
+        })
+
+    }
+
 
     const lifestyles = {
         columns: [
-
             {
                 field: 'view', width: 5, title: '', align: 'left', hidden: props?.productViewData ? true : false, render: (e) => {
                     return (
@@ -244,7 +247,6 @@ function OrderDetails(props) {
             },
 
             { field: 'pid', title: 'Product ID' },
-
             { field: 'product_title', title: 'Product Title' },
             { field: 'adultCount', title: 'Adult Count', align: 'left' },
             { field: 'childCount', title: 'Child Count', align: 'left' },
@@ -254,46 +256,10 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            // {
-            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-            //         return (
-            //             <>
-            //                 {e.supplier_order === 'Pending' ? (
-            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-            //                 ) : (
-            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-            //                 )}
-            //             </>
-            //         );
-            //     }
-            // },
-            // {
-            //     field: 'status',
-            //     title: 'Order Status',
-            //     align: 'left',
-            //     hidden: props.hideStatus,
-            //     render: (e) => {
-            //         console.log(e, "Data set delivery is")
-            //         console.log(e.status, "Delivery status")
-            //         return (
-            //             <>
-            //                 <select
-            //                     className='form-select required'
-            //                     name='delivery_status'
-            //                     onChange={(value) => handleDelStatusChange(e, value)}
-            //                     value={e.status} // Set the selected value here
-            //                 >
-            //                     <option value="Approved">Confirm Order</option>
-            //                     <option value="Cancelled">Cancel Order</option>
-            //                 </select>
-            //             </>
-            //         );
-            //     }
-            // },
+
         ],
 
         rows: lifestylesData?.map(value => ({
-
             id: value.checkoutID,
             pid: value.PID,
             product_title: value.product_title,
@@ -323,10 +289,6 @@ function OrderDetails(props) {
 
     const educations = {
         columns: [
-            // { field: 'id', title: 'ID' },
-
-
-
             {
 
                 field: 'view', width: 5, title: '', align: 'left', hidden: props?.productViewData ? true : false, render: (e) => {
@@ -343,60 +305,16 @@ function OrderDetails(props) {
             },
 
             { field: 'pid', title: 'Product ID' },
-
             { field: 'product_title', title: 'Product Title' },
             { field: 'student_type', title: 'Student Type', align: 'left' },
-
             { field: 'inven_start_date', title: 'Start Date', align: 'left' },
             { field: 'inven_end_date', title: 'End Date', align: 'left' },
-
             { field: 'course_startime', title: 'Start Time', align: 'left' },
             { field: 'course_endtime', title: 'End Time', align: 'left' },
-
-
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
-
-
-
-
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            // {
-            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-            //         return (
-            //             <>
-            //                 {e.supplier_order === 'Pending' ? (
-            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-            //                 ) : (
-            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-            //                 )}
-            //             </>
-            //         );
-            //     }
-            // },
-            // {
-            //     field: 'status',
-            //     title: 'Order Status',
-            //     align: 'left',
-            //     hidden: props.hideStatus,
-            //     render: (e) => {
 
-            //         return (
-            //             <>
-            //                 <select
-            //                     className='form-select required'
-            //                     name='delivery_status'
-            //                     onChange={(value) => handleDelStatusChange(e, value)}
-            //                     value={e.status} // Set the selected value here
-            //                 >
-
-            //                     <option value="Approved">Confirm Order</option>
-            //                     <option value="Cancelled">Cancel Order</option>
-            //                 </select>
-            //             </>
-            //         );
-            //     }
-            // },
         ],
 
         rows: educationData?.map(value => ({
@@ -446,42 +364,6 @@ function OrderDetails(props) {
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
 
-            // {
-            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-            //         return (
-            //             <>
-            //                 {e.supplier_order === 'Pending' ? (
-            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-            //                 ) : (
-            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-            //                 )}
-            //             </>
-            //         );
-            //     }
-            // },
-            // {
-            //     field: 'status',
-            //     title: 'Order Status',
-            //     align: 'left',
-            //     hidden: props.hideStatus,
-            //     render: (e) => {
-            //         console.log(e.status, "Delivery status")
-            //         return (
-            //             <>
-            //                 <select
-            //                     className='form-select required'
-            //                     name='delivery_status'
-            //                     onChange={(value) => handleDelStatusChange(e, value)}
-            //                     value={e.status} // Set the selected value here
-            //                 >
-
-            //                     <option value="Approved">Confirm Order</option>
-            //                     <option value="Cancelled">Cancel Order</option>
-            //                 </select>
-            //             </>
-            //         );
-            //     }
-            // },
         ],
 
         rows: essNEssData?.map(value => ({
@@ -501,7 +383,7 @@ function OrderDetails(props) {
             essential_pre_order_id: value.essential_pre_order_id
         }))
     }
-    // Function to render variations
+
     function renderVariations(value) {
         let variations = [];
         for (let i = 1; i <= 5; i++) {
@@ -605,53 +487,7 @@ function OrderDetails(props) {
         })
     }
 
-    const [detailExpander, setDetailExpander] = useState(false)
 
-    const handleDelStatusChange = (e, val) => {
-        console.log(e, "Value Data set is 123")
-        console.log(val.target.value, "Target Value is")
-
-        var title = ""
-
-
-
-        if (val.target.value == "Approved") {
-            title = "Do You Want to Confirm This Order"
-        }
-        else {
-            title = "Do You Want to Cancel This Order"
-        }
-
-        // Swal.fire({
-        //     title: "Are you sure?",
-        //     text: title,
-        //     icon: "question",
-        //     showCancelButton: true,
-        //     confirmButtonColor: "#2eb85c",
-        //     cancelButtonColor: "#d33",
-        //     confirmButtonText: "Yes"
-        // }).then((result) => {
-        //     console.log(result, "IS Confirmed")
-
-        //     if (result.isConfirmed) {
-
-        updateDeliveryStatus(e.id, val.target.value, e.category).then(result => {
-            console.log(result)
-            reload()
-            Swal.fire({
-                title: "Order " + e.id + " Confirmed",
-                text: "Order - " + e.id + " Order Confirmed",
-                icon: "success"
-            });
-        })
-
-        //     }
-        // });
-
-
-
-        // props.relord();
-    }
 
     const hotels = {
         columns: [
@@ -663,40 +499,7 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-            // {
-            //     field: 'supplier_order', title: 'Supplier Confirmation', align: 'left', render: (e) => {
-            //         return (
-            //             <>
-            //                 {e.supplier_order === 'Pending' ? (
-            //                     <CIcon icon={cilCheckCircle} className="text-success" size="xl" />
-            //                 ) : (
-            //                     <CIcon icon={cilXCircle} className="text-danger" size="xl" />
-            //                 )}
-            //             </>
-            //         );
-            //     }
-            // },
-            // {
-            //     field: 'status',
-            //     title: 'Order Status',
-            //     align: 'left',
-            //     hidden: props.hideStatus,
-            //     render: (e) => {
-            //         return (
-            //             <>
-            //                 <select
-            //                     className='form-select required'
-            //                     name='delivery_status'
-            //                     onChange={(value) => handleDelStatusChange(e, value)}
-            //                     value={e.status} // Set the selected value here
-            //                 >
-            //                     <option value="Approved">Confirm Order</option>
-            //                     <option value="Cancelled">Cancel Order</option>
-            //                 </select>
-            //             </>
-            //         );
-            //     }
-            // },
+
         ],
 
         rows: hotelData?.map(value => ({
@@ -715,158 +518,47 @@ function OrderDetails(props) {
     }
 
     const ServiceWiseSummary = () => {
+        const renderTable = (data, columns, title) => (
+            data?.length > 0 && (
+                <div className='py-4'>
+                    <h3 className='title-table'>{title}</h3>
+                    <table className="table">
+                        <thead className="table-header-orders">
+                            <tr>
+                                {columns.map(col => (
+                                    <th key={col.field} scope="col" style={{ width: col.width || 'auto', textAlign: col.align || 'left' }}>
+                                        {col.title}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((row, rowIndex) => (
+                                <tr key={row.id}>
+                                    {columns.map(col => (
+                                        <td key={col.field} style={{ textAlign: col.align || 'left' }}>
+                                            {col.render ? col.render(row) : row[col.field]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <br />
+                </div>
+            )
+        );
 
-
-        console.log(lifestylesData, "LIFESTYLESSS")
         return (
             <>
-                {lifestylesData?.length > 0 ?
-                    <MaterialTable
-                        data={lifestyles.rows}
-                        columns={lifestyles.columns}
-                        title="Lifestyles Details"
-                        options={{
-                            sorting: true, search: true,
-                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                            filtering: false, paging: false, pageSize: 3,
-                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                            showSelectAllCheckbox: false, showTextRowsSelected: false,
-                            grouping: false, columnsButton: false,
-                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                            editCellStyle: { width: "100%" },
-                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                            // fixedColumns: {
-                            //     left: 6
-                            // }
-                        }}
-                    />
-                    :
-                    null
-                }
-
-                <br></br>
-
-
-                {educationData?.length > 0 ?
-                    <MaterialTable
-                        data={educations.rows}
-                        columns={educations.columns}
-                        title="Education Details"
-                        options={{
-                            sorting: true, search: true,
-                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                            filtering: false, paging: false, pageSize: 3,
-                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                            showSelectAllCheckbox: false, showTextRowsSelected: false,
-                            grouping: false, columnsButton: false,
-                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                            editCellStyle: { width: "100%" },
-                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                            // fixedColumns: {
-                            //     left: 6
-                            // }
-                        }}
-                    />
-                    :
-                    null
-                }
-
-                <br></br>
-
-                {essNEssData?.length > 0 ?
-                    <MaterialTable
-                        data={essNEss.rows}
-                        columns={essNEss.columns}
-                        title="Essentials/Non Essentials Details"
-                        options={{
-                            sorting: true, search: true,
-                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                            filtering: false, paging: false, pageSize: 3,
-                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                            showSelectAllCheckbox: false, showTextRowsSelected: false,
-                            grouping: false, columnsButton: false,
-                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                            editCellStyle: { width: "100%" },
-                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                            // fixedColumns: {
-                            //     left: 6
-                            // }
-                        }}
-                    />
-                    :
-                    null
-                }
-
-
-                {hotelData?.length > 0 ?
-                    <MaterialTable
-                        data={hotels.rows}
-                        columns={hotels.columns}
-                        title="Hotels Details"
-                        options={{
-                            sorting: true, search: true,
-                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                            filtering: false, paging: false, pageSize: 3,
-                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                            showSelectAllCheckbox: false, showTextRowsSelected: false,
-                            grouping: false, columnsButton: false,
-                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                            editCellStyle: { width: "100%" },
-                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                            // fixedColumns: {
-                            //     left: 6
-                            // }
-                        }}
-                    />
-                    :
-                    null
-
-                }
-
-
-
-                {flightsData?.length > 0 ?
-                    <MaterialTable
-                        data={flights.rows}
-                        columns={flights.columns}
-                        title="Flights Details"
-                        options={{
-                            tableLayout: "auto",
-                            sorting: true, search: true,
-                            searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                            filtering: false, paging: false, pageSize: 3,
-                            paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                            exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                            showSelectAllCheckbox: false, showTextRowsSelected: false,
-                            grouping: false, columnsButton: false,
-                            rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-                            editCellStyle: { width: "100%" },
-                            headerStyle: { fontSize: "15px", backgroundColor: '#EFF6F9' }
-
-                            // fixedColumns: {
-                            //     left: 6
-                            // }
-                        }}
-                    />
-                    :
-                    null
-                }
+                {renderTable(lifestyles.rows, lifestyles.columns, "Lifestyles Details")}
+                {renderTable(educations.rows, educations.columns, "Education Details")}
+                {renderTable(essNEss.rows, essNEss.columns, "Essentials/Non Essentials Details")}
+                {renderTable(hotels.rows, hotels.columns, "Hotels Details")}
+                {renderTable(flights.rows, flights.columns, "Flights Details")}
             </>
-        )
-    }
-
-    // return (
-    //     <div></div>
-    // )
-
+        );
+    };
 
     return (
         detailsLoading == true ?
@@ -890,8 +582,6 @@ function OrderDetails(props) {
                         </CAlert>
 
                     }
-
-
                     <CCard style={{ maxWidth: '100vw' }}>
                         <CRow className="g-0">
 
@@ -904,14 +594,11 @@ function OrderDetails(props) {
 
                         </CRow>
                     </CCard>
-
-
                     <hr></hr>
-
                     {props?.productViewData ?
                         <ServiceWiseSummary></ServiceWiseSummary>
+                        // <></>
                         :
-
                         <>
                             <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
 
@@ -935,34 +622,21 @@ function OrderDetails(props) {
                         </>
 
                     }
-
-
-
                 </div>
-
-
                 {props?.accounts ?
                     null :
                     <>
 
                         <CCol style={{ width: '100%' }}>
-
-
-
                             <button onClick={() => setDetailExpander(true)} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', float: 'right', top: '20px' }}>
                                 <FontAwesomeIcon icon={faExpand} size={30} />
                             </button>
-
 
                             <Tabs
                                 defaultActiveKey="bookingexperience"
                                 id="uncontrolled-tab-example"
                                 className="mt-4"
                             >
-                                {/* 
-                                <CCol>
-                                    <CCardTitle>Test</CCardTitle>
-                                </CCol> */}
 
                                 <Tab eventKey="bookingexperience" title="Booking Experience">
                                     <BookingExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
@@ -983,12 +657,6 @@ function OrderDetails(props) {
                                         <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                     </Tab>
                                 }
-
-                                {/* 
-                                    <Tab eventKey="location" title="Location Details">
-                                        <DeliveryDetails dataset={productData} />
-                                    </Tab> 
-                                    */}
 
                             </Tabs>
 
@@ -1028,11 +696,11 @@ function OrderDetails(props) {
 
 
                                     <Tab eventKey="bookingexperience" title="Booking Experience">
-                                        <BookingExperience dataset={productData} orderid={props.orderid} />
+                                        <BookingExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
 
                                     <Tab eventKey="supplierexperience" title="Supplier Experience">
-                                        <SupplierExperience dataset={productData} orderid={props.orderid} />
+                                        <SupplierExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
 
                                     <Tab eventKey="travellerExperience" title="Traveller Experience">
@@ -1043,23 +711,14 @@ function OrderDetails(props) {
                                     <Tab eventKey="acc" title="Accounts Details">
                                         <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                     </Tab>
-                                    {/* 
-                                        <Tab eventKey="location" title="Location Details">
-                                            <DeliveryDetails dataset={productData} />
-                                        </Tab>
-                                    */}
+
 
                                 </Tabs>
                             }
                         >
-
                         </DetailExpander>
-
-
                     </>
-
                 }
-
                 {props?.productViewData ?
 
                     <CCol style={{ paddingBottom: 60 }}>
@@ -1070,10 +729,6 @@ function OrderDetails(props) {
 
                     </CCol>
                 }
-
-
-
-
             </>
     )
 

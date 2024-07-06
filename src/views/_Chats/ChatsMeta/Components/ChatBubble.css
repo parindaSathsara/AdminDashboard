@@ -1,0 +1,139 @@
+.chat-bubble {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    max-width: 75%;
+    word-wrap: break-word;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.Admin-chat {
+    align-self: flex-end;
+    background: linear-gradient(to right, #ffffff, #ffffff);
+    background-repeat: repeat;
+    color: #080E18;
+    padding: 10px;
+    /* Adjust padding if necessary */
+    border-radius: 8px;
+    /* Optional: for rounded corners */
+}
+
+.Admin-chat .message-time {
+    color: #080E18;
+}
+
+.Customer-chat,
+.Supplier-chat {
+    align-self: flex-start;
+    background: linear-gradient(to right, #e4efff, rgb(223, 234, 255));
+    background-repeat: repeat;
+    color: rgb(12, 34, 63);
+    padding: 10px;
+    /* Adjust padding if necessary */
+    border-radius: 8px;
+}
+
+
+.Supplier-chat {
+    background: linear-gradient(to right, #ccebff, #b9e3ff);
+}
+
+.Admin-chat::after,
+.Supplier-chat::after,
+.Customer-chat::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+
+.Supplier-chat .chat-header .default-img {
+    background-color: rgb(46, 127, 202);
+    color: white;
+}
+
+.Admin-chat::after {
+    border-width: 20px 0 20px 20px;
+    border-color: transparent transparent transparent #ffffff;
+    border-radius: 40px;
+
+    right: -10px;
+}
+
+.Customer-chat::after {
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #e4efff transparent transparent;
+    top: 10px;
+    left: -10px;
+}
+
+.Supplier-chat::after {
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #ccebff transparent transparent;
+    top: 10px;
+    left: -10px;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.message-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.sender-name {
+    font-weight: bold;
+    margin-bottom: 0px;
+    font-size: 15px;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: gray;
+}
+
+.message-content {
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.reactions {
+    display: flex;
+    margin-top: 0.5rem;
+}
+
+.reaction {
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+
+.chat-header .default-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background-color: rgb(137, 180, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}

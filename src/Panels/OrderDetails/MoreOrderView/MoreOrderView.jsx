@@ -12,6 +12,7 @@ export default function MoreOrderView(props) {
 
     console.log(props.dataSet)
     var category = props.category
+
     var orderData = []
 
     const [productDataSet, setProductDataSet] = useState([])
@@ -25,19 +26,28 @@ export default function MoreOrderView(props) {
     useEffect(() => {
 
 
-        setLoading(true)
-        getMoreDataSet(category, props.preID).then(response => {
-            setProductDataSet(response)
-            setLoading(false)
+        if (props?.notificationView) {
 
-        }).catch(response => {
-            console.log(response, "Catch Response is")
-            setLoading(false)
-        })
+            setProductDataSet(props?.notificationViewData)
+            console.log(props?.notificationViewData, "Notification View Data set isi")
+
+        }
+        else {
+            setLoading(true)
+            getMoreDataSet(category, props.preID).then(response => {
+                setProductDataSet(response)
+                setLoading(false)
+
+            }).catch(response => {
+                console.log(response, "Catch Response is")
+                setLoading(false)
+            })
 
 
+        }
 
-    }, [props.preID])
+
+    }, [props.preID, props?.notificationViewData])
 
 
 

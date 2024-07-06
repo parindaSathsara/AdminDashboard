@@ -293,7 +293,6 @@ const Dashboard = () => {
 
                     <Modal.Title>Order Payment Rejection - Order({orderid})</Modal.Title>
 
-
                 </Modal.Header>
 
                 <Modal.Body className="modalBodyDef">

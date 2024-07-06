@@ -244,8 +244,9 @@ function ProductDetails(props) {
                 align: 'left',
                 hidden: props.hideStatus,
                 render: (e) => {
+
                     console.log(e, "Data set delivery is")
-                    console.log(e.status, "Delivery status")
+                    console.log(e.status, "Delivery status1")
                     return (
                         <>
                             <select

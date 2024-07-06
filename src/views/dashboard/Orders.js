@@ -409,6 +409,9 @@ const Orders = () => {
                 <h4 id="traffic" className="card-title mb-0">
                   Customer Orders
                 </h4>
+
+
+
                 {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
               </CCol>
 
@@ -440,7 +443,7 @@ const Orders = () => {
                     detailPanel={(e) => {
                       return (
                         <div className="col-md-12 mb-4 sub_box materialTableDP">
-                          <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} />
+                          <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} updatedData={() => console.log("Updated")} />
                         </div>
 
                       )
