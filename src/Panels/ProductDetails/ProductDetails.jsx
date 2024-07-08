@@ -244,14 +244,9 @@ function ProductDetails(props) {
                 align: 'left',
                 hidden: props.hideStatus,
                 render: (e) => {
-<<<<<<< HEAD
 
                     console.log(e, "Data set delivery is")
                     console.log(e.status, "Delivery status1")
-=======
-                    // console.log(e, "Data set delivery is")
-                    // console.log(e.status, "Delivery status")
->>>>>>> e78f6639e9f4e34771a5cd8fad3308885c454026
                     return (
                         <>
                             <select
