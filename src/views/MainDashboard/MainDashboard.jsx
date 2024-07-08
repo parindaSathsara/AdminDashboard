@@ -22,7 +22,7 @@ const MainDashboard = () => {
   const { userData, setUserData } = useContext(UserLoginContext);
 
 
-  console.log(userData, "User Data is")
+  // console.log(userData, "User Data is")
 
   return (
     <>
@@ -43,7 +43,7 @@ const MainDashboard = () => {
                 Pending customer orders awaiting processing, prioritization, and timely fulfillment.
               </p>
 
-              {console.log(userData, "User Data issssss")}
+              {/* {// console.log(userData, "User Data issssss")} */}
 
               {userData.user_role == "super_admin" ?
                 <OrderAllocate normalUser={false}></OrderAllocate>

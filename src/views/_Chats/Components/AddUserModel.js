@@ -41,7 +41,7 @@ const AddUserModel = (props) => {
       })
     }
     catch (error) {
-      console.log(error);
+      // console.log(error);
     }
 
   }
@@ -62,7 +62,7 @@ const AddUserModel = (props) => {
 
     try {
       axios.post(baseURL + '/updatechat/' + props.conversation_data.chat_id, dataSet).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data.status === 200) {
           Swal.fire({
             position: "top-end",
@@ -77,18 +77,18 @@ const AddUserModel = (props) => {
         }
       })
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error(error)
     }
   }
 
   useEffect(() => {
     fetchUsers();
-    // console.log(props.conversation_data);
+    // // console.log(props.conversation_data);
     // setSelectedUser(props.conversation_data.supplier_id);
-    // console.log(props.conversation_data.supplier_id);
+    // // console.log(props.conversation_data.supplier_id);
     // handleSelectUser(props.conversation_data.supplier_id);
-    // console.log(selectedUser);
+    // // console.log(selectedUser);
   }, [props.conversation_data])
 
   return (

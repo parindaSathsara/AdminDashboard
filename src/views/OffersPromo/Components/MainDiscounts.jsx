@@ -47,7 +47,7 @@ const MainDashboard = () => {
     const [editTrigger, setEditTrigger] = useState(false)
 
     const handleEdit = (dataSet) => {
-        console.log(dataSet.original, "Data set edit values are")
+        // console.log(dataSet.original, "Data set edit values are")
         setModalData(dataSet.original)
         setEditTrigger(true)
         setShowModal(true)
@@ -65,7 +65,7 @@ const MainDashboard = () => {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log(dataSet.original, "Data Set original Value is");
+                // console.log(dataSet.original, "Data Set original Value is");
 
                 deleteDiscountByID(dataSet?.original?.id).then(response => {
                     if (response.data.status == 200) {

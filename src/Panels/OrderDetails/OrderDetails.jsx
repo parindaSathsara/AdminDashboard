@@ -31,7 +31,7 @@ import TravellerExperience from './DepartmentWise/TravellerExperience';
 
 function OrderDetails(props) {
 
-    console.log(props.orderid)
+    // console.log(props.orderid)
 
     const [isLoading, setIsLoading] = useState(true)
     const [productData, setProductData] = useState([])
@@ -47,7 +47,7 @@ function OrderDetails(props) {
 
     const handlePaymentProof = (e) => {
         setShowModal(true)
-        console.log(e)
+        // console.log(e)
         setRowDetails(e);
     }
 
@@ -104,7 +104,7 @@ function OrderDetails(props) {
 
     useEffect(() => {
 
-        console.log("Order id", props.orderid)
+        // console.log("Order id", props.orderid)
 
         setOrderMainDetails(props.orderData)
         setDetailsLoading(true)
@@ -138,7 +138,7 @@ function OrderDetails(props) {
                 setCustomerData(res.customerData)
                 setDates(res.dates)
 
-                console.log(res.customerData, "CustomerData value is data ")
+                // console.log(res.customerData, "CustomerData value is data ")
             })
         }
 
@@ -182,7 +182,7 @@ function OrderDetails(props) {
     const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
 
     const handleMoreInfoModal = (e, category) => {
-        console.log("More Info Modal", e)
+        // console.log("More Info Modal", e)
 
         setMoreOrderModalCategory(category)
         if (category == 3) {
@@ -256,7 +256,6 @@ function OrderDetails(props) {
             { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
             { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
             { field: 'total_amount', title: 'Total Amount', align: 'left' },
-
         ],
 
         rows: lifestylesData?.map(value => ({
@@ -285,7 +284,7 @@ function OrderDetails(props) {
         }))
     }
 
-    console.log(lifestylesData, "Lifestyle Dataaaaaaa")
+    // console.log(lifestylesData, "Lifestyle Dataaaaaaa")
 
     const educations = {
         columns: [

@@ -17,12 +17,12 @@ function ProductAnalytics() {
     const getDetails = async () => {
         try {
             const response = await axios.get('get_product_analytics');
-            console.log(response, 'responseeee');
+            // console.log(response, 'responseeee');
             if (response.status === 200) {
                 setDetails(response.data);
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
     useEffect(() => {

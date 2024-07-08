@@ -2,7 +2,7 @@ function discountTotal(qty, dataset) {
     var discountamout = 0.00;
     var finaltotal = 0.00;
 
-    console.log(dataset)
+    // console.log(dataset)
 
     if (dataset['ESDiscountType'] === 'ps') {
         discountamout = ((dataset['mrp'] * qty) / 100) * dataset['ESDiscountPrecentage'];

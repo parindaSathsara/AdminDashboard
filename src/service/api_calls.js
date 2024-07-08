@@ -15,7 +15,7 @@ const getAllDataUserWise = async () => {
   await axios
     .get('/fetch_all_orders_userwise/20')
     .then((res) => {
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
         dataArray = res.data.response
@@ -36,7 +36,7 @@ const getAllRefundRequests = async () => {
   await axios
     .get('/get_all_refund_requests')
     .then((res) => {
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
         dataArray = res.data.response
@@ -56,7 +56,7 @@ const getVendorDetails = async () => {
   await axios
     .get('/getAllVendors/5')
     .then((res) => {
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
         dataArray = res.data.response
@@ -76,7 +76,7 @@ const getAllFeedbacks = async (id) => {
   await axios
     .get(`/get_all_feedbacks/${id}`)
     .then((res) => {
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
         dataArray = res.data.response
@@ -100,7 +100,7 @@ const getAllCardData = async () => {
   await axios
     .get('/getCardData')
     .then((res) => {
-      console.log(res)
+      // console.log(res)
 
       // if (res.data.status === 200) {
       dataArray = res.data
@@ -121,7 +121,7 @@ const getAllChartsDataSales = async () => {
   await axios
     .get('/getChartData')
     .then((res) => {
-      console.log(res)
+      // console.log(res)
 
       // if (res.data.status === 200) {
       dataArray = res.data
@@ -142,7 +142,7 @@ async function getDashboardOrders() {
 
     await axios.get('/fetch_all_orders_userwise/20').then((res) => {
 
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
         dataArray = res.data.response
@@ -172,11 +172,11 @@ async function getDashboardOrdersIdWise(id) {
     var dataArray = [];
 
 
-    console.log(id, "Fetch Orders ID is")
+    // console.log(id, "Fetch Orders ID is")
 
     await axios.get(`/fetch_all_orders_userwise_id_wise/${id}`).then((res) => {
 
-      console.log(res)
+      // console.log(res)
       if (res.data.status === 200) {
         dataArray = res.data
       }
@@ -200,11 +200,11 @@ async function getDashboardOrdersIdWiseProduct(id) {
 
     var dataArray = [];
 
-    console.log(id, "Fetch Orders ID is")
+    // console.log(id, "Fetch Orders ID is")
 
     await axios.get(`/fetch_all_orders_userwise_id_wise_product/${id}`).then((res) => {
 
-      console.log(res)
+      // console.log(res)
       if (res.data.status === 200) {
         dataArray = res.data
       }
@@ -252,11 +252,11 @@ async function getPaymentStatusById(rowid, orderid, paymentmood, paymenttype) {
       'paymenttype': paymenttype
     }
 
-    console.log(data, "Get Payment Status");
+    // console.log(data, "Get Payment Status");
     var dataset = [];
 
     await axios.post('/fetch_order_wise_payment_details', data).then((res) => {
-      console.log(res)
+      // console.log(res)
       if (res.data.status === 200) {
         dataset = res.data.response
       }
@@ -276,14 +276,14 @@ async function getPaymentStatusById(rowid, orderid, paymentmood, paymenttype) {
 async function updateDeliveryStatus(id, value, type) {
 
   try {
-    console.log(id, value, type)
+    // console.log(id, value, type)
     const data = {
       rowid: id,
       status: value,
       type: type
 
     }
-    console.log(data, "DataSet is Updated123")
+    // console.log(data, "DataSet is Updated123")
 
 
 
@@ -291,7 +291,7 @@ async function updateDeliveryStatus(id, value, type) {
 
     await axios.post('/update_delivery_status_by_product', data).then((res) => {
 
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
         // toast.success('Updated!')
@@ -306,7 +306,7 @@ async function updateDeliveryStatus(id, value, type) {
 
     await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
 
-      console.log(res)
+      // console.log(res)
 
       if (res.data.status === 200) {
 
@@ -379,7 +379,7 @@ async function createNewOtherInfo(dataset) {
     toast('Please wait..Upload processing')
 
     await axios.post('/create_new_other_info', dataset, { xsrfHeaderName: 'X-CSRF-Token', withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
-      console.log(res)
+      // console.log(res)
       if (res.status === 200) {
         toast.success('Upload Success')
       }
@@ -539,7 +539,7 @@ async function getOtherInforDataByOrderId(id) {
     var dataset = []
 
     await axios.get(`/fetch_other_info_data/${id}`).then((res) => {
-      console.log(res)
+      // console.log(res)
       if (res.data.status === 200) {
         dataset = res.data.data_response
       }

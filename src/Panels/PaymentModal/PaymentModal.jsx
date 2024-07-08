@@ -9,7 +9,7 @@ function PaymentModal(props) {
 
     const [dataset, setDataset] = useState([])
 
-    console.log(props.dataset)
+    // console.log(props.dataset)
 
     useEffect(() => {
         toggler();

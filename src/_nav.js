@@ -1,7 +1,6 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilBell,
   cilCalculator,
   cilChartPie,
   cilCursor,
@@ -34,6 +33,7 @@ const _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
 
   },
+
 
   {
     component: CNavItem,

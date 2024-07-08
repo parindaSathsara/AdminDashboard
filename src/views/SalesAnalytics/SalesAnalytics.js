@@ -45,24 +45,24 @@ const Charts = () => {
   const getSalesTable = async () => {
     try {
       const response = await axios.get('get_sales_table');
-      console.log(response, 'salesTable');
+      // // console.log(response, 'salesTable');
       if (response.data.status === 200) {
         setSalesTable(response.data.categories);
       }
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
     }
   }
 
   const handleChangeSales = async (event) => {
     const time = event.target.value;
-    console.log(time);
+    // // console.log(time);
     getSalesChart(time);
   };
 
   const handleChangeProducts = async (event) => {
     const time = event.target.value;
-    console.log(time);
+    // // console.log(time);
     getProductCount(time);
   }
 
@@ -71,14 +71,14 @@ const Charts = () => {
 
       await axios.get(`get_all_sales_total/${time}`).then((response) => {
 
-        console.log(response);
+        // console.log(response);
         if (response.data.status === 200) {
           setSales(response.data.sales);
         }
 
 
       }).catch((err) => {
-        console.log(err);
+        // console.log(err);
       })
     } catch (err) {
       throw new Error(err);
@@ -92,7 +92,7 @@ const Charts = () => {
         setProductCounts(response.data.productCounts);
       }
     } catch (error) {
-      console.log('Error fetching product counts:', error);
+      // console.log('Error fetching product counts:', error);
     }
   };
 
@@ -102,11 +102,11 @@ const Charts = () => {
       if (response.data.status === 200) {
 
 
-        console.log(response.data, "Response data value is")
+        // console.log(response.data, "Response data value is")
         setMonthlyProducts(response.data.productCountMonthly);
       }
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
     }
   };
 
@@ -199,7 +199,7 @@ const Charts = () => {
           <CCardHeader>Annual Product Variation Chart</CCardHeader>
           <CCardBody>
 
-            {console.log(monthlyProducts.hotels, "LS PRODUCTS")}
+            {/* {// console.log(monthlyProducts.hotels, "LS PRODUCTS")} */}
             <CChartLine className='mt-4'
               data={{
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Set', 'Oct', 'Nov', 'Dec'],
@@ -300,7 +300,7 @@ const Charts = () => {
         </CCard>
       </CCol>
       <CCol xs={6}>
-        {(console.log(productCounts.categories, ''))}
+        {/* {(// console.log(productCounts.categories, ''))} */}
         <CCard className='mb-4'>
           <CCardHeader>Sales Table With Categories</CCardHeader>
           <CCardBody>

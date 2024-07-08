@@ -30,7 +30,7 @@ export default function SupplierExperience(props) {
     const QuantityContainer = ({ data }) => {
 
 
-        console.log(data, "Data Value is")
+        // console.log(data, "Data Value is")
 
 
         if (data.category == "Education") {
@@ -130,14 +130,14 @@ export default function SupplierExperience(props) {
 
     const getSupplierVoucher = async (data) => {
 
-        console.log(data, "Voucher ID")
+        // console.log(data, "Voucher ID")
 
         setSupplierVoucherView(true)
         setSelectedSupplierVoucherData(data)
 
 
         var apiUrl = `https://gateway.aahaas.com/api/displaySupplierVoucher/${data.checkout_id}`
-        console.log(apiUrl, "Voucher ID")
+        // console.log(apiUrl, "Voucher ID")
         try {
             const response = await fetch(apiUrl);
             if (!response.ok) {
@@ -145,7 +145,7 @@ export default function SupplierExperience(props) {
             }
             const dataVal = await response.text();
 
-            console.log(dataVal, "Index")
+            // console.log(dataVal, "Index")
 
             setSupplierVoucherData(dataVal)
         } catch (error) {
@@ -200,13 +200,13 @@ export default function SupplierExperience(props) {
 
     const resendVoucher = () => {
 
-        console.log("resend calling")
+        // console.log("resend calling")
 
 
         setVisible(true)
         // setVoucherSending(true)
         // var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`
-        // console.log(email, "Supplier Data")
+        // // console.log(email, "Supplier Data")
 
 
         // fetch(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`, {

@@ -51,8 +51,6 @@ function Chatshome() {
         filteredCustomerChats.map((value) => {
             if (customerChatID === value.customer_collection_id) {
                 if (value.supplier_id === '' || value.supplier_id === null || value.supplier_id === undefined) {
-
-
                     const dataSet = {
                         customer_collection_id: customerChatID,
                         supplier_id: selectedVedor.id,
@@ -75,7 +73,7 @@ function Chatshome() {
                             }
                         })
                     } catch (error) {
-                        console.log(error);
+                        // console.log(error);
                         throw new Error(error)
                     }
 
@@ -257,7 +255,7 @@ function Chatshome() {
                 }
             })
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
 
         try {
@@ -268,7 +266,7 @@ function Chatshome() {
                 }
             })
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }, [])
 
@@ -480,7 +478,7 @@ function Chatshome() {
                             <p>Customer mail id :{infoDetails.customerChatID.customer_mail_id} </p>
                             <p>Query status : {infoDetails.customerChatID.status} </p>
 
-                            {/* {console.log(infoDetails)} */}
+                            {/* {// console.log(infoDetails)} */}
 
                             {/* need to add if it is necessary */}
 

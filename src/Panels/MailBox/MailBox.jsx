@@ -23,7 +23,7 @@ function MailBox(props) {
 
     var id = props.orderid
 
-    console.log(data)
+    // console.log(data)
 
     const handleShowImage = () => {
         setShowModal(true)
@@ -62,7 +62,7 @@ function MailBox(props) {
             formData.append('email_type', textChange.email_type);
             formData.append('ref_code', textChange.email_type == 'Hotel' ? data.resevation_no : props.orderid)
 
-            console.log(...formData);
+            // console.log(...formData);
 
             if (textChange.email_type == 'Hotel') {
                 sendHotelConfirmationEmail(formData)

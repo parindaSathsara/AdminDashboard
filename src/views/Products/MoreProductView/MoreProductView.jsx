@@ -19,12 +19,12 @@ export default function MoreProductView(props) {
     var productData = props.productData
 
 
-    console.log(productData, "Product Data is")
+    // console.log(productData, "Product Data is")
 
     const [productDataSet, setProductDataSet] = useState([])
 
-    console.log(props.preID, "Pre ID 123")
-    console.log(props.category, "Category 123")
+    // console.log(props.preID, "Pre ID 123")
+    // console.log(props.category, "Category 123")
 
     const [loading, setLoading] = useState(false)
 
@@ -36,9 +36,9 @@ export default function MoreProductView(props) {
             setProductDataSet(response)
             setLoading(false)
 
-            console.log(response, "Data Response Value is111")
+            // console.log(response, "Data Response Value is111")
         }).catch(response => {
-            console.log(response, "Catch Response is")
+            // console.log(response, "Catch Response is")
             setLoading(false)
         })
 

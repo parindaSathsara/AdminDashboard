@@ -22,7 +22,7 @@ export default function TravellerExperience(props) {
 
     const productData = props.dataset
 
-    console.log(productData, "Productttttttt")
+    // console.log(productData, "Productttttttt")
 
     const [travellerData, setTravellerData] = useState({
         pid: '',
@@ -34,18 +34,18 @@ export default function TravellerExperience(props) {
     })
 
     const handleInputFields = (name, value) => {
-        console.log([name, value], 'hjhjhjhjhjh');
+        // console.log([name, value], 'hjhjhjhjhjh');
         setTravellerData({ ...travellerData, [name]: value })
-        // console.log(travellerData.reconfirmationDate);
+        // // console.log(travellerData.reconfirmationDate);
     }
 
     // const createTravellerExperience = async (travellerData) => {
 
-    //     console.log(travellerData, 'traveller new data');
+    //     // console.log(travellerData, 'traveller new data');
     //     var returnData = []
 
     //     await axios.post(`/create_traveller_experience`, travellerData).then((res) => {
-    //         console.log(res, 'traveller Experience')
+    //         // console.log(res, 'traveller Experience')
     //         if (res.data.status === 200) {
     //             returnData = res.data
     //         }
@@ -59,12 +59,12 @@ export default function TravellerExperience(props) {
     // }
 
     const createTravellerExperience = async (rowData) => {
-        console.log(rowData?.data?.checkoutID, "ROWWW");
+        // console.log(rowData?.data?.checkoutID, "ROWWW");
 
         travellerData["pid"] = rowData?.data?.checkoutID
 
 
-        console.log(travellerData, "Travellll")
+        // console.log(travellerData, "Travellll")
 
         try {
             Swal.showLoading()
@@ -74,7 +74,7 @@ export default function TravellerExperience(props) {
 
                 await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${rowData?.data?.checkoutID}/${"CompletedDelivery"}`).then((res) => {
                     Swal.hideLoading()
-                    console.log(res)
+                    // console.log(res)
 
                     if (res.data.status === 200) {
                         Swal.fire({
@@ -123,7 +123,7 @@ export default function TravellerExperience(props) {
     const QuantityContainer = ({ data }) => {
 
 
-        // console.log(data, "Data Value is")
+        // // console.log(data, "Data Value is")
 
 
         if (data.category == "Education") {
@@ -236,7 +236,7 @@ export default function TravellerExperience(props) {
 
 
     const getDisableStatus = (rowData) => {
-        console.log(rowData, "Rowwwww")
+        // console.log(rowData, "Rowwwww")
 
         if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered") {
             return true
@@ -249,7 +249,7 @@ export default function TravellerExperience(props) {
         return false
     }
 
-    // console.log(value, 'fgf');
+    // // console.log(value, 'fgf');
     const columns = [
         { title: 'PID', field: 'pid' },
         { title: 'Delivery Date', field: 'delivery_date', type: 'date' },

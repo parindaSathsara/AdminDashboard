@@ -15,11 +15,11 @@ export default function InAppNotificationService() {
             collection(db, 'orders'),
             (querySnapshot) => {
                 if (!querySnapshot.empty) {
-                    console.log("Inside Snap");
+                    // console.log("Inside Snap");
 
                     const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
                     const lastOrderData = lastDoc.data();
-                    console.log("Last Order: ", lastOrderData);
+                    // console.log("Last Order: ", lastOrderData);
 
                     var dataSet = {}
 
@@ -77,7 +77,7 @@ export default function InAppNotificationService() {
 
 
                 } else {
-                    console.log("No orders found.");
+                    // console.log("No orders found.");
                 }
             },
             (error) => {

@@ -144,9 +144,15 @@ const routes = [
   { path: '/notifications/badges', name: 'Badges', element: Badges },
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
-  { path: '/widgets', name: 'Widgets', element: Widgets }
+  { path: '/widgets', name: 'Widgets', element: Widgets },
+
+
   // { path: "/login", name: 'login', element: Login },
   // { path: "/register", name: 'register', element: Register }
+
+  // flights path
+  { path: '/flights/*', name: 'Flights', element: FlightsmainPage },
+  { path: '/pushNotifications/*', name: 'PushNotifications', element: PushNotifications },
 
 ]
 

@@ -41,7 +41,7 @@ export default function EssentialsProductView(props) {
     const details = props.productData?.productDetails
 
 
-    console.log(basicDetails)
+    // console.log(basicDetails)
 
     function renderVariations(value) {
         let variations = [];

@@ -192,7 +192,7 @@ const VendorList = () => {
         setShowModal(true)
 
 
-        console.log("Value", value)
+        // // console.log("Value", value)
     }
 
     const [progress, setProgress] = useState(0)
@@ -267,7 +267,7 @@ const VendorList = () => {
         }
 
         await axios.post('/vendorApproval', data).then((res) => {
-            console.log(res)
+            // // console.log(res)
 
             if (res.data.status === 200) {
                 Swal.fire({
@@ -326,7 +326,7 @@ const VendorList = () => {
         }
 
         await axios.post('/rejectVendor', data).then((res) => {
-            console.log(res)
+            // // console.log(res)
 
             if (res.data.status === 200) {
                 Swal.fire({

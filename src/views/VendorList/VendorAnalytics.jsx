@@ -17,12 +17,12 @@ function VendorAnalytics() {
     const getDetails = async () => {
         try {
             const response = await axios.get('get_vendor_analytics');
-            // console.log(response.data, 'vendor');
+            // // console.log(response.data, 'vendor');
             if (response.status === 200) {
                 setDetails(response.data);
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
     useEffect(() => {

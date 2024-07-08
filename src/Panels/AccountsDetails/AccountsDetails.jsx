@@ -15,7 +15,7 @@ function AccountsDetails(props) {
     //     props.dataset
     // }, [])
 
-    console.log(props.dataset, "Dataset data value is 1233333")
+    // console.log(props.dataset, "Dataset data value is 1233333")
 
     const [dataset, setDataSet] = useState([])
 
@@ -46,7 +46,7 @@ function AccountsDetails(props) {
     }
 
     const handlePaymentStatusChange = (e, val) => {
-        console.log(val.target.value)
+        // console.log(val.target.value)
 
         var user = sessionStorage.getItem('user');
         var username = JSON.parse(user)
@@ -143,8 +143,6 @@ function AccountsDetails(props) {
 
                             /> */}
 
-
-                            {console.log(dataset, "Dataset manage data is")}
                             <CCol xs={12} sm={12} lg={12}>
                                 <div className='mainContainerTables'>
                                     <div className="col-md-12 mb-4 sub_box materialTableDP">
@@ -164,7 +162,6 @@ function AccountsDetails(props) {
                                                             </tr>
                                                         </thead>
 
-                                                        {console.log(dataset, "DataSet data is ")}
                                                         <tbody>
                                                             <tr>
                                                                 <td><b>{dataset['reference_no']}</b></td>

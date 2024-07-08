@@ -18,12 +18,12 @@ function OrderDetailsAccounts(props) {
 
         setPaymentDataSet(props.paymentDataSet)
 
-        console.log(props.paymentDataSet, "Payment Data Set")
+        // console.log(props.paymentDataSet, "Payment Data Set")
 
         // getPaymentStatusById(props.paymentDataSet?.id, props.paymentDataSet?.OrderId, props.paymentDataSet?.payment_type, props.paymentDataSet?.pay_category).then((res) => {
         //     setDataset(res.data[0])
 
-        //     console.log("Res Data set  value is", res.data[0])
+        //     // console.log("Res Data set  value is", res.data[0])
         // })
 
 

@@ -42,7 +42,7 @@ export default function EducationOrderView(props) {
     const sessionData = props.productData?.sessionData
 
 
-    console.log(sessionData)
+    // console.log(sessionData)
 
     function renderVariations(value) {
         let variations = [];
@@ -233,10 +233,6 @@ export default function EducationOrderView(props) {
                         />
                     </div>
                 </CCol>
-
-
-
-                {console.log(sessionData)}
 
                 <CCol xs="12" lg="3" style={{ backgroundColor: '#EEE2DE', borderRadius: 10, padding: 20 }}>
                     <h6 className='mb-2'>Class Schedule</h6>

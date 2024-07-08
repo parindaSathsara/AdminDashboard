@@ -41,10 +41,10 @@ const Register = () => {
       'X-CSRF-TOKEN': csrfToken
     };
     axios.post('create_admin_user', {
-      name: username,
-      email: email,
-      password: password,
-      role: role,
+        name: username,
+        email: email,
+        password: password,
+        role: role,
     }, { headers: headers })
       .then(response => {
 

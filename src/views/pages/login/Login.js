@@ -77,10 +77,10 @@ const Login = () => {
     };
 
     // axios.get('/sanctum/csrf-cookie', { withCredentials: true }).then((response) => {h
-    // console.log(formdata)
+    // // console.log(formdata)
 
-    console.log(csrfToken)
-    console.log(loginInput)
+    // console.log(csrfToken)
+    // console.log(loginInput)
 
     try {
 
@@ -91,12 +91,12 @@ const Login = () => {
         }
       ).then((res) => {
 
-        console.log(res.data)
+        // console.log(res.data)
         if (res.data.status === 200) {
 
           setToken(res.data.user, res.data.access_token);
 
-          console.log("Login Details is", res.data.user_data)
+          // console.log("Login Details is", res.data.user_data)
 
           setUserData(res.data.user_data)
 
@@ -117,13 +117,13 @@ const Login = () => {
           });
         }
       }).catch((err) => {
-        console.log(err, "Error is")
+        // console.log(err, "Error is")
         // throw new Error(err);
       });
 
 
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
     // })
   }
