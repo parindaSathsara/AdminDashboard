@@ -10,6 +10,8 @@ import OffersPromoDashboard from './views/OffersPromo/OffersPromoDashboard'
 import ReportsMain from './views/Reports/ReportsMain'
 import EmailDashboard from './views/EmailDashboard/EmailDashboard'
 import ChatsMeta from './views/_Chats/ChatsMeta/ChatsMeta'
+import FlightsmainPage from './views/Flights/FlightsmainPage'
+import PushNotifications from './views/PushNotify/PushNotifications'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))

@@ -11,7 +11,7 @@ const ChatCard = ({ title, subtitle, time, isPinned, unreadCount, imgSrc, handle
             <CCardBody style={{ width: '100%' }}>
                 <div className="conversation-header">
                     <div className="conversation-img">
-                        {imgSrc ? <img src={imgSrc} alt={title} /> : <div className="default-img">{title[0]}</div>}
+                        {imgSrc ? <img src={imgSrc} alt={title} /> : <div className="default-img">{title?.[0]}</div>}
                     </div>
                     <div className="conversation-info">
                         <h5>{title}</h5>
