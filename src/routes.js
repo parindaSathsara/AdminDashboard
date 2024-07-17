@@ -91,7 +91,7 @@ const routes = [
   { path: '/orders', name: 'Orders', element: Dashboard, exact: true },
 
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
-  { path: '/accounts', name: 'Sales', element: AccountsDepartment },
+  { path: '/accounts/customerorders', name: 'Sales', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
 
   { path: '/products', name: 'Products', element: ProductList },

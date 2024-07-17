@@ -27,6 +27,9 @@ export default function SupplierExperience(props) {
 
 
 
+    console.log(productData, "Product Data set is123")
+
+
     const QuantityContainer = ({ data }) => {
 
 
@@ -157,6 +160,7 @@ export default function SupplierExperience(props) {
 
     const columns = [
         { title: 'Product ID', field: 'pid' },
+        { title: 'Supplier Voucher', field: 'supplier_voucher' },
         { title: 'Supplier ID', field: 'sid' },
         { title: 'Name', field: 'name' },
         { title: 'Supplier Confirmation', field: 'sup_confirm' },
@@ -180,20 +184,35 @@ export default function SupplierExperience(props) {
     ]
 
 
-    const data = productData?.map(value => ({
-        pid: value?.['PID'],
-        sid: value?.supplier_id,
-        name: value?.['PName'],
-        sup_confirm: value?.supplier_status,
-        company_name: value?.company_name,
-        company_address: value?.address,
-        contact: value?.phone,
-        checkout_id: value?.checkoutID,
-        data: value,
-        email: value?.email
-    }))
+
+    const data = productData?.map((value, index) => {
+        const supplierID = value.supplier_id;
 
 
+        var voucherID = ""
+
+        if (supplierID) {
+            voucherID = `VO_${props?.orderid}_${index + 1}`;
+        }
+        else {
+            voucherID = ""
+        }
+
+
+        return {
+            pid: value?.['PID'],
+            sid: value?.supplier_id,
+            name: value?.['PName'],
+            sup_confirm: value?.supplier_status,
+            company_name: value?.company_name,
+            company_address: value?.address,
+            contact: value?.phone,
+            checkout_id: value?.checkoutID,
+            data: value,
+            email: value?.email,
+            supplier_voucher: voucherID  // Assign the generated voucher ID
+        };
+    });
     const [voucherSending, setVoucherSending] = useState(false)
     const [downloadVoucher, setDownloadVoucher] = useState(false)
 

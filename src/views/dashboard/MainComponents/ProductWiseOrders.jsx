@@ -297,11 +297,9 @@ export default function ProductWiseOrders() {
             {loading ? (
                 <LoaderPanel message={"All orders are being fetched"} />
             ) : (
-                <CCol>
-                    <ThemeProvider theme={defaultMaterialTheme}>
-                        <MaterialReactTable table={table} />
-                    </ThemeProvider>
-                </CCol>
+
+                <MaterialReactTable table={table} />
+
             )}
         </>
     );

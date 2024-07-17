@@ -283,9 +283,7 @@ async function updateDeliveryStatus(id, value, type) {
       type: type
 
     }
-    // console.log(data, "DataSet is Updated123")
-
-
+    console.log(data, "DataSet is Updated123 ")
 
 
 
@@ -325,6 +323,9 @@ async function updateDeliveryStatus(id, value, type) {
 
 async function candelOrder(data) {
 
+
+
+  console.log("Cancel order data set is", data)
   await axios.post("cancel_order", data).then((res) => {
     if (res.data.status === 200) {
       Swal.fire({

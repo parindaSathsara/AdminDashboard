@@ -1,7 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useRef, useState } from 'react'
-
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
   CAvatar,
   CButton,
@@ -23,10 +22,10 @@ import {
   CTableHeaderCell,
   CTableRow,
   CWidgetStatsB,
-} from '@coreui/react'
-import { CChartLine, CChartPolarArea, CChartRadar } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
-import CIcon from '@coreui/icons-react'
+} from '@coreui/react';
+import { CChartLine, CChartPolarArea, CChartRadar } from '@coreui/react-chartjs';
+import { getStyle, hexToRgba } from '@coreui/utils';
+import CIcon from '@coreui/icons-react';
 import {
   cibGmail,
   cibFilezilla,
@@ -34,136 +33,105 @@ import {
   cilViewModule,
   cilViewColumn,
   cilViewStream
-} from '@coreui/icons'
+} from '@coreui/icons';
 
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
+import avatar1 from 'src/assets/images/avatars/1.jpg';
+import avatar2 from 'src/assets/images/avatars/2.jpg';
+import avatar3 from 'src/assets/images/avatars/3.jpg';
+import avatar4 from 'src/assets/images/avatars/4.jpg';
+import avatar5 from 'src/assets/images/avatars/5.jpg';
+import avatar6 from 'src/assets/images/avatars/6.jpg';
 
-import WidgetsBrand from '../widgets/WidgetsBrand'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import { DocsExample } from 'src/components'
-import { getAllCardData, getAllDataUserWise, getDashboardOrdersIdWise } from 'src/service/api_calls'
-import MaterialTable from 'material-table'
-import { Icon, ThemeProvider, createTheme } from '@mui/material'
-import ProductDetails from 'src/Panels/ProductDetails/ProductDetails'
-import ConfirmationDetails from 'src/Panels/ConfirmationDetails/ConfirmationDetails'
-import AccountsDetails from 'src/Panels/AccountsDetails/AccountsDetails'
-import SupDetails from 'src/Panels/SupDetails/SupDetails'
-import FeebackDetails from 'src/Panels/FeebackDetails/FeebackDetails'
-import { Tab, Tabs } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
-import PaymentModal from 'src/Panels/PaymentModal/PaymentModal'
-import AdditionalData from 'src/Panels/AdditionalData/AdditionalData'
-import MailBox from 'src/Panels/MailBox/MailBox'
-import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox'
-import Cards from '../base/cards/Cards'
-import OrderDetails from 'src/Panels/OrderDetails/OrderDetails'
-import BookingExperience from 'src/Panels/OrderDetails/DepartmentWise/BookingExperience'
-import SupplierExperience from 'src/Panels/OrderDetails/DepartmentWise/SupplierExperience'
-import DateWiseSummary from 'src/Panels/OrderDetails/DateWiseSummary/DateWiseSummary'
-import { io } from 'socket.io-client'
-import productSound from '../../assets/productSound.mp3'
-import ProductWiseOrders from './MainComponents/ProductWiseOrders'
-import LoaderPanel from 'src/Panels/LoaderPanel'
-import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander'
+import WidgetsBrand from '../widgets/WidgetsBrand';
+import WidgetsDropdown from '../widgets/WidgetsDropdown';
+import { DocsExample } from 'src/components';
+import { getAllCardData, getAllDataUserWise, getDashboardOrdersIdWise } from 'src/service/api_calls';
+import MaterialTable from 'material-table';
+import { Box, Icon, IconButton, MenuItem, ThemeProvider, Tooltip, createTheme } from '@mui/material';
 
+import { Tab, Tabs } from 'react-bootstrap';
+
+import AdditionalData from 'src/Panels/AdditionalData/AdditionalData';
+import MailBox from 'src/Panels/MailBox/MailBox';
+import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox';
+import Cards from '../base/cards/Cards';
+import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
+
+import { io } from 'socket.io-client';
+import productSound from '../../assets/productSound.mp3';
+import ProductWiseOrders from './MainComponents/ProductWiseOrders';
+import LoaderPanel from 'src/Panels/LoaderPanel';
+import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
+
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { Expand, ExpandCircleDown, ExpandCircleDownSharp } from '@mui/icons-material';
+import { Fullscreen } from '@material-ui/icons';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from 'src/firebase';
 
 const Orders = () => {
-  const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+  const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
   const [orderid, setOrderId] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const [showMailModal, setShowMailModal] = useState(false);
   const [showAddtitionalModal, setShowAdditionalModal] = useState(false);
   const [rowDetails, setRowDetails] = useState([]);
-  const [newlyAddedColumns, setNewlyAddedColumns] = useState([])
-
-
-
+  const [newlyAddedColumns, setNewlyAddedColumns] = useState([]);
 
   const handleSendMail = (e) => {
-    setShowMailModal(true)
-    setOrderId(e)
-  }
+    setShowMailModal(true);
+    setOrderId(e);
+  };
 
   const handleAdditionalModal = (e) => {
-    setShowModalAdd(true)
-    // console.log(e)
-    setOrderId(e)
-  }
-
+    setShowModalAdd(true);
+    setOrderId(e);
+  };
 
   const handleAdditionalInfoModal = (e) => {
-    setShowAdditionalModal(true)
-    setOrderId(e)
-  }
-
+    setShowAdditionalModal(true);
+    setOrderId(e);
+  };
 
   const defaultMaterialTheme = createTheme();
 
-
-
-  const [orderData, setOrderData] = useState([])
+  const [orderData, setOrderData] = useState([]);
   const [cardData, setCardData] = useState({
     orderCount: 0,
     customerCount: 0,
     salesCount: "",
     suppliersCount: 0
-  })
-  const [orderDataIDWise, setOrderDataIdWise] = useState([])
-
-  // useEffect(() => {
-
-  //   // setOrderData(getAllDataUserWise());
-
-  // }, []);
-
-
-
-
-
-  // const socket = io('http://172.16.26.238:5000');
-  // const socket = io('https://socket.aa');
+  });
 
   useEffect(() => {
-    // socket.on('checkoutInitial', initialDataHandler);
-
-    // socket.on('changeCheckout', changedRowHandler);
-
-    // return () => {
-    //   socket.disconnect();
-    // };
-
-    initialDataHandler();
+    initialDataHandler("loading");
   }, []);
 
+  const initialDataHandler = (type) => {
 
-  const initialDataHandler = (initialData) => {
-    setLoading(true)
+
+    if (type == "loading") {
+      setLoading(true);
+    }
+
 
     getAllDataUserWise().then(res => {
-      setOrderData(res)
-      setLoading(false)
-    })
+      setOrderData(res);
+      setLoading(false);
+    });
 
-    setLoading(true)
+    setLoading(true);
 
     getAllCardData().then(res => {
-      // console.log(res)
-      setCardData(res)
-      setLoading(false)
-    })
-
+      setCardData(res);
+      setLoading(false);
+    });
   };
-
 
   const rowStyle = (rowData) => {
     const isRowNewlyAdded = newlyAddedColumns.length > 0 && newlyAddedColumns.includes(rowData.oid);
@@ -173,179 +141,214 @@ const Orders = () => {
       width: "100%",
       color: isRowNewlyAdded ? "#002c4a" : "#000",
       fontWeight: isRowNewlyAdded ? 'normal' : 'normal',
-      backgroundColor: isRowNewlyAdded ? '#bfe5ff' : 'white', // You can adjust the background color here
+      backgroundColor: isRowNewlyAdded ? '#bfe5ff' : 'white',
     };
   };
-
 
   const [audio] = useState(new Audio(productSound));
 
   useEffect(() => {
-
     if (newlyAddedColumns.length > 0) {
       audio.play();
     } else {
       audio.pause();
       audio.currentTime = 0;
     }
-
   }, [newlyAddedColumns]);
 
-
-
-
   const changedRowHandler = (changedRow) => {
-    // getAllProducts().then((data) => {
-    //   setProductList(data);
-    //   const newlyAddedColumn = changedRow?.lastId;
-    //   if (newlyAddedColumn) {
-    //     setNewlyAddedColumns([...newlyAddedColumns, newlyAddedColumn]);
-    //     // After 5 seconds, remove the newly added column from the list
-    //     setTimeout(() => {
-    //       setNewlyAddedColumns([]);
-    //     }, 5000);
-    //   }
-    // });
-
-
-    const newlyAddedColumn = changedRow?.lastId
+    const newlyAddedColumn = changedRow?.lastId;
     getAllDataUserWise().then(res => {
-      setOrderData(res)
+      setOrderData(res);
 
       if (newlyAddedColumn) {
         setNewlyAddedColumns([...newlyAddedColumns, newlyAddedColumn]);
 
         setTimeout(() => {
-          setNewlyAddedColumns([])
-        }, 6000)
+          setNewlyAddedColumns([]);
+        }, 6000);
       }
-    })
+    });
 
     getAllCardData().then(res => {
-      // console.log(res)
-      setCardData(res)
-    })
-
+      setCardData(res);
+    });
   };
 
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, 'order_ids'),
+      (querySnapshot) => {
+        if (!querySnapshot.empty) {
+          initialDataHandler("realtime");
+        } else {
+          console.log("No orders found.");
+        }
+
+      },
+      (error) => {
+        console.error("Error fetching real-time data: ", error);
+      }
+    );
+
+    return () => unsubscribe();
+
+  }, [])
 
 
-
-  const data = {
+  const data = useMemo(() => ({
     columns: [
-      // {
-      //     title: '#ID', field: 'id', align: 'center', editable: 'never',
-      // },
-      {
-        title: 'Order Id', field: 'oid', align: 'left', editable: 'never',
-      },
-      {
-        title: 'Booking Date | Time', field: 'booking_date', align: 'left', editable: 'never',
-      },
-      {
-        title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
-      },
-      {
-        title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
-      },
 
-
-      {
-        title: 'Total Amount', field: 'total_amount', align: 'right', editable: 'never',
-      },
-      {
-        title: 'Paid Amount', field: 'paid_amount', align: 'right', editable: 'never',
-      },
-      {
-        title: 'Balance Amount', field: 'balance_amount', align: 'right', editable: 'never',
-      },
+      { accessorKey: 'oid', header: 'Order Id', align: 'left' },
 
 
 
+      { accessorKey: 'booking_date', header: 'Booking Date | Time', align: 'left' },
+      { accessorKey: 'pay_type', header: 'Payment Type', align: 'left' },
+      { accessorKey: 'pay_category', header: 'Payment Category', align: 'left' },
+      { accessorKey: 'total_amount', header: 'Total Amount', align: 'right' },
+      { accessorKey: 'paid_amount', header: 'Paid Amount', align: 'right' },
+      { accessorKey: 'balance_amount', header: 'Balance Amount', align: 'right' },
+      { accessorKey: 'discount_amount', header: 'Discount Amount', align: 'right' },
+      { accessorKey: 'delivery_charge', header: 'Delivery Charge', align: 'right' },
       {
-        title: 'Discount Amount', field: 'discount_amount', align: 'right', editable: 'never',
+        accessorKey: 'additional_data',
+        header: 'Additional Information',
+        align: 'center',
+        Cell: ({ row }) => (
+          <>
+            <button
+              className="btn btn-primary btn_aditional_data btn-sm"
+              onClick={() => handleAdditionalModal(row.original.oid)}
+            >
+              <CIcon icon={cilNoteAdd} size="sm" />
+            </button>{' '}
+            |{' '}
+            <button
+              type="button"
+              className="btn btn-info view_upload_info btn-sm"
+              onClick={() => handleAdditionalInfoModal(row.original.oid)}
+            >
+              <CIcon icon={cilViewStream} size="sm" />
+            </button>
+          </>
+        ),
       },
-      {
-        title: 'Delivery Charge', field: 'delivery_charge', align: 'right', editable: 'never',
-      },
-      {
-        title: 'Additional Information', field: 'additional_data', align: 'center', editable: 'never',
-      },
-      // {
-      //   title: 'Actions', field: 'actions', align: 'center', editable: 'never',
-      // },
-
     ],
-    rows: orderData?.map((value, idx) => {
-      if (!value) return null; // Handle null value
-      return {
-        oid: value.OrderId,
-        booking_date: value.checkout_date,
-        pay_type: value.payment_type,
-        pay_category: value.pay_category,
-        total_amount: value.ItemCurrency + " " + (value.total_amount || "0.00"), // Check for null or undefined
-        paid_amount: value.ItemCurrency + " " + (value.paid_amount || "0.00"), // Check for null or undefined
-        discount_amount: value.ItemCurrency + " " + (value.discount_price || "0.00"), // Check for null or undefined
-        delivery_charge: value.ItemCurrency + " " + (value.delivery_charge || "0.00"), // Check for null or undefined
-        additional_data: (
-          <><button className="btn btn-primary btn_aditional_data btn-sm" onClick={(e) => { handleAdditionalModal(value.OrderId) }} ><CIcon icon={cilNoteAdd} size="sm" /></button> | <button type='button' className='btn btn-info view_upload_info btn-sm' onClick={() => { handleAdditionalInfoModal(value.OrderId) }}><CIcon icon={cilViewStream} size="sm" /></button></>
-        ),
-        actions: (
-          <div className='actions_box'>
-            <button className="btn btn_actions" onClick={(e) => { handleSendMail(value.OrderId) }}><CIcon icon={cibGmail} size="lg" /></button>
-          </div>
-        ),
-        balance_amount: value.ItemCurrency + " " + (value.balance_amount || "0.00")
-      };
-    })
-  }
+    rows: orderData.map((value) => ({
 
+      oid: value.OrderId,
+      booking_date: value.checkout_date,
+      pay_type: value.payment_type,
+      pay_category: value.pay_category,
+      total_amount: value.ItemCurrency + ' ' + (value.total_amount || '0.00'),
+      paid_amount: value.ItemCurrency + ' ' + (value.paid_amount || '0.00'),
+      discount_amount: value.ItemCurrency + ' ' + (value.discount_price || '0.00'),
+      delivery_charge: value.ItemCurrency + ' ' + (value.delivery_charge || '0.00'),
+      additional_data: value.additional_data,
+      balance_amount: value.ItemCurrency + ' ' + (value.balance_amount || '0.00'),
+    })),
+  }), [orderData]);
 
-  const [tabIndex, setTabIndex] = useState("")
+  const [tabIndex, setTabIndex] = useState("");
 
-
-  const tableRef = useRef()
-
-
+  const tableRef = useRef();
 
   useEffect(() => {
-    tableRef.current.state.data = tableRef.current.state.data.map(data => {
-      // console.log(data, "112Dataaa");
-      data.tableData.showDetailPanel = tableRef.current.props.detailPanel;
-
-      return data;
-    });
-
-
+    // handle any required updates
   }, []);
 
-
   const handleChange = (e) => {
-    // console.log(e)
+    // handle change
+  };
+
+  const [detailExpander, setDetailExpander] = useState(false);
+  const [selectedOrderDetails, setSelectedOrderDetails] = useState([]);
+
+
+  const handleFullScreen = (rowData) => {
+    setSelectedOrderDetails(rowData)
+    setDetailExpander(true)
   }
 
+  const table = useMaterialReactTable({
+    columns: data.columns,
+    data: data.rows,
+    enableSorting: true,
+    enableGlobalFilter: true,
+    globalFilterAlign: 'right',
+    globalFilterAutoFocus: true,
+    globalFilterVariant: 'standard',
+    enableFilters: true,
+    enablePagination: true,
+    pageSizes: [20, 25, 50, 100],
+    initialState: { pagination: { pageSize: 10 } },
+    paginationType: 'stepped',
 
-  const [detailExpander, setDetailExpander] = useState(false)
-  const [selectedOrderDetails, setSelectedOrderDetails] = useState([])
+    paginationPosition: 'both',
+    enableExport: true,
+    exportOptions: { exportAllData: true, fileName: 'TableData' },
+    enableExpandAll: false,
+
+    enableGrouping: true,
+    enableColumnActions: true,
+    initialState: { expanded: false },
+
+    defaultColumn: {
+      headerStyle: {
+        background: '#070e1a',
+        color: '#fff',
+        padding: '15px',
+        fontSize: '17px',
+        fontWeight: '500',
+      },
+      cellStyle: {},
+    },
+    enableRowActions: true,
+
+    renderRowActions: ({ row }) => [
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip title="Full Screen">
+          <IconButton onClick={() => handleFullScreen(row?.original)}>
+            <Fullscreen />
+          </IconButton>
+        </Tooltip>
+
+      </Box>
+    ],
 
 
+    muiDetailPanelProps: () => ({
+      sx: (theme) => ({
+        backgroundColor: 'white'
+      }),
+    }),
+    //custom expand button rotation
+    muiExpandButtonProps: ({ row, table }) => ({
+      onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //only 1 detail panel open at a time
+      sx: {
+        transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
+        transition: 'transform 0.2s',
+      },
+    }),
+    //conditionally render detail panel
+    renderDetailPanel: ({ row }) =>
+      row?.original?.oid ?
+        (
 
+          <OrderDetails orderid={row.original.oid} orderData={row?.original} hideStatus={false} updatedData={() => console.log("Updated")} />
 
+        ) : null
+  });
 
-
-  if (loading == true) {
-    return (
-      <LoaderPanel message={"Data processing in progress"} />
-    )
-  }
-  else {
+  if (loading) {
+    return <LoaderPanel message={"Data processing in progress"} />;
+  } else {
     return (
       <>
-
         <CRow>
           <CCol xs={12} sm={6} lg={3}>
-
             <CWidgetStatsB
               color="success"
               inverse
@@ -354,7 +357,6 @@ const Orders = () => {
               progress={{ value: 100.00 }}
               text="Last 30 Days Order Count"
             />
-
           </CCol>
           <CCol xs={12} sm={6} lg={3}>
             <CWidgetStatsB
@@ -368,7 +370,6 @@ const Orders = () => {
             />
           </CCol>
           <CCol xs={12} sm={6} lg={3}>
-
             <CWidgetStatsB
               className="mb-4"
               value={cardData.customerCount + ""}
@@ -379,10 +380,7 @@ const Orders = () => {
               text="Last 30 Days Customer Count"
             />
           </CCol>
-
           <CCol xs={12} sm={6} lg={3}>
-
-
             <CWidgetStatsB
               className="mb-4"
               value={cardData.suppliersCount + ""}
@@ -392,175 +390,73 @@ const Orders = () => {
               progress={{ value: 100.0 }}
               text="Last 30 Days Supplier Count"
             />
-
-
           </CCol>
-
         </CRow>
 
-
         <CCard className="mb-4">
-
-
-
           <CCardBody>
             <CRow>
               <CCol sm={5}>
                 <h4 id="traffic" className="card-title mb-0">
                   Customer Orders
                 </h4>
-
-
-
-                {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
               </CCol>
-
             </CRow>
-
-
-
-
 
             <Tabs
               defaultActiveKey="group"
               id="uncontrolled-tab-example"
               className="mt-4"
-              style={{
-                fontSize: 16
-              }}
+              style={{ fontSize: 16 }}
             >
-
               <Tab eventKey="group" title="Group Wise">
+                <MaterialReactTable
+                  table={table}
 
-                <ThemeProvider theme={defaultMaterialTheme}>
-                  <MaterialTable
-                    title=""
-                    // tableRef={tableRef}                    
-                    tableRef={tableRef}
-                    data={data.rows}
-                    columns={data.columns}
-
-                    detailPanel={(e) => {
-                      return (
-                        <div className="col-md-12 mb-4 sub_box materialTableDP">
-                          <OrderDetails dataset={orderDataIDWise} orderid={e.oid} orderData={e} hideStatus={false} updatedData={() => console.log("Updated")} />
-                        </div>
-
-                      )
-                    }}
-
-
-
-
-                    options={{
-                      sorting: true, search: true,
-                      searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                      filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                      paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                      exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: 0, selection: false,
-                      showSelectAllCheckbox: false, showTextRowsSelected: false,
-                      grouping: true, columnsButton: true,
-                      headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-
-                      rowStyle: rowStyle,
-                      defaultExpanded: true
-
-                    }}
-
-                    actions={[
-                      {
-                        icon: 'fullscreen',
-                        tooltip: 'Full Screen',
-                        onClick: (event, rowData) => {
-                          setSelectedOrderDetails(rowData)
-                          setDetailExpander(true)
-                        }
-                      }
-                    ]}
-
-                  // components={{
-                  //   Action: props => (
-                  //     <CButton
-                  //       onClick={(event) => props.action.onClick(event, props.data)}
-                  //       color="primary"
-                  //       variant="contained"
-                  //       style={{ textTransform: 'none' }}
-                  //       size="small"
-                  //     >
-                  //       My Button
-                  //     </CButton>
-                  //   ),
-                  // }}
-                  />
-
-                </ThemeProvider>
+                />
               </Tab>
               <Tab eventKey="product" title="Product Wise">
                 <ProductWiseOrders />
               </Tab>
-
-
             </Tabs>
-
-
-
-
-
           </CCardBody>
-
         </CCard>
-
 
         <DetailExpander
           show={detailExpander}
           onHide={() => setDetailExpander(false)}
           orderid={selectedOrderDetails.oid}
-
           component={
-            <OrderDetails dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} />
+            <OrderDetails dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
           }
-        >
+        />
 
-        </DetailExpander>
-
-
-
-
-
-        {showModalAdd == true ?
+        {showModalAdd && (
           <AdditionalData
             show={showModalAdd}
             onHide={() => setShowModalAdd(false)}
             orderid={orderid}
           />
-          :
-          null
-        }
+        )}
 
-        {showMailModal == true ?
+        {showMailModal && (
           <MailBox
             show={showMailModal}
             onHide={() => setShowMailModal(false)}
             orderid={orderid}
           />
-          :
-          null
-        }
+        )}
 
-        {showAddtitionalModal == true ?
+        {showAddtitionalModal && (
           <AdditionalInfoBox
             show={showAddtitionalModal}
             onHide={() => setShowAdditionalModal(false)}
             orderid={orderid}
           />
-          :
-          null
-        }
-
+        )}
       </>
-    )
+    );
   }
+};
 
-}
-
-export default Orders
+export default Orders;

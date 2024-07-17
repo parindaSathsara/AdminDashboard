@@ -30,8 +30,6 @@ const OrderAllocate = ({ normalUser = false }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState([]);
 
-
-
     const [selectedEmployee, setSelectedEmployee] = useState(null);
 
     const { userData, setUserData } = useContext(UserLoginContext);
@@ -61,6 +59,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 customerData: result?.customerData,
             }));
         }
+
         else {
             const response = await getAllProductsOrdersByEmployee(userData?.id);
 
@@ -561,6 +560,8 @@ const OrderAllocate = ({ normalUser = false }) => {
             </Tabs >
 
             <MaterialReactTable table={table} />
+
+
         </>
     );
 };

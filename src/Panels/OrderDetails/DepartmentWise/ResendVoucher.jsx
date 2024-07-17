@@ -23,6 +23,9 @@ export default function ResendVoucher({ voucherData, orderID }) {
             emails: selected.toString()
         }
 
+
+        console.log(postdata, "Posting data is")
+
         axios.post(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}/${type}`, postdata, {
             headers: {
                 'Content-Type': 'application/json'
@@ -60,7 +63,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
             <CContainer>
                 <CCardTitle>Send to Supplier Email</CCardTitle>
                 <CCardText>{voucherData?.email}</CCardText>
-                <CButton title='Send to Supplier Origin Email' color='info' style={{ color: 'white' }} onClick={() => sendToSupplierEmail("Supplier")}>
+                <CButton title='Send to Supplier Origin Email' color='info' style={{ color: 'white' }} onClick={() => sendToSupplierEmail("Supplier")} disabled={voucherSending != ""}>
                     Send
                     {voucherSending === "Supplier" ?
                         <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
@@ -83,7 +86,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
                     placeHolder="Enter Email"
 
                 />
-                <CButton title='Send to Supplier Origin Email' color='info' style={{ color: 'white', marginTop: 10 }} onClick={() => sendToSupplierEmail("All")}>
+                <CButton title='Send to Supplier Origin Email' color='info' style={{ color: 'white', marginTop: 10 }} onClick={() => sendToSupplierEmail("All")} disabled={voucherSending != ""}>
 
                     Send To Selected
 

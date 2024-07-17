@@ -307,7 +307,7 @@ const VendorList = () => {
             showCancelButton: true,
             confirmButtonColor: "#979797",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Reject Payment"
+            confirmButtonText: "Reject Document"
         }).then((result) => {
             if (result.isConfirmed) {
 
@@ -384,7 +384,12 @@ const VendorList = () => {
                             <CButton color="success" onClick={handleAcceptVendor}>Accept Document</CButton>
                         }
 
-                        <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleRejectDocuments}>Reject Document</CButton>
+                        {vendorData?.status == 2 ?
+                            null
+                            :
+                            <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleRejectDocuments}>Reject Document</CButton>
+                        }
+
 
                     </Modal.Header>
 

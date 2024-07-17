@@ -159,6 +159,7 @@ export default function DateWiseSummary(props) {
                     placement="top"
                     title="Quantity Data"
                     style={customPopoverStyle}
+                    trigger="focus"
                 >
                     <CButton color="info" style={{ fontSize: 14, color: 'white' }}>View</CButton>
                 </CPopover>

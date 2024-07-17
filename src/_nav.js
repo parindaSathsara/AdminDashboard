@@ -121,24 +121,25 @@ const _nav = [
   },
 
 
+
+
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Accounts',
     to: '/accounts',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
-    // items: [
-    //   {
-    //     component: CNavItem,
-    //     name: 'Customer Orders',
-    //     to: '/accounts/customerOrders',
-    //   },
-    //   // {
-    //   //   component: CNavItem,
-    //   //   name: 'Refund Requests',
-    //   //   to: '/accounts/refundRequests',
-    //   // },
-
-    // ],
+    items: [
+      {
+        component: CNavItem,
+        name: 'Customer Orders',
+        to: '/accounts/customerorders',
+      },
+      {
+        component: CNavItem,
+        name: 'Refund Requests',
+        to: '/accounts/refundRequests',
+      }
+    ],
   },
 
 

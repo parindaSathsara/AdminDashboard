@@ -7,6 +7,8 @@ import EducationOrderView from './Categories/EducationOrderView';
 import PleaseWaitLoader from 'src/Panels/PleaseWaitLoader/PleaseWaitLoader';
 import { Tab, Tabs } from 'react-bootstrap';
 
+import $ from 'jquery';
+
 export default function MoreOrderView(props) {
 
 
@@ -50,6 +52,16 @@ export default function MoreOrderView(props) {
     }, [props.preID, props?.notificationViewData])
 
 
+    useEffect(() => {
+        // $('div.modal').modal();
+
+        // $('div.modal').on('shown.bs.modal', function () {
+        //     $(document).off('focusin.modal');
+        // });
+    }, [])
+
+
+
 
 
 
@@ -59,7 +71,8 @@ export default function MoreOrderView(props) {
             {...props}
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
-            centered
+
+
         >
 
             <Modal.Header closeButton>

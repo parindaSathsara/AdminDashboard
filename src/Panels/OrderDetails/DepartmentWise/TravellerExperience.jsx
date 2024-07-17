@@ -238,11 +238,11 @@ export default function TravellerExperience(props) {
     const getDisableStatus = (rowData) => {
         // console.log(rowData, "Rowwwww")
 
-        if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered") {
+        if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered" || rowData?.data?.status == "Completed") {
             return true
         }
 
-        if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered") {
+        if (rowData?.data?.status == "Cancel" || rowData?.data?.status == "CustomerOrdered" || rowData?.data?.status == "Completed") {
             return true
         }
 
@@ -285,6 +285,12 @@ export default function TravellerExperience(props) {
                 else if (rowData?.data.status == "Completed") {
                     return (
                         <CIcon icon={cilCheckCircle} size="xxl" />
+                    )
+                }
+
+                else if (rowData?.data.status == "Cancel") {
+                    return (
+                        <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>Order Cancelled</CBadge>
                     )
                 }
 

@@ -244,143 +244,110 @@ function CustomerFeedbacks(props) {
                     </div>
                 </div>
 
-                {orderData.pay_category == "Online Transfer" ?
-                    <div className='mainContainerTables mt-4 mb-4'>
-                        <div className="col-md-12 sub_box materialTableDP">
-                            <CRow>
-                                <CCol md={6}>
-                                    <h5 className="cardHeader">Customer Bank Details</h5>
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Bank Name</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CFormLabel>{orderData.bank_name}</CFormLabel>
-                                        </CCol>
-                                    </CRow>
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Branch Name</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CFormLabel>{orderData.branch_name}</CFormLabel>
-                                        </CCol>
-                                    </CRow>
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Account Name</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CFormLabel>{orderData.account_name}</CFormLabel>
-                                        </CCol>
-                                    </CRow>
+                {/* {orderData.pay_category == "Online Transfer" ? */}
+                <div className='mainContainerTables mt-4 mb-4'>
+                    <div className="col-md-12 sub_box materialTableDP">
+                        <CRow>
+                            <CCol md={6}>
+                                <h5 className="cardHeader">Customer Bank Details</h5>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Bank Name</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CFormLabel>{orderData.bank_name}</CFormLabel>
+                                    </CCol>
+                                </CRow>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Branch Name</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CFormLabel>{orderData.branch_name}</CFormLabel>
+                                    </CCol>
+                                </CRow>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Account Name</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CFormLabel>{orderData.account_name}</CFormLabel>
+                                    </CCol>
+                                </CRow>
 
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Account Number</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CFormLabel>{orderData.account_number}</CFormLabel>
-                                        </CCol>
-                                    </CRow>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Account Number</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CFormLabel>{orderData.account_number}</CFormLabel>
+                                    </CCol>
+                                </CRow>
 
-                                </CCol>
+                            </CCol>
 
-                                <CCol md={6}>
-                                    <h5 className="cardHeader">Product Details</h5>
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Product</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CFormLabel>{product?.product_name}</CFormLabel>
-                                        </CCol>
-                                    </CRow>
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Product Description</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CFormLabel>{product?.product_desc}</CFormLabel>
-                                        </CCol>
-                                    </CRow>
-                                    <CRow>
-                                        <CCol md={2}>
-                                            <CFormLabel>Product Image</CFormLabel>
-                                        </CCol>
-                                        <CCol md={1}>
-                                            <CFormLabel>:</CFormLabel>
-                                        </CCol>
-                                        <CCol md={2}>
-                                            <CImage src={product?.product_image?.split(',')?.[0]} height={100} width={100} style={{ borderRadius: 15 }}></CImage>
-                                        </CCol>
-                                    </CRow>
-
-
-
-                                </CCol>
-                            </CRow>
+                            {/* <CCol md={6}>
+                                <h5 className="cardHeader">Product Details</h5>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Product</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CFormLabel>{product?.product_name}</CFormLabel>
+                                    </CCol>
+                                </CRow>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Product Description</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CFormLabel>{product?.product_desc}</CFormLabel>
+                                    </CCol>
+                                </CRow>
+                                <CRow>
+                                    <CCol md={2}>
+                                        <CFormLabel>Product Image</CFormLabel>
+                                    </CCol>
+                                    <CCol md={1}>
+                                        <CFormLabel>:</CFormLabel>
+                                    </CCol>
+                                    <CCol md={2}>
+                                        <CImage src={product?.product_image?.split(',')?.[0]} height={100} width={100} style={{ borderRadius: 15 }}></CImage>
+                                    </CCol>
+                                </CRow>
 
 
-                        </div>
+
+                            </CCol> */}
+                        </CRow>
+
+
                     </div>
-                    :
-                    null
+                </div>
 
-                }
                 <div className="radioGroup">
                     <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Confirm" defaultChecked onClick={handleApprovePayment} />
 
                 </div>
             </>
-
-            {feedbacks.length > 0 ?
-                <MaterialTable
-                    title="Customer Feedbacks"
-                    // tableRef={tableRef}
-                    data={data.rows}
-                    columns={data.columns}
-
-
-                    options={{
-
-                        sorting: true, search: true,
-                        searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                        filtering: false, paging: true, pageSizeOptions: [5, 10, 15, 20], pageSize: 5,
-                        paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                        exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                        showSelectAllCheckbox: false, showTextRowsSelected: false,
-                        grouping: true, columnsButton: true,
-                        headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
-                        rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-
-                        // fixedColumns: {
-                        //     left: 6
-                        // }
-                    }}
-                />
-                :
-                null
-
-            }
 
 
 

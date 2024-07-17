@@ -1,77 +1,27 @@
-import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CFormTextarea, CInputGroup, CInputGroupText } from "@coreui/react";
+import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CFormTextarea } from "@coreui/react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-
 function PaymentRejection(props) {
-
-    const [validated, setValidated] = useState(false)
-    const handleSubmit = (event) => {
-        const form = event.currentTarget
-        if (form.checkValidity() === false) {
-            event.preventDefault()
-            event.stopPropagation()
-        }
-        // else {
-        //     event.preventDefault()
-        //     setValidated(true)
-        //     // Swal.fire({
-        //     //     title: "Are you sure?",
-        //     //     text: "You want to reject this payment",
-        //     //     icon: "question",
-        //     //     showCancelButton: true,
-        //     //     confirmButtonColor: "#979797",
-        //     //     cancelButtonColor: "#d33",
-        //     //     confirmButtonText: "Reject Payment"
-        //     // }).then((result) => {
-        //     //     if (result.isConfirmed) {
-        //     //         Swal.fire({
-        //     //             title: "Payment Approved!",
-        //     //             text: "Order - " + orderid + "Payment Approved",
-        //     //             icon: "success"
-        //     //         });
-        //     //     }
-        //     // });
-
-        // }
-
-        event.preventDefault();
-        setValidated(true)
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You want to reject this payment",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#979797",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Reject Payment"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Payment Rejected!",
-                    text: "Order - " + props.orderid + " Payment Rejected",
-                    icon: "success"
-                });
-            }
-        });
-
-
-
-
-    }
-
-
+    const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({
         reasonRejection: '',
         remarks: '',
-    })
-
-
+        paidAmount: '',
+    });
     const [balanceAmount, setBalanceAmount] = useState({
         paidAmount: 0.00,
         balanceAmountToPay: 0.00
-    })
+    });
+    const [paymentDataSet, setPaymentDataSet] = useState([]);
 
+    useEffect(() => {
+        setPaymentDataSet(props.paymentDataSet);
+        setBalanceAmount({
+            ...balanceAmount,
+            balanceAmountToPay: props.paymentDataSet?.paid_amount || 0.00,
+        });
+    }, [props.paymentDataSet]);
 
     const handleFormData = (e) => {
         const { name, value } = e.target;
@@ -80,39 +30,45 @@ function PaymentRejection(props) {
             ...formData,
             [name]: value,
         });
-    }
 
+        if (name === 'paidAmount') {
+            setBalanceAmount({
+                ...balanceAmount,
+                paidAmount: value,
+                balanceAmountToPay: paymentDataSet.paid_amount - value,
+            });
+        }
+    };
 
-    const handleBalancePayment = (e) => {
-        const { name, value } = e.target;
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
 
-        setBalanceAmount({
-            ...balanceAmount,
-            balanceAmountToPay: paymentDataSet.paid_amount - value,
-            paidAmount: value
-        });
-
-
-    }
-
-
-
-    const [paymentDataSet, setPaymentDataSet] = useState([])
-
-
-    useEffect(() => {
-
-        setPaymentDataSet(props.paymentDataSet)
-        setBalanceAmount({
-            ...balanceAmount,
-            balanceAmountToPay: props.paymentDataSet?.paid_amount,
-        });
-
-        // console.log(props.paymentDataSet, "Payment Data set value is")
-
-    }, [props.paymentDataSet])
-
-
+        if (form.checkValidity() === false || (formData.paidAmount > balanceAmount.balanceAmountToPay && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
+            event.stopPropagation();
+            setValidated(true);
+        } else {
+            setValidated(true);
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to reject this payment",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#979797",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Reject Payment"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Add your API call or action here
+                    Swal.fire({
+                        title: "Payment Rejected!",
+                        text: "Order - " + props.orderid + " Payment Rejected",
+                        icon: "success"
+                    });
+                }
+            });
+        }
+    };
 
     return (
         <CForm
@@ -121,11 +77,10 @@ function PaymentRejection(props) {
             validated={validated}
             onSubmit={handleSubmit}
         >
-
             <CCol md={12}>
                 <CFormSelect
                     aria-describedby="validationCustom04Feedback"
-                    feedbackInvalid="Please select proper reason for payment rejection"
+                    feedbackInvalid="Please select a proper reason for payment rejection"
                     id="validationCustom04"
                     label="Reason for Payment Rejection"
                     onChange={handleFormData}
@@ -133,9 +88,8 @@ function PaymentRejection(props) {
                     value={formData.reasonRejection}
                     required
                 >
-                    <option value={""} selected>Select Option</option>
+                    <option value="">Select Option</option>
                     <option value="Indicates that only a portion of the total amount has been paid">Indicates that only a portion of the total amount has been paid</option>
-
                     <option value="The uploaded receipt is unclear, illegible, or distorted">The uploaded receipt is unclear, illegible, or distorted</option>
                     <option value="The receipt provided contains incorrect information, such as wrong transaction amounts, dates, or payee details">The receipt provided contains incorrect information, such as wrong transaction amounts, dates, or payee details</option>
                     <option value="The uploaded receipt is incomplete, missing essential details, or pages">The uploaded receipt is incomplete, missing essential details, or pages</option>
@@ -147,12 +101,14 @@ function PaymentRejection(props) {
                     <option value="The payment method used is not approved or accepted by the organization">The payment method used is not approved or accepted by the organization</option>
                     <option value="The payment or receipt violates the organization's financial policies">The payment or receipt violates the organization's financial policies</option>
                 </CFormSelect>
+                {/* <CFormFeedback type="invalid">
+                    Please select a reason for payment rejection.
+                </CFormFeedback> */}
             </CCol>
 
             <CCol md={12}>
                 <CFormTextarea
                     type="text"
-                    defaultValue=""
                     name="remarks"
                     id="validationCustom01"
                     label="Remarks"
@@ -161,55 +117,43 @@ function PaymentRejection(props) {
                 />
             </CCol>
 
-
-            {formData.reasonRejection == "Indicates that only a portion of the total amount has been paid" ?
+            {formData.reasonRejection === "Indicates that only a portion of the total amount has been paid" &&
                 <>
                     <CCol md={6}>
                         <CFormInput
                             type="number"
-                            defaultValue="0.00"
-
                             name="paidAmount"
                             id="validationCustom05"
                             label="Paid Amount"
-                            feedbackInvalid="Please fill paid amount"
-                            onChange={handleBalancePayment}
+                            feedbackInvalid="Paid amount must be less than or equal to balance amount"
+                            value={formData.paidAmount}
+                            onChange={handleFormData}
                             required
                         />
+                        {formData.paidAmount > balanceAmount.balanceAmountToPay && (
+                            <CFormFeedback invalid>Paid amount cannot be greater than the balance amount.</CFormFeedback>
+                        )}
                     </CCol>
                     <CCol md={6}>
                         <CFormInput
                             type="number"
-                            defaultValue="0.00"
                             name="balanceAmount"
                             id="validationCustom06"
                             label="Balance Amount"
-
                             disabled={true}
-
                             value={balanceAmount.balanceAmountToPay}
-                            onChange={handleBalancePayment}
-
                         />
                     </CCol>
-
                 </>
-
-                :
-                null
             }
 
-
-
-
-
             <CCol xs={12}>
-                <CButton className="btnViewAction" type="submit" >
+                <CButton className="btnViewAction" type="submit">
                     Reject Payment
                 </CButton>
             </CCol>
         </CForm>
-    )
+    );
 }
 
 export default PaymentRejection;
