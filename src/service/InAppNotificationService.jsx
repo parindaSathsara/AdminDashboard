@@ -19,7 +19,9 @@ export default function InAppNotificationService() {
 
                     const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
                     const lastOrderData = lastDoc.data();
-                    // console.log("Last Order: ", lastOrderData);
+                    console.log("Last Order: ", lastOrderData);
+
+
 
                     var dataSet = {}
 
