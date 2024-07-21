@@ -12,6 +12,7 @@ import EmailDashboard from './views/EmailDashboard/EmailDashboard'
 import ChatsMeta from './views/_Chats/ChatsMeta/ChatsMeta'
 import FlightsmainPage from './views/Flights/FlightsmainPage'
 import PushNotifications from './views/PushNotify/PushNotifications'
+import FlightOrderView from './views/dashboard/FlightUI/FlightOrderView'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -79,7 +80,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
 
 
-
+  { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
 
 
   { path: '/offers_promo', name: 'Promotions & Offers', element: OffersPromoDashboard, exact: true },

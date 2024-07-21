@@ -359,16 +359,22 @@ export default function BookingExperience(props) {
 
         { title: 'Name', field: 'name' },
         {
-            title: 'QTY', field: 'qty', render: rowData =>
-                <CPopover
-                    content={<QuantityContainer data={rowData.qty} />}
-                    placement="top"
-                    title="Quantity Data"
-                    style={customPopoverStyle}
-                    trigger="focus"
-                >
-                    <CButton color="success" style={{ fontSize: 14, color: 'white' }}>View</CButton>
-                </CPopover>
+            title: 'QTY', field: 'qty', render: rowData => {
+                rowData?.category != "flights" ?
+                    <CPopover
+                        content={<QuantityContainer data={rowData.qty} />}
+                        placement="top"
+                        title="Quantity Data"
+                        style={customPopoverStyle}
+                        trigger="focus"
+                    >
+                        <CButton color="success" style={{ fontSize: 14, color: 'white' }}>View</CButton>
+                    </CPopover>
+
+                    :
+                    null
+            }
+
 
         },
         { title: 'Date', field: 'date' },
@@ -379,7 +385,7 @@ export default function BookingExperience(props) {
         { title: 'Balance Amount', field: 'balance_amount' },
         {
             title: 'Feedbacks', field: 'feedbacks', render: rowData => {
-                if (rowData?.data?.orderFeedbacks.length > 0) {
+                if (rowData?.data?.orderFeedbacks?.length > 0) {
                     return (
                         <CPopover
                             content={<FeedbackContainer data={rowData.data?.orderFeedbacks} />}
@@ -530,7 +536,7 @@ export default function BookingExperience(props) {
     }))
 
 
-    { console.log(data, "ROW BOOKINGGGGG") }
+    console.log(productData, "Product dat avalue is")
 
 
 

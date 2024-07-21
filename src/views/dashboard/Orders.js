@@ -68,6 +68,7 @@ import { Expand, ExpandCircleDown, ExpandCircleDownSharp } from '@mui/icons-mate
 import { Fullscreen } from '@material-ui/icons';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from 'src/firebase';
+import FlightOrderView from './FlightUI/FlightOrderView';
 
 const Orders = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -402,6 +403,8 @@ const Orders = () => {
                 </h4>
               </CCol>
             </CRow>
+
+
 
             <Tabs
               defaultActiveKey="group"

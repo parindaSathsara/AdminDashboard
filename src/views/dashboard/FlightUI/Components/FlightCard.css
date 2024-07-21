@@ -1,0 +1,49 @@
+.airline-logo {
+    width: 80px;
+    height: 80px;
+}
+
+.flight-card .card-body {
+    padding: 0px;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.flight-section {
+    background-color: #fcfcfc;
+    padding: 0px;
+    margin: 0px !important;
+    border: 1px solid #E7ECEF;
+
+}
+
+.section-header {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.layover-section {
+    background-color: #B6DDEE;
+    color: #656E71;
+}
+
+.flight-card .card-body {
+    padding: 0px !important;
+}
+
+.section-header {
+    background-color: #E7ECEF;
+    font-size: 18px;
+    padding: 10px;
+}

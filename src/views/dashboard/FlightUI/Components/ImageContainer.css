@@ -1,0 +1,59 @@
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.image-item {
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container.image-count-1 .image-item {
+    flex: 0 0 100%;
+    /* One image taking full width */
+}
+
+.image-container.image-count-2 .image-item {
+    flex: 0 0 calc(50% - 10px);
+    /* Two images per row */
+}
+
+.image-container.image-count-3 .image-item:nth-child(1),
+.image-container.image-count-3 .image-item:nth-child(2) {
+    flex: 0 0 calc(50% - 10px);
+    /* First two images in one row */
+}
+
+.image-container.image-count-3 .image-item:nth-child(3) {
+    flex: 0 0 100%;
+    /* Third image centered in the second row */
+    display: flex;
+    justify-content: center;
+}
+
+.image-container.image-count-4 .image-item {
+    flex: 0 0 calc(50% - 10px);
+    /* Four images, two per row */
+}
+
+.image-container.image-count-2 .airline-logo,
+.image-container.image-count-3 .airline-logo,
+.image-container.image-count-4 .airline-logo {
+    width: 60px;
+    height: 60px;
+}
+
+.image-container.image-count-1 .airline-logo {
+    width: 80px;
+    height: 80px;
+}
+
+.airline-logo {
+    object-fit: contain;
+    /* Ensures the image fits within the box without stretching */
+}

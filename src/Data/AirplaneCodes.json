@@ -1,0 +1,4837 @@
+[
+    {
+      "AirlineCode": "A0",
+      "AirlineName": "Avian Lineas Aereas S.A Avianca Argentina",
+      "AlternativeBusinessName": "Avianca Argentina"
+    },
+    {
+      "AirlineCode": "A2",
+      "AirlineName": "Astra Airlines",
+      "AlternativeBusinessName": "Astra Airlines"
+    },
+    {
+      "AirlineCode": "A3",
+      "AirlineName": "Aegean Airlines S.A.",
+      "AlternativeBusinessName": "Aegean Airlines"
+    },
+    {
+      "AirlineCode": "A4",
+      "AirlineName": "JSC AZIMUTH Airlines",
+      "AlternativeBusinessName": "Azimuth Airlines"
+    },
+    {
+      "AirlineCode": "A5",
+      "AirlineName": "HOP!",
+      "AlternativeBusinessName": "HOP!"
+    },
+    {
+      "AirlineCode": "A6",
+      "AirlineName": "Yunnan Hong Tu Airlines Co. Ltd.",
+      "AlternativeBusinessName": "HongTu Airlines"
+    },
+    {
+      "AirlineCode": "A7",
+      "AirlineName": "Aereo Calafia S.A. de C.V.",
+      "AlternativeBusinessName": "Calafia Airlines"
+    },
+    {
+      "AirlineCode": "A8",
+      "AirlineName": "Aerolink Uganda Limited",
+      "AlternativeBusinessName": "Aerolink Uganda"
+    },
+    {
+      "AirlineCode": "A9",
+      "AirlineName": "Georgian Airways",
+      "AlternativeBusinessName": "Georgian Airways"
+    },
+    {
+      "AirlineCode": "AA",
+      "AirlineName": "American Airlines",
+      "AlternativeBusinessName": "American Airlines"
+    },
+    {
+      "AirlineCode": "AC",
+      "AirlineName": "Air Canada",
+      "AlternativeBusinessName": "Air Canada"
+    },
+    {
+      "AirlineCode": "AD",
+      "AirlineName": "Azul Linhas Aereas Brasileiras",
+      "AlternativeBusinessName": "Azul"
+    },
+    {
+      "AirlineCode": "AE",
+      "AirlineName": "Mandarin Airlines Ltd.",
+      "AlternativeBusinessName": "Mandarin Airlines"
+    },
+    {
+      "AirlineCode": "AF",
+      "AirlineName": "Air France",
+      "AlternativeBusinessName": "Air France"
+    },
+    {
+      "AirlineCode": "AG",
+      "AirlineName": "Air Ghana Limited",
+      "AlternativeBusinessName": "Air Ghana"
+    },
+    {
+      "AirlineCode": "AH",
+      "AirlineName": "Air Algerie",
+      "AlternativeBusinessName": "Air Algerie"
+    },
+    {
+      "AirlineCode": "AI",
+      "AirlineName": "Air India Limited",
+      "AlternativeBusinessName": "Air India"
+    },
+    {
+      "AirlineCode": "AJ",
+      "AirlineName": "Aztec Worldwide Airlines Inc.",
+      "AlternativeBusinessName": "Aztec Worldwide Airlines"
+    },
+    {
+      "AirlineCode": "AK",
+      "AirlineName": "AirAsia Berhad / AirAsia",
+      "AlternativeBusinessName": "AirAsia"
+    },
+    {
+      "AirlineCode": "AL",
+      "AirlineName": "Air Leisure",
+      "AlternativeBusinessName": "Air Leisure"
+    },
+    {
+      "AirlineCode": "AM",
+      "AirlineName": "Aeromexico Aerovias de Mexico S.A. de C.V.",
+      "AlternativeBusinessName": "Aeromexico"
+    },
+    {
+      "AirlineCode": "AN",
+      "AirlineName": "Advanced Air, LLC",
+      "AlternativeBusinessName": "Advanced Air"
+    },
+    {
+      "AirlineCode": "AO",
+      "AirlineName": "Air Juan Aviation Inc.",
+      "AlternativeBusinessName": "Air Juan"
+    },
+    {
+      "AirlineCode": "B0",
+      "AirlineName": "DreamJet SAS t/a La Compagnie",
+      "AlternativeBusinessName": "La Compagnie"
+    },
+    {
+      "AirlineCode": "AP",
+      "AirlineName": "Alba Star S.A. / Alba Star",
+      "AlternativeBusinessName": "Alba Star"
+    },
+    {
+      "AirlineCode": "AQ",
+      "AirlineName": "9 Air Co Ltd.",
+      "AlternativeBusinessName": "9 Air"
+    },
+    {
+      "AirlineCode": "B2",
+      "AirlineName": "Belavia",
+      "AlternativeBusinessName": "Belavia"
+    },
+    {
+      "AirlineCode": "AR",
+      "AirlineName": "Aerolineas Argentinas S.A.",
+      "AlternativeBusinessName": "Aerolineas Argentinas"
+    },
+    {
+      "AirlineCode": "B3",
+      "AirlineName": "Bhutan Airlines / Tashi Air Pvt Ltd",
+      "AlternativeBusinessName": "Bhutan Airlines"
+    },
+    {
+      "AirlineCode": "AS",
+      "AirlineName": "Alaska Airlines",
+      "AlternativeBusinessName": "Alaska Airlines"
+    },
+    {
+      "AirlineCode": "B4",
+      "AirlineName": "ZanAir Limited",
+      "AlternativeBusinessName": "ZanAir"
+    },
+    {
+      "AirlineCode": "AT",
+      "AirlineName": "Royal Air Maroc",
+      "AlternativeBusinessName": "Royal Air Maroc"
+    },
+    {
+      "AirlineCode": "B5",
+      "AirlineName": "East African Safari Air Express Ltd.",
+      "AlternativeBusinessName": "Fly-Sax"
+    },
+    {
+      "AirlineCode": "AU",
+      "AirlineName": "Cielos del Sur S.A. / Austral Lineas Aereas S.A.",
+      "AlternativeBusinessName": "Austral"
+    },
+    {
+      "AirlineCode": "B6",
+      "AirlineName": "Jetblue Airways Corporation",
+      "AlternativeBusinessName": "JetBlue Airways"
+    },
+    {
+      "AirlineCode": "AV",
+      "AirlineName": "Aerovias del Continente Americano S.A. AVIANCA",
+      "AlternativeBusinessName": "AVIANCA"
+    },
+    {
+      "AirlineCode": "B7",
+      "AirlineName": "Uni Airways Corporation",
+      "AlternativeBusinessName": "Uni Airways"
+    },
+    {
+      "AirlineCode": "AW",
+      "AirlineName": "Africa World Airlines",
+      "AlternativeBusinessName": "Africa World Airlines"
+    },
+    {
+      "AirlineCode": "B8",
+      "AirlineName": "Eritrean Airlines",
+      "AlternativeBusinessName": "Eritrean Airlines"
+    },
+    {
+      "AirlineCode": "AX",
+      "AirlineName": "Trans States Airlines, LLC",
+      "AlternativeBusinessName": "Trans States Airlines"
+    },
+    {
+      "AirlineCode": "B9",
+      "AirlineName": "Iran Airtour Airline",
+      "AlternativeBusinessName": "Iran Airtour"
+    },
+    {
+      "AirlineCode": "AY",
+      "AirlineName": "Finnair Oyj",
+      "AlternativeBusinessName": "Finnair"
+    },
+    {
+      "AirlineCode": "AZ",
+      "AirlineName": "Alitalia - Societa Aerea Italiana S.p.A",
+      "AlternativeBusinessName": "Alitalia"
+    },
+    {
+      "AirlineCode": "BA",
+      "AirlineName": "British Airways p.l.c.",
+      "AlternativeBusinessName": "British Airways"
+    },
+    {
+      "AirlineCode": "BB",
+      "AirlineName": "Seaborne Airlines",
+      "AlternativeBusinessName": "Seaborne Airlines"
+    },
+    {
+      "AirlineCode": "BC",
+      "AirlineName": "Skymark Airlines Inc.",
+      "AlternativeBusinessName": "Skymark Airlines"
+    },
+    {
+      "AirlineCode": "BD",
+      "AirlineName": "Cambodia Bayon Airlines Limited",
+      "AlternativeBusinessName": "Cambodia Bayon Airlines"
+    },
+    {
+      "AirlineCode": "BE",
+      "AirlineName": "Flybe Limited",
+      "AlternativeBusinessName": "Flybe"
+    },
+    {
+      "AirlineCode": "BF",
+      "AirlineName": "French Blue",
+      "AlternativeBusinessName": "French Blue"
+    },
+    {
+      "AirlineCode": "BG",
+      "AirlineName": "Biman Bangladesh Airlines Limited",
+      "AlternativeBusinessName": "Biman Bangladesh Airlines"
+    },
+    {
+      "AirlineCode": "BH",
+      "AirlineName": "Bismillah Airlines",
+      "AlternativeBusinessName": "Bismillah Airlines"
+    },
+    {
+      "AirlineCode": "BI",
+      "AirlineName": "Royal Brunei Airlines",
+      "AlternativeBusinessName": "Royal Brunei Airlines"
+    },
+    {
+      "AirlineCode": "BJ",
+      "AirlineName": "Nouvelair Tunisie",
+      "AlternativeBusinessName": "Nouvelair Tunisie"
+    },
+    {
+      "AirlineCode": "BK",
+      "AirlineName": "Okay Airways Company Limited",
+      "AlternativeBusinessName": "Okay Airways"
+    },
+    {
+      "AirlineCode": "BL",
+      "AirlineName": "Jetstar Pacific Airlines",
+      "AlternativeBusinessName": "Jetstar Pacific"
+    },
+    {
+      "AirlineCode": "BM",
+      "AirlineName": "British Midland Regional Limited t/a bmi Regional",
+      "AlternativeBusinessName": "bmi Regional"
+    },
+    {
+      "AirlineCode": "BN",
+      "AirlineName": "Air Inter Transport Co. Ltd",
+      "AlternativeBusinessName": "Air Inter Transport"
+    },
+    {
+      "AirlineCode": "BO",
+      "AirlineName": "Blafugl ehf. / Bluebird Cargo Ltd",
+      "AlternativeBusinessName": "Bluebird Nordic"
+    },
+    {
+      "AirlineCode": "BP",
+      "AirlineName": "Air Botswana",
+      "AlternativeBusinessName": "Air Botswana"
+    },
+    {
+      "AirlineCode": "C2",
+      "AirlineName": "CEIBA Intercontinental S.A.",
+      "AlternativeBusinessName": "CEIBA Intercontinental"
+    },
+    {
+      "AirlineCode": "BR",
+      "AirlineName": "EVA Airways Corporation",
+      "AlternativeBusinessName": "EVA Air"
+    },
+    {
+      "AirlineCode": "C3",
+      "AirlineName": "Trade Air Ltd.",
+      "AlternativeBusinessName": "Trade Air Ltd."
+    },
+    {
+      "AirlineCode": "BS",
+      "AirlineName": "US-Bangla Airlines Limited",
+      "AlternativeBusinessName": "US-Bangla Airlines"
+    },
+    {
+      "AirlineCode": "C4",
+      "AirlineName": "Conquest Air Inc",
+      "AlternativeBusinessName": "Conquest Air"
+    },
+    {
+      "AirlineCode": "BT",
+      "AirlineName": "Air Baltic Corporation AS",
+      "AlternativeBusinessName": "Air Baltic"
+    },
+    {
+      "AirlineCode": "C5",
+      "AirlineName": "Champlain Enterprises Inc. / Commutair",
+      "AlternativeBusinessName": "Commutair"
+    },
+    {
+      "AirlineCode": "BU",
+      "AirlineName": "Compagnie Africaine d'Aviation",
+      "AlternativeBusinessName": "CAA"
+    },
+    {
+      "AirlineCode": "BV",
+      "AirlineName": "Blue Panorama Airlines S.p.A",
+      "AlternativeBusinessName": "Blue Panorama Airlines"
+    },
+    {
+      "AirlineCode": "C7",
+      "AirlineName": "Saffron Aviation (Pvt) Ltd / Cinnamon Air",
+      "AlternativeBusinessName": "Cinnamon Air"
+    },
+    {
+      "AirlineCode": "BW",
+      "AirlineName": "Caribbean Airlines Limited",
+      "AlternativeBusinessName": "Caribbean Airlines"
+    },
+    {
+      "AirlineCode": "C8",
+      "AirlineName": "Cronos Airlines",
+      "AlternativeBusinessName": "Cronos Airlines"
+    },
+    {
+      "AirlineCode": "BX",
+      "AirlineName": "Air Busan",
+      "AlternativeBusinessName": "Air Busan"
+    },
+    {
+      "AirlineCode": "C9",
+      "AirlineName": "Alphaland Aviation Inc.",
+      "AlternativeBusinessName": "Alphaland Aviation"
+    },
+    {
+      "AirlineCode": "BY",
+      "AirlineName": "Thomson Airways Limited",
+      "AlternativeBusinessName": ""
+    },
+    {
+      "AirlineCode": "BZ",
+      "AirlineName": "Blue Dart Aviation Ltd.",
+      "AlternativeBusinessName": "Blue Dart Aviation"
+    },
+    {
+      "AirlineCode": "CA",
+      "AirlineName": "Air China Limited",
+      "AlternativeBusinessName": "Air China Limited"
+    },
+    {
+      "AirlineCode": "CB",
+      "AirlineName": "Trans Caribbean Air Export Import, Inc.",
+      "AlternativeBusinessName": "Trans Caribbean Air"
+    },
+    {
+      "AirlineCode": "CC",
+      "AirlineName": "CM Airlines",
+      "AlternativeBusinessName": "CM Airlines"
+    },
+    {
+      "AirlineCode": "CD",
+      "AirlineName": "Corendon Dutch Airlines",
+      "AlternativeBusinessName": "Corendon Dutch Airlines"
+    },
+    {
+      "AirlineCode": "CE",
+      "AirlineName": "Chalair Aviation",
+      "AlternativeBusinessName": "Chalair"
+    },
+    {
+      "AirlineCode": "CF",
+      "AirlineName": "China Postal Airlines Ltd.",
+      "AlternativeBusinessName": "China Postal Airlines"
+    },
+    {
+      "AirlineCode": "CG",
+      "AirlineName": "PNG Air Limited",
+      "AlternativeBusinessName": "PNG Air"
+    },
+    {
+      "AirlineCode": "CH",
+      "AirlineName": "Bemidji Aviation Services, Inc.",
+      "AlternativeBusinessName": "Bemidji Aviation Services"
+    },
+    {
+      "AirlineCode": "CI",
+      "AirlineName": "China Airlines Ltd.",
+      "AlternativeBusinessName": "China Airlines"
+    },
+    {
+      "AirlineCode": "CJ",
+      "AirlineName": "BA Cityflyer Limited",
+      "AlternativeBusinessName": "BA Cityflyer"
+    },
+    {
+      "AirlineCode": "CK",
+      "AirlineName": "China Cargo Airlines Ltd.",
+      "AlternativeBusinessName": "China Cargo"
+    },
+    {
+      "AirlineCode": "CL",
+      "AirlineName": "Lufthansa CityLine Gmbh",
+      "AlternativeBusinessName": "Lufthansa CityLine"
+    },
+    {
+      "AirlineCode": "CM",
+      "AirlineName": "Compania Panamena de Aviacion, S.A. (COPA)",
+      "AlternativeBusinessName": "COPA"
+    },
+    {
+      "AirlineCode": "CN",
+      "AirlineName": "Grand China Air Co., Ltd.",
+      "AlternativeBusinessName": "Grand China Air"
+    },
+    {
+      "AirlineCode": "CO",
+      "AirlineName": "Cobaltair Ltd",
+      "AlternativeBusinessName": "Cobalt"
+    },
+    {
+      "AirlineCode": "D0",
+      "AirlineName": "DHL Air Limited",
+      "AlternativeBusinessName": "DHL Air Limited"
+    },
+    {
+      "AirlineCode": "CP",
+      "AirlineName": "Compass Airlines LLC",
+      "AlternativeBusinessName": "Compass Airlines"
+    },
+    {
+      "AirlineCode": "CQ",
+      "AirlineName": "Charterlines, Inc.",
+      "AlternativeBusinessName": "Charterlines"
+    },
+    {
+      "AirlineCode": "D2",
+      "AirlineName": "Severstal Aircompany Ltd.",
+      "AlternativeBusinessName": "Severstal Aircompany"
+    },
+    {
+      "AirlineCode": "D3",
+      "AirlineName": "Daallo Airlines",
+      "AlternativeBusinessName": "Daallo Airlines"
+    },
+    {
+      "AirlineCode": "CS",
+      "AirlineName": "Comlux Aruba NV",
+      "AlternativeBusinessName": "Comlux Aruba"
+    },
+    {
+      "AirlineCode": "D4",
+      "AirlineName": "Dart Limited Trust Distribution",
+      "AlternativeBusinessName": "Dart Limited"
+    },
+    {
+      "AirlineCode": "CT",
+      "AirlineName": "Alitalia CityLiner S.p.A.",
+      "AlternativeBusinessName": "Alitalia CityLiner"
+    },
+    {
+      "AirlineCode": "D5",
+      "AirlineName": "DHL Aero Expreso S.A.",
+      "AlternativeBusinessName": "DHL Aero Expreso"
+    },
+    {
+      "AirlineCode": "CU",
+      "AirlineName": "Cubana de Aviacion S.A.",
+      "AlternativeBusinessName": "Cubana de Aviacion"
+    },
+    {
+      "AirlineCode": "CV",
+      "AirlineName": "Cargolux Airlines International S.A.",
+      "AlternativeBusinessName": "Cargolux Airlines International"
+    },
+    {
+      "AirlineCode": "D7",
+      "AirlineName": "AirAsia X Sdn. Bhd",
+      "AlternativeBusinessName": "AirAsia X"
+    },
+    {
+      "AirlineCode": "CW",
+      "AirlineName": "Air Cargo Global, s.r.o",
+      "AlternativeBusinessName": "Air Cargo Global"
+    },
+    {
+      "AirlineCode": "D8",
+      "AirlineName": "Norwegian Air International Ltd",
+      "AlternativeBusinessName": "Norwegian Air International"
+    },
+    {
+      "AirlineCode": "CX",
+      "AirlineName": "Cathay Pacific Airways, Ltd.",
+      "AlternativeBusinessName": "Cathay Pacific Airways"
+    },
+    {
+      "AirlineCode": "CY",
+      "AirlineName": "Charlie Airlines Limited",
+      "AlternativeBusinessName": "Cyprus Airways"
+    },
+    {
+      "AirlineCode": "CZ",
+      "AirlineName": "China Southern Airlines",
+      "AlternativeBusinessName": "China Southern Airlines"
+    },
+    {
+      "AirlineCode": "DC",
+      "AirlineName": "Braathens Regional Airways AB",
+      "AlternativeBusinessName": ""
+    },
+    {
+      "AirlineCode": "DD",
+      "AirlineName": "Nok Airlines Public Company Limited / Nok Air",
+      "AlternativeBusinessName": "Nok Air"
+    },
+    {
+      "AirlineCode": "DE",
+      "AirlineName": "Condor Flugdienst GmbH",
+      "AlternativeBusinessName": "Condor Flugdienst"
+    },
+    {
+      "AirlineCode": "DF",
+      "AirlineName": "Condor Berlin GmbH",
+      "AlternativeBusinessName": "Condor Berlin"
+    },
+    {
+      "AirlineCode": "DG",
+      "AirlineName": "Cebgo, Inc / Cebgo",
+      "AlternativeBusinessName": "Cebgo"
+    },
+    {
+      "AirlineCode": "DH",
+      "AirlineName": "Norwegian Air Norway AS",
+      "AlternativeBusinessName": "Norwegian Air Norway"
+    },
+    {
+      "AirlineCode": "DI",
+      "AirlineName": "Norwegian Air UK Ltd",
+      "AlternativeBusinessName": "Norwegian Air"
+    },
+    {
+      "AirlineCode": "DJ",
+      "AirlineName": "AirAsia Japan Co. Ltd",
+      "AlternativeBusinessName": "AirAsia Japan"
+    },
+    {
+      "AirlineCode": "DK",
+      "AirlineName": "Thomas Cook Airlines Scandinavia A/S",
+      "AlternativeBusinessName": "Thomas Cook Airlines Scandinavia"
+    },
+    {
+      "AirlineCode": "DL",
+      "AirlineName": "Delta Air Lines, Inc.",
+      "AlternativeBusinessName": "Delta Air Lines"
+    },
+    {
+      "AirlineCode": "DP",
+      "AirlineName": "Pobeda Airlines LLC",
+      "AlternativeBusinessName": "Pobeda"
+    },
+    {
+      "AirlineCode": "E2",
+      "AirlineName": "Eurowings Europe GmbH",
+      "AlternativeBusinessName": "Eurowings Europe"
+    },
+    {
+      "AirlineCode": "DR",
+      "AirlineName": "Ruili Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Ruili Airlines"
+    },
+    {
+      "AirlineCode": "E3",
+      "AirlineName": "Sabaidee Airways Co. Ltd / New Gen",
+      "AlternativeBusinessName": "New Gen Airways"
+    },
+    {
+      "AirlineCode": "DS",
+      "AirlineName": "Easyjet Switzerland S.A.",
+      "AlternativeBusinessName": "Easyjet Switzerland"
+    },
+    {
+      "AirlineCode": "E4",
+      "AirlineName": "Enter Air Spolka z.o.o.",
+      "AlternativeBusinessName": "Enter Air"
+    },
+    {
+      "AirlineCode": "DT",
+      "AirlineName": "TAAG - Linhas Aereas de Angola",
+      "AlternativeBusinessName": "TAAG"
+    },
+    {
+      "AirlineCode": "E5",
+      "AirlineName": "Air Arabia Egypt",
+      "AlternativeBusinessName": "Air Arabia Egypt"
+    },
+    {
+      "AirlineCode": "DU",
+      "AirlineName": "Sky Jet M.G. Inc.",
+      "AlternativeBusinessName": "Air Liaison"
+    },
+    {
+      "AirlineCode": "E6",
+      "AirlineName": "Bringer Air Cargo Taxi Aereo Ltda",
+      "AlternativeBusinessName": "Bringer Air Cargo Taxi"
+    },
+    {
+      "AirlineCode": "DV",
+      "AirlineName": "JSC Aircompany SCAT",
+      "AlternativeBusinessName": "AirCompany SCAT"
+    },
+    {
+      "AirlineCode": "E7",
+      "AirlineName": "Estafeta Carga Aerea, S.A. de C.V.",
+      "AlternativeBusinessName": "Estafeta"
+    },
+    {
+      "AirlineCode": "DW",
+      "AirlineName": "Dominican Wings S.A.",
+      "AlternativeBusinessName": "Dominican Wings"
+    },
+    {
+      "AirlineCode": "E8",
+      "AirlineName": "City Airways Company Limited",
+      "AlternativeBusinessName": "City Airways"
+    },
+    {
+      "AirlineCode": "DX",
+      "AirlineName": "Danish Air Transport",
+      "AlternativeBusinessName": "Danish Air"
+    },
+    {
+      "AirlineCode": "E9",
+      "AirlineName": "Evelop Airlines S.L.",
+      "AlternativeBusinessName": "Evelop Airlines"
+    },
+    {
+      "AirlineCode": "DY",
+      "AirlineName": "Norwegian Air Shuttle A.S",
+      "AlternativeBusinessName": "Norwegian Air Shuttle"
+    },
+    {
+      "AirlineCode": "DZ",
+      "AirlineName": "Donghai Airlines Co., Ltd",
+      "AlternativeBusinessName": "Donghai Airlines"
+    },
+    {
+      "AirlineCode": "EA",
+      "AirlineName": "Eastern Air Lines Group Inc.",
+      "AlternativeBusinessName": "Eastern Air Lines"
+    },
+    {
+      "AirlineCode": "EB",
+      "AirlineName": "Wamos Air S.A.",
+      "AlternativeBusinessName": "Wamos Air"
+    },
+    {
+      "AirlineCode": "EC",
+      "AirlineName": "Openskies",
+      "AlternativeBusinessName": "Openskies"
+    },
+    {
+      "AirlineCode": "ED",
+      "AirlineName": "AirExplore s.r.o.",
+      "AlternativeBusinessName": "AirExplore"
+    },
+    {
+      "AirlineCode": "EE",
+      "AirlineName": "Regional Jet OU",
+      "AlternativeBusinessName": "Regional Jet"
+    },
+    {
+      "AirlineCode": "EG",
+      "AirlineName": "Ernest S.p.A / Ernest Airlines",
+      "AlternativeBusinessName": "Ernest Airlines"
+    },
+    {
+      "AirlineCode": "EH",
+      "AirlineName": "ANA Wings Co. Ltd.",
+      "AlternativeBusinessName": "ANA Wings"
+    },
+    {
+      "AirlineCode": "EI",
+      "AirlineName": "Aer Lingus Limited",
+      "AlternativeBusinessName": "Aer Lingus"
+    },
+    {
+      "AirlineCode": "EK",
+      "AirlineName": "Emirates",
+      "AlternativeBusinessName": "Emirates"
+    },
+    {
+      "AirlineCode": "EL",
+      "AirlineName": "Ellinair S.A",
+      "AlternativeBusinessName": "Ellinair"
+    },
+    {
+      "AirlineCode": "EM",
+      "AirlineName": "Empire Airlines",
+      "AlternativeBusinessName": "Empire Airlines"
+    },
+    {
+      "AirlineCode": "EN",
+      "AirlineName": "Air Dolomiti S.p.A. Aeree Regionali Europee",
+      "AlternativeBusinessName": "Air Dolomiti"
+    },
+    {
+      "AirlineCode": "EP",
+      "AirlineName": "Iran Aseman Airlines",
+      "AlternativeBusinessName": "Iran Aseman Airlines"
+    },
+    {
+      "AirlineCode": "EQ",
+      "AirlineName": "Tame Linea Aerea Del Ecuador",
+      "AlternativeBusinessName": "TAME"
+    },
+    {
+      "AirlineCode": "F2",
+      "AirlineName": "Safarilink Aviation Limited",
+      "AlternativeBusinessName": "Safarilink"
+    },
+    {
+      "AirlineCode": "ER",
+      "AirlineName": "Serene Air",
+      "AlternativeBusinessName": "Serene Air"
+    },
+    {
+      "AirlineCode": "F3",
+      "AirlineName": "flyadeal",
+      "AlternativeBusinessName": "flyadeal"
+    },
+    {
+      "AirlineCode": "ES",
+      "AirlineName": "DHL Aviation EEMEA B.S.C.(c)",
+      "AlternativeBusinessName": "DHL Aviation EEMEA"
+    },
+    {
+      "AirlineCode": "F4",
+      "AirlineName": "Air Charter, Inc / Air Flamenco",
+      "AlternativeBusinessName": "Air Flamenco"
+    },
+    {
+      "AirlineCode": "ET",
+      "AirlineName": "Ethiopian Airlines Enterprise",
+      "AlternativeBusinessName": "Ethiopian Airlines"
+    },
+    {
+      "AirlineCode": "F5",
+      "AirlineName": "Aerotranscargo",
+      "AlternativeBusinessName": "Aerotranscargo"
+    },
+    {
+      "AirlineCode": "EU",
+      "AirlineName": "Chengdu Airlines",
+      "AlternativeBusinessName": "Chengdu Airlines"
+    },
+    {
+      "AirlineCode": "F6",
+      "AirlineName": "Fly Compass Service S.R.L.",
+      "AlternativeBusinessName": "FlyValan"
+    },
+    {
+      "AirlineCode": "EV",
+      "AirlineName": "ExpressJet Airlines, Inc.",
+      "AlternativeBusinessName": "ExpressJet"
+    },
+    {
+      "AirlineCode": "EW",
+      "AirlineName": "Eurowings GmbH",
+      "AlternativeBusinessName": "Eurowings"
+    },
+    {
+      "AirlineCode": "F8",
+      "AirlineName": "Flair Airlines Ltd.",
+      "AlternativeBusinessName": "Flair Airlines"
+    },
+    {
+      "AirlineCode": "F9",
+      "AirlineName": "Frontier Airlines, Inc.",
+      "AlternativeBusinessName": "Frontier Airlines"
+    },
+    {
+      "AirlineCode": "EY",
+      "AirlineName": "Etihad Airways",
+      "AlternativeBusinessName": "Etihad Airways"
+    },
+    {
+      "AirlineCode": "EZ",
+      "AirlineName": "Sun Air Of Scandinavia A.S.",
+      "AlternativeBusinessName": "Sun Air"
+    },
+    {
+      "AirlineCode": "FA",
+      "AirlineName": "Safair (Proprietary) Ltd.",
+      "AlternativeBusinessName": "Safair"
+    },
+    {
+      "AirlineCode": "FB",
+      "AirlineName": "Bulgaria Air",
+      "AlternativeBusinessName": "Bulgaria Air"
+    },
+    {
+      "AirlineCode": "FC",
+      "AirlineName": "Fast Colombia S.A.S / Viva Colombia",
+      "AlternativeBusinessName": "VivaColombia"
+    },
+    {
+      "AirlineCode": "FD",
+      "AirlineName": "Thai AirAsia Co., Ltd.",
+      "AlternativeBusinessName": "Thai AirAsia"
+    },
+    {
+      "AirlineCode": "FE",
+      "AirlineName": "Far Eastern Air Transport Corp",
+      "AlternativeBusinessName": "Far Eastern Air"
+    },
+    {
+      "AirlineCode": "FG",
+      "AirlineName": "Ariana Afghan Airlines",
+      "AlternativeBusinessName": "Ariana Afghan Airlines"
+    },
+    {
+      "AirlineCode": "FH",
+      "AirlineName": "Freebird Airlines",
+      "AlternativeBusinessName": "Freebird Airlines"
+    },
+    {
+      "AirlineCode": "FI",
+      "AirlineName": "Icelandair",
+      "AlternativeBusinessName": "Icelandair"
+    },
+    {
+      "AirlineCode": "FJ",
+      "AirlineName": "Air Pacific Limited t/a Fiji Airways",
+      "AlternativeBusinessName": "Fiji Airways"
+    },
+    {
+      "AirlineCode": "FK",
+      "AirlineName": "Kelowna Flightcraft Air Charter Ltd. / KF Cargo",
+      "AlternativeBusinessName": "KF Cargo"
+    },
+    {
+      "AirlineCode": "FL",
+      "AirlineName": "AirTran Airways, Inc.",
+      "AlternativeBusinessName": "AirTran"
+    },
+    {
+      "AirlineCode": "FM",
+      "AirlineName": "Shanghai Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Shanghai Airlines"
+    },
+    {
+      "AirlineCode": "FN",
+      "AirlineName": "Fastjet Airlines Limited",
+      "AlternativeBusinessName": "Fastjet"
+    },
+    {
+      "AirlineCode": "FP",
+      "AirlineName": "Pelican Airlines Pty Ltd",
+      "AlternativeBusinessName": "Pelican Airlines"
+    },
+    {
+      "AirlineCode": "FQ",
+      "AirlineName": "Fenix Airways of Florida, Inc / Fenix Airways",
+      "AlternativeBusinessName": "Fenix Airways"
+    },
+    {
+      "AirlineCode": "G2",
+      "AirlineName": "Galeyr Airline",
+      "AlternativeBusinessName": "Galeyr Airline"
+    },
+    {
+      "AirlineCode": "FR",
+      "AirlineName": "Ryanair Ltd.",
+      "AlternativeBusinessName": "Ryanair"
+    },
+    {
+      "AirlineCode": "G3",
+      "AirlineName": "GOL Linhas Aereas S.A.",
+      "AlternativeBusinessName": "Gol"
+    },
+    {
+      "AirlineCode": "FS",
+      "AirlineName": "flyglobal charter Sdn. Bhd.",
+      "AlternativeBusinessName": "flyglobal charter"
+    },
+    {
+      "AirlineCode": "G4",
+      "AirlineName": "Allegiant Air LLC",
+      "AlternativeBusinessName": "Allegiant Air"
+    },
+    {
+      "AirlineCode": "FT",
+      "AirlineName": "FlyEgypt",
+      "AlternativeBusinessName": "FlyEgypt"
+    },
+    {
+      "AirlineCode": "G5",
+      "AirlineName": "China Express Airlines",
+      "AlternativeBusinessName": "China Express Airlines"
+    },
+    {
+      "AirlineCode": "FU",
+      "AirlineName": "Fuzhou Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Fuzhou Airlines"
+    },
+    {
+      "AirlineCode": "G6",
+      "AirlineName": "Aura Airlines",
+      "AlternativeBusinessName": "Aura Airlines"
+    },
+    {
+      "AirlineCode": "FV",
+      "AirlineName": "Rossiya Airlines JSC",
+      "AlternativeBusinessName": "Rossiya Airlines"
+    },
+    {
+      "AirlineCode": "G7",
+      "AirlineName": "GoJet Airlines LLC",
+      "AlternativeBusinessName": "GoJet Airlines"
+    },
+    {
+      "AirlineCode": "FW",
+      "AirlineName": "IBEX Airlines Co., Ltd.",
+      "AlternativeBusinessName": "IBEX Airlines"
+    },
+    {
+      "AirlineCode": "G8",
+      "AirlineName": "Go Airlines (India) Ltd.",
+      "AlternativeBusinessName": "Go Air"
+    },
+    {
+      "AirlineCode": "FX",
+      "AirlineName": "FedEx",
+      "AlternativeBusinessName": "FedEx"
+    },
+    {
+      "AirlineCode": "G9",
+      "AirlineName": "Air Arabia",
+      "AlternativeBusinessName": "Air Arabia"
+    },
+    {
+      "AirlineCode": "FY",
+      "AirlineName": "FlyFirefly Sdn. Bhd.",
+      "AlternativeBusinessName": "FlyFirefly"
+    },
+    {
+      "AirlineCode": "FZ",
+      "AirlineName": "flydubai",
+      "AlternativeBusinessName": "flydubai"
+    },
+    {
+      "AirlineCode": "GA",
+      "AirlineName": "Garuda Indonesia",
+      "AlternativeBusinessName": "Garuda Indonesia"
+    },
+    {
+      "AirlineCode": "GB",
+      "AirlineName": "ABX Air, Inc.",
+      "AlternativeBusinessName": "ABX Air"
+    },
+    {
+      "AirlineCode": "GC",
+      "AirlineName": "Global Feeder Services LLC",
+      "AlternativeBusinessName": "Global Feeder Services"
+    },
+    {
+      "AirlineCode": "GE",
+      "AirlineName": "Global Aviation Operations (PTY) Ltd",
+      "AlternativeBusinessName": "Global Aviation"
+    },
+    {
+      "AirlineCode": "GF",
+      "AirlineName": "Gulf Air B.S.C. (c)",
+      "AlternativeBusinessName": "Gulf Air"
+    },
+    {
+      "AirlineCode": "GG",
+      "AirlineName": "Sky Lease I Inc.",
+      "AlternativeBusinessName": "Sky Lease I"
+    },
+    {
+      "AirlineCode": "GH",
+      "AirlineName": "Globus LLC",
+      "AlternativeBusinessName": "Globus"
+    },
+    {
+      "AirlineCode": "GI",
+      "AirlineName": "Guangdong Longhao Airlines Co.,Ltd",
+      "AlternativeBusinessName": "Guangdong Longhao"
+    },
+    {
+      "AirlineCode": "GJ",
+      "AirlineName": "Zhejiang Loong Airlines Co. Ltd",
+      "AlternativeBusinessName": "Loong Air"
+    },
+    {
+      "AirlineCode": "GK",
+      "AirlineName": "Jetstar Japan Co. Ltd.",
+      "AlternativeBusinessName": "Jetstar Japan"
+    },
+    {
+      "AirlineCode": "GL",
+      "AirlineName": "Air Greenland A/S",
+      "AlternativeBusinessName": "Air Greenland"
+    },
+    {
+      "AirlineCode": "GM",
+      "AirlineName": "Germania Flug AG",
+      "AlternativeBusinessName": "Germania Flug"
+    },
+    {
+      "AirlineCode": "GO",
+      "AirlineName": "ULS Airlines Cargo",
+      "AlternativeBusinessName": "ULS Airlines Cargo"
+    },
+    {
+      "AirlineCode": "GP",
+      "AirlineName": "APG Airlines",
+      "AlternativeBusinessName": "APG Airlines"
+    },
+    {
+      "AirlineCode": "GQ",
+      "AirlineName": "Sky Express S.A.",
+      "AlternativeBusinessName": "Sky Express"
+    },
+    {
+      "AirlineCode": "H2",
+      "AirlineName": "Sky Airline S.A.",
+      "AlternativeBusinessName": "Sky Airline"
+    },
+    {
+      "AirlineCode": "GR",
+      "AirlineName": "Aurigny Air Services Limited",
+      "AlternativeBusinessName": "Aurigny Air Services"
+    },
+    {
+      "AirlineCode": "GS",
+      "AirlineName": "TianJin Airlines Co. Ltd.",
+      "AlternativeBusinessName": "TianJin Airlines"
+    },
+    {
+      "AirlineCode": "H4",
+      "AirlineName": "Raven Air, LLC / Island Hoppers",
+      "AlternativeBusinessName": "Island Hoppers"
+    },
+    {
+      "AirlineCode": "GT",
+      "AirlineName": "Air Guilin Co. Ltd.",
+      "AlternativeBusinessName": "Air Guilin"
+    },
+    {
+      "AirlineCode": "GU",
+      "AirlineName": "AVIATECA, S.A.",
+      "AlternativeBusinessName": "AVIATECA"
+    },
+    {
+      "AirlineCode": "H6",
+      "AirlineName": "Hageland Aviation Services, Inc.",
+      "AlternativeBusinessName": "Hageland Aviation"
+    },
+    {
+      "AirlineCode": "GV",
+      "AirlineName": "Grant Aviation, Inc.",
+      "AlternativeBusinessName": "Grant Aviation"
+    },
+    {
+      "AirlineCode": "H7",
+      "AirlineName": "Taron Avia LLC",
+      "AlternativeBusinessName": "Taron Avia"
+    },
+    {
+      "AirlineCode": "GW",
+      "AirlineName": "Go Fly, LLC.",
+      "AlternativeBusinessName": "Go Fly"
+    },
+    {
+      "AirlineCode": "H8",
+      "AirlineName": "Chilejet S.A",
+      "AlternativeBusinessName": "Chilejet"
+    },
+    {
+      "AirlineCode": "GX",
+      "AirlineName": "Guangxi Beibu Gulf Airlines Co., Ltd",
+      "AlternativeBusinessName": "Guangxi Beibu Gulf Airlines"
+    },
+    {
+      "AirlineCode": "H9",
+      "AirlineName": "Himalaya Airlines Pvt. Ltd",
+      "AlternativeBusinessName": "Himalaya Airlines"
+    },
+    {
+      "AirlineCode": "GY",
+      "AirlineName": "Colorful GuiZhou Airlines Co., Ltd",
+      "AlternativeBusinessName": "Colorful GuiZhou Airlines"
+    },
+    {
+      "AirlineCode": "GZ",
+      "AirlineName": "Air Rarotonga",
+      "AlternativeBusinessName": "Air Rarotonga"
+    },
+    {
+      "AirlineCode": "HA",
+      "AirlineName": "Hawaiian Airlines Inc.",
+      "AlternativeBusinessName": "Hawaiian Airlines"
+    },
+    {
+      "AirlineCode": "HB",
+      "AirlineName": "Asia Atlantic Airlines Co. Ltd",
+      "AlternativeBusinessName": "Asia Atlantic Airlines"
+    },
+    {
+      "AirlineCode": "HD",
+      "AirlineName": "Airdo Co., Ltd",
+      "AlternativeBusinessName": "Air Do"
+    },
+    {
+      "AirlineCode": "HE",
+      "AirlineName": "LGW - Luftfahrtgesellschaft Walter GmbH",
+      "AlternativeBusinessName": "LGW"
+    },
+    {
+      "AirlineCode": "HF",
+      "AirlineName": "Air Cote D'Ivoire",
+      "AlternativeBusinessName": "Air Cote D'Ivoire"
+    },
+    {
+      "AirlineCode": "HG",
+      "AirlineName": "NIKI Luftfahrt GmBh",
+      "AlternativeBusinessName": "NIKI"
+    },
+    {
+      "AirlineCode": "HH",
+      "AirlineName": "Taban Airlines",
+      "AlternativeBusinessName": "Taban Airlines"
+    },
+    {
+      "AirlineCode": "HI",
+      "AirlineName": "Papillon Airways",
+      "AlternativeBusinessName": "Papillon Airways"
+    },
+    {
+      "AirlineCode": "HJ",
+      "AirlineName": "Tasman Cargo Airlines Pty Ltd.",
+      "AlternativeBusinessName": "Tasman Cargo Airlines"
+    },
+    {
+      "AirlineCode": "HK",
+      "AirlineName": "Skippers Aviation Pty, Ltd.",
+      "AlternativeBusinessName": "Skippers Aviation"
+    },
+    {
+      "AirlineCode": "HM",
+      "AirlineName": "Air Seychelles Limited",
+      "AlternativeBusinessName": "Air Seychelles"
+    },
+    {
+      "AirlineCode": "HO",
+      "AirlineName": "Juneyao Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Juneyao Airlines"
+    },
+    {
+      "AirlineCode": "HP",
+      "AirlineName": "Amapola Flyg AB",
+      "AlternativeBusinessName": "Amapola"
+    },
+    {
+      "AirlineCode": "HQ",
+      "AirlineName": "Thomas Cook Airlines Belgium N.V.",
+      "AlternativeBusinessName": "Thomas Cook Belgium"
+    },
+    {
+      "AirlineCode": "I2",
+      "AirlineName": "Compania Operadora de Corto y Medio Radio Iberia Express, S.A.U.",
+      "AlternativeBusinessName": "Iberia Express"
+    },
+    {
+      "AirlineCode": "HR",
+      "AirlineName": "Hahn Air Lines Gmbh",
+      "AlternativeBusinessName": "Hahn Air Lines"
+    },
+    {
+      "AirlineCode": "HS",
+      "AirlineName": "Heli Securite Helicopter Airline",
+      "AlternativeBusinessName": "Heli Securite"
+    },
+    {
+      "AirlineCode": "I4",
+      "AirlineName": "LTD I Fly",
+      "AlternativeBusinessName": "LTD I Fly"
+    },
+    {
+      "AirlineCode": "I5",
+      "AirlineName": "Air Asia (India) Private Limited",
+      "AlternativeBusinessName": "AirAsia (India)"
+    },
+    {
+      "AirlineCode": "HU",
+      "AirlineName": "Hainan Airlines Holding Company Limited",
+      "AlternativeBusinessName": "Hainan Airlines"
+    },
+    {
+      "AirlineCode": "HV",
+      "AirlineName": "Transavia Airlines",
+      "AlternativeBusinessName": "Transavia"
+    },
+    {
+      "AirlineCode": "I7",
+      "AirlineName": "Inter Iles Air",
+      "AlternativeBusinessName": "Inter Iles Air"
+    },
+    {
+      "AirlineCode": "HW",
+      "AirlineName": "North-Wright Airways Ltd.",
+      "AlternativeBusinessName": "North-Wright Airways"
+    },
+    {
+      "AirlineCode": "I8",
+      "AirlineName": "Izhavia Public Stock Company",
+      "AlternativeBusinessName": "Izhavia"
+    },
+    {
+      "AirlineCode": "HX",
+      "AirlineName": "Hong Kong Airlines Limited",
+      "AlternativeBusinessName": "Hong Kong Airlines"
+    },
+    {
+      "AirlineCode": "I9",
+      "AirlineName": "Air Italy S.p.A.",
+      "AlternativeBusinessName": "Air Italy"
+    },
+    {
+      "AirlineCode": "HY",
+      "AirlineName": "Uzbekistan Airways",
+      "AlternativeBusinessName": "Uzbekistan Airways"
+    },
+    {
+      "AirlineCode": "HZ",
+      "AirlineName": "Joint-Stock Company Aurora Airlines",
+      "AlternativeBusinessName": "Aurora Airlines"
+    },
+    {
+      "AirlineCode": "IA",
+      "AirlineName": "Iraqi Airways",
+      "AlternativeBusinessName": "Iraqi Airways"
+    },
+    {
+      "AirlineCode": "IB",
+      "AirlineName": "Iberia Lineas Aereas de Espana Sociedad Anonima Operadora",
+      "AlternativeBusinessName": "Iberia"
+    },
+    {
+      "AirlineCode": "ID",
+      "AirlineName": "PT. Batik Air Indonesia",
+      "AlternativeBusinessName": "Batik Air"
+    },
+    {
+      "AirlineCode": "IE",
+      "AirlineName": "Solomon Airlines Limited",
+      "AlternativeBusinessName": "Solomon Airlines"
+    },
+    {
+      "AirlineCode": "IF",
+      "AirlineName": "Gulf & Caribbean Cargo",
+      "AlternativeBusinessName": "Gulf & Caribbean Cargo"
+    },
+    {
+      "AirlineCode": "IG",
+      "AirlineName": "Meridiana fly S.p.A",
+      "AlternativeBusinessName": "Meridiana fly"
+    },
+    {
+      "AirlineCode": "II",
+      "AirlineName": "IBC Airways, Inc.",
+      "AlternativeBusinessName": "IBC Airways"
+    },
+    {
+      "AirlineCode": "IJ",
+      "AirlineName": "Spring Airlines Japan Co. Ltd.",
+      "AlternativeBusinessName": "Spring Airlines Japan"
+    },
+    {
+      "AirlineCode": "IK",
+      "AirlineName": "LLC IKAR",
+      "AlternativeBusinessName": "LLC IKAR"
+    },
+    {
+      "AirlineCode": "IL",
+      "AirlineName": "PT. Trigana Air Service",
+      "AlternativeBusinessName": "Trigana Air"
+    },
+    {
+      "AirlineCode": "IM",
+      "AirlineName": "JSC Aircompany ATMA",
+      "AlternativeBusinessName": "Jupiter Jet"
+    },
+    {
+      "AirlineCode": "IN",
+      "AirlineName": "PT. Nam Air",
+      "AlternativeBusinessName": "Nam Air"
+    },
+    {
+      "AirlineCode": "IO",
+      "AirlineName": "Closed Joint Stock Company IrAero",
+      "AlternativeBusinessName": "IrAero"
+    },
+    {
+      "AirlineCode": "IQ",
+      "AirlineName": "Qazaq Air Joint Stock Company",
+      "AlternativeBusinessName": "Qazaq Air"
+    },
+    {
+      "AirlineCode": "J2",
+      "AirlineName": "Azerbaijan Hava Yollary",
+      "AlternativeBusinessName": "Azerbaijan Hava Yollary"
+    },
+    {
+      "AirlineCode": "IR",
+      "AirlineName": "Iran Air - The Airline of Islamic Republic of Iran",
+      "AlternativeBusinessName": "Iran Air"
+    },
+    {
+      "AirlineCode": "J3",
+      "AirlineName": "Northwestern Airlease Ltd.",
+      "AlternativeBusinessName": "Northwestern Air"
+    },
+    {
+      "AirlineCode": "IS",
+      "AirlineName": "AIS Airlines B.V.",
+      "AlternativeBusinessName": "AIS Airlines"
+    },
+    {
+      "AirlineCode": "J4",
+      "AirlineName": "Badr Airlines",
+      "AlternativeBusinessName": "Badr Airlines"
+    },
+    {
+      "AirlineCode": "IT",
+      "AirlineName": "Tigerair Taiwan Co Ltd",
+      "AlternativeBusinessName": "Tigerair Taiwan"
+    },
+    {
+      "AirlineCode": "J5",
+      "AirlineName": "Kalinin Aviation LLC, Alaska Seaplane Service LLC",
+      "AlternativeBusinessName": "Alaska Seaplane"
+    },
+    {
+      "AirlineCode": "IU",
+      "AirlineName": "SW Italia s.p.a",
+      "AlternativeBusinessName": "SW Italia"
+    },
+    {
+      "AirlineCode": "J6",
+      "AirlineName": "Jet Ops",
+      "AlternativeBusinessName": "Jet Ops"
+    },
+    {
+      "AirlineCode": "IV",
+      "AirlineName": "Cardiff Aviation Malta Ltd.",
+      "AlternativeBusinessName": "Cardiff Aviation Malta"
+    },
+    {
+      "AirlineCode": "J7",
+      "AirlineName": "Afrijet Business Service",
+      "AlternativeBusinessName": "Afrijet"
+    },
+    {
+      "AirlineCode": "IW",
+      "AirlineName": "PT. Wings Abadi Airlines",
+      "AlternativeBusinessName": "Wings Abadi Airlines"
+    },
+    {
+      "AirlineCode": "J8",
+      "AirlineName": "Berjaya Air Sdn. Bhd",
+      "AlternativeBusinessName": "Berjaya Air"
+    },
+    {
+      "AirlineCode": "IX",
+      "AirlineName": "Air India Charters Limited",
+      "AlternativeBusinessName": "Air-India Express"
+    },
+    {
+      "AirlineCode": "J9",
+      "AirlineName": "Jazeera Airways",
+      "AlternativeBusinessName": "Jazeera Airways"
+    },
+    {
+      "AirlineCode": "IY",
+      "AirlineName": "Yemenia Yemen Airways",
+      "AlternativeBusinessName": "Yemen Airways"
+    },
+    {
+      "AirlineCode": "IZ",
+      "AirlineName": "Arkia - Israeli Airlines Ltd",
+      "AlternativeBusinessName": "Arkia - Israeli Airlines"
+    },
+    {
+      "AirlineCode": "JA",
+      "AirlineName": "Jetsmart SpA",
+      "AlternativeBusinessName": "JetSMART"
+    },
+    {
+      "AirlineCode": "JC",
+      "AirlineName": "Japan Air Commuter Co. Ltd.",
+      "AlternativeBusinessName": "Japan Air Commuter"
+    },
+    {
+      "AirlineCode": "JD",
+      "AirlineName": "Beijing Capital Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Beijing Capital Airlines"
+    },
+    {
+      "AirlineCode": "JE",
+      "AirlineName": "Mango Airlines (Pty) Ltd trading as MANGO",
+      "AlternativeBusinessName": "MANGO"
+    },
+    {
+      "AirlineCode": "JF",
+      "AirlineName": "Jet Asia Airways Company Limited / Jet Asia",
+      "AlternativeBusinessName": "Jet Asia"
+    },
+    {
+      "AirlineCode": "JG",
+      "AirlineName": "Jetgo Australia Holdings Pty Ltd.",
+      "AlternativeBusinessName": "Jetgo Australia"
+    },
+    {
+      "AirlineCode": "JH",
+      "AirlineName": "Fuji Dream Airlines Co. Ltd",
+      "AlternativeBusinessName": "Fuji Dream Airlines"
+    },
+    {
+      "AirlineCode": "JI",
+      "AirlineName": "Meraj Air",
+      "AlternativeBusinessName": "Meraj Air"
+    },
+    {
+      "AirlineCode": "JJ",
+      "AirlineName": "TAM Linhas Aereas S.A / LATAM Airlines Brasil",
+      "AlternativeBusinessName": "LATAM Airlines Brasil"
+    },
+    {
+      "AirlineCode": "JK",
+      "AirlineName": "Aerolinea Del Caribe S.A. / Aercaribe S.A.",
+      "AlternativeBusinessName": "Aercaribe"
+    },
+    {
+      "AirlineCode": "JL",
+      "AirlineName": "Japan Airlines Co., Ltd.",
+      "AlternativeBusinessName": "JAL"
+    },
+    {
+      "AirlineCode": "JM",
+      "AirlineName": "Jambojet Limited",
+      "AlternativeBusinessName": "Jambojet Limited"
+    },
+    {
+      "AirlineCode": "JN",
+      "AirlineName": "Joon",
+      "AlternativeBusinessName": "Joon"
+    },
+    {
+      "AirlineCode": "JO",
+      "AirlineName": "Royal Wings",
+      "AlternativeBusinessName": "Royal Wings"
+    },
+    {
+      "AirlineCode": "JP",
+      "AirlineName": "Adria Airways d.o.o.",
+      "AlternativeBusinessName": "Adria Airways"
+    },
+    {
+      "AirlineCode": "JQ",
+      "AirlineName": "Jetstar Airways Pty Limited",
+      "AlternativeBusinessName": "Jetstar Airways"
+    },
+    {
+      "AirlineCode": "K2",
+      "AirlineName": "Paklook Air Inc.",
+      "AlternativeBusinessName": "Paklook Air"
+    },
+    {
+      "AirlineCode": "JR",
+      "AirlineName": "Joy Air",
+      "AlternativeBusinessName": "Joy Air"
+    },
+    {
+      "AirlineCode": "K3",
+      "AirlineName": "Venture Travel LLC / Taquan Air",
+      "AlternativeBusinessName": "Taquan Air"
+    },
+    {
+      "AirlineCode": "JS",
+      "AirlineName": "Air Koryo",
+      "AlternativeBusinessName": "Air Koryo"
+    },
+    {
+      "AirlineCode": "K4",
+      "AirlineName": "Kalitta Air LLC",
+      "AlternativeBusinessName": "Kalitta Air"
+    },
+    {
+      "AirlineCode": "JT",
+      "AirlineName": "Lion Airlines",
+      "AlternativeBusinessName": "Lion Airlines"
+    },
+    {
+      "AirlineCode": "K5",
+      "AirlineName": "Silverstone Air Services Ltd",
+      "AlternativeBusinessName": "Silverstone Air Services"
+    },
+    {
+      "AirlineCode": "JU",
+      "AirlineName": "JSC for Air Traffic-Air SERBIA Belgrade t/a Air Serbia a.d. Beograd",
+      "AlternativeBusinessName": "Air Serbia"
+    },
+    {
+      "AirlineCode": "K6",
+      "AirlineName": "Cambodia Angkor Air t/a Cambodia Angkor Air Co., Ltd.",
+      "AlternativeBusinessName": "Cambodia Angkor Air"
+    },
+    {
+      "AirlineCode": "JV",
+      "AirlineName": "Bearskin Lake Air Services LP",
+      "AlternativeBusinessName": "Bearskin Lake Air Services"
+    },
+    {
+      "AirlineCode": "K7",
+      "AirlineName": "Air KBZ Ltd.",
+      "AlternativeBusinessName": "Air KBZ"
+    },
+    {
+      "AirlineCode": "JW",
+      "AirlineName": "Vanilla Air Inc.",
+      "AlternativeBusinessName": "Vanilla Air"
+    },
+    {
+      "AirlineCode": "K8",
+      "AirlineName": "InterJet West Inc.",
+      "AlternativeBusinessName": "InterJet West"
+    },
+    {
+      "AirlineCode": "JX",
+      "AirlineName": "DAC Aviation (EC) Ltd",
+      "AlternativeBusinessName": "Jambojet"
+    },
+    {
+      "AirlineCode": "K9",
+      "AirlineName": "Kalitta Charters, L.L.C.",
+      "AlternativeBusinessName": "Kalitta Charters"
+    },
+    {
+      "AirlineCode": "JY",
+      "AirlineName": "Intercaribbean Airways, Ltd.",
+      "AlternativeBusinessName": "InterCaribbean Airways"
+    },
+    {
+      "AirlineCode": "JZ",
+      "AirlineName": "Jubba Airways",
+      "AlternativeBusinessName": "Jubba Airways"
+    },
+    {
+      "AirlineCode": "KA",
+      "AirlineName": "Cathay Dragon",
+      "AlternativeBusinessName": "Cathay Dragon"
+    },
+    {
+      "AirlineCode": "KB",
+      "AirlineName": "Druk Air Corporation Limited.",
+      "AlternativeBusinessName": "Druk Air"
+    },
+    {
+      "AirlineCode": "KC",
+      "AirlineName": "JSC Air Astana",
+      "AlternativeBusinessName": "Air Astana"
+    },
+    {
+      "AirlineCode": "KD",
+      "AirlineName": "Western Global Airlines LLC",
+      "AlternativeBusinessName": "Western Global"
+    },
+    {
+      "AirlineCode": "KE",
+      "AirlineName": "Korean Air Lines Co. Ltd.",
+      "AlternativeBusinessName": "Korean Air Lines"
+    },
+    {
+      "AirlineCode": "KG",
+      "AirlineName": "Key Lime Air Corporation",
+      "AlternativeBusinessName": "Key Lime Air"
+    },
+    {
+      "AirlineCode": "KH",
+      "AirlineName": "Aeko Kula Inc. / Aloha Air Cargo",
+      "AlternativeBusinessName": "Aloha Air Cargo"
+    },
+    {
+      "AirlineCode": "KI",
+      "AirlineName": "KrasAvia",
+      "AlternativeBusinessName": "KrasAvia"
+    },
+    {
+      "AirlineCode": "KJ",
+      "AirlineName": "Air Incheon Co Ltd",
+      "AlternativeBusinessName": "Air Incheon"
+    },
+    {
+      "AirlineCode": "KK",
+      "AirlineName": "Atlasjet Havacilik A.S. AtlasGlobal",
+      "AlternativeBusinessName": "Atlasglobal"
+    },
+    {
+      "AirlineCode": "KL",
+      "AirlineName": "KLM Royal Dutch Airlines",
+      "AlternativeBusinessName": "KLM"
+    },
+    {
+      "AirlineCode": "KM",
+      "AirlineName": "Air Malta p.l.c.",
+      "AlternativeBusinessName": "Air Malta"
+    },
+    {
+      "AirlineCode": "KN",
+      "AirlineName": "China United Airlines",
+      "AlternativeBusinessName": "China United Airlines"
+    },
+    {
+      "AirlineCode": "KO",
+      "AirlineName": "Alaska Central Express",
+      "AlternativeBusinessName": "Alaska Central Express"
+    },
+    {
+      "AirlineCode": "KP",
+      "AirlineName": "PT. Asialink Cargo Express",
+      "AlternativeBusinessName": "Asialink Cargo Express"
+    },
+    {
+      "AirlineCode": "KQ",
+      "AirlineName": "Kenya Airways",
+      "AlternativeBusinessName": "Kenya Airways"
+    },
+    {
+      "AirlineCode": "L2",
+      "AirlineName": "Lynden Air Cargo LLC.",
+      "AlternativeBusinessName": "Lynden Air Cargo"
+    },
+    {
+      "AirlineCode": "L3",
+      "AirlineName": "DHL de Guatemala S.A.",
+      "AlternativeBusinessName": "DHL de Guatemala"
+    },
+    {
+      "AirlineCode": "KS",
+      "AirlineName": "Penair",
+      "AlternativeBusinessName": "Penair"
+    },
+    {
+      "AirlineCode": "KT",
+      "AirlineName": "SiAvia d.o.o.",
+      "AlternativeBusinessName": "SiAvia"
+    },
+    {
+      "AirlineCode": "KU",
+      "AirlineName": "Kuwait Airways",
+      "AlternativeBusinessName": "Kuwait Airways"
+    },
+    {
+      "AirlineCode": "L6",
+      "AirlineName": "Mauritania Airlines International",
+      "AlternativeBusinessName": "Mauritania Airlines"
+    },
+    {
+      "AirlineCode": "KV",
+      "AirlineName": "Sky Regional Airlines Inc",
+      "AlternativeBusinessName": "Sky Regional"
+    },
+    {
+      "AirlineCode": "L7",
+      "AirlineName": "Linea Aerea Carguera de Colombia S.A. / LATAM Cargo Colombia",
+      "AlternativeBusinessName": "LATAM Cargo Colombia"
+    },
+    {
+      "AirlineCode": "KW",
+      "AirlineName": "Korea Express Air Co Ltd",
+      "AlternativeBusinessName": "Korea Express Air"
+    },
+    {
+      "AirlineCode": "KX",
+      "AirlineName": "Cayman Airways Limited",
+      "AlternativeBusinessName": "Cayman Airways"
+    },
+    {
+      "AirlineCode": "L9",
+      "AirlineName": "Bristow U.S. LLC",
+      "AlternativeBusinessName": "Bristow"
+    },
+    {
+      "AirlineCode": "KY",
+      "AirlineName": "Kunming Airlines",
+      "AlternativeBusinessName": "Kunming Airlines"
+    },
+    {
+      "AirlineCode": "KZ",
+      "AirlineName": "Nippon Cargo Airlines",
+      "AlternativeBusinessName": "Nippon Cargo"
+    },
+    {
+      "AirlineCode": "LA",
+      "AirlineName": "LATAM Airlines Group S.A. / LATAM Airlines Group",
+      "AlternativeBusinessName": "LATAM Airlines Group"
+    },
+    {
+      "AirlineCode": "LB",
+      "AirlineName": "Bul Air Ltd.",
+      "AlternativeBusinessName": "Bul Air"
+    },
+    {
+      "AirlineCode": "LD",
+      "AirlineName": "AHK Air Hong Kong Limited",
+      "AlternativeBusinessName": "AHK"
+    },
+    {
+      "AirlineCode": "LE",
+      "AirlineName": "Lion Air Cargo Tanzania Limited",
+      "AlternativeBusinessName": "Lion Air Cargo"
+    },
+    {
+      "AirlineCode": "LF",
+      "AirlineName": "Contour Airlines / Corporate Flight Management, Inc",
+      "AlternativeBusinessName": "Contour Airlines"
+    },
+    {
+      "AirlineCode": "LG",
+      "AirlineName": "Luxair",
+      "AlternativeBusinessName": "Luxair"
+    },
+    {
+      "AirlineCode": "LH",
+      "AirlineName": "Deutsche Lufthansa AG",
+      "AlternativeBusinessName": "Lufthansa"
+    },
+    {
+      "AirlineCode": "LI",
+      "AirlineName": "LIAT",
+      "AlternativeBusinessName": "LIAT"
+    },
+    {
+      "AirlineCode": "LJ",
+      "AirlineName": "Jin Air Co. Ltd.",
+      "AlternativeBusinessName": "Jin Air"
+    },
+    {
+      "AirlineCode": "LK",
+      "AirlineName": "Lao Skyway",
+      "AlternativeBusinessName": "Lao Skyway"
+    },
+    {
+      "AirlineCode": "LL",
+      "AirlineName": "Miami Air International",
+      "AlternativeBusinessName": "Miami Air International"
+    },
+    {
+      "AirlineCode": "LM",
+      "AirlineName": "Loganair Limited",
+      "AlternativeBusinessName": "Loganair"
+    },
+    {
+      "AirlineCode": "LN",
+      "AirlineName": "Libyan Airlines",
+      "AlternativeBusinessName": "Libyan Airlines"
+    },
+    {
+      "AirlineCode": "LO",
+      "AirlineName": "LOT - Polish Airlines",
+      "AlternativeBusinessName": "LOT - Polish Airlines"
+    },
+    {
+      "AirlineCode": "M0",
+      "AirlineName": "Aero Mongolia",
+      "AlternativeBusinessName": "Aero Mongolia"
+    },
+    {
+      "AirlineCode": "LP",
+      "AirlineName": "Lan Peru S.A / LATAM Airlines Peru",
+      "AlternativeBusinessName": "LATAM Airlines Peru"
+    },
+    {
+      "AirlineCode": "LQ",
+      "AirlineName": "Lanmei Airlines (Cambodia) Co. Ltd",
+      "AlternativeBusinessName": "Lanmei Airlines"
+    },
+    {
+      "AirlineCode": "M2",
+      "AirlineName": "Sunrise Airlines Inc. Dba Millon Express",
+      "AlternativeBusinessName": "Millon Express"
+    },
+    {
+      "AirlineCode": "LR",
+      "AirlineName": "Lineas Aereas Costarricenses S.A.",
+      "AlternativeBusinessName": "Avianca Costa Rica"
+    },
+    {
+      "AirlineCode": "M3",
+      "AirlineName": "ABSA - Aerolinhas Brasileiras S.A. / LATAM Cargo Brasil",
+      "AlternativeBusinessName": "LATAM Cargo Brasil"
+    },
+    {
+      "AirlineCode": "LS",
+      "AirlineName": "Jet2.com Limited",
+      "AlternativeBusinessName": "Jet2"
+    },
+    {
+      "AirlineCode": "M4",
+      "AirlineName": "Mistral Air S.r.l",
+      "AlternativeBusinessName": "Mistral Air"
+    },
+    {
+      "AirlineCode": "LT",
+      "AirlineName": "LongJiang Airlines Co., Ltd.",
+      "AlternativeBusinessName": "LongJiang Airlines"
+    },
+    {
+      "AirlineCode": "M5",
+      "AirlineName": "Kenmore Air",
+      "AlternativeBusinessName": "Kenmore Air"
+    },
+    {
+      "AirlineCode": "LU",
+      "AirlineName": "Transporte Aereo S.A. / LATAM Airlines Chile",
+      "AlternativeBusinessName": "LATAM Airlines Chile"
+    },
+    {
+      "AirlineCode": "M6",
+      "AirlineName": "Amerijet International Inc.",
+      "AlternativeBusinessName": "Amerijet International"
+    },
+    {
+      "AirlineCode": "M7",
+      "AirlineName": "Aerotransportes Mas de Carga S.A. de C.V. / LATAM Cargo Mexico",
+      "AlternativeBusinessName": "LATAM Cargo Mexico"
+    },
+    {
+      "AirlineCode": "LW",
+      "AirlineName": "Latin American Wings S.A.",
+      "AlternativeBusinessName": "Latin American Wings"
+    },
+    {
+      "AirlineCode": "M8",
+      "AirlineName": "Magnum Air, Inc / Skyjet",
+      "AlternativeBusinessName": "Skyjet"
+    },
+    {
+      "AirlineCode": "LX",
+      "AirlineName": "SWISS International Air Lines Ltd. / Swiss",
+      "AlternativeBusinessName": "SWISS"
+    },
+    {
+      "AirlineCode": "M9",
+      "AirlineName": "Motor-Sich JSC",
+      "AlternativeBusinessName": "Motor-Sich"
+    },
+    {
+      "AirlineCode": "LY",
+      "AirlineName": "El Al Israel Airlines Ltd.",
+      "AlternativeBusinessName": "El Al"
+    },
+    {
+      "AirlineCode": "LZ",
+      "AirlineName": "Swiss Global Air Lines AG",
+      "AlternativeBusinessName": "Swiss Global"
+    },
+    {
+      "AirlineCode": "MB",
+      "AirlineName": "Execaire",
+      "AlternativeBusinessName": "Execaire"
+    },
+    {
+      "AirlineCode": "MC",
+      "AirlineName": "Air Mobility Command",
+      "AlternativeBusinessName": "Air Mobility Command"
+    },
+    {
+      "AirlineCode": "MD",
+      "AirlineName": "Air Madagascar",
+      "AlternativeBusinessName": "Air Madagascar"
+    },
+    {
+      "AirlineCode": "ME",
+      "AirlineName": "Middle East Airlines",
+      "AlternativeBusinessName": "Middle East Airlines"
+    },
+    {
+      "AirlineCode": "MF",
+      "AirlineName": "Xiamen Airlines",
+      "AlternativeBusinessName": "Xiamen Airlines"
+    },
+    {
+      "AirlineCode": "MG",
+      "AirlineName": "Miami Air Lease Inc.",
+      "AlternativeBusinessName": "Miami Air Lease"
+    },
+    {
+      "AirlineCode": "MH",
+      "AirlineName": "Malaysia Airlines Berhad / Malaysia Airline",
+      "AlternativeBusinessName": "Malaysia Airlines"
+    },
+    {
+      "AirlineCode": "MI",
+      "AirlineName": "Silkair (S) Pte. Ltd.",
+      "AlternativeBusinessName": "Silkair"
+    },
+    {
+      "AirlineCode": "MK",
+      "AirlineName": "Air Mauritius Ltd",
+      "AlternativeBusinessName": "Air Mauritius"
+    },
+    {
+      "AirlineCode": "MM",
+      "AirlineName": "Peach Aviation Limited",
+      "AlternativeBusinessName": "Peach Aviation"
+    },
+    {
+      "AirlineCode": "MN",
+      "AirlineName": "Comair Ltd.",
+      "AlternativeBusinessName": "Kulula"
+    },
+    {
+      "AirlineCode": "MO",
+      "AirlineName": "Calm Air International Ltd.",
+      "AlternativeBusinessName": "Calm Air International"
+    },
+    {
+      "AirlineCode": "MP",
+      "AirlineName": "Martinair Holland N.V.",
+      "AlternativeBusinessName": "Martinair"
+    },
+    {
+      "AirlineCode": "MQ",
+      "AirlineName": "Envoy Air Inc.",
+      "AlternativeBusinessName": "Envoy Air"
+    },
+    {
+      "AirlineCode": "N2",
+      "AirlineName": "Jet Charter, Inc",
+      "AlternativeBusinessName": "Jet Charter"
+    },
+    {
+      "AirlineCode": "MR",
+      "AirlineName": "Hunnu Air LLC",
+      "AlternativeBusinessName": "Hunnu Air"
+    },
+    {
+      "AirlineCode": "MS",
+      "AirlineName": "EgyptAir",
+      "AlternativeBusinessName": "EgyptAir"
+    },
+    {
+      "AirlineCode": "N4",
+      "AirlineName": "LLC Nord Wind",
+      "AlternativeBusinessName": "Nord Wind"
+    },
+    {
+      "AirlineCode": "MT",
+      "AirlineName": "Thomas Cook Airlines Limited of Manchester",
+      "AlternativeBusinessName": "Thomas Cook Airlines"
+    },
+    {
+      "AirlineCode": "N5",
+      "AirlineName": "Les Investissements Nolinor Inc",
+      "AlternativeBusinessName": "Nolinor"
+    },
+    {
+      "AirlineCode": "MU",
+      "AirlineName": "China Eastern Airlines",
+      "AlternativeBusinessName": "China Eastern Airlines"
+    },
+    {
+      "AirlineCode": "MV",
+      "AirlineName": "Air Mediterranean S.A",
+      "AlternativeBusinessName": "Air Mediterranean"
+    },
+    {
+      "AirlineCode": "N7",
+      "AirlineName": "Neptune Air Sdn Bhd",
+      "AlternativeBusinessName": "Neptune Air"
+    },
+    {
+      "AirlineCode": "MW",
+      "AirlineName": "Mokulele Flight Service",
+      "AlternativeBusinessName": "Mokulele Airlines"
+    },
+    {
+      "AirlineCode": "N8",
+      "AirlineName": "National Air Cargo Group, Inc / National Airlines",
+      "AlternativeBusinessName": "National Airlines"
+    },
+    {
+      "AirlineCode": "N9",
+      "AirlineName": "Nova Airlines AB",
+      "AlternativeBusinessName": "Novair"
+    },
+    {
+      "AirlineCode": "MY",
+      "AirlineName": "MASwings Sdn Bhd",
+      "AlternativeBusinessName": "MASwings"
+    },
+    {
+      "AirlineCode": "MZ",
+      "AirlineName": "Amakusa Airlines",
+      "AlternativeBusinessName": "Amakusa"
+    },
+    {
+      "AirlineCode": "NA",
+      "AirlineName": "Nesma Airlines Company Ltd.",
+      "AlternativeBusinessName": "Nesma Airlines"
+    },
+    {
+      "AirlineCode": "NB",
+      "AirlineName": "Skypower Express Airways Ltd.",
+      "AlternativeBusinessName": "Skypower Express"
+    },
+    {
+      "AirlineCode": "NC",
+      "AirlineName": "Northern Air Cargo Inc.",
+      "AlternativeBusinessName": "Northern Air Cargo"
+    },
+    {
+      "AirlineCode": "ND",
+      "AirlineName": "FMI Air",
+      "AlternativeBusinessName": "FMI Air"
+    },
+    {
+      "AirlineCode": "NE",
+      "AirlineName": "Nesma Airlines",
+      "AlternativeBusinessName": "Nesma Airlines"
+    },
+    {
+      "AirlineCode": "NF",
+      "AirlineName": "Air Vanuatu (Operations) Limited",
+      "AlternativeBusinessName": "Air Vanuatu"
+    },
+    {
+      "AirlineCode": "NH",
+      "AirlineName": "All Nippon Airways Co. Ltd.",
+      "AlternativeBusinessName": "ANA"
+    },
+    {
+      "AirlineCode": "NI",
+      "AirlineName": "Portugalia - Companhia Portuguesa de Transportes Aereos SA",
+      "AlternativeBusinessName": "Portugalia Airlines"
+    },
+    {
+      "AirlineCode": "NJ",
+      "AirlineName": "Niger Airways",
+      "AlternativeBusinessName": "Niger Airways"
+    },
+    {
+      "AirlineCode": "NK",
+      "AirlineName": "Spirit Airlines, Inc.",
+      "AlternativeBusinessName": "Spirit Airlines"
+    },
+    {
+      "AirlineCode": "NL",
+      "AirlineName": "Shaheen Air International",
+      "AlternativeBusinessName": "Shaheen Air International"
+    },
+    {
+      "AirlineCode": "NN",
+      "AirlineName": "VIM Airlines",
+      "AlternativeBusinessName": "VIM Airlines"
+    },
+    {
+      "AirlineCode": "NO",
+      "AirlineName": "Neos S.P.A.",
+      "AlternativeBusinessName": "Neos"
+    },
+    {
+      "AirlineCode": "NP",
+      "AirlineName": "Nile Air",
+      "AlternativeBusinessName": "Nile Air"
+    },
+    {
+      "AirlineCode": "NQ",
+      "AirlineName": "Air Japan Company Ltd.",
+      "AlternativeBusinessName": "Air Japan Company"
+    },
+    {
+      "AirlineCode": "O2",
+      "AirlineName": "AirDialog, LLC",
+      "AlternativeBusinessName": "Linear Air"
+    },
+    {
+      "AirlineCode": "NR",
+      "AirlineName": "Al-Naser Airlines",
+      "AlternativeBusinessName": "Al-Naser Airlines"
+    },
+    {
+      "AirlineCode": "O3",
+      "AirlineName": "SF Airlines Company Limited",
+      "AlternativeBusinessName": "SF Airlines"
+    },
+    {
+      "AirlineCode": "NS",
+      "AirlineName": "Hebei Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Hebei Airlines"
+    },
+    {
+      "AirlineCode": "NT",
+      "AirlineName": "Binter Canarias",
+      "AlternativeBusinessName": "Binter Canarias"
+    },
+    {
+      "AirlineCode": "NU",
+      "AirlineName": "Japan Transocean Air Co. Ltd.",
+      "AlternativeBusinessName": "Japan Transocean Air"
+    },
+    {
+      "AirlineCode": "O6",
+      "AirlineName": "Oceanair Linhas Aereas S.A. t/a Avianca (Brasil)",
+      "AlternativeBusinessName": "Avianca Brazil"
+    },
+    {
+      "AirlineCode": "NV",
+      "AirlineName": "Iranian Naft Airlines",
+      "AlternativeBusinessName": "Iranian Naft Airlines"
+    },
+    {
+      "AirlineCode": "O7",
+      "AirlineName": "SUE Orenburg Region Int'l Airport Orenburg",
+      "AlternativeBusinessName": "Orenburg"
+    },
+    {
+      "AirlineCode": "NX",
+      "AirlineName": "Air Macau Company Limited",
+      "AlternativeBusinessName": "Air Macau"
+    },
+    {
+      "AirlineCode": "O9",
+      "AirlineName": "NOVA Airways Co.",
+      "AlternativeBusinessName": "NOVA Airways"
+    },
+    {
+      "AirlineCode": "NY",
+      "AirlineName": "Flugfelag Islands ehf / Air Iceland",
+      "AlternativeBusinessName": "Air Iceland Connect"
+    },
+    {
+      "AirlineCode": "NZ",
+      "AirlineName": "Air New Zealand Limited",
+      "AlternativeBusinessName": "Air New Zealand"
+    },
+    {
+      "AirlineCode": "OA",
+      "AirlineName": "Olympic Air",
+      "AlternativeBusinessName": "Olympic Air"
+    },
+    {
+      "AirlineCode": "OB",
+      "AirlineName": "Boliviana de Aviacion (BoA)",
+      "AlternativeBusinessName": "BoA"
+    },
+    {
+      "AirlineCode": "OC",
+      "AirlineName": "Oriental Air Bridge Co., Ltd.",
+      "AlternativeBusinessName": "Oriental Air Bridge"
+    },
+    {
+      "AirlineCode": "OD",
+      "AirlineName": "Malindo Airways Sdn Bhd (Malindo Air)",
+      "AlternativeBusinessName": "Malindo Air"
+    },
+    {
+      "AirlineCode": "OF",
+      "AirlineName": "Overland Airways Limited",
+      "AlternativeBusinessName": "Overland Airways"
+    },
+    {
+      "AirlineCode": "OH",
+      "AirlineName": "PSA Airlines, Inc. (US Airways Express)",
+      "AlternativeBusinessName": "PSA Airlines"
+    },
+    {
+      "AirlineCode": "OI",
+      "AirlineName": "Hinterland Aviation Pty Ltd",
+      "AlternativeBusinessName": "Hinterland Aviation"
+    },
+    {
+      "AirlineCode": "OJ",
+      "AirlineName": "Fly Jamaica Airways",
+      "AlternativeBusinessName": "Fly Jamaica Airways"
+    },
+    {
+      "AirlineCode": "OK",
+      "AirlineName": "Czech Airlines a.s., CSA",
+      "AlternativeBusinessName": "CSA"
+    },
+    {
+      "AirlineCode": "OL",
+      "AirlineName": "Polynesian Limited / Samoa Airlines",
+      "AlternativeBusinessName": "Polynesian Airline of Samoa"
+    },
+    {
+      "AirlineCode": "OM",
+      "AirlineName": "Miat - Mongolian Airlines",
+      "AlternativeBusinessName": "Miat - Mongolian Airlines"
+    },
+    {
+      "AirlineCode": "ON",
+      "AirlineName": "Nauru Air Corporation t/a Our Airline",
+      "AlternativeBusinessName": "Our Airline"
+    },
+    {
+      "AirlineCode": "OO",
+      "AirlineName": "SkyWest Airlines",
+      "AlternativeBusinessName": "SkyWest Airlines"
+    },
+    {
+      "AirlineCode": "P0",
+      "AirlineName": "Proflight Commuter Services LTD",
+      "AlternativeBusinessName": "Proflight Zambia"
+    },
+    {
+      "AirlineCode": "OQ",
+      "AirlineName": "Chongqing Airlines Co. Ltd",
+      "AlternativeBusinessName": "Chongqing Airlines"
+    },
+    {
+      "AirlineCode": "P2",
+      "AirlineName": "AirKenya Express Limited",
+      "AlternativeBusinessName": "AirKenya Express"
+    },
+    {
+      "AirlineCode": "OR",
+      "AirlineName": "TUI Airlines Nederland B.V.",
+      "AlternativeBusinessName": "TUIfly Netherlands"
+    },
+    {
+      "AirlineCode": "P3",
+      "AirlineName": "Cargologicair Ltd",
+      "AlternativeBusinessName": "Cargologicair"
+    },
+    {
+      "AirlineCode": "OS",
+      "AirlineName": "Austrian Airlines AG / Austrian",
+      "AlternativeBusinessName": "Austrian"
+    },
+    {
+      "AirlineCode": "P4",
+      "AirlineName": "Air Peace Limited",
+      "AlternativeBusinessName": "Air Peace"
+    },
+    {
+      "AirlineCode": "P5",
+      "AirlineName": "Aero Republica S.A.",
+      "AlternativeBusinessName": "Copa Airlines Colombia"
+    },
+    {
+      "AirlineCode": "OU",
+      "AirlineName": "Croatia Airlines",
+      "AlternativeBusinessName": "Croatia Airlines"
+    },
+    {
+      "AirlineCode": "P6",
+      "AirlineName": "9736140 Canada Inc. t/a Pascan",
+      "AlternativeBusinessName": "Pascan"
+    },
+    {
+      "AirlineCode": "OV",
+      "AirlineName": "Salam Air",
+      "AlternativeBusinessName": "SalamAir"
+    },
+    {
+      "AirlineCode": "P7",
+      "AirlineName": "Small Planet Airline Sp. Z.o.o.",
+      "AlternativeBusinessName": "Small Planet Airline"
+    },
+    {
+      "AirlineCode": "OW",
+      "AirlineName": "Skyward Express",
+      "AlternativeBusinessName": "Skyward Express"
+    },
+    {
+      "AirlineCode": "P8",
+      "AirlineName": "SprintAir SA",
+      "AlternativeBusinessName": "SprintAir"
+    },
+    {
+      "AirlineCode": "OX",
+      "AirlineName": "Orient Thai Airlines",
+      "AlternativeBusinessName": "Orient Thai Airlines"
+    },
+    {
+      "AirlineCode": "P9",
+      "AirlineName": "Aero Micronesia Inc. / Asia Pacific Airlines",
+      "AlternativeBusinessName": "Asia Pacific Airlines"
+    },
+    {
+      "AirlineCode": "OY",
+      "AirlineName": "Omni Air International",
+      "AlternativeBusinessName": "Omni Air International"
+    },
+    {
+      "AirlineCode": "OZ",
+      "AirlineName": "Asiana Airlines, Inc.",
+      "AlternativeBusinessName": "Asiana Airlines"
+    },
+    {
+      "AirlineCode": "PA",
+      "AirlineName": "M/S Airblue (PVT) Ltd",
+      "AlternativeBusinessName": "Airblue"
+    },
+    {
+      "AirlineCode": "PB",
+      "AirlineName": "PAL Airlines LTD t/a Provincial Airlines",
+      "AlternativeBusinessName": "PAL Airlines"
+    },
+    {
+      "AirlineCode": "PC",
+      "AirlineName": "Pegasus Hava Tasimaciligi A.S.",
+      "AlternativeBusinessName": "Pegasus"
+    },
+    {
+      "AirlineCode": "PD",
+      "AirlineName": "Porter Airlines Inc.",
+      "AlternativeBusinessName": "Porter Airlines"
+    },
+    {
+      "AirlineCode": "PE",
+      "AirlineName": "Pacific Air Express Australia Pty Limited",
+      "AlternativeBusinessName": "Pacific Air Express"
+    },
+    {
+      "AirlineCode": "PF",
+      "AirlineName": "Primera Air Scandinavia A/S",
+      "AlternativeBusinessName": "Primera Air Scandinavia"
+    },
+    {
+      "AirlineCode": "PG",
+      "AirlineName": "Bangkok Airways Public Company Limited",
+      "AlternativeBusinessName": "Bangkok Airways"
+    },
+    {
+      "AirlineCode": "PH",
+      "AirlineName": "Phoenix Air Group Inc.",
+      "AlternativeBusinessName": "Phoenix Air Group"
+    },
+    {
+      "AirlineCode": "PI",
+      "AirlineName": "Polar Airlines OJSC",
+      "AlternativeBusinessName": "Polar Airlines"
+    },
+    {
+      "AirlineCode": "PJ",
+      "AirlineName": "Air Saint Pierre",
+      "AlternativeBusinessName": "Air Saint Pierre"
+    },
+    {
+      "AirlineCode": "PK",
+      "AirlineName": "Pakistan International Airlines",
+      "AlternativeBusinessName": "Pakistan International Airlines"
+    },
+    {
+      "AirlineCode": "PL",
+      "AirlineName": "Southern Air Charter Co., Limited",
+      "AlternativeBusinessName": "Southern Air"
+    },
+    {
+      "AirlineCode": "PM",
+      "AirlineName": "Prescott Support Company",
+      "AlternativeBusinessName": "Prescott Support Company"
+    },
+    {
+      "AirlineCode": "PN",
+      "AirlineName": "China West Air Co. Ltd.",
+      "AlternativeBusinessName": "West Air"
+    },
+    {
+      "AirlineCode": "PO",
+      "AirlineName": "Polar Air Cargo Worldwide, Inc.",
+      "AlternativeBusinessName": "Polar Air Cargo"
+    },
+    {
+      "AirlineCode": "PP",
+      "AirlineName": "Jet Aviation Business Jets AG",
+      "AlternativeBusinessName": "Jet Aviation Business"
+    },
+    {
+      "AirlineCode": "PQ",
+      "AirlineName": "AirAsia Inc.",
+      "AlternativeBusinessName": "AirAsia Inc."
+    },
+    {
+      "AirlineCode": "Q2",
+      "AirlineName": "Island Aviation Services Ltd.",
+      "AlternativeBusinessName": "Maldivian"
+    },
+    {
+      "AirlineCode": "PR",
+      "AirlineName": "Philippine Airlines, Inc.",
+      "AlternativeBusinessName": "Philippine Airlines"
+    },
+    {
+      "AirlineCode": "Q3",
+      "AirlineName": "Anguilla Air Services Ltd",
+      "AlternativeBusinessName": "Anguilla Air Services"
+    },
+    {
+      "AirlineCode": "PS",
+      "AirlineName": "Private Stock Company Ukraine International Airlines",
+      "AlternativeBusinessName": "Ukraine International"
+    },
+    {
+      "AirlineCode": "PT",
+      "AirlineName": "Piedmont Airlines Inc (US Airways Express)",
+      "AlternativeBusinessName": "Piedmont Airlines"
+    },
+    {
+      "AirlineCode": "Q5",
+      "AirlineName": "40-Mile Air, Ltd.",
+      "AlternativeBusinessName": "40-Mile Air"
+    },
+    {
+      "AirlineCode": "PU",
+      "AirlineName": "Plus Ultra Lineas Aereas, S. A",
+      "AlternativeBusinessName": "Plus Ultra"
+    },
+    {
+      "AirlineCode": "Q6",
+      "AirlineName": "Vuela Aviacion S.A. Volaris Costa Rica",
+      "AlternativeBusinessName": "Volaris Costa Rica"
+    },
+    {
+      "AirlineCode": "PV",
+      "AirlineName": "Saint Barth Commuter",
+      "AlternativeBusinessName": "Saint Barth Commuter"
+    },
+    {
+      "AirlineCode": "Q7",
+      "AirlineName": "SkyBahamas Airlines",
+      "AlternativeBusinessName": "SkyBahamas"
+    },
+    {
+      "AirlineCode": "PW",
+      "AirlineName": "Precision Air Services Ltd",
+      "AlternativeBusinessName": "Precision Air Services"
+    },
+    {
+      "AirlineCode": "Q8",
+      "AirlineName": "Trans Air Congo (TAC)",
+      "AlternativeBusinessName": "Trans Air Congo"
+    },
+    {
+      "AirlineCode": "PX",
+      "AirlineName": "Air Niugini Pty Limited / Air Niugini",
+      "AlternativeBusinessName": "Air Niugini"
+    },
+    {
+      "AirlineCode": "Q9",
+      "AirlineName": "Kuwait National Airways t/a Wataniya Airways",
+      "AlternativeBusinessName": "Wataniya Airways"
+    },
+    {
+      "AirlineCode": "PY",
+      "AirlineName": "Surinam Airways Ltd.",
+      "AlternativeBusinessName": "Surinam Airways"
+    },
+    {
+      "AirlineCode": "PZ",
+      "AirlineName": "Transportes Aereos Del Mercosur S.A. / LATAM Airlines Paraguay",
+      "AlternativeBusinessName": "LATAM Airlines Paraguay."
+    },
+    {
+      "AirlineCode": "QA",
+      "AirlineName": "Cimber A/S",
+      "AlternativeBusinessName": "Cimber"
+    },
+    {
+      "AirlineCode": "QB",
+      "AirlineName": "Qeshm Air",
+      "AlternativeBusinessName": "Qeshm Air"
+    },
+    {
+      "AirlineCode": "QC",
+      "AirlineName": "Cameroon Airlines Corporation (Camair-Co)",
+      "AlternativeBusinessName": "Camair-Co"
+    },
+    {
+      "AirlineCode": "QD",
+      "AirlineName": "JC (Cambodia) International Airlines",
+      "AlternativeBusinessName": "JC International Airlines"
+    },
+    {
+      "AirlineCode": "QE",
+      "AirlineName": "Express Freighters Australia Pty",
+      "AlternativeBusinessName": "Express Freighters Australia"
+    },
+    {
+      "AirlineCode": "QF",
+      "AirlineName": "Qantas Airways Ltd.",
+      "AlternativeBusinessName": "Qantas"
+    },
+    {
+      "AirlineCode": "QG",
+      "AirlineName": "PT. Citilink Indonesia",
+      "AlternativeBusinessName": "Citilink Indonesia"
+    },
+    {
+      "AirlineCode": "QH",
+      "AirlineName": "OJSC Air Kyrgyzstan",
+      "AlternativeBusinessName": "Altyn Air"
+    },
+    {
+      "AirlineCode": "QJ",
+      "AirlineName": "Jet Airways Inc.",
+      "AlternativeBusinessName": "Jet Airways"
+    },
+    {
+      "AirlineCode": "QK",
+      "AirlineName": "Jazz Aviation LP",
+      "AlternativeBusinessName": "Jazz Aviation LP"
+    },
+    {
+      "AirlineCode": "QL",
+      "AirlineName": "Linea Aerea de Servicio Ejecutivo Regional Laser C.A.",
+      "AlternativeBusinessName": "LASER"
+    },
+    {
+      "AirlineCode": "QM",
+      "AirlineName": "Monacair",
+      "AlternativeBusinessName": "Monacair"
+    },
+    {
+      "AirlineCode": "QO",
+      "AirlineName": "Quikjet Cargo Airlines Pvt. Ltd",
+      "AlternativeBusinessName": "Quikjet"
+    },
+    {
+      "AirlineCode": "QP",
+      "AirlineName": "Starlight Airline",
+      "AlternativeBusinessName": "Starlight Airline"
+    },
+    {
+      "AirlineCode": "QQ",
+      "AirlineName": "Alliance Airlines Pty Limited",
+      "AlternativeBusinessName": "Alliance Airlines"
+    },
+    {
+      "AirlineCode": "R2",
+      "AirlineName": "Groupe Transair S.A",
+      "AlternativeBusinessName": "Groupe Transair"
+    },
+    {
+      "AirlineCode": "QR",
+      "AirlineName": "Qatar Airways (Q.C.S.C.)",
+      "AlternativeBusinessName": "Qatar Airways"
+    },
+    {
+      "AirlineCode": "R3",
+      "AirlineName": "Joint Stock Company Aircompany Yakutia",
+      "AlternativeBusinessName": "Yakutia"
+    },
+    {
+      "AirlineCode": "QS",
+      "AirlineName": "Travel Service A.S.",
+      "AlternativeBusinessName": "Smart Wings"
+    },
+    {
+      "AirlineCode": "QT",
+      "AirlineName": "Tampa Cargo S.A.S",
+      "AlternativeBusinessName": "Avianca Cargo"
+    },
+    {
+      "AirlineCode": "R5",
+      "AirlineName": "Jordan Aviation",
+      "AlternativeBusinessName": "Jordan Aviation"
+    },
+    {
+      "AirlineCode": "QU",
+      "AirlineName": "Azur Air Ukraine Airlines LLC",
+      "AlternativeBusinessName": "UTair"
+    },
+    {
+      "AirlineCode": "R6",
+      "AirlineName": "Joint Stock Company Airlines DOT LT",
+      "AlternativeBusinessName": "DOT LT"
+    },
+    {
+      "AirlineCode": "QV",
+      "AirlineName": "Lao Airlines",
+      "AlternativeBusinessName": "Lao Airlines"
+    },
+    {
+      "AirlineCode": "R7",
+      "AirlineName": "Aserca Airlines, C.A.",
+      "AlternativeBusinessName": "Aserca Airlines"
+    },
+    {
+      "AirlineCode": "QW",
+      "AirlineName": "Qingdao Airlines Co Ltd",
+      "AlternativeBusinessName": "Qingdao Airlines"
+    },
+    {
+      "AirlineCode": "R8",
+      "AirlineName": "Sundance Air Venezuela S.A",
+      "AlternativeBusinessName": "Sundance Air"
+    },
+    {
+      "AirlineCode": "QX",
+      "AirlineName": "Horizon Air Industries Inc.",
+      "AlternativeBusinessName": "Horizon Air"
+    },
+    {
+      "AirlineCode": "R9",
+      "AirlineName": "Suasa Airlines Sdn Bhd",
+      "AlternativeBusinessName": "Suasa Airlines"
+    },
+    {
+      "AirlineCode": "QY",
+      "AirlineName": "European Air Transport Leipzig GmbH",
+      "AlternativeBusinessName": "European Air Transport"
+    },
+    {
+      "AirlineCode": "QZ",
+      "AirlineName": "PT. Indonesia AirAsia",
+      "AlternativeBusinessName": "Indonesia AirAsia"
+    },
+    {
+      "AirlineCode": "RA",
+      "AirlineName": "Nepal Airlines Corporation",
+      "AlternativeBusinessName": "Nepal Airlines"
+    },
+    {
+      "AirlineCode": "RB",
+      "AirlineName": "Syrian Arab Airlines",
+      "AlternativeBusinessName": "Syrian Arab Airlines"
+    },
+    {
+      "AirlineCode": "RC",
+      "AirlineName": "Atlantic Airways, Faroe Islands, P/F",
+      "AlternativeBusinessName": "Atlantic Airways Faroe Islands"
+    },
+    {
+      "AirlineCode": "RD",
+      "AirlineName": "Small Planet Airlines Cambodia",
+      "AlternativeBusinessName": "Small Planet Airlines Cambodia"
+    },
+    {
+      "AirlineCode": "RE",
+      "AirlineName": "Stobart Air (Comhforbairt Gaillimh)",
+      "AlternativeBusinessName": "Stobart Air"
+    },
+    {
+      "AirlineCode": "RF",
+      "AirlineName": "Florida West International Airways, Inc.",
+      "AlternativeBusinessName": "Florida West International Airways"
+    },
+    {
+      "AirlineCode": "RG",
+      "AirlineName": "Rotana Jet Aviation / Rotana Jet",
+      "AlternativeBusinessName": "Rotana Jet"
+    },
+    {
+      "AirlineCode": "RH",
+      "AirlineName": "Hong Kong Air Cargo Carrier Limited",
+      "AlternativeBusinessName": "Hong Kong Air Cargo Carrier"
+    },
+    {
+      "AirlineCode": "RJ",
+      "AirlineName": "Royal Jordanian",
+      "AlternativeBusinessName": "Royal Jordanian"
+    },
+    {
+      "AirlineCode": "RL",
+      "AirlineName": "JSC Royal Flight Airlines",
+      "AlternativeBusinessName": "Royal Flight Airlines"
+    },
+    {
+      "AirlineCode": "RM",
+      "AirlineName": "Aircompany Armenia LLC",
+      "AlternativeBusinessName": "Armenia"
+    },
+    {
+      "AirlineCode": "RO",
+      "AirlineName": "TAROM",
+      "AlternativeBusinessName": "TAROM"
+    },
+    {
+      "AirlineCode": "S0",
+      "AirlineName": "Aerolineas Sosa S.A. de C.V.",
+      "AlternativeBusinessName": "Aerolineas Sosa"
+    },
+    {
+      "AirlineCode": "RP",
+      "AirlineName": "Budapest Aircraft Service Kft.",
+      "AlternativeBusinessName": "Base Kft"
+    },
+    {
+      "AirlineCode": "RQ",
+      "AirlineName": "Kam Air",
+      "AlternativeBusinessName": "Kam Air"
+    },
+    {
+      "AirlineCode": "S2",
+      "AirlineName": "Jet Lite (India) Limited",
+      "AlternativeBusinessName": "Jet Lite"
+    },
+    {
+      "AirlineCode": "RS",
+      "AirlineName": "Air Seoul, Inc",
+      "AlternativeBusinessName": "Air Seoul"
+    },
+    {
+      "AirlineCode": "S4",
+      "AirlineName": "SATA Internacional - Azores Airlines, S.A.",
+      "AlternativeBusinessName": "Azores Airlines"
+    },
+    {
+      "AirlineCode": "RT",
+      "AirlineName": "JSC UVT Aero",
+      "AlternativeBusinessName": "UVT Aero"
+    },
+    {
+      "AirlineCode": "S5",
+      "AirlineName": "Small Planet Airlines UAB",
+      "AlternativeBusinessName": "Small Planet Airlines"
+    },
+    {
+      "AirlineCode": "RU",
+      "AirlineName": "AirBridgeCargo Airlines LLC",
+      "AlternativeBusinessName": "AirBridgeCargo"
+    },
+    {
+      "AirlineCode": "S6",
+      "AirlineName": "Sunrise Airways S.A.",
+      "AlternativeBusinessName": "Sunrise Airways"
+    },
+    {
+      "AirlineCode": "RV",
+      "AirlineName": "8165343 Canada Inc. / Air Canada Rouge",
+      "AlternativeBusinessName": "Air Canada Rouge"
+    },
+    {
+      "AirlineCode": "S7",
+      "AirlineName": "Siberia Airlines PJSC",
+      "AlternativeBusinessName": "S7 Airlines"
+    },
+    {
+      "AirlineCode": "RW",
+      "AirlineName": "Royal Air Charter Service Inc.",
+      "AlternativeBusinessName": "Royal Air Charter"
+    },
+    {
+      "AirlineCode": "S8",
+      "AirlineName": "Sky Capital Airlines Ltd.",
+      "AlternativeBusinessName": "Sky Capital Airlines"
+    },
+    {
+      "AirlineCode": "RX",
+      "AirlineName": "HG Aviation Limited / Regent Airways",
+      "AlternativeBusinessName": "Regent Airways"
+    },
+    {
+      "AirlineCode": "S9",
+      "AirlineName": "Air Company LLC Silk Road Cargo Business",
+      "AlternativeBusinessName": "Silk Road Cargo Business"
+    },
+    {
+      "AirlineCode": "RY",
+      "AirlineName": "Jiangxi Air Company Limited",
+      "AlternativeBusinessName": "Jiangxi Air"
+    },
+    {
+      "AirlineCode": "RZ",
+      "AirlineName": "Servicios Aereos Nacionales S.A.",
+      "AlternativeBusinessName": "SANSA"
+    },
+    {
+      "AirlineCode": "SA",
+      "AirlineName": "South African Airways",
+      "AlternativeBusinessName": "South African Airways"
+    },
+    {
+      "AirlineCode": "SB",
+      "AirlineName": "Air Caledonie International",
+      "AlternativeBusinessName": "Aircalin"
+    },
+    {
+      "AirlineCode": "SC",
+      "AirlineName": "Shandong Airlines",
+      "AlternativeBusinessName": "Shandong Airlines"
+    },
+    {
+      "AirlineCode": "SD",
+      "AirlineName": "Sudan Airways Co. Ltd.",
+      "AlternativeBusinessName": "Sudan Airways"
+    },
+    {
+      "AirlineCode": "SE",
+      "AirlineName": "XL Airways France",
+      "AlternativeBusinessName": "XL Airways France"
+    },
+    {
+      "AirlineCode": "SF",
+      "AirlineName": "Tassili Airlines",
+      "AlternativeBusinessName": "Tassili Airlines"
+    },
+    {
+      "AirlineCode": "SG",
+      "AirlineName": "SpiceJet Ltd.",
+      "AlternativeBusinessName": "SpiceJet"
+    },
+    {
+      "AirlineCode": "SH",
+      "AirlineName": "Sharp Aviation Pty. Ltd t/a Sharp Airlines",
+      "AlternativeBusinessName": "Sharp Airlines"
+    },
+    {
+      "AirlineCode": "SI",
+      "AirlineName": "Sierra Pacific Airlines, Inc.",
+      "AlternativeBusinessName": "Sierra Pacific Airlines"
+    },
+    {
+      "AirlineCode": "SJ",
+      "AirlineName": "PT. Sriwijaya Air",
+      "AlternativeBusinessName": "Sriwijaya Air"
+    },
+    {
+      "AirlineCode": "SK",
+      "AirlineName": "Scandinavian Airlines System",
+      "AlternativeBusinessName": "SAS"
+    },
+    {
+      "AirlineCode": "SL",
+      "AirlineName": "Thai Lion Mentari Co. Ltd",
+      "AlternativeBusinessName": "Thai Lion Mentari"
+    },
+    {
+      "AirlineCode": "SM",
+      "AirlineName": "Air Cairo",
+      "AlternativeBusinessName": "Air Cairo"
+    },
+    {
+      "AirlineCode": "SN",
+      "AirlineName": "Brussels Airlines N.V.",
+      "AlternativeBusinessName": "Brussels Airlines"
+    },
+    {
+      "AirlineCode": "SO",
+      "AirlineName": "Apex Airline Public Company Limited",
+      "AlternativeBusinessName": "Apex Airline"
+    },
+    {
+      "AirlineCode": "T0",
+      "AirlineName": "Trans American Airlines, S.A. TACA Peru",
+      "AlternativeBusinessName": "Avianca Peru"
+    },
+    {
+      "AirlineCode": "SP",
+      "AirlineName": "SATA - Air Acores",
+      "AlternativeBusinessName": "SATA - Air Acores"
+    },
+    {
+      "AirlineCode": "SQ",
+      "AirlineName": "Singapore Airlines Limited",
+      "AlternativeBusinessName": "Singapore Airlines"
+    },
+    {
+      "AirlineCode": "T2",
+      "AirlineName": "Fly Art",
+      "AlternativeBusinessName": "Fly Art"
+    },
+    {
+      "AirlineCode": "T3",
+      "AirlineName": "Air Kilroe Limited t/a Eastern Airways",
+      "AlternativeBusinessName": "Eastern Airways"
+    },
+    {
+      "AirlineCode": "SS",
+      "AirlineName": "Corsair t/a Corsair International",
+      "AlternativeBusinessName": "Corsair"
+    },
+    {
+      "AirlineCode": "T4",
+      "AirlineName": "Rhoades Aviation Inc.",
+      "AlternativeBusinessName": "Rhoades Aviation"
+    },
+    {
+      "AirlineCode": "ST",
+      "AirlineName": "Germania Fluggessellschaft mbH",
+      "AlternativeBusinessName": "Germania"
+    },
+    {
+      "AirlineCode": "T5",
+      "AirlineName": "Turkmenistan Airlines",
+      "AlternativeBusinessName": "Turkmenistan"
+    },
+    {
+      "AirlineCode": "SU",
+      "AirlineName": "PJSC Aeroflot",
+      "AlternativeBusinessName": "Aeroflot"
+    },
+    {
+      "AirlineCode": "T6",
+      "AirlineName": "Airswift Transport, INC.",
+      "AlternativeBusinessName": "AirSWIFT"
+    },
+    {
+      "AirlineCode": "SV",
+      "AirlineName": "Saudi Arabian Airlines",
+      "AlternativeBusinessName": "Saudi Airlines"
+    },
+    {
+      "AirlineCode": "T7",
+      "AirlineName": "Transcarga International Airways, C.A.",
+      "AlternativeBusinessName": "Transcarga"
+    },
+    {
+      "AirlineCode": "SW",
+      "AirlineName": "Air Namibia (Pty) Ltd.",
+      "AlternativeBusinessName": "Air Namibia"
+    },
+    {
+      "AirlineCode": "T8",
+      "AirlineName": "MCS Aerocarga de Mexico,S.A. de C.V",
+      "AlternativeBusinessName": "MCS Aerocarga de Mexico"
+    },
+    {
+      "AirlineCode": "SX",
+      "AirlineName": "Skywagon Corporation",
+      "AlternativeBusinessName": "Skywagon"
+    },
+    {
+      "AirlineCode": "T9",
+      "AirlineName": "Turpial Airlines C.A.",
+      "AlternativeBusinessName": "Turpial Airlines"
+    },
+    {
+      "AirlineCode": "SY",
+      "AirlineName": "MN Airlines LLC",
+      "AlternativeBusinessName": "Sun Country"
+    },
+    {
+      "AirlineCode": "SZ",
+      "AirlineName": "Aircompany Somon Air LLC",
+      "AlternativeBusinessName": "Somon Air"
+    },
+    {
+      "AirlineCode": "TA",
+      "AirlineName": "Taca International Airlines, S.A.",
+      "AlternativeBusinessName": "Avianca El Salvador"
+    },
+    {
+      "AirlineCode": "TB",
+      "AirlineName": "TUI Airlines Belgium N.V / TUI fly",
+      "AlternativeBusinessName": "Jetairfly"
+    },
+    {
+      "AirlineCode": "TC",
+      "AirlineName": "Air Tanzania Company Ltd.",
+      "AlternativeBusinessName": "Air Tanzania"
+    },
+    {
+      "AirlineCode": "TD",
+      "AirlineName": "Atlantis European Airways",
+      "AlternativeBusinessName": "Atlantis European Airways"
+    },
+    {
+      "AirlineCode": "TE",
+      "AirlineName": "Sky Taxi sp. z.o.o.",
+      "AlternativeBusinessName": "IGAvion"
+    },
+    {
+      "AirlineCode": "TF",
+      "AirlineName": "Braathens Regional Aviation AB",
+      "AlternativeBusinessName": "Braathens Regional Aviation"
+    },
+    {
+      "AirlineCode": "TG",
+      "AirlineName": "Thai Airways International Ltd.",
+      "AlternativeBusinessName": "Thai Airways International"
+    },
+    {
+      "AirlineCode": "TH",
+      "AirlineName": "Raya Airways Sdn. Bhd. / Raya Airways",
+      "AlternativeBusinessName": "Raya Airways"
+    },
+    {
+      "AirlineCode": "TI",
+      "AirlineName": "Tailwind Hava Yollari A.S.",
+      "AlternativeBusinessName": "Tailwind"
+    },
+    {
+      "AirlineCode": "TJ",
+      "AirlineName": "Tradewind Aviation LLC",
+      "AlternativeBusinessName": "Tradewind Aviation"
+    },
+    {
+      "AirlineCode": "TK",
+      "AirlineName": "Turkish Airlines Inc.",
+      "AlternativeBusinessName": "Turkish Airlines"
+    },
+    {
+      "AirlineCode": "TL",
+      "AirlineName": "Capiteq Limited / AIRNORTH",
+      "AlternativeBusinessName": "AIRNORTH"
+    },
+    {
+      "AirlineCode": "TM",
+      "AirlineName": "LAM - Linhas Aereas De Mocambi",
+      "AlternativeBusinessName": "LAM"
+    },
+    {
+      "AirlineCode": "TN",
+      "AirlineName": "Air Tahiti Nui",
+      "AlternativeBusinessName": "Air Tahiti Nui"
+    },
+    {
+      "AirlineCode": "TO",
+      "AirlineName": "Transavia France",
+      "AlternativeBusinessName": "Transavia France"
+    },
+    {
+      "AirlineCode": "TP",
+      "AirlineName": "TAP Portugal",
+      "AlternativeBusinessName": "TAP"
+    },
+    {
+      "AirlineCode": "TQ",
+      "AirlineName": "Tandem Aero Ltd.",
+      "AlternativeBusinessName": "Tandem Aero"
+    },
+    {
+      "AirlineCode": "U2",
+      "AirlineName": "Easyjet Airline Company Limited",
+      "AlternativeBusinessName": "easyJet"
+    },
+    {
+      "AirlineCode": "TR",
+      "AirlineName": "Scoot Tigerair Pte. Ltd",
+      "AlternativeBusinessName": "Scoot"
+    },
+    {
+      "AirlineCode": "U3",
+      "AirlineName": "Air Company Sky Gates Airlines Limited Liability Company",
+      "AlternativeBusinessName": "Sky Gates Airlines"
+    },
+    {
+      "AirlineCode": "TS",
+      "AirlineName": "Air Transat",
+      "AlternativeBusinessName": "Air Transat"
+    },
+    {
+      "AirlineCode": "U4",
+      "AirlineName": "Buddha Air Pvt. Ltd.",
+      "AlternativeBusinessName": "Buddha Air"
+    },
+    {
+      "AirlineCode": "TT",
+      "AirlineName": "Tiger Airways Australia",
+      "AlternativeBusinessName": "Tigerair Australia"
+    },
+    {
+      "AirlineCode": "U5",
+      "AirlineName": "Karinou Airlines",
+      "AlternativeBusinessName": "Karinou Airlines"
+    },
+    {
+      "AirlineCode": "TU",
+      "AirlineName": "Tunisair",
+      "AlternativeBusinessName": "Tunisair"
+    },
+    {
+      "AirlineCode": "U6",
+      "AirlineName": "Joint Stock Company Ural Airlines",
+      "AlternativeBusinessName": "Ural Airlines"
+    },
+    {
+      "AirlineCode": "TV",
+      "AirlineName": "Tibet Airlines",
+      "AlternativeBusinessName": "Tibet Airlines"
+    },
+    {
+      "AirlineCode": "U7",
+      "AirlineName": "Uniworld Air Cargo Corp.",
+      "AlternativeBusinessName": "Uniworld Air Cargo"
+    },
+    {
+      "AirlineCode": "TW",
+      "AirlineName": "T'Way Air Co. Ltd",
+      "AlternativeBusinessName": "T'Way Air"
+    },
+    {
+      "AirlineCode": "U8",
+      "AirlineName": "TUS Airways Ltd.",
+      "AlternativeBusinessName": "TUS Airways"
+    },
+    {
+      "AirlineCode": "TX",
+      "AirlineName": "Air Caraibes",
+      "AlternativeBusinessName": "Air Caraibes"
+    },
+    {
+      "AirlineCode": "TY",
+      "AirlineName": "Air Caledonie",
+      "AlternativeBusinessName": "Air Caledonie"
+    },
+    {
+      "AirlineCode": "UA",
+      "AirlineName": "United Airlines, Inc.",
+      "AlternativeBusinessName": "United Airlines"
+    },
+    {
+      "AirlineCode": "UB",
+      "AirlineName": "Myanmar National Airlines",
+      "AlternativeBusinessName": "Myanmar National Airlines"
+    },
+    {
+      "AirlineCode": "UC",
+      "AirlineName": "Lan Chile Cargo S.A. / LATAM Cargo Chile",
+      "AlternativeBusinessName": "LATAM Cargo Chile"
+    },
+    {
+      "AirlineCode": "UE",
+      "AirlineName": "Ultimate Jetcharters LLC / Ultimate Air Shuttle",
+      "AlternativeBusinessName": "Ultimate Jetcharters"
+    },
+    {
+      "AirlineCode": "UG",
+      "AirlineName": "Tunisair Express",
+      "AlternativeBusinessName": "Tunisair Express"
+    },
+    {
+      "AirlineCode": "UH",
+      "AirlineName": "Aircompany Atlasjet Ukraine LLC",
+      "AlternativeBusinessName": "Atlasjet Ukraine"
+    },
+    {
+      "AirlineCode": "UI",
+      "AirlineName": "Auric Air Services Limited",
+      "AlternativeBusinessName": "Auric Air"
+    },
+    {
+      "AirlineCode": "UJ",
+      "AirlineName": "USA Jet Airlines, Inc.",
+      "AlternativeBusinessName": "USA Jet Airlines"
+    },
+    {
+      "AirlineCode": "UK",
+      "AirlineName": "Tata Sia Airline Ltda / Vistara",
+      "AlternativeBusinessName": "Vistara"
+    },
+    {
+      "AirlineCode": "UL",
+      "AirlineName": "SriLankan Airlines Limited",
+      "AlternativeBusinessName": "SriLankan Airlines"
+    },
+    {
+      "AirlineCode": "UM",
+      "AirlineName": "Air Zimbabwe (Pvt) Ltd.",
+      "AlternativeBusinessName": "Air Zimbabwe"
+    },
+    {
+      "AirlineCode": "UO",
+      "AirlineName": "Hong Kong Express Airways Limited",
+      "AlternativeBusinessName": "Hong Kong Express"
+    },
+    {
+      "AirlineCode": "V0",
+      "AirlineName": "CONVIASA",
+      "AlternativeBusinessName": "CONVIASA"
+    },
+    {
+      "AirlineCode": "UP",
+      "AirlineName": "Bahamasair Holdings, Limited",
+      "AlternativeBusinessName": "Bahamasair"
+    },
+    {
+      "AirlineCode": "UQ",
+      "AirlineName": "Urumqi Airlines Co. Ltd",
+      "AlternativeBusinessName": "Urumqi Airlines"
+    },
+    {
+      "AirlineCode": "V2",
+      "AirlineName": "Avialeasing Aviation Company",
+      "AlternativeBusinessName": "Avialeasing"
+    },
+    {
+      "AirlineCode": "V3",
+      "AirlineName": "Carpatair S.A.",
+      "AlternativeBusinessName": "Carpatair"
+    },
+    {
+      "AirlineCode": "V4",
+      "AirlineName": "Vieques Air Link, Inc.",
+      "AlternativeBusinessName": "Vieques Air Link"
+    },
+    {
+      "AirlineCode": "UT",
+      "AirlineName": "UTair Aviation Joint-Stock Company",
+      "AlternativeBusinessName": "UTair Aviation"
+    },
+    {
+      "AirlineCode": "V5",
+      "AirlineName": "Aerovias DAP S.A.",
+      "AlternativeBusinessName": "Aerovias DAP"
+    },
+    {
+      "AirlineCode": "UU",
+      "AirlineName": "Air Austral",
+      "AlternativeBusinessName": "Air Austral"
+    },
+    {
+      "AirlineCode": "V6",
+      "AirlineName": "Clairmont Holdings Ltd / VI Airlink",
+      "AlternativeBusinessName": "VI Airlink"
+    },
+    {
+      "AirlineCode": "UV",
+      "AirlineName": "Universal Airways Inc.",
+      "AlternativeBusinessName": "Universal Airways"
+    },
+    {
+      "AirlineCode": "V7",
+      "AirlineName": "Volotea, S.A.",
+      "AlternativeBusinessName": "Volotea"
+    },
+    {
+      "AirlineCode": "UW",
+      "AirlineName": "Uni-Top Airlines Co., Ltd",
+      "AlternativeBusinessName": "Uni-Top Airlines"
+    },
+    {
+      "AirlineCode": "V8",
+      "AirlineName": "Iliamna Air Taxi, Inc.",
+      "AlternativeBusinessName": "Iliamna Air Taxi"
+    },
+    {
+      "AirlineCode": "UX",
+      "AirlineName": "Air Europa Lineas Aereas, S.A.",
+      "AlternativeBusinessName": "Air Europa Lineas Aereas"
+    },
+    {
+      "AirlineCode": "V9",
+      "AirlineName": "Van Air Europe, a.s.",
+      "AlternativeBusinessName": "Citywing"
+    },
+    {
+      "AirlineCode": "UY",
+      "AirlineName": "Sky Prime Charter",
+      "AlternativeBusinessName": "Sky Prime Charter"
+    },
+    {
+      "AirlineCode": "UZ",
+      "AirlineName": "Buraq Air Transport (BRQ)",
+      "AlternativeBusinessName": "Buraq Air"
+    },
+    {
+      "AirlineCode": "VA",
+      "AirlineName": "Virgin Australia International Airlines Pty Ltd",
+      "AlternativeBusinessName": "Virgin Australia International"
+    },
+    {
+      "AirlineCode": "VB",
+      "AirlineName": "Aeroenlaces Nacionales S.A. de C.V.",
+      "AlternativeBusinessName": "VivaAerobus"
+    },
+    {
+      "AirlineCode": "VC",
+      "AirlineName": "Via Airlines, Inc.",
+      "AlternativeBusinessName": "ViaAir"
+    },
+    {
+      "AirlineCode": "VE",
+      "AirlineName": "Easyfly S.A",
+      "AlternativeBusinessName": "Easyfly"
+    },
+    {
+      "AirlineCode": "VF",
+      "AirlineName": "FlyViking AS",
+      "AlternativeBusinessName": "FlyViking"
+    },
+    {
+      "AirlineCode": "VI",
+      "AirlineName": "Volga-Dnepr Airline Joint Stock",
+      "AlternativeBusinessName": "Volga-Dnepr"
+    },
+    {
+      "AirlineCode": "VJ",
+      "AirlineName": "VietJet Aviation Joint Stock Company",
+      "AlternativeBusinessName": "VietJet Air"
+    },
+    {
+      "AirlineCode": "VL",
+      "AirlineName": "Med View Airlines (NIG) Ltd.",
+      "AlternativeBusinessName": "Med View Airlines"
+    },
+    {
+      "AirlineCode": "VM",
+      "AirlineName": "Max Air Ltd.",
+      "AlternativeBusinessName": "Max Air"
+    },
+    {
+      "AirlineCode": "VN",
+      "AirlineName": "Vietnam Airlines JSC",
+      "AlternativeBusinessName": "Vietnam Airlines"
+    },
+    {
+      "AirlineCode": "VO",
+      "AirlineName": "VLM Airlines D.D.",
+      "AlternativeBusinessName": "VLM Airlines"
+    },
+    {
+      "AirlineCode": "VP",
+      "AirlineName": "Villa Air Pvt. Ltd. / Villa Air",
+      "AlternativeBusinessName": "Flyme"
+    },
+    {
+      "AirlineCode": "VQ",
+      "AirlineName": "Novoair Limited",
+      "AlternativeBusinessName": "Novoair"
+    },
+    {
+      "AirlineCode": "W2",
+      "AirlineName": "FlexFlight ApS",
+      "AlternativeBusinessName": "FlexFlight"
+    },
+    {
+      "AirlineCode": "VR",
+      "AirlineName": "Transportes Aereos de Cabo Verde",
+      "AlternativeBusinessName": "TACV"
+    },
+    {
+      "AirlineCode": "W3",
+      "AirlineName": "Arik Air Limited",
+      "AlternativeBusinessName": "Arik Air"
+    },
+    {
+      "AirlineCode": "VS",
+      "AirlineName": "Virgin Atlantic Airways Limited",
+      "AlternativeBusinessName": "Virgin Atlantic Airways"
+    },
+    {
+      "AirlineCode": "W4",
+      "AirlineName": "LC Busre SAC",
+      "AlternativeBusinessName": "LC Busre"
+    },
+    {
+      "AirlineCode": "VT",
+      "AirlineName": "Air Tahiti",
+      "AlternativeBusinessName": "Air Tahiti"
+    },
+    {
+      "AirlineCode": "W5",
+      "AirlineName": "Mahan Airlines",
+      "AlternativeBusinessName": "Mahan Airlines"
+    },
+    {
+      "AirlineCode": "VU",
+      "AirlineName": "Vuelos Economicos Centroamericanos",
+      "AlternativeBusinessName": "VECA"
+    },
+    {
+      "AirlineCode": "W6",
+      "AirlineName": "Wizz Air Hungary Ltd.",
+      "AlternativeBusinessName": "Wizz Air"
+    },
+    {
+      "AirlineCode": "VV",
+      "AirlineName": "Viva Airlines Peru S.A.C.",
+      "AlternativeBusinessName": "Viva Airlines Peru"
+    },
+    {
+      "AirlineCode": "W7",
+      "AirlineName": "Wings of Lebanon S.a.l.",
+      "AlternativeBusinessName": "Wings of Lebanon"
+    },
+    {
+      "AirlineCode": "VW",
+      "AirlineName": "Transportes Aeromar, S.A de C.V",
+      "AlternativeBusinessName": "Aeromar"
+    },
+    {
+      "AirlineCode": "W8",
+      "AirlineName": "Cargojet Airways Inc.",
+      "AlternativeBusinessName": "Cargojet Airways"
+    },
+    {
+      "AirlineCode": "VX",
+      "AirlineName": "Virgin America Inc.",
+      "AlternativeBusinessName": "Virgin America"
+    },
+    {
+      "AirlineCode": "VY",
+      "AirlineName": "Vueling Airlines S.A.",
+      "AlternativeBusinessName": "Vueling Airlines"
+    },
+    {
+      "AirlineCode": "VZ",
+      "AirlineName": "Aero V.I.P. Ltda",
+      "AlternativeBusinessName": "Aero V.I.P."
+    },
+    {
+      "AirlineCode": "WA",
+      "AirlineName": "KLM Cityhopper",
+      "AlternativeBusinessName": "KLM Cityhopper"
+    },
+    {
+      "AirlineCode": "WB",
+      "AirlineName": "RwandAir Limited",
+      "AlternativeBusinessName": "RwandAir"
+    },
+    {
+      "AirlineCode": "WC",
+      "AirlineName": "Islena de Inversiones S.A. De C.V. / Islena Airlines",
+      "AlternativeBusinessName": "Avianca Honduras"
+    },
+    {
+      "AirlineCode": "WD",
+      "AirlineName": "Modern Transporte Aereo de Carga SA",
+      "AlternativeBusinessName": "Modern Logistics"
+    },
+    {
+      "AirlineCode": "WE",
+      "AirlineName": "Thai Smile Airways Company Limited",
+      "AlternativeBusinessName": "Thai Smile"
+    },
+    {
+      "AirlineCode": "WF",
+      "AirlineName": "Wideroe's Flyveselskap A/S",
+      "AlternativeBusinessName": "Wideroe"
+    },
+    {
+      "AirlineCode": "WG",
+      "AirlineName": "Sunwing Airlines Inc.",
+      "AlternativeBusinessName": "Sunwing"
+    },
+    {
+      "AirlineCode": "WI",
+      "AirlineName": "White Airways S.A.",
+      "AlternativeBusinessName": "White Airways"
+    },
+    {
+      "AirlineCode": "WK",
+      "AirlineName": "Edelweiss Air AG",
+      "AlternativeBusinessName": "Edelweiss Air"
+    },
+    {
+      "AirlineCode": "WL",
+      "AirlineName": "Caribbean Sun Airlines, Inc. / World Atlantic Airlines",
+      "AlternativeBusinessName": "World Atlantic Airlines"
+    },
+    {
+      "AirlineCode": "WM",
+      "AirlineName": "Windward Islands Airways Int'l N.V.",
+      "AlternativeBusinessName": "Winair"
+    },
+    {
+      "AirlineCode": "WN",
+      "AirlineName": "Southwest Airlines",
+      "AlternativeBusinessName": "Southwest Airlines"
+    },
+    {
+      "AirlineCode": "WP",
+      "AirlineName": "Hawaii Island Air, Inc. / Island Air",
+      "AlternativeBusinessName": "Island Air"
+    },
+    {
+      "AirlineCode": "WQ",
+      "AirlineName": "Swift Air LLC",
+      "AlternativeBusinessName": "Swift Air"
+    },
+    {
+      "AirlineCode": "WR",
+      "AirlineName": "WestJet Encore Ltd.",
+      "AlternativeBusinessName": "WestJet Encore"
+    },
+    {
+      "AirlineCode": "X3",
+      "AirlineName": "TUIfly GmbH",
+      "AlternativeBusinessName": "TUIfly"
+    },
+    {
+      "AirlineCode": "WS",
+      "AirlineName": "WestJet",
+      "AlternativeBusinessName": "WestJet"
+    },
+    {
+      "AirlineCode": "X4",
+      "AirlineName": "Air Excursions, LLC",
+      "AlternativeBusinessName": "Air Excursions"
+    },
+    {
+      "AirlineCode": "WT",
+      "AirlineName": "Swiftair S.A.",
+      "AlternativeBusinessName": "Swiftair S.A."
+    },
+    {
+      "AirlineCode": "X5",
+      "AirlineName": "Aeronova S.L. / Air Europa Express",
+      "AlternativeBusinessName": "Air Europa Express"
+    },
+    {
+      "AirlineCode": "WU",
+      "AirlineName": "Jetways Airlines Limited",
+      "AlternativeBusinessName": "Jetways Airlines"
+    },
+    {
+      "AirlineCode": "X7",
+      "AirlineName": "Exec Air Inc. of Naples",
+      "AlternativeBusinessName": "Exec Air"
+    },
+    {
+      "AirlineCode": "WW",
+      "AirlineName": "WOW Air ehf",
+      "AlternativeBusinessName": "WOW air"
+    },
+    {
+      "AirlineCode": "X8",
+      "AirlineName": "Airmax S.A.",
+      "AlternativeBusinessName": "Airmax"
+    },
+    {
+      "AirlineCode": "WX",
+      "AirlineName": "Cityjet",
+      "AlternativeBusinessName": "Cityjet"
+    },
+    {
+      "AirlineCode": "X9",
+      "AirlineName": "JSC Avion Express",
+      "AlternativeBusinessName": "Avion Express"
+    },
+    {
+      "AirlineCode": "WY",
+      "AirlineName": "Oman Air (S.A.O.C.)",
+      "AlternativeBusinessName": "Oman Air"
+    },
+    {
+      "AirlineCode": "WZ",
+      "AirlineName": "Joint Stock Company Red Wing",
+      "AlternativeBusinessName": "Red Wings"
+    },
+    {
+      "AirlineCode": "XC",
+      "AirlineName": "Turistik Hava Tasimacilik A.S. (Corendon Airlines)",
+      "AlternativeBusinessName": "Corendon Air"
+    },
+    {
+      "AirlineCode": "XE",
+      "AirlineName": "Delux Public Charter LLC / JetSuiteX Air",
+      "AlternativeBusinessName": "Delux Public Charter"
+    },
+    {
+      "AirlineCode": "XG",
+      "AirlineName": "SunExpress Deutschland GmbH",
+      "AlternativeBusinessName": "SunExpress Deutschland"
+    },
+    {
+      "AirlineCode": "XJ",
+      "AirlineName": "Thai Airasia X Company Limited",
+      "AlternativeBusinessName": "Thai Airasia X"
+    },
+    {
+      "AirlineCode": "XK",
+      "AirlineName": "Air Corsica",
+      "AlternativeBusinessName": "Air Corsica"
+    },
+    {
+      "AirlineCode": "XL",
+      "AirlineName": "Aerolane Lineas Aerea Nacional / LATAM Airlines Ecuador",
+      "AlternativeBusinessName": "LATAM Airlines Ecuador"
+    },
+    {
+      "AirlineCode": "XM",
+      "AirlineName": "Zimex Aviation Ltd",
+      "AlternativeBusinessName": "Zimex Aviation"
+    },
+    {
+      "AirlineCode": "XN",
+      "AirlineName": "PT. Travel Express Aviation Service / Xpressair",
+      "AlternativeBusinessName": "Xpressair"
+    },
+    {
+      "AirlineCode": "XO",
+      "AirlineName": "South East Asian Airlines (SEAIR) International, Inc.",
+      "AlternativeBusinessName": "South East Asian Airlines (SEAIR)"
+    },
+    {
+      "AirlineCode": "XP",
+      "AirlineName": "TEM Enterprises / XTRAirways",
+      "AlternativeBusinessName": "XTRAirways"
+    },
+    {
+      "AirlineCode": "XQ",
+      "AirlineName": "SunExpress",
+      "AlternativeBusinessName": "SunExpress"
+    },
+    {
+      "AirlineCode": "Y2",
+      "AirlineName": "Air Century, S.A.",
+      "AlternativeBusinessName": "Air Century"
+    },
+    {
+      "AirlineCode": "XR",
+      "AirlineName": "Touristic Aviation Services Ltd / Corendon Airlines Europe",
+      "AlternativeBusinessName": "Corendon Airlines Europe"
+    },
+    {
+      "AirlineCode": "Y4",
+      "AirlineName": "Concesionaria Vuela Compania de SA de CV (Volaris)",
+      "AlternativeBusinessName": "Volaris"
+    },
+    {
+      "AirlineCode": "XT",
+      "AirlineName": "Indonesia AirAsia Extra PT",
+      "AlternativeBusinessName": "AirAsia Extra"
+    },
+    {
+      "AirlineCode": "Y5",
+      "AirlineName": "Golden Myanmar Airlines Public Co.",
+      "AlternativeBusinessName": "Golden Myanmar Airlines"
+    },
+    {
+      "AirlineCode": "XU",
+      "AirlineName": "African Express Airways (K) Limited",
+      "AlternativeBusinessName": "African Express Airways"
+    },
+    {
+      "AirlineCode": "Y7",
+      "AirlineName": "Joint-stock company NordStar Airlines / NORDSTAR",
+      "AlternativeBusinessName": "NordStar Airlines"
+    },
+    {
+      "AirlineCode": "XW",
+      "AirlineName": "NokScoot Airlines Company Limited",
+      "AlternativeBusinessName": "NokScoot Airlines"
+    },
+    {
+      "AirlineCode": "Y8",
+      "AirlineName": "Suparna Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Suparna Airlines"
+    },
+    {
+      "AirlineCode": "Y9",
+      "AirlineName": "Kish Airlines",
+      "AlternativeBusinessName": "Kish Air"
+    },
+    {
+      "AirlineCode": "XY",
+      "AirlineName": "National Air Services / Flynas",
+      "AlternativeBusinessName": "Flynas"
+    },
+    {
+      "AirlineCode": "XZ",
+      "AirlineName": "South African Express Airways",
+      "AlternativeBusinessName": "South African Express"
+    },
+    {
+      "AirlineCode": "YB",
+      "AirlineName": "BoraJet Havacilik Tasimacilik Ucak",
+      "AlternativeBusinessName": "BoraJet"
+    },
+    {
+      "AirlineCode": "YC",
+      "AirlineName": "Joint-Stock Company Yamal Airlines",
+      "AlternativeBusinessName": "Yamal Airlines"
+    },
+    {
+      "AirlineCode": "YD",
+      "AirlineName": "Synergy Aviation Ltd",
+      "AlternativeBusinessName": "Synergy Aviation"
+    },
+    {
+      "AirlineCode": "YE",
+      "AirlineName": "Yan Air Ltd",
+      "AlternativeBusinessName": "Yan Air"
+    },
+    {
+      "AirlineCode": "YF",
+      "AirlineName": "Department of National Defence",
+      "AlternativeBusinessName": ""
+    },
+    {
+      "AirlineCode": "YG",
+      "AirlineName": "YTO Cargo Airlines Co. Ltd",
+      "AlternativeBusinessName": "YTO Cargo"
+    },
+    {
+      "AirlineCode": "YH",
+      "AirlineName": "Yangon Airways Limited",
+      "AlternativeBusinessName": "Yangon Airways"
+    },
+    {
+      "AirlineCode": "YJ",
+      "AirlineName": "Asian Wings Airways Limited",
+      "AlternativeBusinessName": "Asian Wings Airways"
+    },
+    {
+      "AirlineCode": "YK",
+      "AirlineName": "Avia Traffic Company",
+      "AlternativeBusinessName": "Avia Traffic Company"
+    },
+    {
+      "AirlineCode": "YL",
+      "AirlineName": "Libyan Wings",
+      "AlternativeBusinessName": "Libyan Wings"
+    },
+    {
+      "AirlineCode": "YM",
+      "AirlineName": "Montenegro Airlines",
+      "AlternativeBusinessName": "Montenegro Airlines"
+    },
+    {
+      "AirlineCode": "YN",
+      "AirlineName": "Air Creebec (1994) Inc.",
+      "AlternativeBusinessName": "Air Creebec"
+    },
+    {
+      "AirlineCode": "YO",
+      "AirlineName": "Heli Air Monaco",
+      "AlternativeBusinessName": "Heli Air Monaco"
+    },
+    {
+      "AirlineCode": "YP",
+      "AirlineName": "Perimeter Aviation, Ltd.",
+      "AlternativeBusinessName": "Perimeter Aviation"
+    },
+    {
+      "AirlineCode": "YQ",
+      "AirlineName": "Link Conexion Aerea S.A de C.V",
+      "AlternativeBusinessName": "TAR Aerolineas"
+    },
+    {
+      "AirlineCode": "Z2",
+      "AirlineName": "Philippines AirAsia Inc / AirAsia",
+      "AlternativeBusinessName": "Philippines AirAsia"
+    },
+    {
+      "AirlineCode": "YR",
+      "AirlineName": "Grand Canyon Airlines, Inc. / Scenic Airlines",
+      "AlternativeBusinessName": "Scenic Airlines"
+    },
+    {
+      "AirlineCode": "Z3",
+      "AirlineName": "Bidzy Ta Hot AANA Corporation",
+      "AlternativeBusinessName": "Tanana Air Service"
+    },
+    {
+      "AirlineCode": "YS",
+      "AirlineName": "Regional Compagnie Aerienne Europeenne t/a HOP!-REGIONAL",
+      "AlternativeBusinessName": "HOP!-REGIONAL"
+    },
+    {
+      "AirlineCode": "Z4",
+      "AirlineName": "Zagros Air Co.",
+      "AlternativeBusinessName": "Zagros Air"
+    },
+    {
+      "AirlineCode": "YT",
+      "AirlineName": "Yeti Airlines Domestic Pvt. Ltd.",
+      "AlternativeBusinessName": "Yeti Airlines Domestic"
+    },
+    {
+      "AirlineCode": "Z5",
+      "AirlineName": "Global Africa Aviation",
+      "AlternativeBusinessName": "Global Africa Aviation"
+    },
+    {
+      "AirlineCode": "YU",
+      "AirlineName": "EUROATLANTIC Airways Transportes Aereos, S.A.",
+      "AlternativeBusinessName": "EUROATLANTIC Airways"
+    },
+    {
+      "AirlineCode": "YV",
+      "AirlineName": "Mesa Airlines, Inc.",
+      "AlternativeBusinessName": "Mesa Airlines"
+    },
+    {
+      "AirlineCode": "Z7",
+      "AirlineName": "Amaszonas Uruguay",
+      "AlternativeBusinessName": "Amaszonas Uruguay"
+    },
+    {
+      "AirlineCode": "YW",
+      "AirlineName": "Air Nostrum L.A.M.S.A.",
+      "AlternativeBusinessName": "Air Nostrum"
+    },
+    {
+      "AirlineCode": "Z8",
+      "AirlineName": "Amaszonas S.A.",
+      "AlternativeBusinessName": "Amaszonas"
+    },
+    {
+      "AirlineCode": "YX",
+      "AirlineName": "Republic Airline, Inc",
+      "AlternativeBusinessName": "Republic Airline"
+    },
+    {
+      "AirlineCode": "Z9",
+      "AirlineName": "JSC Bek Air",
+      "AlternativeBusinessName": "Bek Air"
+    },
+    {
+      "AirlineCode": "ZA",
+      "AirlineName": "Sky Angkor Airlines",
+      "AlternativeBusinessName": "Sky Angkor"
+    },
+    {
+      "AirlineCode": "ZC",
+      "AirlineName": "NU-Aero (Pvt) Ltd t/a Fly Africa Zimbabwe",
+      "AlternativeBusinessName": "Fly Africa Zimbabwe"
+    },
+    {
+      "AirlineCode": "ZD",
+      "AirlineName": "EWA Air",
+      "AlternativeBusinessName": "EWA Air"
+    },
+    {
+      "AirlineCode": "ZE",
+      "AirlineName": "EASTAR JET Co. Ltd",
+      "AlternativeBusinessName": "EASTAR JET"
+    },
+    {
+      "AirlineCode": "ZF",
+      "AirlineName": "Safari Express Cargo Limited",
+      "AlternativeBusinessName": "Safari Express Cargo"
+    },
+    {
+      "AirlineCode": "ZH",
+      "AirlineName": "Shenzhen Airlines",
+      "AlternativeBusinessName": "Shenzhen Airlines"
+    },
+    {
+      "AirlineCode": "ZI",
+      "AirlineName": "Aigle Azur",
+      "AlternativeBusinessName": "Aigle Azur"
+    },
+    {
+      "AirlineCode": "ZJ",
+      "AirlineName": "Air Routing International L.P.",
+      "AlternativeBusinessName": "Air Routing International"
+    },
+    {
+      "AirlineCode": "ZK",
+      "AirlineName": "Limited Liability Company Aircompany ZetAvia",
+      "AlternativeBusinessName": "Aircompany ZetAvia"
+    },
+    {
+      "AirlineCode": "ZL",
+      "AirlineName": "Regional Express Pty. Limited",
+      "AlternativeBusinessName": "Regional Express"
+    },
+    {
+      "AirlineCode": "ZM",
+      "AirlineName": "Air Manas / Air Manas ltd. Air Company",
+      "AlternativeBusinessName": "Pegasus Asia"
+    },
+    {
+      "AirlineCode": "ZN",
+      "AirlineName": "Naysa",
+      "AlternativeBusinessName": "Naysa"
+    },
+    {
+      "AirlineCode": "ZO",
+      "AirlineName": "Zexus Air Services Pvt, Ltd.",
+      "AlternativeBusinessName": "Zoom Air"
+    },
+    {
+      "AirlineCode": "ZP",
+      "AirlineName": "Silk Way Airlines",
+      "AlternativeBusinessName": "Silk Way Airlines"
+    },
+    {
+      "AirlineCode": "ZQ",
+      "AirlineName": "Azman Air Services LTD",
+      "AlternativeBusinessName": "Azman Air"
+    },
+    {
+      "AirlineCode": "ZR",
+      "AirlineName": "Aviacon Zitotrans Air Company JSC",
+      "AlternativeBusinessName": "Aviacon Zitotrans"
+    },
+    {
+      "AirlineCode": "ZT",
+      "AirlineName": "Titan Airways Limited",
+      "AlternativeBusinessName": "Titan Airways Limited"
+    },
+    {
+      "AirlineCode": "ZW",
+      "AirlineName": "Air Wisconsin Airlines Corporation (AWAC)",
+      "AlternativeBusinessName": "Air Wisconsin Airlines"
+    },
+    {
+      "AirlineCode": "ZX",
+      "AirlineName": "Air Georgian Ltd. / Air Alliance",
+      "AlternativeBusinessName": "Air Alliance"
+    },
+    {
+      "AirlineCode": "ZY",
+      "AirlineName": "China Air Cargo co. Ltd",
+      "AlternativeBusinessName": "China Air Cargo"
+    },
+    {
+      "AirlineCode": "0J",
+      "AirlineName": "Premium Jet AG",
+      "AlternativeBusinessName": "Premium Jet"
+    },
+    {
+      "AirlineCode": "0V",
+      "AirlineName": "Vietnam Air Service Company",
+      "AlternativeBusinessName": "Vietnam Air Service"
+    },
+    {
+      "AirlineCode": "1I",
+      "AirlineName": "Deutsche Rettungsflugwacht",
+      "AlternativeBusinessName": "Deutsche Rettungsflugwacht"
+    },
+    {
+      "AirlineCode": "2A",
+      "AirlineName": "Deutsche Bahn AG",
+      "AlternativeBusinessName": "Deutsche Bahn"
+    },
+    {
+      "AirlineCode": "2B",
+      "AirlineName": "Albawings",
+      "AlternativeBusinessName": "Albawings"
+    },
+    {
+      "AirlineCode": "2C",
+      "AirlineName": "SNCF",
+      "AlternativeBusinessName": "SNCF"
+    },
+    {
+      "AirlineCode": "2D",
+      "AirlineName": "Dynamic International Airways, LLC",
+      "AlternativeBusinessName": "Dynamic Airways"
+    },
+    {
+      "AirlineCode": "2E",
+      "AirlineName": "Smokey Bay Air Inc.",
+      "AlternativeBusinessName": "Smokey Bay Air"
+    },
+    {
+      "AirlineCode": "2F",
+      "AirlineName": "Fair Aviation (PTY) Ltd.",
+      "AlternativeBusinessName": "Fair Aviation"
+    },
+    {
+      "AirlineCode": "2G",
+      "AirlineName": "Open Joint Stock Company Angara Airlines",
+      "AlternativeBusinessName": "Angara Airlines"
+    },
+    {
+      "AirlineCode": "2H",
+      "AirlineName": "Thalys International",
+      "AlternativeBusinessName": "Thalys International"
+    },
+    {
+      "AirlineCode": "2I",
+      "AirlineName": "21 Air LLC",
+      "AlternativeBusinessName": "21 Air"
+    },
+    {
+      "AirlineCode": "2J",
+      "AirlineName": "Air Burkina",
+      "AlternativeBusinessName": "Air Burkina"
+    },
+    {
+      "AirlineCode": "2K",
+      "AirlineName": "Aerolineas Galapagos S.A. Aerogal",
+      "AlternativeBusinessName": "Avianca Ecuador"
+    },
+    {
+      "AirlineCode": "2L",
+      "AirlineName": "Transportes Aereos Bolivianos",
+      "AlternativeBusinessName": "TAB"
+    },
+    {
+      "AirlineCode": "2M",
+      "AirlineName": "Maya Island Air",
+      "AlternativeBusinessName": "Maya Island Air"
+    },
+    {
+      "AirlineCode": "2N",
+      "AirlineName": "NextJet AB",
+      "AlternativeBusinessName": "NextJet"
+    },
+    {
+      "AirlineCode": "2O",
+      "AirlineName": "Redemption Inc.",
+      "AlternativeBusinessName": "Island Air Service"
+    },
+    {
+      "AirlineCode": "2P",
+      "AirlineName": "Air Philippines Corporation / PAL Express and Airphil Express",
+      "AlternativeBusinessName": "PAL Express"
+    },
+    {
+      "AirlineCode": "2Q",
+      "AirlineName": "Air Cargo Carriers, LLC",
+      "AlternativeBusinessName": "Air Cargo Carriers"
+    },
+    {
+      "AirlineCode": "2S",
+      "AirlineName": "Air Carnival Private Limited",
+      "AlternativeBusinessName": "Air Carnival"
+    },
+    {
+      "AirlineCode": "2T",
+      "AirlineName": "Timbis Air Services",
+      "AlternativeBusinessName": "Timbis Air"
+    },
+    {
+      "AirlineCode": "2U",
+      "AirlineName": "Sun d'Or International Airlines",
+      "AlternativeBusinessName": "Sun d'Or"
+    },
+    {
+      "AirlineCode": "2V",
+      "AirlineName": "Amtrak",
+      "AlternativeBusinessName": "Amtrak"
+    },
+    {
+      "AirlineCode": "2W",
+      "AirlineName": "Multiple Solutions Limited",
+      "AlternativeBusinessName": "Multiple Solutions"
+    },
+    {
+      "AirlineCode": "2Y",
+      "AirlineName": "PT. My Indo Airlines",
+      "AlternativeBusinessName": "My Indo Airlines"
+    },
+    {
+      "AirlineCode": "2Z",
+      "AirlineName": "Passaredo Transportes Aereos S.A.",
+      "AlternativeBusinessName": "Passaredo"
+    },
+    {
+      "AirlineCode": "3A",
+      "AirlineName": "Kenosha Aero, Inc. / Alliance Airlines",
+      "AlternativeBusinessName": "Alliance Airlines"
+    },
+    {
+      "AirlineCode": "3B",
+      "AirlineName": "Binter Cabo Verde Sociedade Unipress S.A.",
+      "AlternativeBusinessName": "Binter Cabo Verde"
+    },
+    {
+      "AirlineCode": "3C",
+      "AirlineName": "Air Chathams Limited t/a Air Chathams",
+      "AlternativeBusinessName": "Air Chathams"
+    },
+    {
+      "AirlineCode": "3E",
+      "AirlineName": "Multi-Aero Inc. / Air Choice One",
+      "AlternativeBusinessName": "Air Choice One"
+    },
+    {
+      "AirlineCode": "3F",
+      "AirlineName": "Pacific Airways Inc.",
+      "AlternativeBusinessName": "Pacific Airways"
+    },
+    {
+      "AirlineCode": "3G",
+      "AirlineName": "POS Asia Cargo Express SDN. BHD / Asia Cargo Express",
+      "AlternativeBusinessName": "Asia Cargo Express"
+    },
+    {
+      "AirlineCode": "3H",
+      "AirlineName": "Air Inuit LTD/LTEE",
+      "AlternativeBusinessName": "Air Inuit"
+    },
+    {
+      "AirlineCode": "3J",
+      "AirlineName": "Jubba Airways Limited / Jubba Airways Limited",
+      "AlternativeBusinessName": "Jubba Airways Limited"
+    },
+    {
+      "AirlineCode": "3K",
+      "AirlineName": "Jetstar Asia Airways Pte Ltd",
+      "AlternativeBusinessName": "Jetstar Asia"
+    },
+    {
+      "AirlineCode": "3M",
+      "AirlineName": "Silver Airways Corp",
+      "AlternativeBusinessName": "Silver Airways"
+    },
+    {
+      "AirlineCode": "3N",
+      "AirlineName": "Air Urga",
+      "AlternativeBusinessName": "Air Urga"
+    },
+    {
+      "AirlineCode": "3O",
+      "AirlineName": "Air Arabia Maroc",
+      "AlternativeBusinessName": "Air Arabia Maroc"
+    },
+    {
+      "AirlineCode": "3P",
+      "AirlineName": "Air Philip Co. Ltd.",
+      "AlternativeBusinessName": "Air Philip"
+    },
+    {
+      "AirlineCode": "3R",
+      "AirlineName": "Avior Regional C.A.",
+      "AlternativeBusinessName": "Avior Regional"
+    },
+    {
+      "AirlineCode": "3S",
+      "AirlineName": "Aerologic GmbH",
+      "AlternativeBusinessName": "Aerologic"
+    },
+    {
+      "AirlineCode": "3T",
+      "AirlineName": "Tarco Air",
+      "AlternativeBusinessName": "Tarco Air"
+    },
+    {
+      "AirlineCode": "3U",
+      "AirlineName": "Sichuan Airlines Co. Ltd.",
+      "AlternativeBusinessName": "Sichuan Airlines"
+    },
+    {
+      "AirlineCode": "3V",
+      "AirlineName": "ASL Airlines Belgium",
+      "AlternativeBusinessName": "ASL Airlines Belgium"
+    },
+    {
+      "AirlineCode": "3W",
+      "AirlineName": "Malawian Airlines",
+      "AlternativeBusinessName": "Malawian Airlines"
+    },
+    {
+      "AirlineCode": "3X",
+      "AirlineName": "Premier Trans Aire Inc.",
+      "AlternativeBusinessName": "Premier Trans Aire"
+    },
+    {
+      "AirlineCode": "3Y",
+      "AirlineName": "Baseops International Inc",
+      "AlternativeBusinessName": "Baseops International"
+    },
+    {
+      "AirlineCode": "3Z",
+      "AirlineName": "Travel Service Polska Sp. z.o.o.",
+      "AlternativeBusinessName": "Travel Service Polska"
+    },
+    {
+      "AirlineCode": "4A",
+      "AirlineName": "Aerodynamics, Inc.",
+      "AlternativeBusinessName": "Aerodynamics"
+    },
+    {
+      "AirlineCode": "4B",
+      "AirlineName": "Aviastar-TU Co. Aviacompany",
+      "AlternativeBusinessName": "Aviastar"
+    },
+    {
+      "AirlineCode": "4C",
+      "AirlineName": "Aerovias de Integracion Regional / LATAM Airlines Colombia",
+      "AlternativeBusinessName": "LATAM Airlines Colombia"
+    },
+    {
+      "AirlineCode": "4D",
+      "AirlineName": "Air Sinai",
+      "AlternativeBusinessName": "Air Sinai"
+    },
+    {
+      "AirlineCode": "4E",
+      "AirlineName": "Stabo Air Limited",
+      "AlternativeBusinessName": "Stabo Air"
+    },
+    {
+      "AirlineCode": "4G",
+      "AirlineName": "Gazpromavia Aviation Company Ltd.",
+      "AlternativeBusinessName": "Gazpromavia Aviation"
+    },
+    {
+      "AirlineCode": "4I",
+      "AirlineName": "IHY Izmir Havayollari A.S.",
+      "AlternativeBusinessName": "IHY Izmir Havayollari"
+    },
+    {
+      "AirlineCode": "4K",
+      "AirlineName": "Kenn Borek Air Ltd.",
+      "AlternativeBusinessName": "Kenn Borek Air"
+    },
+    {
+      "AirlineCode": "4L",
+      "AirlineName": "Lineas Aereas Suramericanas SA LAS S.A.",
+      "AlternativeBusinessName": "LAS Cargo"
+    },
+    {
+      "AirlineCode": "4M",
+      "AirlineName": "Lan Argentina / LATAM Airlines Argentina",
+      "AlternativeBusinessName": "LATAM Airlines Argentina"
+    },
+    {
+      "AirlineCode": "4N",
+      "AirlineName": "Air North Charter and Training Ltd.",
+      "AlternativeBusinessName": "Air North"
+    },
+    {
+      "AirlineCode": "4O",
+      "AirlineName": "ABC Aerolineas S.A. de C.V.",
+      "AlternativeBusinessName": "InterJet"
+    },
+    {
+      "AirlineCode": "4Q",
+      "AirlineName": "Safi Airways Ltd.",
+      "AlternativeBusinessName": "Safi Airways"
+    },
+    {
+      "AirlineCode": "4S",
+      "AirlineName": "Solar Cargo C.A.",
+      "AlternativeBusinessName": "Solar Cargo"
+    },
+    {
+      "AirlineCode": "4U",
+      "AirlineName": "Germanwings Gmbh",
+      "AlternativeBusinessName": "Germanwings"
+    },
+    {
+      "AirlineCode": "4V",
+      "AirlineName": "BV Airways / BVI Airways",
+      "AlternativeBusinessName": "BVI Airways"
+    },
+    {
+      "AirlineCode": "4W",
+      "AirlineName": "Allied Air Ltd.",
+      "AlternativeBusinessName": "Allied Air"
+    },
+    {
+      "AirlineCode": "4X",
+      "AirlineName": "Mercury Air Cargo, Inc",
+      "AlternativeBusinessName": "Mercury Air Cargo"
+    },
+    {
+      "AirlineCode": "4Y",
+      "AirlineName": "Airbus Transport International",
+      "AlternativeBusinessName": "Airbus Transport International"
+    },
+    {
+      "AirlineCode": "4Z",
+      "AirlineName": "SA Airlink / South African Airlink",
+      "AlternativeBusinessName": "SA Airlink"
+    },
+    {
+      "AirlineCode": "5A",
+      "AirlineName": "Alpine Aviation, Inc.",
+      "AlternativeBusinessName": "Alpine Aviation"
+    },
+    {
+      "AirlineCode": "5B",
+      "AirlineName": "Bassaka Air Limited",
+      "AlternativeBusinessName": "Bassaka Air"
+    },
+    {
+      "AirlineCode": "5C",
+      "AirlineName": "Nature Air S.A.",
+      "AlternativeBusinessName": "Nature Air"
+    },
+    {
+      "AirlineCode": "5D",
+      "AirlineName": "Aerolitoral S.A. de C.V.",
+      "AlternativeBusinessName": "Aerolitoral"
+    },
+    {
+      "AirlineCode": "5E",
+      "AirlineName": "East Coast Flight Services, Inc.",
+      "AlternativeBusinessName": "East Coast Flight Services"
+    },
+    {
+      "AirlineCode": "5F",
+      "AirlineName": "Fly One S.R.L.",
+      "AlternativeBusinessName": "Fly One"
+    },
+    {
+      "AirlineCode": "5G",
+      "AirlineName": "Aerocuahonte SA de CV",
+      "AlternativeBusinessName": "Aerocuahonte"
+    },
+    {
+      "AirlineCode": "5H",
+      "AirlineName": "Five Forty Aviation Limited",
+      "AlternativeBusinessName": "Fly540"
+    },
+    {
+      "AirlineCode": "5I",
+      "AirlineName": "Alsa Grupo SLU",
+      "AlternativeBusinessName": "Alsa Grupo"
+    },
+    {
+      "AirlineCode": "5J",
+      "AirlineName": "Cebu Air, Inc.",
+      "AlternativeBusinessName": "Cebu Air"
+    },
+    {
+      "AirlineCode": "5K",
+      "AirlineName": "Hi Fly Transportes Aereos, S.A.",
+      "AlternativeBusinessName": "Hi Fly"
+    },
+    {
+      "AirlineCode": "5M",
+      "AirlineName": "Montserrat Airways Ltd.",
+      "AlternativeBusinessName": "Montserrat Airways"
+    },
+    {
+      "AirlineCode": "5N",
+      "AirlineName": "Joint-Stock Company Nordavia - Regional Airlines",
+      "AlternativeBusinessName": "Nordavia Regional Airlines"
+    },
+    {
+      "AirlineCode": "5O",
+      "AirlineName": "ASL Airlines France",
+      "AlternativeBusinessName": "ASL Airlines"
+    },
+    {
+      "AirlineCode": "5P",
+      "AirlineName": "Small Planet Airlines GmbH",
+      "AlternativeBusinessName": "Small Planet"
+    },
+    {
+      "AirlineCode": "5R",
+      "AirlineName": "Rutas Aereas, C.A. / RUTACA",
+      "AlternativeBusinessName": "RUTACA"
+    },
+    {
+      "AirlineCode": "5S",
+      "AirlineName": "Servicios Aereos Profesionales S.A.",
+      "AlternativeBusinessName": "S.A.P."
+    },
+    {
+      "AirlineCode": "5T",
+      "AirlineName": "Canadian North Inc.",
+      "AlternativeBusinessName": "Canadian North"
+    },
+    {
+      "AirlineCode": "5U",
+      "AirlineName": "Transportes Aereos Guatemaltecos S.A.",
+      "AlternativeBusinessName": "TAG"
+    },
+    {
+      "AirlineCode": "5V",
+      "AirlineName": "Tatonduk Outfitters Limited / Everts Air Alaska / Everts Air Cargo",
+      "AlternativeBusinessName": "Everts Air Alaska dba Everts Air Cargo"
+    },
+    {
+      "AirlineCode": "5W",
+      "AirlineName": "WESTbahn Management GmbH",
+      "AlternativeBusinessName": "WESTbahn Management"
+    },
+    {
+      "AirlineCode": "5X",
+      "AirlineName": "UPS",
+      "AlternativeBusinessName": "UPS"
+    },
+    {
+      "AirlineCode": "5Y",
+      "AirlineName": "Atlas Air, Inc.",
+      "AlternativeBusinessName": "Atlas Air"
+    },
+    {
+      "AirlineCode": "5Z",
+      "AirlineName": "Cemair (Pty) Ltd. t/a Cemair",
+      "AlternativeBusinessName": "CemAir Pty"
+    },
+    {
+      "AirlineCode": "6A",
+      "AirlineName": "Armenia Airways Aircompany CJSC",
+      "AlternativeBusinessName": "Armenia Airways"
+    },
+    {
+      "AirlineCode": "6B",
+      "AirlineName": "TUIfly Nordic AB",
+      "AlternativeBusinessName": "TUIfly Nordic"
+    },
+    {
+      "AirlineCode": "6C",
+      "AirlineName": "Air Timor S.A.",
+      "AlternativeBusinessName": "Air Timor"
+    },
+    {
+      "AirlineCode": "6D",
+      "AirlineName": "Travel Service Slovensko s.r.o",
+      "AlternativeBusinessName": "Travel Service Slovensko"
+    },
+    {
+      "AirlineCode": "6E",
+      "AirlineName": "Interglobe Aviation Ltd. / Indigo",
+      "AlternativeBusinessName": "IndiGo"
+    },
+    {
+      "AirlineCode": "6F",
+      "AirlineName": "Primera Air Nordic",
+      "AlternativeBusinessName": "Primera Air Nordic"
+    },
+    {
+      "AirlineCode": "6G",
+      "AirlineName": "Executive Express Aviation LLC",
+      "AlternativeBusinessName": "Executive Express Aviation"
+    },
+    {
+      "AirlineCode": "6H",
+      "AirlineName": "Israir Airlines and Tourism Ltd.",
+      "AlternativeBusinessName": "Israir Airlines"
+    },
+    {
+      "AirlineCode": "6I",
+      "AirlineName": "Air Alsie A/S",
+      "AlternativeBusinessName": "Air Alsie"
+    },
+    {
+      "AirlineCode": "6J",
+      "AirlineName": "Solaseed Air Inc.",
+      "AlternativeBusinessName": "Solaseed Air"
+    },
+    {
+      "AirlineCode": "6L",
+      "AirlineName": "Aklak Inc.",
+      "AlternativeBusinessName": "Aklak"
+    },
+    {
+      "AirlineCode": "6M",
+      "AirlineName": "Maximus Airlines",
+      "AlternativeBusinessName": "Maximus Air"
+    },
+    {
+      "AirlineCode": "6N",
+      "AirlineName": "Niger Airlines S.A.",
+      "AlternativeBusinessName": "Niger Airlines"
+    },
+    {
+      "AirlineCode": "6O",
+      "AirlineName": "Orbest S.A.",
+      "AlternativeBusinessName": "Orbest S.A."
+    },
+    {
+      "AirlineCode": "6Q",
+      "AirlineName": "Cham Wings Airlines",
+      "AlternativeBusinessName": "Cham Wings"
+    },
+    {
+      "AirlineCode": "6R",
+      "AirlineName": "Aerotransporte de Carga Union S.A. de C.",
+      "AlternativeBusinessName": "Aerounion"
+    },
+    {
+      "AirlineCode": "6S",
+      "AirlineName": "Saudi Gulf Airlines",
+      "AlternativeBusinessName": "Saudi Gulf"
+    },
+    {
+      "AirlineCode": "6T",
+      "AirlineName": "Air Mandalay Ltd.",
+      "AlternativeBusinessName": "Air Mandalay"
+    },
+    {
+      "AirlineCode": "6V",
+      "AirlineName": "Auto Res S.L.U / Avanza Group",
+      "AlternativeBusinessName": "Avanza Group"
+    },
+    {
+      "AirlineCode": "6W",
+      "AirlineName": "Saratov Airlines Joint Stock Company",
+      "AlternativeBusinessName": "Saravia"
+    },
+    {
+      "AirlineCode": "6Y",
+      "AirlineName": "Smartlynx Airlines Ltd.",
+      "AlternativeBusinessName": "Smartlynx Airlines"
+    },
+    {
+      "AirlineCode": "6Z",
+      "AirlineName": "JSC Aircompany Euro-Asia Air",
+      "AlternativeBusinessName": "Euro-Asia Air"
+    },
+    {
+      "AirlineCode": "7A",
+      "AirlineName": "Express Air Cargo",
+      "AlternativeBusinessName": "Express Air"
+    },
+    {
+      "AirlineCode": "7C",
+      "AirlineName": "Coyne Airways Ltd.",
+      "AlternativeBusinessName": "Coyne Airways"
+    },
+    {
+      "AirlineCode": "7E",
+      "AirlineName": "Sylt Air GmbH",
+      "AlternativeBusinessName": "Sylt Air"
+    },
+    {
+      "AirlineCode": "7F",
+      "AirlineName": "Bradley Air Services Limited t/a First Air",
+      "AlternativeBusinessName": "First Air"
+    },
+    {
+      "AirlineCode": "7G",
+      "AirlineName": "Star Flyer Inc.",
+      "AlternativeBusinessName": "Star Flyer"
+    },
+    {
+      "AirlineCode": "7H",
+      "AirlineName": "Corvus Airlines Inc. / Ravn Alaska",
+      "AlternativeBusinessName": "Ravn Alaska"
+    },
+    {
+      "AirlineCode": "7I",
+      "AirlineName": "Insel Air International B.V.",
+      "AlternativeBusinessName": "Insel Air"
+    },
+    {
+      "AirlineCode": "7J",
+      "AirlineName": "OJSC Tajik Air",
+      "AlternativeBusinessName": "Tajik Air"
+    },
+    {
+      "AirlineCode": "7L",
+      "AirlineName": "Silk Way West Airlines Limited",
+      "AlternativeBusinessName": "Silk Way West"
+    },
+    {
+      "AirlineCode": "7M",
+      "AirlineName": "Mayair S.A. de C.V.",
+      "AlternativeBusinessName": "Mayair"
+    },
+    {
+      "AirlineCode": "7N",
+      "AirlineName": "Pan Am World Airways Dominicana S.A",
+      "AlternativeBusinessName": "PAWA Dominicana"
+    },
+    {
+      "AirlineCode": "7O",
+      "AirlineName": "Travel Service Legiforgalmi es Szolgaltato Kft/Ltd",
+      "AlternativeBusinessName": "Travel Service Hungary"
+    },
+    {
+      "AirlineCode": "7P",
+      "AirlineName": "Air Panama / Parsa, S.A.",
+      "AlternativeBusinessName": "Air Panama"
+    },
+    {
+      "AirlineCode": "7Q",
+      "AirlineName": "Elite Airways LLC",
+      "AlternativeBusinessName": "Elite Airways"
+    },
+    {
+      "AirlineCode": "7R",
+      "AirlineName": "Joint Stock Aviation Company RusLine",
+      "AlternativeBusinessName": "RusLine"
+    },
+    {
+      "AirlineCode": "7S",
+      "AirlineName": "Arctic Transportation Services, Inc. / Ryan Air",
+      "AlternativeBusinessName": "Ryan Air"
+    },
+    {
+      "AirlineCode": "7T",
+      "AirlineName": "Aero Express del Ecuador - Trans AM",
+      "AlternativeBusinessName": "Trans AM"
+    },
+    {
+      "AirlineCode": "7U",
+      "AirlineName": "Alpha Air Transport / Commercial Aviation Services",
+      "AlternativeBusinessName": "Commercial Aviation Services"
+    },
+    {
+      "AirlineCode": "7V",
+      "AirlineName": "Federal Airlines Pty Ltd",
+      "AlternativeBusinessName": "Federal Air"
+    },
+    {
+      "AirlineCode": "7W",
+      "AirlineName": "Wind Rose Aviation Company",
+      "AlternativeBusinessName": "Windrose"
+    },
+    {
+      "AirlineCode": "7Y",
+      "AirlineName": "Mann Yadanarpon Airlines Co. Ltd",
+      "AlternativeBusinessName": "Mann Yadanarpon Airlines"
+    },
+    {
+      "AirlineCode": "7Z",
+      "AirlineName": "Ameristar Air Cargo Inc.",
+      "AlternativeBusinessName": "Ameristar Air Cargo"
+    },
+    {
+      "AirlineCode": "8A",
+      "AirlineName": "Panama Airways",
+      "AlternativeBusinessName": "Panama Airways"
+    },
+    {
+      "AirlineCode": "8B",
+      "AirlineName": "PT. TransNusa Aviation Mandiri",
+      "AlternativeBusinessName": "TransNusa"
+    },
+    {
+      "AirlineCode": "8C",
+      "AirlineName": "Air Transport International Inc.",
+      "AlternativeBusinessName": "ATI"
+    },
+    {
+      "AirlineCode": "8D",
+      "AirlineName": "FITS Aviation (Pvt) Ltd",
+      "AlternativeBusinessName": "FitsAir"
+    },
+    {
+      "AirlineCode": "8E",
+      "AirlineName": "Easy Fly Express Limited",
+      "AlternativeBusinessName": "Easy Fly Express"
+    },
+    {
+      "AirlineCode": "8F",
+      "AirlineName": "PT Cardig Air",
+      "AlternativeBusinessName": "PT Cardig Air"
+    },
+    {
+      "AirlineCode": "8G",
+      "AirlineName": "Mid Africa Aviation",
+      "AlternativeBusinessName": "Fly Mid Africa"
+    },
+    {
+      "AirlineCode": "8H",
+      "AirlineName": "BH Air Ltd.",
+      "AlternativeBusinessName": "BH Air"
+    },
+    {
+      "AirlineCode": "8J",
+      "AirlineName": "Linea Aerea Eco Jet S.A",
+      "AlternativeBusinessName": "Ecojet"
+    },
+    {
+      "AirlineCode": "8K",
+      "AirlineName": "K-Mile Air Co. Ltd.",
+      "AlternativeBusinessName": "K-Mile Air"
+    },
+    {
+      "AirlineCode": "8L",
+      "AirlineName": "Lucky Air Co. Ltd.",
+      "AlternativeBusinessName": "Lucky Air"
+    },
+    {
+      "AirlineCode": "8M",
+      "AirlineName": "Myanmar Airways International Company Limited",
+      "AlternativeBusinessName": "Myanmar Airways International"
+    },
+    {
+      "AirlineCode": "8N",
+      "AirlineName": "Regional Air Services",
+      "AlternativeBusinessName": "Regional Air Services"
+    },
+    {
+      "AirlineCode": "8P",
+      "AirlineName": "Pacific Coastal Airlines Limited",
+      "AlternativeBusinessName": "Pacific Coastal Airlines"
+    },
+    {
+      "AirlineCode": "8Q",
+      "AirlineName": "Onur Air Tasimacilik A.S",
+      "AlternativeBusinessName": "Onur Air"
+    },
+    {
+      "AirlineCode": "8S",
+      "AirlineName": "Shun Tak-China Travel Ship Mgmt. Ltd.",
+      "AlternativeBusinessName": "Turbojet"
+    },
+    {
+      "AirlineCode": "8T",
+      "AirlineName": "Air Tindi Ltd.",
+      "AlternativeBusinessName": "Air Tindi"
+    },
+    {
+      "AirlineCode": "8U",
+      "AirlineName": "Afriqiyah Airways",
+      "AlternativeBusinessName": "Afriqiyah Airways"
+    },
+    {
+      "AirlineCode": "8V",
+      "AirlineName": "Astral Aviation Ltd.",
+      "AlternativeBusinessName": "Astral Aviation"
+    },
+    {
+      "AirlineCode": "8W",
+      "AirlineName": "Fly Always N.V",
+      "AlternativeBusinessName": "Fly Always"
+    },
+    {
+      "AirlineCode": "8Y",
+      "AirlineName": "Astro Air International Inc.",
+      "AlternativeBusinessName": "Astro Air"
+    },
+    {
+      "AirlineCode": "8Z",
+      "AirlineName": "Congo Airways",
+      "AlternativeBusinessName": "Congo Airways"
+    },
+    {
+      "AirlineCode": "9A",
+      "AirlineName": "Eaglexpress Air Charter Sdn Bhd / Eaglexpress Air",
+      "AlternativeBusinessName": "Eaglexpress Air"
+    },
+    {
+      "AirlineCode": "9B",
+      "AirlineName": "AccesRail and Partner Railway",
+      "AlternativeBusinessName": "AccesRail"
+    },
+    {
+      "AirlineCode": "9C",
+      "AirlineName": "Spring Airlines Limited Corporation",
+      "AlternativeBusinessName": "Spring Airlines"
+    },
+    {
+      "AirlineCode": "9E",
+      "AirlineName": "Endeavor Air",
+      "AlternativeBusinessName": "Endeavor Air"
+    },
+    {
+      "AirlineCode": "9F",
+      "AirlineName": "Eurostar International Limited",
+      "AlternativeBusinessName": "Eurostar"
+    },
+    {
+      "AirlineCode": "9G",
+      "AirlineName": "9G Rail Limited",
+      "AlternativeBusinessName": "9G Rail"
+    },
+    {
+      "AirlineCode": "9H",
+      "AirlineName": "Changan Airlines Limited Company",
+      "AlternativeBusinessName": "Changan Airlines"
+    },
+    {
+      "AirlineCode": "9I",
+      "AirlineName": "Airline Allied Services Limited / Alliance Air",
+      "AlternativeBusinessName": "Alliance Air"
+    },
+    {
+      "AirlineCode": "9J",
+      "AirlineName": "Dana Airlines Limited",
+      "AlternativeBusinessName": "Dana Airlines"
+    },
+    {
+      "AirlineCode": "9K",
+      "AirlineName": "Hyannis Air Service, Inc. / Cape Air",
+      "AlternativeBusinessName": "Cape Air"
+    },
+    {
+      "AirlineCode": "9L",
+      "AirlineName": "AirTanker Services Limited",
+      "AlternativeBusinessName": "AirTanker Services"
+    },
+    {
+      "AirlineCode": "9M",
+      "AirlineName": "Central Mountain Air",
+      "AlternativeBusinessName": "Central Mountain Air"
+    },
+    {
+      "AirlineCode": "9N",
+      "AirlineName": "Tropic Air Limited",
+      "AlternativeBusinessName": "Tropic Air"
+    },
+    {
+      "AirlineCode": "9P",
+      "AirlineName": "Air Arabia Jordan",
+      "AlternativeBusinessName": "Air Arabia Jordan"
+    },
+    {
+      "AirlineCode": "9Q",
+      "AirlineName": "Caicos Express Airways",
+      "AlternativeBusinessName": "Caicos Express Airways"
+    },
+    {
+      "AirlineCode": "9R",
+      "AirlineName": "Servicio Aereo a Territorios Nacionales Satena",
+      "AlternativeBusinessName": "SATENA"
+    },
+    {
+      "AirlineCode": "9S",
+      "AirlineName": "Southern Air Inc.",
+      "AlternativeBusinessName": "Southern Air Inc."
+    },
+    {
+      "AirlineCode": "9T",
+      "AirlineName": "ACT Havayollari A.S.",
+      "AlternativeBusinessName": "MyCargo Airlines"
+    },
+    {
+      "AirlineCode": "9U",
+      "AirlineName": "Air Moldova",
+      "AlternativeBusinessName": "Air Moldova"
+    },
+    {
+      "AirlineCode": "9V",
+      "AirlineName": "Avior Airlines, C.A.",
+      "AlternativeBusinessName": "Avior"
+    },
+    {
+      "AirlineCode": "9W",
+      "AirlineName": "Jet Airways (India) Limited",
+      "AlternativeBusinessName": "Jet Airways"
+    },
+    {
+      "AirlineCode": "9X",
+      "AirlineName": "Southern Airways Express, LLC",
+      "AlternativeBusinessName": "Southern Airways Express"
+    }
+  ]

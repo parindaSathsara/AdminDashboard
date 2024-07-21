@@ -28,6 +28,7 @@ import BookingExperience from './DepartmentWise/BookingExperience';
 import SupplierExperience from './DepartmentWise/SupplierExperience';
 import DateWiseSummary from './DateWiseSummary/DateWiseSummary';
 import TravellerExperience from './DepartmentWise/TravellerExperience';
+import FlightOrderView from 'src/views/dashboard/FlightUI/FlightOrderView';
 
 function OrderDetails(props) {
 
@@ -393,98 +394,98 @@ function OrderDetails(props) {
         return variations.length > 0 ? variations.join(', ') : '-';
     }
 
-    const flights = {
-        columns: [
-            {
-                field: 'flightData', title: 'Flight Data', hidden: props?.productViewData ? true : false, align: 'left', width: 500,
-                render: (e) => {
-                    var originData = e.flightData.ori_loccation?.split(',')
-                    var destData = e.flightData.dest_loccation?.split(',')
+    // const flights = {
+    //     columns: [
+    //         {
+    //             field: 'flightData', title: 'Flight Data', hidden: props?.productViewData ? true : false, align: 'left', width: 500,
+    //             render: (e) => {
+    //                 var originData = e.flightData.ori_loccation?.split(',')
+    //                 var destData = e.flightData.dest_loccation?.split(',')
 
-                    var depDates = e.flightData.departure_datetime?.split(',')
-                    var flights = e.flightData.flight_code?.split(',')
-                    return (
-                        <>
-                            <CRow>
-                                <CCol lg={3}>
-                                    <h6 style={{ fontWeight: 'bold' }}>Departure</h6>
-                                </CCol>
-                                <CCol lg={1}>
+    //                 var depDates = e.flightData.departure_datetime?.split(',')
+    //                 var flights = e.flightData.flight_code?.split(',')
+    //                 return (
+    //                     <>
+    //                         <CRow>
+    //                             <CCol lg={3}>
+    //                                 <h6 style={{ fontWeight: 'bold' }}>Departure</h6>
+    //                             </CCol>
+    //                             <CCol lg={1}>
 
-                                </CCol>
-                                <CCol lg={3}>
-                                    <h6 style={{ textAlign: 'right', fontWeight: 'bold' }}>Arrival</h6>
-                                </CCol>
+    //                             </CCol>
+    //                             <CCol lg={3}>
+    //                                 <h6 style={{ textAlign: 'right', fontWeight: 'bold' }}>Arrival</h6>
+    //                             </CCol>
 
-                                <CCol lg={2}>
-                                    <h6 style={{ textAlign: 'left', fontWeight: 'bold' }}>Flight</h6>
-                                </CCol>
-                                <CCol lg={3}>
-                                    <h6 style={{ textAlign: 'right', fontWeight: 'bold' }}>Departure Date</h6>
-                                </CCol>
+    //                             <CCol lg={2}>
+    //                                 <h6 style={{ textAlign: 'left', fontWeight: 'bold' }}>Flight</h6>
+    //                             </CCol>
+    //                             <CCol lg={3}>
+    //                                 <h6 style={{ textAlign: 'right', fontWeight: 'bold' }}>Departure Date</h6>
+    //                             </CCol>
 
-                            </CRow>
+    //                         </CRow>
 
-                            {originData?.map((origin, indexOrigin) => (
-                                <CRow>
+    //                         {originData?.map((origin, indexOrigin) => (
+    //                             <CRow>
 
-                                    <CCol lg={3}>
-                                        <h6>{origin}</h6>
+    //                                 <CCol lg={3}>
+    //                                     <h6>{origin}</h6>
 
-                                    </CCol>
-                                    <CCol lg={1}>
-                                        <h6>✈️</h6>
-                                    </CCol>
-                                    <CCol lg={3}>
-                                        <h6 style={{ textAlign: 'right' }}>{destData[indexOrigin]}</h6>
-                                    </CCol>
-
-
-                                    <CCol lg={1}>
-                                        <CImage src={`https://gateway.aahaas.com/Airlines/${flights[indexOrigin]}.png`} height={20} width={20} style={{ borderRadius: 15, resizeMode: 'contain' }}></CImage>
-
-                                    </CCol>
-
-                                    <CCol lg={3}>
-                                        <h6 style={{ textAlign: 'right' }}>{depDates[indexOrigin]}</h6>
-                                    </CCol>
-
-                                </CRow>
-                            ))}
-                        </>
+    //                                 </CCol>
+    //                                 <CCol lg={1}>
+    //                                     <h6>✈️</h6>
+    //                                 </CCol>
+    //                                 <CCol lg={3}>
+    //                                     <h6 style={{ textAlign: 'right' }}>{destData[indexOrigin]}</h6>
+    //                                 </CCol>
 
 
+    //                                 <CCol lg={1}>
+    //                                     <CImage src={`https://gateway.aahaas.com/Airlines/${flights[indexOrigin]}.png`} height={20} width={20} style={{ borderRadius: 15, resizeMode: 'contain' }}></CImage>
+
+    //                                 </CCol>
+
+    //                                 <CCol lg={3}>
+    //                                     <h6 style={{ textAlign: 'right' }}>{depDates[indexOrigin]}</h6>
+    //                                 </CCol>
+
+    //                             </CRow>
+    //                         ))}
+    //                     </>
 
 
 
-                    )
 
-                }
-            },
 
-            { field: 'total_amount', title: 'Total Amount', align: 'left' },
+    //                 )
 
-        ],
+    //             }
+    //         },
 
-        rows: flightsData?.map(value => {
-            // const oriLocations = value.ori_loccation.split(',');
-            // const departureTimes = value.departure_datetime.split(',');
-            // const flightsInfo = [];
+    //         { field: 'total_amount', title: 'Total Amount', align: 'left' },
 
-            // for (let i = 0; i < oriLocations.length; i++) {
-            //     flightsInfo.push({
-            //         ori_location: oriLocations[i].trim(),
-            //         departure_time: departureTimes[i].trim()
-            //     });
-            // }
+    //     ],
 
-            return {
-                flightData: value,
+    //     rows: flightsData?.map(value => {
+    //         // const oriLocations = value.ori_loccation.split(',');
+    //         // const departureTimes = value.departure_datetime.split(',');
+    //         // const flightsInfo = [];
 
-                total_amount: value.currency + " " + value.total_amount,
-            }
-        })
-    }
+    //         // for (let i = 0; i < oriLocations.length; i++) {
+    //         //     flightsInfo.push({
+    //         //         ori_location: oriLocations[i].trim(),
+    //         //         departure_time: departureTimes[i].trim()
+    //         //     });
+    //         // }
+
+    //         return {
+    //             flightData: value,
+
+    //             total_amount: value.currency + " " + value.total_amount,
+    //         }
+    //     })
+    // }
 
 
 
@@ -554,7 +555,7 @@ function OrderDetails(props) {
                 {renderTable(educations.rows, educations.columns, "Education Details")}
                 {renderTable(essNEss.rows, essNEss.columns, "Essentials/Non Essentials Details")}
                 {renderTable(hotels.rows, hotels.columns, "Hotels Details")}
-                {renderTable(flights.rows, flights.columns, "Flights Details")}
+                {/* {renderTable(flights.rows, flights.columns, "Flights Details")} */}
             </>
         );
     };
@@ -594,34 +595,45 @@ function OrderDetails(props) {
                         </CRow>
                     </CCard>
                     <hr></hr>
-                    {props?.productViewData ?
-                        <ServiceWiseSummary></ServiceWiseSummary>
-                        // <></>
+                    {flightsData?.length > 0 ?
+
+                        <FlightOrderView flightMetadata={flightsData}></FlightOrderView>
                         :
                         <>
-                            <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
+                            {props?.productViewData ?
+                                <ServiceWiseSummary></ServiceWiseSummary>
+                                // <></>
+                                :
+                                <>
+                                    <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
 
-                            <Tabs
-                                defaultActiveKey="service"
-                                id="uncontrolled-tab-example"
-                                className="mt-4"
-                                style={{
-                                    fontSize: 16
-                                }}
-                            >
+                                    <Tabs
+                                        defaultActiveKey="service"
+                                        id="uncontrolled-tab-example"
+                                        className="mt-4"
+                                        style={{
+                                            fontSize: 16
+                                        }}
+                                    >
 
-                                <Tab eventKey="service" title="Service Wise">
-                                    <ServiceWiseSummary></ServiceWiseSummary>
-                                </Tab>
-                                <Tab eventKey="date" title="Day Wise">
-                                    <DateWiseSummary dataset={productData} orderid={props.orderid} dates={dates} handleMoreInfoModal={handleMoreInfoModal} />
-                                </Tab>
+                                        <Tab eventKey="service" title="Service Wise">
+                                            <ServiceWiseSummary></ServiceWiseSummary>
+                                        </Tab>
+                                        <Tab eventKey="date" title="Day Wise">
+                                            <DateWiseSummary dataset={productData} orderid={props.orderid} dates={dates} handleMoreInfoModal={handleMoreInfoModal} />
+                                        </Tab>
 
-                            </Tabs>
+                                    </Tabs>
+                                </>
+
+                            }
+
                         </>
-
                     }
+
+
                 </div>
+
                 {props?.accounts ?
                     null :
                     <>

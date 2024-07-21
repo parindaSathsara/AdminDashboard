@@ -174,7 +174,7 @@ async function getDashboardOrdersIdWise(id) {
 
     // console.log(id, "Fetch Orders ID is")
 
-    await axios.get(`/fetch_all_orders_userwise_id_wise/${id}`).then((res) => {
+    await axios.get(`/fetch_order_details/${id}`).then((res) => {
 
       // console.log(res)
       if (res.data.status === 200) {
