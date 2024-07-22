@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import discountTotal from '../dcalculator';
 import moment from 'moment';
 import './OrderDetails.css'
-import { getDashboardOrdersIdWise, getDashboardOrdersIdWiseProduct, updateDeliveryStatus } from '../../service/api_calls';
+import { getDashboardOrdersIdWise, getDashboardOrdersIdWiseProduct, getDashboardProductOrderDetails, updateDeliveryStatus } from '../../service/api_calls';
 // import { data } from '../../../Data/flight_airports';
 import data from '../../Data/flight_airports';
 import MaterialTable from 'material-table';
@@ -112,20 +112,40 @@ function OrderDetails(props) {
 
 
         if (props?.productViewData) {
-            setProductData([props.orderData?.info])
-            setCustomerData(props.orderData?.customerData)
+            // setProductData([props.orderData?.info])
+            // setCustomerData(props.orderData?.customerData)
 
-            if (props?.orderData?.info?.catid == "3") {
-                setLifestylesData([props.orderData?.info])
-            }
-            else if (props?.orderData?.info?.catid == "1") {
-                setEssNEssData([props.orderData?.info])
-            }
-            else if (props?.orderData?.info?.catid == "5") {
-                setEducationData([props.orderData?.info])
-            }
+            // if (props?.orderData?.info?.catid == "3") {
+            //     setLifestylesData([props.orderData?.info])
+            // }
+            // else if (props?.orderData?.info?.catid == "1") {
+            //     setEssNEssData([props.orderData?.info])
+            // }
+            // else if (props?.orderData?.info?.catid == "5") {
+            //     setEducationData([props.orderData?.info])
+            // }
+
+            console.log(props?.orderData?.info?.checkoutID, "Checkout ID")
+
+            getDashboardProductOrderDetails(props?.orderData?.info?.checkoutID).then((res) => {
+                setDetailsLoading(false)
+                setLifestylesData(res.lifestyleData)
+                setEssNEssData(res.essNEssData)
+                setEducationData(res.educationData)
+                setFlightsData(res.flightsData)
+                setHotelData(res.hotelData)
+                setProductData(res.productData)
+                setCustomerData(res.customerData)
+                setDates(res.dates)
+
+                // console.log(res.customerData, "CustomerData value is data ")
+            })
 
             setDetailsLoading(false)
+
+
+
+
         }
         else {
             getDashboardOrdersIdWise(props.orderid).then((res) => {
@@ -149,7 +169,7 @@ function OrderDetails(props) {
         console.log(props?.orderid, "Order data id is val")
         props?.updatedData()
         if (props?.productViewData) {
-            getDashboardOrdersIdWiseProduct(props.orderid?.info?.checkoutID).then((res) => {
+            getDashboardProductOrderDetails(props.orderid?.info?.checkoutID).then((res) => {
                 // setDetailsLoading(false)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)

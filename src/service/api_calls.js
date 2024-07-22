@@ -164,6 +164,36 @@ async function getDashboardOrders() {
 }
 
 
+
+async function getDashboardProductOrderDetails(id) {
+
+  try {
+
+    var dataArray = [];
+
+
+    console.log(`/fetch_order_details_by_pid/${id}`, "Fetch Orders ID is")
+
+    await axios.get(`/fetch_order_details_by_pid/${id}`).then((res) => {
+
+      // console.log(res)
+      if (res.data.status === 200) {
+        dataArray = res.data
+      }
+
+    }).catch((err) => {
+      throw new Error(err);
+    })
+
+    return dataArray
+
+  } catch (err) {
+    throw new Error(err);
+  }
+
+}
+
+
 //
 async function getDashboardOrdersIdWise(id) {
 
@@ -292,8 +322,28 @@ async function updateDeliveryStatus(id, value, type) {
       // console.log(res)
 
       if (res.data.status === 200) {
+        axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
+
+          // console.log(res)
+
+          if (res.data.status === 200) {
+
+          }
+
+        }).catch((err) => {
+          throw new Error(err);
+        })
+
         // toast.success('Updated!')
+        return 200
       }
+      else if (res.data.status == 201) {
+        return 201
+      }
+      else {
+        return 202
+      }
+
 
     }).catch((err) => {
       throw new Error(err);
@@ -302,17 +352,7 @@ async function updateDeliveryStatus(id, value, type) {
     console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
 
 
-    await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
 
-      // console.log(res)
-
-      if (res.data.status === 200) {
-
-      }
-
-    }).catch((err) => {
-      throw new Error(err);
-    })
 
 
   } catch (error) {
@@ -333,7 +373,26 @@ async function candelOrder(data) {
         text: "Order has been canceled.",
         icon: "success"
       });
-    } else {
+    }
+
+    else if (result == 201) {
+      Swal.fire({
+        title: "Order " + e.checkoutID + " is on Editing",
+        text: "Order - " + e.checkoutID + " Order is Editing by Customer and Supplier.",
+        icon: "error"
+      })
+    }
+
+    else if (result == 202) {
+      Swal.fire({
+        title: "Order " + e.checkoutID + " is Already Updated",
+        icon: "error"
+      })
+
+
+    }
+
+    else {
       Swal.fire({
         title: "Oops!",
         text: "Swomthing went wrong",
@@ -621,7 +680,7 @@ async function adminToggleStatus(status, userID) {
 }
 
 export {
-  getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus, getDashboardOrdersIdWiseProduct,
+  getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus, getDashboardOrdersIdWiseProduct, getDashboardProductOrderDetails,
   getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, candelOrder, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
   availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId
 }

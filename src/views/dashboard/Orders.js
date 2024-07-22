@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
   CAvatar,
+  CBadge,
   CButton,
   CButtonGroup,
   CCard,
@@ -126,7 +127,9 @@ const Orders = () => {
       setLoading(false);
     });
 
-    setLoading(true);
+    if (type == "loading") {
+      setLoading(true);
+    }
 
     getAllCardData().then(res => {
       setCardData(res);
@@ -148,14 +151,14 @@ const Orders = () => {
 
   const [audio] = useState(new Audio(productSound));
 
-  useEffect(() => {
-    if (newlyAddedColumns.length > 0) {
-      audio.play();
-    } else {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-  }, [newlyAddedColumns]);
+  // useEffect(() => {
+  //   if (newlyAddedColumns.length > 0) {
+  //     audio.play();
+  //   } else {
+  //     audio.pause();
+  //     audio.currentTime = 0;
+  //   }
+  // }, [newlyAddedColumns]);
 
   const changedRowHandler = (changedRow) => {
     const newlyAddedColumn = changedRow?.lastId;
@@ -202,17 +205,40 @@ const Orders = () => {
     columns: [
 
       { accessorKey: 'oid', header: 'Order Id', align: 'left' },
-
-
-
       { accessorKey: 'booking_date', header: 'Booking Date | Time', align: 'left' },
       { accessorKey: 'pay_type', header: 'Payment Type', align: 'left' },
       { accessorKey: 'pay_category', header: 'Payment Category', align: 'left' },
+      {
+        accessorKey: 'refundAmount', header: 'Refunding Amount', align: 'left', Cell: ({ row }) => {
+
+          if (row?.original?.refundAmount > 0) {
+            return (
+              <>
+
+                <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
+                  Refunding {row?.original?.currency} {row?.original?.refundAmount}
+                </CBadge>
+
+              </>
+            )
+
+          }
+          else {
+            return (
+              <p>No Refund Request</p>
+            )
+          }
+
+
+        }
+
+      },
       { accessorKey: 'total_amount', header: 'Total Amount', align: 'right' },
       { accessorKey: 'paid_amount', header: 'Paid Amount', align: 'right' },
       { accessorKey: 'balance_amount', header: 'Balance Amount', align: 'right' },
       { accessorKey: 'discount_amount', header: 'Discount Amount', align: 'right' },
       { accessorKey: 'delivery_charge', header: 'Delivery Charge', align: 'right' },
+
       {
         accessorKey: 'additional_data',
         header: 'Additional Information',
@@ -236,6 +262,10 @@ const Orders = () => {
           </>
         ),
       },
+
+
+
+
     ],
     rows: orderData.map((value) => ({
 
@@ -249,8 +279,16 @@ const Orders = () => {
       delivery_charge: value.ItemCurrency + ' ' + (value.delivery_charge || '0.00'),
       additional_data: value.additional_data,
       balance_amount: value.ItemCurrency + ' ' + (value.balance_amount || '0.00'),
+      refundAmount: (value.refundableAmount || 0.00),
+      currency: value.ItemCurrency
+
+
     })),
   }), [orderData]);
+
+
+  // refundableAmount
+
 
   const [tabIndex, setTabIndex] = useState("");
 

@@ -228,15 +228,35 @@ export default function BookingExperience(props) {
                         updateDeliveryStatus(e.checkoutID, targetvalue, "").then(result => {
                             console.log(result)
 
-                            console.log("Success result is coming")
-                            props.reload();
+                            if (result == 200) {
+                                console.log("Success result is coming")
+                                props.reload();
 
-                            setSelectedStatusCheckout("Approved")
-                            Swal.fire({
-                                title: "Order " + e.checkoutID + " Confirmed",
-                                text: "Order - " + e.checkoutID + " Order Confirmed",
-                                icon: "success"
-                            })
+                                setSelectedStatusCheckout("Approved")
+                                Swal.fire({
+                                    title: "Order " + e.checkoutID + " Confirmed",
+                                    text: "Order - " + e.checkoutID + " Order Confirmed",
+                                    icon: "success"
+                                })
+
+
+                            }
+                            else if (result == 201) {
+                                Swal.fire({
+                                    title: "Order " + e.checkoutID + " is on Editing",
+                                    text: "Order - " + e.checkoutID + " Order is Editing by Customer and Supplier.",
+                                    icon: "error"
+                                })
+                            }
+
+                            else if (result == 202) {
+                                Swal.fire({
+                                    title: "Order " + e.checkoutID + " is Already Updated",
+                                    icon: "error"
+                                })
+
+
+                            }
 
 
 
@@ -428,93 +448,116 @@ export default function BookingExperience(props) {
 
                 var cancel_role = e?.data?.cancel_role
 
+                var edit = e?.data?.edit_status
 
+                console.log(edit, "Edit Coming Data Is")
 
-                if (cancel_role == "Supplier") {
+                if (edit == "Edited") {
                     return (
                         <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
 
-                            <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Supplier Cancelled</CCardText>
-
-                            <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
-                                <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
-                                <CCardText>More Details</CCardText>
-                            </CButton>
 
 
-                        </CCol >
-                    )
-                }
+                            <CBadge color='info' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }}>
 
-                else if (cancel_role == "Admin") {
-                    return (
-                        <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-
-                            <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Admin Cancelled</CCardText>
-
-                            <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
-                                <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
-                                <CCardText>More Details</CCardText>
-                            </CButton>
-
-
-                        </CCol >
-                    )
-                }
-
-                else if (cancel_role == "CUSTOMER") {
-                    return (
-
-                        <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-
-                            <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Customer Cancelled</CCardText>
-
-                            <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
-                                <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
-                                <CCardText>More Details</CCardText>
-                            </CButton>
+                                <CCardText>Order Edit Requested</CCardText>
+                            </CBadge>
 
 
                         </CCol >
                     )
                 }
                 else {
-                    return (
-                        <>
-
-                            {e?.data?.checkoutID == clickedStatus ?
-                                <select
-                                    className='form-select required'
-                                    name='delivery_status'
-                                    onChange={(value) => handleDelStatusChange(e, value)}
-                                    value={selectedStatusCheckout}
-                                    defaultValue={e?.data?.status}
-                                // value={e?.data.status} // Set the selected value here
-                                >
-                                    <option value="" >Select</option>
-                                    <option value="Approved">Confirm</option>
-                                    <option value="Cancel">Cancel</option>
-                                </select>
-                                :
-
-                                <>
-
-                                    {status == "Approved" ?
-                                        <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>
-
-                                        :
-                                        <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
-
-                                    }
 
 
-                                </>
 
-                            }
+                    if (cancel_role == "Supplier") {
+                        return (
+                            <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
 
-                        </>
-                    );
+                                <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Supplier Cancelled</CCardText>
+
+                                <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
+                                    <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
+                                    <CCardText>More Details</CCardText>
+                                </CButton>
+
+
+                            </CCol >
+                        )
+                    }
+
+                    else if (cancel_role == "Admin") {
+                        return (
+                            <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+                                <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Admin Cancelled</CCardText>
+
+                                <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
+                                    <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
+                                    <CCardText>More Details</CCardText>
+                                </CButton>
+
+
+                            </CCol >
+                        )
+                    }
+
+                    else if (cancel_role == "CUSTOMER") {
+                        return (
+
+                            <CCol style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+                                <CCardText color='danger' style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Customer Cancelled</CCardText>
+
+                                <CButton color='danger' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 14, color: 'white' }} onClick={() => handleMoreCancellationDetails(e)}>
+                                    <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
+                                    <CCardText>More Details</CCardText>
+                                </CButton>
+
+
+                            </CCol >
+                        )
+                    }
+                    else {
+                        return (
+                            <>
+
+                                {e?.data?.checkoutID == clickedStatus ?
+                                    <select
+                                        className='form-select required'
+                                        name='delivery_status'
+                                        onChange={(value) => handleDelStatusChange(e, value)}
+                                        value={selectedStatusCheckout}
+                                        defaultValue={e?.data?.status}
+                                    // value={e?.data.status} // Set the selected value here
+                                    >
+                                        <option value="" >Select</option>
+                                        <option value="Approved">Confirm</option>
+                                        <option value="Cancel">Cancel</option>
+                                    </select>
+                                    :
+
+                                    <>
+
+                                        {status == "Approved" ?
+                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>
+
+                                            :
+                                            <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
+
+                                        }
+
+
+                                    </>
+
+                                }
+
+                            </>
+                        );
+                    }
                 }
+
 
             }
         },
@@ -600,10 +643,6 @@ export default function BookingExperience(props) {
                         null
 
                     }
-
-
-
-
 
                 </COffcanvasBody>
             </COffcanvas>
