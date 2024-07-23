@@ -12,6 +12,7 @@ import CIcon from '@coreui/icons-react';
 import { Modal } from 'react-bootstrap';
 import CancellationModal from '../CancelationModal/CancellationModal';
 import StarRating from '../Components/StarRating';
+import CurrencyConverter from 'src/Context/CurrencyConverter';
 
 
 export default function BookingExperience(props) {
@@ -191,7 +192,7 @@ export default function BookingExperience(props) {
 
     const [selectedStatusCheckout, setSelectedStatusCheckout] = useState("")
 
-    const handleDelStatusChange = (e, val) => {
+    const handleDelStatusChange = async (e, val) => {
         console.log(e, "Value Data set is 123")
         console.log(val.target.value, "Target Value is")
 
@@ -228,43 +229,11 @@ export default function BookingExperience(props) {
                         updateDeliveryStatus(e.checkoutID, targetvalue, "").then(result => {
                             console.log(result)
 
-                            if (result == 200) {
-                                console.log("Success result is coming")
-                                props.reload();
+                            props.reload();
 
-                                setSelectedStatusCheckout("Approved")
-                                Swal.fire({
-                                    title: "Order " + e.checkoutID + " Confirmed",
-                                    text: "Order - " + e.checkoutID + " Order Confirmed",
-                                    icon: "success"
-                                })
-
-
-                            }
-                            else if (result == 201) {
-                                Swal.fire({
-                                    title: "Order " + e.checkoutID + " is on Editing",
-                                    text: "Order - " + e.checkoutID + " Order is Editing by Customer and Supplier.",
-                                    icon: "error"
-                                })
-                            }
-
-                            else if (result == 202) {
-                                Swal.fire({
-                                    title: "Order " + e.checkoutID + " is Already Updated",
-                                    icon: "error"
-                                })
-
-
-                            }
-
-
-
-
+                            setSelectedStatusCheckout("Approved")
 
                             // Swal.close(); // Close the loading spinner
-
-
 
                         }).catch(error => {
 
@@ -338,11 +307,14 @@ export default function BookingExperience(props) {
 
         cancellationData["reason"] = data
 
-        setSelectedStatusCheckout("Approved")
+
         Swal.showLoading()
         await candelOrder(cancellationData)
         Swal.hideLoading()
         props?.reload();
+
+        setSelectedStatusCheckout("Cancel")
+
 
     }
 
@@ -352,6 +324,7 @@ export default function BookingExperience(props) {
 
     const handleButtonClick = (data) => {
         setClickedStatus(data)
+        setSelectedStatusCheckout("")
     }
 
 
@@ -564,15 +537,17 @@ export default function BookingExperience(props) {
     ]
 
 
+
+
     const data = productData?.map(value => ({
         pid: value?.['PID'],
         name: value?.['PName'],
         qty: value,
         date: value?.['DDate'],
         address: value?.['DAddress'],
-        total_amount: value.currency + " " + value?.['total_amount'],
-        paid_amount: value.currency + " " + value?.['paid_amount'],
-        balance_amount: value.currency + " " + value?.['balance_amount'],
+        total_amount: CurrencyConverter(value.currency, value?.['total_amount']),
+        paid_amount: CurrencyConverter(value.currency, value?.['paid_amount']),
+        balance_amount: CurrencyConverter(value.currency, value?.['balance_amount']),
         checkoutID: value?.checkoutID,
         supplier_status: value?.supplier_status,
         data: value

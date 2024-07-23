@@ -5,6 +5,7 @@ import './scss/style.scss'
 import axios from 'axios'
 import { UserLoginContext } from './Context/UserLoginContext'
 import InAppNotificationService from './service/InAppNotificationService'
+import { CurrencyContext } from './Context/CurrencyContext'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
@@ -50,6 +51,7 @@ function App() {
   const [userData, setUserData] = useState(false)
 
 
+  const [currencyData, setCurrencyData] = useState([])
 
 
 
@@ -62,46 +64,63 @@ function App() {
       setUserLogin(true)
     }
 
+
+
+    axios.get(`getCurrency/${"USD"}`).then(response => {
+      if (response?.data?.status == 200) {
+        setCurrencyData(response.data)
+      }
+    })
+
   }, [])
+
+
+
+
+
+
+
 
 
   return (
 
+    <CurrencyContext.Provider value={{ currencyData, setCurrencyData }}>
+      <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
 
-    <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
+        <HashRouter>
+          <Suspense fallback={loading}>
+            <Routes>
 
-      <HashRouter>
-        <Suspense fallback={loading}>
-          <Routes>
+              {!userLogin ?
+                <>
+                  <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                  <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                  <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
+                </>
 
-            {!userLogin ?
-              <>
-                <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-                <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-                <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
-              </>
+                :
 
-              :
-
-              <>
-                {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                <>
+                  {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                 <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
 
 
 
-                <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
-              </>
+                  <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
+                </>
 
 
-            }
+              }
 
 
 
 
-          </Routes>
-        </Suspense>
-      </HashRouter>
-    </UserLoginContext.Provider>
+            </Routes>
+          </Suspense>
+        </HashRouter>
+      </UserLoginContext.Provider>
+    </CurrencyContext.Provider>
+
   );
 
 }

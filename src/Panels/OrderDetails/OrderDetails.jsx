@@ -29,6 +29,7 @@ import SupplierExperience from './DepartmentWise/SupplierExperience';
 import DateWiseSummary from './DateWiseSummary/DateWiseSummary';
 import TravellerExperience from './DepartmentWise/TravellerExperience';
 import FlightOrderView from 'src/views/dashboard/FlightUI/FlightOrderView';
+import CurrencyConverter from 'src/Context/CurrencyConverter';
 
 function OrderDetails(props) {
 
@@ -163,7 +164,6 @@ function OrderDetails(props) {
             })
         }
 
-
     }, [props.orderid, props.orderData])
     const reload = () => {
         console.log(props?.orderid, "Order data id is val")
@@ -286,9 +286,9 @@ function OrderDetails(props) {
             childCount: value.childCount,
             adultCount: value.adultCount,
             service_date: value.service_date,
-            balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
-            paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
-            total_amount: value.currency + " " + (value.total_amount || "0.00"),
+            balance_amount: CurrencyConverter(value.currency, value.balance_amount),
+            paid_amount: CurrencyConverter(value.currency, value.paid_amount),
+            total_amount: CurrencyConverter(value.currency, value.total_amount),
             booking_date: value.booking_date,
             supplier_order: value.supplier_status,
             status: value.status,
@@ -342,9 +342,9 @@ function OrderDetails(props) {
             pid: value.PID,
             product_title: value.product_title,
             student_type: value.student_type,
-            balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
-            paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
-            total_amount: value.currency + " " + (value.total_amount || "0.00"),
+            balance_amount: CurrencyConverter(value.currency, value.balance_amount),
+            paid_amount: CurrencyConverter(value.currency, value.paid_amount),
+            total_amount: CurrencyConverter(value.currency, value.total_amount),
             booking_date: value.preffered_booking_date,
             supplier_order: value.supplier_status,
             status: value.status,
@@ -394,9 +394,9 @@ function OrderDetails(props) {
             quantity: value.quantity,
             preffered_date: value.preffered_date,
             address: value.location,
-            balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
-            paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
-            total_amount: value.currency + " " + (value.total_amount || "0.00"),
+            balance_amount: CurrencyConverter(value.currency, value.balance_amount),
+            paid_amount: CurrencyConverter(value.currency, value.paid_amount),
+            total_amount: CurrencyConverter(value.currency, value.total_amount),
             features: renderVariations(value), // Render variations
             supplier_order: value.supplier_status,
             status: value.status, // Default value
@@ -529,9 +529,9 @@ function OrderDetails(props) {
             NoOfNights: value.NoOfNights,
             NoOfAdults: value.NoOfAdults,
             checkInDate: value.checkInDate,
-            balance_amount: value.currency + " " + (value.balance_amount || "0.00"),
-            paid_amount: value.currency + " " + (value.paid_amount || "0.00"),
-            total_amount: value.currency + " " + (value.total_amount || "0.00"),
+            balance_amount: CurrencyConverter(value.currency, value.balance_amount),
+            paid_amount: CurrencyConverter(value.currency, value.paid_amount),
+            total_amount: CurrencyConverter(value.currency, value.total_amount),
             supplier_order: value.supplier_status,
             status: value.status
         }))

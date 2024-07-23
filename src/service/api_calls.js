@@ -319,39 +319,56 @@ async function updateDeliveryStatus(id, value, type) {
 
     await axios.post('/update_delivery_status_by_product', data).then((res) => {
 
-      // console.log(res)
+      console.log(res.data, "Update Delivery Status")
 
       if (res.data.status === 200) {
-        axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
 
-          // console.log(res)
-
-          if (res.data.status === 200) {
-
-          }
-
-        }).catch((err) => {
-          throw new Error(err);
+        Swal.fire({
+          title: "Order " + id + " Confirmed",
+          text: "Order - " + id + " Order Confirmed",
+          icon: "success"
         })
-
         // toast.success('Updated!')
-        return 200
+        // return 200
       }
       else if (res.data.status == 201) {
-        return 201
+        Swal.fire({
+          title: "Order " + id + " is on Editing",
+          text: "Order - " + id + " Order is Editing by Customer and Supplier.",
+          icon: "error"
+        })
+        // return 201
       }
       else {
-        return 202
+
+        Swal.fire({
+          title: "Order " + id + " is Already Updated",
+          icon: "error"
+        })
+
+
+
+        // return 202
       }
 
 
     }).catch((err) => {
-      throw new Error(err);
+      console.log(err, "Checkout err isssss")
     })
 
     console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
 
+    axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
 
+      // console.log(res)
+
+      if (res.data.status === 200) {
+
+      }
+
+    }).catch((err) => {
+      throw new Error(err);
+    })
 
 
 
@@ -375,21 +392,19 @@ async function candelOrder(data) {
       });
     }
 
-    else if (result == 201) {
+    else if (res.data.status == 201) {
       Swal.fire({
-        title: "Order " + e.checkoutID + " is on Editing",
-        text: "Order - " + e.checkoutID + " Order is Editing by Customer and Supplier.",
+        title: "Order is on Editing mode",
+        text: "Order is Editing by Customer and Supplier.",
         icon: "error"
       })
     }
 
-    else if (result == 202) {
+    else if (res.data.status == 202) {
       Swal.fire({
-        title: "Order " + e.checkoutID + " is Already Updated",
+        title: "Order is Already Updated",
         icon: "error"
       })
-
-
     }
 
     else {
@@ -399,6 +414,8 @@ async function candelOrder(data) {
         icon: "error"
       });
     }
+
+
   }).catch((error) => {
     Swal.fire({
       title: "Oops!",

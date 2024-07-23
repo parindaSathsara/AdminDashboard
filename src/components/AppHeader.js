@@ -14,6 +14,7 @@ import {
   CCardText,
   CFormSwitch,
   CRow,
+  CCol,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilBell, cilEnvelopeOpen, cilExitToApp, cilList, cilMenu } from '@coreui/icons';
@@ -23,6 +24,7 @@ import { AppHeaderDropdown } from './header/index';
 import logo from '../assets/brand/aahaas.png';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { adminToggleStatus } from 'src/service/api_calls';
+import CurrencyController from './CurrencyController';
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -85,15 +87,18 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
         <CHeaderNav>
           <CRow>
-
-            <CFormSwitch
-              size="xl"
-              label={switchState ? 'Active' : 'Inactive'}
-              id="formSwitchCheckDefaultXL"
-              onChange={handleToggleOnChange}
-              checked={switchState}
-            />
-
+            <CCol>
+              <CurrencyController />
+            </CCol>
+            <CCol>
+              <CFormSwitch
+                size="xl"
+                label={switchState ? 'Active' : 'Inactive'}
+                id="formSwitchCheckDefaultXL"
+                onChange={handleToggleOnChange}
+                checked={switchState}
+              />
+            </CCol>
           </CRow>
         </CHeaderNav>
         <CHeaderNav className="ms-3">

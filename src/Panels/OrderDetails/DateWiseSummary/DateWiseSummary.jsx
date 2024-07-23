@@ -1,11 +1,13 @@
 
 
 
-import React from 'react'
+import React, { useContext } from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCol, CPopover, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilInfo } from '@coreui/icons';
+import { CurrencyContext } from 'src/Context/CurrencyContext';
+import CurrencyConverter from 'src/Context/CurrencyConverter';
 
 
 export default function DateWiseSummary(props) {
@@ -174,6 +176,8 @@ export default function DateWiseSummary(props) {
     ]
 
 
+    const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+
 
     const getProductData = (date) => {
         return productData?.filter(dateFil => dateFil?.DDate == date)?.map(value => ({
@@ -182,9 +186,9 @@ export default function DateWiseSummary(props) {
             ext: value,
             category: value?.['category'],
             address: value?.['DAddress'],
-            total_amount: value.currency + " " + value?.['total_amount'],
-            paid_amount: value.currency + " " + value?.['paid_amount'],
-            balance_amount: value.currency + " " + value?.['balance_amount'],
+            total_amount: CurrencyConverter(value.currency, value?.['total_amount']),
+            paid_amount: CurrencyConverter(value.currency, value?.['paid_amount']),
+            balance_amount: CurrencyConverter(value.currency, value?.['balance_amount']),
 
         }))
     }

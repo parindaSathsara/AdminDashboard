@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useContext } from 'react';
 import {
   CAvatar,
   CBadge,
@@ -70,6 +70,8 @@ import { Fullscreen } from '@material-ui/icons';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from 'src/firebase';
 import FlightOrderView from './FlightUI/FlightOrderView';
+import CurrencyConverter from 'src/Context/CurrencyConverter';
+import { CurrencyContext } from 'src/Context/CurrencyContext';
 
 const Orders = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -201,6 +203,9 @@ const Orders = () => {
   }, [])
 
 
+  const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+
+
   const data = useMemo(() => ({
     columns: [
 
@@ -216,7 +221,7 @@ const Orders = () => {
               <>
 
                 <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-                  Refunding {row?.original?.currency} {row?.original?.refundAmount}
+                  Refunding {CurrencyConverter(row?.original?.currency, row?.original?.refundAmount)}
                 </CBadge>
 
               </>
@@ -273,18 +278,18 @@ const Orders = () => {
       booking_date: value.checkout_date,
       pay_type: value.payment_type,
       pay_category: value.pay_category,
-      total_amount: value.ItemCurrency + ' ' + (value.total_amount || '0.00'),
-      paid_amount: value.ItemCurrency + ' ' + (value.paid_amount || '0.00'),
-      discount_amount: value.ItemCurrency + ' ' + (value.discount_price || '0.00'),
-      delivery_charge: value.ItemCurrency + ' ' + (value.delivery_charge || '0.00'),
+      total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount),
+      paid_amount: CurrencyConverter(value.ItemCurrency, value.paid_amount),
+      discount_amount: CurrencyConverter(value.ItemCurrency, value.discount_price),
+      delivery_charge: CurrencyConverter(value.ItemCurrency, value.delivery_charge),
       additional_data: value.additional_data,
-      balance_amount: value.ItemCurrency + ' ' + (value.balance_amount || '0.00'),
+      balance_amount: CurrencyConverter(value.ItemCurrency, value.balance_amount),
       refundAmount: (value.refundableAmount || 0.00),
       currency: value.ItemCurrency
 
 
     })),
-  }), [orderData]);
+  }), [orderData, currencyData]);
 
 
   // refundableAmount

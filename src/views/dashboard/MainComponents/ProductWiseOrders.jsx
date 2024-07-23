@@ -1,6 +1,6 @@
 import { CBadge, CButton, CCardImage, CCol } from '@coreui/react';
 import axios from 'axios';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import CIcon from '@coreui/icons-react';
@@ -13,6 +13,8 @@ import './ProductWiseOrders.css';
 import { db } from 'src/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 import debounce from 'lodash/debounce';
+import { CurrencyContext } from 'src/Context/CurrencyContext';
+import CurrencyConverter from 'src/Context/CurrencyConverter';
 
 export default function ProductWiseOrders() {
     const defaultMaterialTheme = createTheme();
@@ -146,6 +148,13 @@ export default function ProductWiseOrders() {
         { accessorKey: 'booked_date', header: 'Booked Date', enableColumnFilter: false }
     ];
 
+
+
+
+
+    const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+
+
     const data = useMemo(() => allOrdersProducts?.map((result) => ({
         product_id: result?.PID,
         product_image: result?.product_image,
@@ -153,15 +162,15 @@ export default function ProductWiseOrders() {
         product_title: result?.product_title,
         category: result?.category,
         service_date: result?.service_date,
-        balance_amount: result?.balance_amount,
-        paid_amount: result?.currency + " " + result?.paid_amount,
-        balance_amount: result?.currency + " " + result?.balance_amount,
-        total_amount: result?.currency + " " + result?.total_amount,
+        balance_amount: CurrencyConverter(result?.currency, result?.balance_amount),
+        paid_amount: CurrencyConverter(result?.currency, result?.paid_amount),
+        balance_amount: CurrencyConverter(result?.currency, result?.balance_amount),
+        total_amount: CurrencyConverter(result?.currency, result?.total_amount),
         booked_date: result?.checkout_date,
         info: result,
         customerData: result?.customerData,
         order_id: "AHS_" + result?.orderID,
-    })), [allOrdersProducts]);
+    })), [allOrdersProducts, currencyData]);
 
 
     const rowStyle = (data) => {
