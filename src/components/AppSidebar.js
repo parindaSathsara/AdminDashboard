@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
+import { CCardText, CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
@@ -33,16 +33,25 @@ const AppSidebar = () => {
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
         <img src={logo} height={30}></img>
+
       </CSidebarBrand>
+
+
+
+
       <CSidebarNav className='sideBarSub'>
         <SimpleBar>
           <AppSidebarNav items={navigation} />
         </SimpleBar>
+
+
+
       </CSidebarNav>
       {/* <CSidebarToggler
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       /> */}
+      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.8</CCardText>
     </CSidebar>
   )
 }
