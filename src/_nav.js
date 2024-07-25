@@ -55,12 +55,12 @@ const _nav = [
   // },
 
 
-  {
-    component: CNavItem,
-    name: 'Promotions & Offers',
-    to: '/offers_promo',
-    icon: <CIcon icon={cilTag} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Promotions & Offers',
+  //   to: '/offers_promo',
+  //   icon: <CIcon icon={cilTag} customClassName="nav-icon" />,
+  // },
 
   {
     component: CNavItem,

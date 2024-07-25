@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     CCard,
     CCardBody,
@@ -7,15 +7,15 @@ import {
     CContainer,
     CFormLabel,
     CButton,
-    CRow
+    CRow,
+    CFormCheck
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Select from 'react-select';
 
-import './ReportsMain.css'
+import './ReportsMain.css';
 import OrderCheckoutsReport from './OrderCheckouts/OrderCheckoutsReport';
-import axios from 'axios';
 import { getReports } from './services/reportingServices';
 import moment from 'moment';
 import LifestylesCategoryData from './CategoryData/LifestylesCategoryData';
@@ -23,32 +23,16 @@ import LoaderPanel from 'src/Panels/LoaderPanel';
 import EssentialsCategoryData from './CategoryData/EssentialsCategoryData';
 import EducationCategoryData from './CategoryData/EducationCategoryData';
 
-
-
 const ReportGenerationPage = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [category, setCategory] = useState({ value: 0 });
-
-    const [reportType, setReportType] = useState(null)
-    const [reportDataSet, setReportDataSet] = useState([])
-
-
-    const [searchData, setSearchData] = useState([])
-
-
-    const [loading, setLoading] = useState(false)
-
-
-
-    // const categories = [
-    //     { value: '0', label: 'All Categories', visible: false },
-    //     { value: '1', label: 'Essentials' },
-    //     { value: '2', label: 'Non Essentials' },
-    //     { value: '3', label: 'Lifestyles' },
-    //     { value: '5', label: 'Education' },
-    //     { value: '4', label: 'Hotels' },
-    // ];
+    const [reportType, setReportType] = useState(null);
+    const [reportDataSet, setReportDataSet] = useState([]);
+    const [searchData, setSearchData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [dateType, setDateType] = useState('service_date'); // Added state for radio buttons
+    const [validationErrors, setValidationErrors] = useState({}); // Added state for validation errors
 
     const [categories, setCategories] = useState([
         { value: '0', label: 'All Categories' },
@@ -57,75 +41,79 @@ const ReportGenerationPage = () => {
         { value: '3', label: 'Lifestyles' },
         { value: '5', label: 'Education' },
         { value: '4', label: 'Hotels' },
-    ])
+    ]);
 
     const reportTypes = [
         { value: 'products_report', label: 'Products Report' },
         { value: 'orders_report', label: 'Orders Report' }
     ];
 
-
     useEffect(() => {
-        if (reportType?.value == "orders_report") {
-            setCategories(
-                [
-                    { value: '0', label: 'All Categories' },
-                    { value: '1', label: 'Essentials' },
-                    { value: '2', label: 'Non Essentials' },
-                    { value: '3', label: 'Lifestyles' },
-                    { value: '5', label: 'Education' },
-                    { value: '4', label: 'Hotels' },
-                ]
-            )
+        if (reportType?.value === 'orders_report') {
+            setCategories([
+                { value: '0', label: 'All Categories' },
+                { value: '1', label: 'Essentials' },
+                { value: '2', label: 'Non Essentials' },
+                { value: '3', label: 'Lifestyles' },
+                { value: '5', label: 'Education' },
+                { value: '4', label: 'Hotels' },
+            ]);
+        } else {
+            setCategories([
+                { value: '1', label: 'Essentials' },
+                { value: '2', label: 'Non Essentials' },
+                { value: '3', label: 'Lifestyles' },
+                { value: '5', label: 'Education' },
+                { value: '4', label: 'Hotels' },
+            ]);
         }
-        else {
-            setCategories(
-                [
+    }, [reportType]);
 
-                    { value: '1', label: 'Essentials' },
-                    { value: '2', label: 'Non Essentials' },
-                    { value: '3', label: 'Lifestyles' },
-                    { value: '5', label: 'Education' },
-                    { value: '4', label: 'Hotels' },
-                ]
-            )
-        }
-    }, [reportType])
-
-
+    const [dataEmptyState, setDataEmptyState] = useState(false);
 
     const handleGenerateReport = () => {
-        // Implement the logic to fetch and display the report
-        // console.log('Generating report for:', { startDate, endDate, category });
-        const dataSet = {
-            startDate: moment(startDate).format("YYYY-MM-DD"),
-            endDate: moment(endDate).format("YYYY-MM-DD"),
-            category: category["value"],
-            reportType: reportType["value"]
+        const errors = {};
+        if (!startDate) errors.startDate = 'Start date is required';
+        if (!endDate) errors.endDate = 'End date is required';
+        if (!reportType) errors.reportType = 'Report type is required';
+        if (!category || category.value === '' || category.value === 0) errors.category = 'Category is required';
+
+        if (Object.keys(errors).length > 0) {
+            setValidationErrors(errors);
+            return;
         }
 
-        setLoading(true)
-        getReports(dataSet).then(response => {
-            setReportDataSet(response)
+        const dataSet = {
+            startDate: moment(startDate).format('YYYY-MM-DD'),
+            endDate: moment(endDate).format('YYYY-MM-DD'),
+            category: category.value,
+            reportType: reportType.value,
+            dateType: dateType
+        };
 
-            setLoading(false)
-        }).catch(response => {
-            setLoading(false)
-        })
 
+        setLoading(true);
+        getReports(dataSet)
+            .then(response => {
+                setReportDataSet(response);
+                setLoading(false);
+                if (response?.length === 0) {
+                    setDataEmptyState(true);
+                } else {
+                    setDataEmptyState(false);
+                }
+            })
+            .catch(() => {
+                setLoading(false);
+            });
     };
 
-
-
     useEffect(() => {
-
-        setReportDataSet([])
-
-    }, [startDate, endDate, reportType, category])
+        setReportDataSet([]);
+    }, [startDate, endDate, reportType, category]);
 
     return (
         <CContainer fluid>
-
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
@@ -135,133 +123,127 @@ const ReportGenerationPage = () => {
                         <CRow className="align-items-end">
                             <CCol xs={12} sm={6} lg={3}>
                                 <CFormLabel htmlFor="start-date">Start Date</CFormLabel>
-                                <br></br>
+                                <br />
                                 <DatePicker
                                     selected={startDate}
-                                    onChange={(date) => setStartDate(date)}
+                                    onChange={date => setStartDate(date)}
                                     className="form-control full-width"
                                     placeholderText="Select start date"
                                     id="start-date"
                                 />
+                                {validationErrors.startDate && (
+                                    <div className="text-danger">{validationErrors.startDate}</div>
+                                )}
                             </CCol>
                             <CCol xs={12} sm={6} lg={3}>
                                 <CFormLabel htmlFor="end-date">End Date</CFormLabel>
-                                <br></br>
+                                <br />
                                 <DatePicker
                                     selected={endDate}
-                                    onChange={(date) => setEndDate(date)}
+                                    onChange={date => setEndDate(date)}
                                     className="form-control full-width"
                                     placeholderText="Select end date"
                                     id="end-date"
                                 />
+                                {validationErrors.endDate && (
+                                    <div className="text-danger">{validationErrors.endDate}</div>
+                                )}
                             </CCol>
-
-
                             <CCol xs={12} sm={6} lg={2}>
-                                <CFormLabel htmlFor="category">Report Type</CFormLabel>
-                                <br></br>
+                                <CFormLabel htmlFor="report-type">Report Type</CFormLabel>
+                                <br />
                                 <Select
                                     options={reportTypes}
                                     value={reportType}
-                                    onChange={(selectedOption) => {
-                                        setReportType(selectedOption)
-
-                                        setCategory([])
+                                    onChange={selectedOption => {
+                                        setReportType(selectedOption);
+                                        setCategory([]);
                                     }}
                                     placeholder="Select a Report Type"
+                                    id="report-type"
                                 />
+                                {validationErrors.reportType && (
+                                    <div className="text-danger">{validationErrors.reportType}</div>
+                                )}
                             </CCol>
-
                             <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Category</CFormLabel>
-
-                                <br></br>
-
+                                <br />
                                 <Select
                                     options={categories}
                                     value={category}
-                                    onChange={(selectedOption) => setCategory(selectedOption)}
+                                    onChange={selectedOption => setCategory(selectedOption)}
                                     placeholder="Select a category"
+                                    id="category"
                                 />
+                                {validationErrors.category && (
+                                    <div className="text-danger">{validationErrors.category}</div>
+                                )}
                             </CCol>
-
-
                             <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
-                                <CButton color="dark" className='full-width' onClick={handleGenerateReport}>
+                                <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
                                     Generate Report
                                 </CButton>
+                            </CCol>
+                        </CRow>
+                        <CRow className="mt-3">
+                            <CCol xs={12}>
+                                <CFormLabel htmlFor="date-type">Date Type</CFormLabel>
+                                <br />
+                                <CFormCheck
+                                    inline
+                                    type="radio"
+                                    id="service_date"
+                                    name="dateType"
+                                    value="service_date"
+                                    label="Service Date"
+                                    checked={dateType === 'service_date'}
+                                    onChange={() => setDateType('service_date')}
+                                />
+                                <CFormCheck
+                                    inline
+                                    type="radio"
+                                    id="booking_date"
+                                    name="dateType"
+                                    value="booking_date"
+                                    label="Booking Date"
+                                    checked={dateType === 'booking_date'}
+                                    onChange={() => setDateType('booking_date')}
+                                />
                             </CCol>
                         </CRow>
                     </CCardBody>
                 </CCard>
             </CCol>
-
-
-
-            {loading == true ?
-
-                <LoaderPanel message={"Report Data Fetching"} />
-                :
-                <>
-
-
-
-                    {reportDataSet.length > 0 ?
+            {loading ? (
+                <LoaderPanel message="Report Data Fetching" />
+            ) : (
+                <div>
+                    {reportDataSet.length > 0 ? (
                         <>
-
-
-                            {reportType?.["value"] === "products_report" ?
-
+                            {reportType?.value === 'products_report' ? (
                                 <>
-                                    {category?.value == 3 ?
-                                        <LifestylesCategoryData data={reportDataSet}></LifestylesCategoryData>
-                                        :
-                                        null
-                                    }
-                                    {category?.value == 1 || category?.value == 2 ?
-                                        <EssentialsCategoryData data={reportDataSet} category={category?.value}></EssentialsCategoryData>
-                                        :
-                                        null
-                                    }
-
-                                    {category?.value == 5 ?
-                                        <EducationCategoryData data={reportDataSet}></EducationCategoryData>
-                                        :
-                                        null
-                                    }
-
-
-
+                                    {category.value == 3 ? (
+                                        <LifestylesCategoryData data={reportDataSet} />
+                                    ) : null}
+                                    {category.value == 1 || category.value == 2 ? (
+                                        <EssentialsCategoryData data={reportDataSet} category={category.value} />
+                                    ) : null}
+                                    {category.value == 5 ? (
+                                        <EducationCategoryData data={reportDataSet} />
+                                    ) : null}
                                 </>
-                                :
-
-                                <OrderCheckoutsReport dataSet={reportDataSet} category={category?.value}></OrderCheckoutsReport>
-
-
-                            }
-
-
-
-
-
-
-
-
+                            ) : (
+                                <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} />
+                            )}
                         </>
-
-                        :
-                        null
-                    }
-
-
-
-                </>
-
-            }
-
-
-
-
+                    ) : (
+                        dataEmptyState ? (
+                            <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>
+                        ) : null
+                    )}
+                </div>
+            )}
         </CContainer>
     );
 };

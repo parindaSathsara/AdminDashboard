@@ -224,7 +224,7 @@ const EmailDashboard = () => {
                 </CCard>
             </CCol>
 
-            <RichTextEditor></RichTextEditor>
+            {/* <RichTextEditor></RichTextEditor> */}
 
 
 

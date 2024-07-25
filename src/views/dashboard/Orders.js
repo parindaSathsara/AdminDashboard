@@ -43,8 +43,8 @@ import avatar4 from 'src/assets/images/avatars/4.jpg';
 import avatar5 from 'src/assets/images/avatars/5.jpg';
 import avatar6 from 'src/assets/images/avatars/6.jpg';
 
-import WidgetsBrand from '../widgets/WidgetsBrand';
-import WidgetsDropdown from '../widgets/WidgetsDropdown';
+
+
 import { DocsExample } from 'src/components';
 import { getAllCardData, getAllDataUserWise, getDashboardOrdersIdWise } from 'src/service/api_calls';
 import MaterialTable from 'material-table';
@@ -55,7 +55,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import AdditionalData from 'src/Panels/AdditionalData/AdditionalData';
 import MailBox from 'src/Panels/MailBox/MailBox';
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox';
-import Cards from '../base/cards/Cards';
+
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 
 import { io } from 'socket.io-client';

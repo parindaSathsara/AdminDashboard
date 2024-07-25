@@ -220,7 +220,7 @@ export default function EducationProductView(props) {
                 <CCol xs="12" lg="3">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.["image_path"]}
+                            src={basicDetails?.["image_path"]?.split(",")?.[0]}
                             fluid
                             style={{
                                 position: 'absolute',
