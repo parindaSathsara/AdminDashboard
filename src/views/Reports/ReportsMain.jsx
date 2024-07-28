@@ -186,32 +186,41 @@ const ReportGenerationPage = () => {
                                 </CButton>
                             </CCol>
                         </CRow>
-                        <CRow className="mt-3">
-                            <CCol xs={12}>
-                                <CFormLabel htmlFor="date-type">Date Type</CFormLabel>
-                                <br />
-                                <CFormCheck
-                                    inline
-                                    type="radio"
-                                    id="service_date"
-                                    name="dateType"
-                                    value="service_date"
-                                    label="Service Date"
-                                    checked={dateType === 'service_date'}
-                                    onChange={() => setDateType('service_date')}
-                                />
-                                <CFormCheck
-                                    inline
-                                    type="radio"
-                                    id="booking_date"
-                                    name="dateType"
-                                    value="booking_date"
-                                    label="Booking Date"
-                                    checked={dateType === 'booking_date'}
-                                    onChange={() => setDateType('booking_date')}
-                                />
-                            </CCol>
-                        </CRow>
+
+
+                        {console.log(reportType?.value, "Report Typeeeeee")}
+
+                        {reportType?.value === 'orders_report' ?
+                            <CRow className="mt-3">
+                                <CCol xs={12}>
+                                    <CFormLabel htmlFor="date-type">Date Type</CFormLabel>
+                                    <br />
+                                    <CFormCheck
+                                        inline
+                                        type="radio"
+                                        id="service_date"
+                                        name="dateType"
+                                        value="service_date"
+                                        label="Service Date"
+                                        checked={dateType === 'service_date'}
+                                        onChange={() => setDateType('service_date')}
+                                    />
+                                    <CFormCheck
+                                        inline
+                                        type="radio"
+                                        id="booking_date"
+                                        name="dateType"
+                                        value="booking_date"
+                                        label="Booking Date"
+                                        checked={dateType === 'booking_date'}
+                                        onChange={() => setDateType('booking_date')}
+                                    />
+                                </CCol>
+                            </CRow>
+                            :
+                            null
+                        }
+
                     </CCardBody>
                 </CCard>
             </CCol>
