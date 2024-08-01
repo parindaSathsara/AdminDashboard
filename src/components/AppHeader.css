@@ -1,0 +1,15 @@
+.currency-col {
+    min-width: 200px;
+    /* Adjust this value as needed */
+}
+
+.currency-controller {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.currency-controller select {
+    padding: 5px 10px;
+    font-size: 16px;
+}

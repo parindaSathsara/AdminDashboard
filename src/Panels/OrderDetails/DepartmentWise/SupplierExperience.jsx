@@ -5,12 +5,14 @@ import React, { useState } from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCloseButton, CCol, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow, CSpinner } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilCloudDownload, cilExitToApp, cilInfo } from '@coreui/icons';
+import { cilChatBubble, cilCloudDownload, cilExitToApp, cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
 import rowStyle from '../Components/rowStyle';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ResendVoucher from './ResendVoucher';
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
 export default function SupplierExperience(props) {
 
@@ -158,6 +160,44 @@ export default function SupplierExperience(props) {
 
     }
 
+
+    const navigate = useNavigate();
+
+    const createChatWithSupplier = async (data) => {
+
+        console.log(data, "Voucher ID")
+
+
+
+        const dataSet = {
+            customer_collection_id: "AHS_SUP" + data?.sid + "_" + data?.data?.checkoutID + "CHAT",
+            supplier_id: data?.sid,
+            supplier_name: data?.company_name,
+            group_chat: '',
+            customer_name: "",
+            status: "Started",
+            chat_created_date: moment().format(),
+            customer_mail_id: "",
+            supplier_mail_id: data?.email,
+            supplier_added_date: moment().format(),
+            comments: 'DirectSupplier',
+            chat_name: `${data?.company_name} Conversation OID (${data?.supplier_voucher})`,
+            customer_id: ""
+        };
+
+        axios.post('https://gateway.aahaas.com/api/addchats', dataSet).then(res => {
+            if (res.data.status === 200) {
+                console.log(res.data, "Data set value 123456789")
+            } else {
+
+            }
+        });
+        navigate("../Chats")
+
+    }
+
+
+
     const columns = [
         { title: 'Product ID', field: 'pid' },
         { title: 'Supplier Voucher', field: 'supplier_voucher' },
@@ -168,6 +208,18 @@ export default function SupplierExperience(props) {
         { title: 'Company Name', field: 'company_name' },
         { title: 'Company Address', field: 'company_address' },
         { title: 'Contact', field: 'contact' },
+        {
+            field: 'chatsupplier', width: 5, title: 'Reach Supplier', align: 'left', render: (e) => {
+                return (
+                    <>
+
+
+                        <CButton color="success" style={{ fontSize: 14, color: 'white', }} onClick={() => createChatWithSupplier(e)}><CIcon icon={cilChatBubble} size="xl" /> Reach Supplier</CButton>
+
+                    </>
+                );
+            }
+        },
 
         {
             field: 'suppliervoucher', width: 5, title: 'Supplier Voucher', align: 'left', render: (e) => {
@@ -192,7 +244,7 @@ export default function SupplierExperience(props) {
         var voucherID = ""
 
         if (supplierID) {
-            voucherID = `VO_${props?.orderid}_${index + 1}`;
+            voucherID = `VO${props?.orderid}V${index + 1}`;
         }
         else {
             voucherID = ""

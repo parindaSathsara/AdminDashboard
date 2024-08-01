@@ -5,6 +5,9 @@ import Swal from "sweetalert2"
 
 const getAllProductsOrders = async (val) => {
     var dataset = []
+
+    console.log("fetch_all_orders_product_wise_allcation", "Product Wise Allocation URL is calling as")
+
     await axios.get("fetch_all_orders_product_wise_allcation").then(res => {
         if (res.data.status == 200) {
             dataset = res.data.productData

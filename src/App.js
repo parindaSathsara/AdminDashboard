@@ -26,8 +26,8 @@ axios.defaults.data = 'https://admin-api.aahaas.com'
 // }
 
 //
-// axios.defaults.baseURL = 'http://192.168.8.110:8000/api/'
-// axios.defaults.data = 'http://192.168.8.110:8000'
+// axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
+// axios.defaults.data = 'http://172.16.26.238:8000'
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
 
 const loading = (

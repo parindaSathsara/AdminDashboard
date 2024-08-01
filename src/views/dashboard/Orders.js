@@ -327,7 +327,9 @@ const Orders = () => {
     enableFilters: true,
     enablePagination: true,
     pageSizes: [20, 25, 50, 100],
-    initialState: { pagination: { pageSize: 10 } },
+    initialState: { expanded: false },
+    enableColumnResizing: true,
+    // initialState: { pagination: { pageSize: 10 } },
     paginationType: 'stepped',
 
     paginationPosition: 'both',
@@ -337,8 +339,8 @@ const Orders = () => {
 
     enableGrouping: true,
     enableColumnActions: true,
-    initialState: { expanded: false },
-
+    // initialState: { expanded: false },
+    initialState: { expanded: false, columnVisibility: { pay_category: false, pay_type: false, additional_data: false } },
     defaultColumn: {
       headerStyle: {
         background: '#070e1a',
@@ -347,6 +349,7 @@ const Orders = () => {
         fontSize: '17px',
         fontWeight: '500',
       },
+
       cellStyle: {},
     },
     enableRowActions: true,
@@ -458,6 +461,7 @@ const Orders = () => {
               <Tab eventKey="group" title="Group Wise">
                 <MaterialReactTable
                   table={table}
+
 
                 />
               </Tab>
