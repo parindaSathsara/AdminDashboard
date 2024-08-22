@@ -1,0 +1,4 @@
+.custom-datepicker {
+    z-index: 9999 !important;
+    /* Ensure it’s on top of other components */
+}

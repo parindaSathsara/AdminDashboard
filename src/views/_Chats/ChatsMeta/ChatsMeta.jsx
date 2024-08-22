@@ -75,6 +75,9 @@ export default function ChatsMeta() {
         fetchConversations().then(response => {
             console.log(response, "Response Data Set Value")
             setConversationsList(response)
+
+            setSelectedIndex(0)
+            setSelectedData(response[0])
         })
     }, [])
 

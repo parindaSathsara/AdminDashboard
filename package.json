@@ -68,7 +68,7 @@
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",
     "react-bootstrap": "^2.9.1",
-    "react-datepicker": "^7.1.0",
+    "react-datepicker": "^7.3.0",
     "react-dom": "^18.2.0",
     "react-double-scrollbar": "^0.0.15",
     "react-draft-wysiwyg": "^1.15.0",

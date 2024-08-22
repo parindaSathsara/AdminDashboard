@@ -17,6 +17,8 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 axios.defaults.data = 'https://admin-api.aahaas.com'
+// axios.defaults.baseURL = 'https://meta-admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://meta-admin-api.aahaas.com'
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
