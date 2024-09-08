@@ -29,9 +29,8 @@ const getAvailableEmployees = async () => {
         }
     })
 
-    // console.log(dataSet, "Data set is employee available")
-
     return dataSet
+
 }
 
 

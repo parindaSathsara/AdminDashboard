@@ -72,6 +72,7 @@ import { db } from 'src/firebase';
 import FlightOrderView from './FlightUI/FlightOrderView';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
 import { CurrencyContext } from 'src/Context/CurrencyContext';
+import axios from 'axios';
 
 const Orders = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -339,6 +340,8 @@ const Orders = () => {
 
     enableGrouping: true,
     enableColumnActions: true,
+
+    enableStickyFooter: true,
     // initialState: { expanded: false },
     initialState: { expanded: false, columnVisibility: { pay_category: false, pay_type: false, additional_data: false } },
     defaultColumn: {
@@ -388,6 +391,20 @@ const Orders = () => {
 
         ) : null
   });
+
+
+
+
+  const handleTest = () => {
+
+    for (let index = 0; index < 50; index++) {
+      console.log("first trigger test")
+      axios.get(`button_trigger_test`).then(response => {
+
+      })
+    }
+
+  }
 
   if (loading) {
     return <LoaderPanel message={"Data processing in progress"} />;
@@ -447,6 +464,9 @@ const Orders = () => {
                 <h4 id="traffic" className="card-title mb-0">
                   Customer Orders
                 </h4>
+
+
+                {/* <button onClick={handleTest}>Testttt</button> */}
               </CCol>
             </CRow>
 
@@ -461,7 +481,6 @@ const Orders = () => {
               <Tab eventKey="group" title="Group Wise">
                 <MaterialReactTable
                   table={table}
-
 
                 />
               </Tab>

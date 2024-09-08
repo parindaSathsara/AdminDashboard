@@ -205,6 +205,7 @@ function OrderDetails(props) {
     const handleMoreInfoModal = (e, category) => {
         // console.log("More Info Modal", e)
 
+
         setMoreOrderModalCategory(category)
         if (category == 3) {
             setMoreOrderDetails(e.lifestyle_booking_id)
@@ -216,6 +217,14 @@ function OrderDetails(props) {
         }
 
         else if (category == 5) {
+            setMoreOrderDetails(e.booking_id)
+            setMoreOrderModal(true)
+        }
+
+        else if (category == 4) {
+
+            console.log(e, "Console Hotel Data is")
+
             setMoreOrderDetails(e.booking_id)
             setMoreOrderModal(true)
         }
@@ -511,6 +520,18 @@ function OrderDetails(props) {
 
     const hotels = {
         columns: [
+            {
+                field: 'view', width: 5, title: '', align: 'left', hidden: props?.productViewData ? true : false, render: (e) => {
+                    return (
+                        <>
+                            <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(e, 4)}>
+                                <CIcon icon={cilInfo} className="text-info" size="xl" />
+                            </CButton>
+
+                        </>
+                    );
+                }
+            },
             { field: 'hotelName', title: 'Hotel Name' },
             { field: 'Provider', title: 'Provider', align: 'left' },
             { field: 'NoOfNights', title: 'No of Nights', align: 'left' },
@@ -528,7 +549,7 @@ function OrderDetails(props) {
             Provider: value.Provider == "hotelAhs" ? "Aahaas" : "TBO",
             NoOfNights: value.NoOfNights,
             NoOfAdults: value.NoOfAdults,
-            checkInDate: value.checkInDate,
+            checkInDate: moment(value.checkInDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
             balance_amount: CurrencyConverter(value.currency, value.balance_amount),
             paid_amount: CurrencyConverter(value.currency, value.paid_amount),
             total_amount: CurrencyConverter(value.currency, value.total_amount),

@@ -354,13 +354,11 @@ export default function TravellerExperience(props) {
                 columns={columns}
                 data={data}
                 options={{
-
-
                     headerStyle: {
-                        fontSize: '14px', // Adjust the header font size here
+                        fontSize: '14px',
                     },
                     cellStyle: {
-                        fontSize: '14px', // Adjust the column font size here
+                        fontSize: '14px',
                     },
                     paging: false,
                     search: false,
@@ -368,8 +366,6 @@ export default function TravellerExperience(props) {
                     exportButton: true,
                     grouping: true,
                     rowStyle: rowStyle,
-
-
                 }}
 
 

@@ -25,8 +25,11 @@ export default function MoreOrderView(props) {
     const [loading, setLoading] = useState(false)
 
 
+
     useEffect(() => {
 
+
+        console.log("Modal is loading in background")
 
         if (props?.notificationView) {
 
