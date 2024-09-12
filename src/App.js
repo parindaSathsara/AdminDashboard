@@ -1,6 +1,6 @@
 
 import React, { Component, Suspense, useEffect, useState } from 'react'
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import './scss/style.scss'
 import axios from 'axios'
 import { UserLoginContext } from './Context/UserLoginContext'
@@ -15,8 +15,13 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-axios.defaults.data = 'https://admin-api.aahaas.com'
+// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://admin-api.aahaas.com'
+
+axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
+axios.defaults.data = 'http://172.16.26.238:8000'
+
+
 // axios.defaults.baseURL = 'https://meta-admin-api.aahaas.com/api'
 // axios.defaults.data = 'https://meta-admin-api.aahaas.com'
 
@@ -31,6 +36,22 @@ axios.defaults.data = 'https://admin-api.aahaas.com'
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
 // axios.defaults.data = 'http://172.16.26.238:8000'
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
+
+
+
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+
+
+  console.log(token, "Tokenize value is")
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+
+
+
+  return config;
+})
 
 const loading = (
   <div className="pt-3 text-center">
@@ -55,26 +76,29 @@ function App() {
 
   const [currencyData, setCurrencyData] = useState([])
 
+  const userid = localStorage.getItem("userID");
 
 
   useEffect(() => {
-    const userid = localStorage.getItem("userID");
 
     if (userid) {
       const userDataVal = JSON.parse(localStorage.getItem('user'));
       setUserData(userDataVal)
       setUserLogin(true)
+
+
+      axios.get(`getCurrency/${"USD"}`).then(response => {
+        if (response?.data?.status == 200) {
+          setCurrencyData(response.data)
+        }
+      })
     }
 
 
 
-    axios.get(`getCurrency/${"USD"}`).then(response => {
-      if (response?.data?.status == 200) {
-        setCurrencyData(response.data)
-      }
-    })
 
-  }, [])
+
+  }, [userid])
 
 
 
