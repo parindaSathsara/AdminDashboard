@@ -15,11 +15,11 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-// axios.defaults.data = 'https://admin-api.aahaas.com'
+axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+axios.defaults.data = 'https://admin-api.aahaas.com'
 
-axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
-axios.defaults.data = 'http://172.16.26.238:8000'
+// axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
+// axios.defaults.data = 'http://172.16.26.238:8000'
 
 
 // axios.defaults.baseURL = 'https://meta-admin-api.aahaas.com/api'
@@ -42,16 +42,50 @@ axios.defaults.data = 'http://172.16.26.238:8000'
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
 
-
-  console.log(token, "Tokenize value is")
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
 
-
-
   return config;
 })
+
+axios.interceptors.response.use(
+  (response) => {
+    return response; // If the response is successful, simply return it
+  },
+  (error) => {
+
+    const status = error.response ? error.response.status : null;
+
+
+    if (error.response && error.response.status === 401) {
+      sessionStorage.clear();
+      localStorage.clear();
+      window.location.href = '/#/login';
+      console.log("Auth Checking User", error)
+    }
+
+    else if (status === 500) {
+
+      console.error('A server error occurred. Please try again later.');
+
+    } else if (status === 404) {
+
+      console.error('The requested resource was not found.');
+
+    } else if (status >= 400 && status < 500) {
+
+      console.error('A client error occurred:', error.response.data);
+
+    } else {
+
+      console.error('An unknown error occurred.');
+
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 const loading = (
   <div className="pt-3 text-center">
@@ -68,7 +102,11 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Orders'));
 
 function App() {
 
+  window.addEventListener('unhandledrejection', function (event) {
+    event.preventDefault();
 
+    console.error('Unhandled promise rejection:', event.reason.message);
+  });
 
   const [userLogin, setUserLogin] = useState(false)
   const [userData, setUserData] = useState(false)
@@ -99,10 +137,6 @@ function App() {
 
 
   }, [userid])
-
-
-
-
 
 
 

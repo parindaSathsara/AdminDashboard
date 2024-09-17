@@ -31,6 +31,7 @@ import HotList from 'src/views/HotList/HotList';
 import { fetchInAppNotifications, fetchInAppNotificationsCount, readInAppNotifications } from 'src/views/HotList/service/HotListServices';
 
 import './AppHeader.css'
+import axios from 'axios';
 
 const AppHeader = () => {
   const dispatch = useDispatch();
@@ -38,13 +39,27 @@ const AppHeader = () => {
   const navigate = useNavigate();
   const { userLogin, setUserLogin, userData, setUserData } = useContext(UserLoginContext);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Clear all user sessions
-    sessionStorage.clear(); // Clears session storage
-    localStorage.clear(); // Clears local storage
 
-    setUserLogin(false);
-    navigate('/login');
+
+    await axios
+      .get('/user_logout')
+      .then((res) => {
+        sessionStorage.clear();
+        localStorage.clear();
+
+        setUserLogin(false);
+        navigate('/login');
+      })
+      .catch((err) => {
+        throw new Error(err)
+      })
+
+
+
+
+
   };
 
   const [switchState, setSwitchState] = useState(false);
