@@ -22,6 +22,7 @@ import LifestylesCategoryData from './CategoryData/LifestylesCategoryData';
 import LoaderPanel from 'src/Panels/LoaderPanel';
 import EssentialsCategoryData from './CategoryData/EssentialsCategoryData';
 import EducationCategoryData from './CategoryData/EducationCategoryData';
+import CustomersData from './CustomersData/CustomersData';
 
 const ReportGenerationPage = () => {
     const [startDate, setStartDate] = useState(null);
@@ -45,7 +46,8 @@ const ReportGenerationPage = () => {
 
     const reportTypes = [
         { value: 'products_report', label: 'Products Report' },
-        { value: 'orders_report', label: 'Orders Report' }
+        { value: 'orders_report', label: 'Orders Report' },
+        { value: 'customer_report', label: 'Customer Report' },
     ];
 
     useEffect(() => {
@@ -166,6 +168,8 @@ const ReportGenerationPage = () => {
                                     <div className="text-danger">{validationErrors.reportType}</div>
                                 )}
                             </CCol>
+
+
                             <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Category</CFormLabel>
                                 <br />
@@ -175,6 +179,7 @@ const ReportGenerationPage = () => {
                                     onChange={selectedOption => setCategory(selectedOption)}
                                     placeholder="Select a category"
                                     id="category"
+                                    isDisabled={reportType?.value == "customer_report"}
                                 />
                                 {validationErrors.category && (
                                     <div className="text-danger">{validationErrors.category}</div>
@@ -242,9 +247,16 @@ const ReportGenerationPage = () => {
                                         <EducationCategoryData data={reportDataSet} />
                                     ) : null}
                                 </>
-                            ) : (
-                                <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} />
-                            )}
+                            ) :
+
+                                reportType.value === "customer_report" ?
+                                    (
+                                        <CustomersData dataSet={reportDataSet} category={category.value} />
+                                    )
+                                    :
+                                    (
+                                        <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} />
+                                    )}
                         </>
                     ) : (
                         dataEmptyState ? (
