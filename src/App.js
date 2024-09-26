@@ -6,6 +6,9 @@ import axios from 'axios'
 import { UserLoginContext } from './Context/UserLoginContext'
 import InAppNotificationService from './service/InAppNotificationService'
 import { CurrencyContext } from './Context/CurrencyContext'
+
+import './App.css';
+
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
