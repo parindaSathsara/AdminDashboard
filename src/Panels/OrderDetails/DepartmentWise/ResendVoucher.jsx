@@ -24,7 +24,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
         }
 
 
-        console.log(postdata, "Posting data is")
+        // console.log(postdata, "Posting data is")
 
         axios.post(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}/${type}`, postdata, {
             headers: {

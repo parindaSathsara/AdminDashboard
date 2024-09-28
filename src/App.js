@@ -65,7 +65,7 @@ axios.interceptors.response.use(
       sessionStorage.clear();
       localStorage.clear();
       window.location.href = '/#/login';
-      console.log("Auth Checking User", error)
+      // console.log("Auth Checking User", error)
     }
 
     else if (status === 500) {

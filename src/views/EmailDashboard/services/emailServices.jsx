@@ -55,7 +55,7 @@ const downloadAllSupplierVouchers = async (id, groupIds = []) => {
 
     groupIds.map(res => {
 
-        console.log(res, "Group ID data values are")
+        // console.log(res, "Group ID data values are")
         downloadSupplierVoucherOneByOne(res, id)
     })
 }
@@ -63,7 +63,7 @@ const downloadAllSupplierVouchers = async (id, groupIds = []) => {
 
 
 const resendOrderEmailToCustomer = (id) => {
-    console.log(id, "ID Value is");
+    // console.log(id, "ID Value is");
 
     Swal.fire({
         title: 'Sending...',

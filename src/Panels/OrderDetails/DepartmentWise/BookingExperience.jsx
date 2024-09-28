@@ -33,7 +33,7 @@ export default function BookingExperience(props) {
     const QuantityContainer = ({ data }) => {
 
 
-        console.log(data, "Data Value is")
+        // console.log(data, "Data Value is")
 
 
         if (data.category == "Education") {
@@ -132,7 +132,7 @@ export default function BookingExperience(props) {
 
 
     const FeedbackContainer = ({ data }) => {
-        console.log(data, "Feedback Container data is");
+        // console.log(data, "Feedback Container data is");
 
         return (
             <div>
@@ -193,8 +193,8 @@ export default function BookingExperience(props) {
     const [selectedStatusCheckout, setSelectedStatusCheckout] = useState("")
 
     const handleDelStatusChange = async (e, val) => {
-        console.log(e, "Value Data set is 123")
-        console.log(val.target.value, "Target Value is")
+        // console.log(e, "Value Data set is 123")
+        // console.log(val.target.value, "Target Value is")
 
         var title = "";
 
@@ -212,7 +212,7 @@ export default function BookingExperience(props) {
                     cancelButtonColor: "#d33",
                     confirmButtonText: "Yes"
                 }).then((result) => {
-                    console.log(result, "IS Confirmed")
+                    // console.log(result, "IS Confirmed")
 
                     if (result.isConfirmed) {
                         Swal.fire({
@@ -225,9 +225,9 @@ export default function BookingExperience(props) {
                             }
                         });
 
-                        console.log("Show Loading")
+                        // console.log("Show Loading")
                         updateDeliveryStatus(e.checkoutID, targetvalue, "").then(result => {
-                            console.log(result)
+                            // console.log(result)
 
                             props.reload();
 
@@ -238,7 +238,7 @@ export default function BookingExperience(props) {
                         }).catch(error => {
 
 
-                            console.log(error, "Error Value is 1234")
+                            // console.log(error, "Error Value is 1234")
                             Swal.fire({
                                 title: "Error!",
                                 text: "Failed to update order",
@@ -335,7 +335,7 @@ export default function BookingExperience(props) {
 
 
     const handleMoreCancellationDetails = (data) => {
-        console.log(data, "handle more cancellation details")
+        // console.log(data, "handle more cancellation details")
 
         setSelectedCancellationModal(data?.data)
         setCancellationModalState(true)
@@ -423,7 +423,7 @@ export default function BookingExperience(props) {
 
                 var edit = e?.data?.edit_status
 
-                console.log(edit, "Edit Coming Data Is")
+                // console.log(edit, "Edit Coming Data Is")
 
                 if (edit == "Edited") {
                     return (
@@ -554,7 +554,7 @@ export default function BookingExperience(props) {
     }))
 
 
-    console.log(productData, "Product dat avalue is")
+    // console.log(productData, "Product dat avalue is")
 
 
 

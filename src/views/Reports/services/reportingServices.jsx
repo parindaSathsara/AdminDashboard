@@ -7,7 +7,7 @@ const getReports = async (dataSet) => {
     var dataArray = [];
 
 
-    console.log("generate_custom_reports", dataSet)
+    // console.log("generate_custom_reports", dataSet)
 
     await axios.post("generate_custom_reports", dataSet).then(response => {
         if (response.data.status == 200) {
@@ -17,7 +17,7 @@ const getReports = async (dataSet) => {
         dataArray = []
     })
 
-    console.log(dataSet, "Data Array Values are")
+    // console.log(dataSet, "Data Array Values are")
 
     return dataArray
 }

@@ -47,7 +47,7 @@ export default function ArrDepLine({ flightData, depDate, flightCodes, reVal = f
     function calculateTotalStopCount(flights) {
 
 
-        console.log(flights, "Flight Validation Data set is")
+        // console.log(flights, "Flight Validation Data set is")
         let totalStopCount = 0;
         for (const flight of flights) {
             totalStopCount += flight.stopCount;

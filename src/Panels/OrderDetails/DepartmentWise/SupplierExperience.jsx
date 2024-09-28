@@ -29,7 +29,7 @@ export default function SupplierExperience(props) {
 
 
 
-    console.log(productData, "Product Data set is123")
+    // console.log(productData, "Product Data set is123")
 
 
     const QuantityContainer = ({ data }) => {
@@ -165,7 +165,7 @@ export default function SupplierExperience(props) {
 
     const createChatWithSupplier = async (data) => {
 
-        console.log(data, "Voucher ID")
+        // console.log(data, "Voucher ID")
 
 
 
@@ -187,7 +187,7 @@ export default function SupplierExperience(props) {
 
         axios.post('https://gateway.aahaas.com/api/addchats', dataSet).then(res => {
             if (res.data.status === 200) {
-                console.log(res.data, "Data set value 123456789")
+                // console.log(res.data, "Data set value 123456789")
             } else {
 
             }

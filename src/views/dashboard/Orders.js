@@ -190,7 +190,7 @@ const Orders = () => {
         if (!querySnapshot.empty) {
           initialDataHandler("realtime");
         } else {
-          console.log("No orders found.");
+          // console.log("No orders found.");
         }
 
       },
@@ -398,7 +398,7 @@ const Orders = () => {
   const handleTest = () => {
 
     for (let index = 0; index < 50; index++) {
-      console.log("first trigger test")
+      // console.log("first trigger test")
       axios.get(`button_trigger_test`).then(response => {
 
       })

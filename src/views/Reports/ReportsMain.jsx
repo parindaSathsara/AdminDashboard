@@ -193,7 +193,7 @@ const ReportGenerationPage = () => {
                         </CRow>
 
 
-                        {console.log(reportType?.value, "Report Typeeeeee")}
+                        {/* {console.log(reportType?.value, "Report Typeeeeee")} */}
 
                         {reportType?.value === 'orders_report' ?
                             <CRow className="mt-3">

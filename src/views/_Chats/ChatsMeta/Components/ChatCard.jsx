@@ -4,7 +4,7 @@ import './ChatCard.css';
 
 const ChatCard = ({ title, subtitle, time, isPinned, unreadCount, imgSrc, handleClick, selectedIndex, index }) => {
 
-    console.log(selectedIndex === index, "Index Tally")
+    // console.log(selectedIndex === index, "Index Tally")
 
     return (
         <CCard className={`conversation-card ${selectedIndex === index ? "conversation-card-active" : ""}`} onClick={() => handleClick(index)}>

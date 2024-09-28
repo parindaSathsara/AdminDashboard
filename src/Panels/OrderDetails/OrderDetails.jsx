@@ -126,7 +126,7 @@ function OrderDetails(props) {
             //     setEducationData([props.orderData?.info])
             // }
 
-            console.log(props?.orderData?.info?.checkoutID, "Checkout ID")
+            // console.log(props?.orderData?.info?.checkoutID, "Checkout ID")
 
             getDashboardProductOrderDetails(props?.orderData?.info?.checkoutID).then((res) => {
                 setDetailsLoading(false)
@@ -166,7 +166,7 @@ function OrderDetails(props) {
 
     }, [props.orderid, props.orderData])
     const reload = () => {
-        console.log(props?.orderid, "Order data id is val")
+        // console.log(props?.orderid, "Order data id is val")
         props?.updatedData()
         if (props?.productViewData) {
             getDashboardProductOrderDetails(props.orderid?.info?.checkoutID).then((res) => {
@@ -223,7 +223,7 @@ function OrderDetails(props) {
 
         else if (category == 4) {
 
-            console.log(e, "Console Hotel Data is")
+            // console.log(e, "Console Hotel Data is")
 
             setMoreOrderDetails(e.booking_id)
             setMoreOrderModal(true)
@@ -235,8 +235,8 @@ function OrderDetails(props) {
     const [detailExpander, setDetailExpander] = useState(false)
 
     const handleDelStatusChange = (e, val) => {
-        console.log(e, "Value Data set is 123")
-        console.log(val.target.value, "Target Value is")
+        // console.log(e, "Value Data set is 123")
+        // console.log(val.target.value, "Target Value is")
 
         var title = ""
 
@@ -249,7 +249,7 @@ function OrderDetails(props) {
             title = "Do You Want to Cancel This Order"
         }
         updateDeliveryStatus(e.id, val.target.value, e.category).then(result => {
-            console.log(result)
+            // console.log(result)
             reload()
             Swal.fire({
                 title: "Order " + e.id + " Confirmed",

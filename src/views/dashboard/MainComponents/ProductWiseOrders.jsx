@@ -41,7 +41,7 @@ export default function ProductWiseOrders() {
                 setAllOrdersProductsStatic(res.data.productData)
 
                 setCustomerData(res.data.customerData);
-                console.log(res.data);
+                // console.log(res.data);
                 setLoading(false);
             }
         }).catch(() => {
@@ -73,7 +73,7 @@ export default function ProductWiseOrders() {
 
                     getAllProductsOrders("realtime");
                 } else {
-                    console.log("No orders found.");
+                    // console.log("No orders found.");
                 }
                 getAllProductsOrders("realtime");
             },
@@ -98,7 +98,7 @@ export default function ProductWiseOrders() {
     }, [currentFilters, allOrdersProductsStatic]);
 
     const handleMoreInfoModal = (row) => {
-        console.log(row);
+        // console.log(row);
 
         setMoreOrderModalCategory(row?.info.catid);
         if (row?.info.catid === 3) {
@@ -268,12 +268,12 @@ export default function ProductWiseOrders() {
         setMoreOrderModal(false)
         // getAllProductsOrders("realtime");
 
-        console.log("Passing Dataset")
+        // console.log("Passing Dataset")
     }
 
     const handleUpdateState = () => {
 
-        console.log("Updating State")
+        // console.log("Updating State")
         getAllProductsOrders("realtime");
     }
 

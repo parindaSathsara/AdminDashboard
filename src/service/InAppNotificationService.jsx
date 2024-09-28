@@ -19,7 +19,7 @@ export default function InAppNotificationService() {
 
                     const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
                     const lastOrderData = lastDoc.data();
-                    console.log("Last Order: ", lastOrderData);
+                    // console.log("Last Order: ", lastOrderData);
 
 
 
@@ -30,7 +30,7 @@ export default function InAppNotificationService() {
                     if (moment().diff(createdAtVal, 'seconds') < 15) {
                         getMoreDataSet(lastOrderData?.category, lastOrderData?.related_id).then(response => {
 
-                            console.log(response, "Response Data Object")
+                            // console.log(response, "Response Data Object")
 
                             if (lastOrderData?.category == 3) {
                                 addNewToast({
@@ -64,7 +64,7 @@ export default function InAppNotificationService() {
 
 
                         }).catch(response => {
-                            console.log(response, "Catch Response is")
+                            // console.log(response, "Catch Response is")
                             // setLoading(false)
                         })
                     }
@@ -143,7 +143,7 @@ export default function InAppNotificationService() {
                 customerData: response?.[0]?.customerData
             }
 
-            console.log(dataSet, "Passing Dataset value data")
+            // console.log(dataSet, "Passing Dataset value data")
 
             setOrderData(dataSet)
         })
