@@ -165,28 +165,28 @@
 }
 
 .reading-admins .chat-admin {
-    padding: 2px 6px;
-    font-size: 8px;
-    background-color: green;
-    border-radius: 50%;
-    color: white;
+    padding: 2px;
     margin: 0px;
+    font-size: 8px;
+    border-radius: 50%;
+    color: green
 }
 
 .reading-admins .read-admin {
-    padding: 2px 6px;
+    padding: 2px;
+    margin: 0px;
     font-size: 8px;
-    background-color: red;
     border-radius: 50%;
-    color: white;
+    color: red;
     margin: 0px;
 }
 
 .reading-admins span {
     padding: 2px;
+    margin: 0px;
     font-size: 8px;
     border-radius: 50%;
-    color: red;
+    color: black;
     margin: 0px;
 }
 

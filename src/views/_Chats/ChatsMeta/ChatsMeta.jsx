@@ -60,7 +60,7 @@ function ChatsMeta() {
     const handleCloseChat = async () => {
         setChatOpened(false);
         setChatOpenDetails([]);
-        await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.id });
+        await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
     }
 
 
@@ -125,11 +125,11 @@ function ChatsMeta() {
             setMessages(sortedMessages);
         });
         if (updateState === false) {
-            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: chatId.notifyCustomer, adminStatus: 'false', supplierStatus: chatId.notifySupplier, adminId: userData.id, updateState: updateState });
+            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: chatId.notifyCustomer, adminStatus: 'false', supplierStatus: chatId.notifySupplier, adminId: userData.name, updateState: updateState });
         } else {
-            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: 'true', adminStatus: 'false', supplierStatus: "true", adminId: userData.id, updateState: updateState });
+            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: 'true', adminStatus: 'false', supplierStatus: "true", adminId: userData.name, updateState: updateState });
         }
-        await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.id });
+        await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
         return () => getmessages();
     }
 
@@ -247,7 +247,7 @@ function ChatsMeta() {
 
     useEffect(() => {
         const handleBeforeUnload = async (event) => {
-            await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.id });
+            await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
             event.preventDefault();
             event.returnValue = "";
         };
@@ -335,21 +335,14 @@ function ChatsMeta() {
                                             <div className="reading-admins">
                                                 {
                                                     (value?.admin_included === undefined || value?.admin_included?.length == 0) ?
-                                                        <span>Yet to be replied</span>
-                                                        :
-                                                        value?.admin_included?.map((value) => (
-                                                            <p className="chat-admin">{value}</p>
-                                                        ))
+                                                        <span className="chat-admin">Yet to be replied</span>
+                                                        : <span className="chat-admin">{value?.admin_included?.length} admin are in chat</span>
                                                 }
                                                 <span>-</span>
                                                 {
                                                     (value?.admin_reading === undefined || value?.admin_reading?.length === 0) ?
-                                                        <span>No is is reading</span>
-                                                        :
-                                                        value?.admin_reading?.map((value) => (
-                                                            value !== '' &&
-                                                            <p className="read-admin">{value}</p>
-                                                        ))
+                                                        <span className="read-admin">No is is reading</span>
+                                                        : <span className="read-admin">{value?.admin_reading?.length} are reading</span>
                                                 }
                                             </div>
                                             <div className="chat-notify">
@@ -410,10 +403,7 @@ function ChatsMeta() {
                                                 searchBarStatus.searchResuts === false ?
                                                     <p>enter your keyword to search</p>
                                                     : searchBarStatus.searchResultChats.map((value, index) => (
-                                                        <div
-                                                            className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `}
-                                                            onClick={() => handleScrollToMessage(index, value)}  // Attach click handler
-                                                        >
+                                                        <div className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `} onClick={() => handleScrollToMessage(index, value)}  >
                                                             <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
                                                             <h6 className="chat-content-text">{value.text}</h6>
                                                             <p className="chat-content-time">{formatDate(value.createdAt)} by {value.name}</p>
