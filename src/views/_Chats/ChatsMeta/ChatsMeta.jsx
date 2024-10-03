@@ -412,8 +412,11 @@ function ChatsMeta() {
                                             }
                                         </div>
                                     </div>
+                                    <div className="admin-chats-clipborad">
+                                        
+                                    </div>
                                     <div className="chat-message-input">
-                                        <input type="text" value={adminMessage} onChange={(e) => setAdminMessage(e.target.value)} onKeyUp={handleKeyUp} placeholder="Enter your message" className="chat-message-input-form" />
+                                        <input type="text" value={adminMessage} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
                                         <FontAwesomeIcon icon={faPaperPlane} className="chat-message-input-icon-send" onClick={() => handleSendMessage(adminMessage)} />
                                         <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" />
                                         <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />

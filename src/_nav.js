@@ -16,11 +16,17 @@ const _nav = [
     to: '/orders',
     icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
   },
+  // {
+  //   component: CNavItem,
+  //   name: 'Orders allocations',
+  //   to: '/allocation',
+  //   icon: <CIcon icon={cilGarage} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
-    name: 'Orders allocations',
-    to: '/allocation',
-    icon: <CIcon icon={cilGarage} customClassName="nav-icon" />,
+    name: 'Orders calendar',
+    to: '/order-calendar',
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

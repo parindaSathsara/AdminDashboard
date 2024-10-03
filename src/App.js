@@ -1,12 +1,11 @@
-
+import axios from 'axios'
 import React, { Component, Suspense, useEffect, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
-import './scss/style.scss'
-import axios from 'axios'
 import { UserLoginContext } from './Context/UserLoginContext'
 import InAppNotificationService from './service/InAppNotificationService'
 import { CurrencyContext } from './Context/CurrencyContext'
 
+import './scss/style.scss'
 import './App.css';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'

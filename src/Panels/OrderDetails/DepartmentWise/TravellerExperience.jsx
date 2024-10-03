@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MaterialTable from 'material-table';
 import { CBadge, CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
@@ -20,9 +20,11 @@ export default function TravellerExperience(props) {
         '--cui-popover-body-padding-y': '.5rem',
     }
 
-    const productData = props.dataset
+    const productData = props.dataset;
 
     // console.log(productData, "Productttttttt")
+
+    const [driverAllocationStatus, setDriverAllocationStatus] = useState(false);
 
     const [travellerData, setTravellerData] = useState({
         pid: '',
@@ -269,6 +271,7 @@ export default function TravellerExperience(props) {
 
             }
         },
+        { title: 'Driver allocation', field: 'Driver allocation', render: rowData => <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => setDriverAllocationStatus(true)} className='btn btn-primary'>Allocate driver</CButton> },
         {
             title: '',
             render: rowData => {
@@ -303,7 +306,6 @@ export default function TravellerExperience(props) {
 
             }
         }
-
         // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
     ];
 
@@ -332,7 +334,27 @@ export default function TravellerExperience(props) {
 
     };
 
+    const [driverDetailsLoading, setDriverDetailsLoading] = useState(false);
+    const [driverDetails, setDriverDetails] = useState([]);
 
+    const getAllExistingDeivers = async () => {
+        setDriverDetailsLoading(true);
+        await axios.get('/vehicle-drivers').then((response) => {
+            console.log('response from backend', response)
+            setDriverDetailsLoading(false);
+            setDriverDetails(response.data.data);
+        })
+    }
+
+    useEffect(() => {
+        console.log('====================================');
+        console.log(driverDetails);
+        console.log('====================================');
+    }, [driverDetails])
+
+    useEffect(() => {
+        getAllExistingDeivers();
+    }, [driverAllocationStatus]);
 
     return (
         <>
@@ -347,6 +369,35 @@ export default function TravellerExperience(props) {
                 <Modal.Footer>
 
                 </Modal.Footer>
+            </Modal>
+
+            <Modal show={driverAllocationStatus} onHide={() => setDriverAllocationStatus(false)}>
+                {driverDetails.map((value, key) => (
+                    <div key={key}>
+                        <h6>{value.vehicle_number}</h6>
+                        <h6>{value.vehicle_province}</h6>
+                        <h6>{value.vehicle_province}</h6>
+                        <div>
+                            <h6>{value.vehicle_type}</h6>
+                            <h6>{value.vehicle_model}</h6>
+                            <h6>{value.vehicle_color}</h6>
+                            <h6>{value.vehicle_make}</h6>
+                        </div>
+                        <div>
+                            <h6>{value.vehicle_registered_date}</h6>
+                            <h6>{value.vehicle_vehicle_condition}</h6>
+                        </div>
+                        <div>
+                            <h6>{value.vehicle_status}</h6>
+                            <h6>{value.driver_name}</h6>
+                            <h6>{value.driver_registered_country}</h6>
+                            <h6>{value.driver_type}</h6>
+                            <h6>{value.driver_nic}</h6>
+                            <h6>{value.driver_registered_date}</h6>
+                            <h6>{value.driver_status}</h6>
+                        </div>
+                    </div>
+                ))}
             </Modal>
 
             <MaterialTable
