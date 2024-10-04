@@ -738,7 +738,6 @@ function OrderDetails(props) {
                             show={detailExpander}
                             onHide={() => setDetailExpander(false)}
                             orderid={props.orderid}
-
                             component={
                                 <Tabs defaultActiveKey="bookingexperience" id="uncontrolled-tab-example" className="mt-4">
                                     <Tab eventKey="bookingexperience" title="Booking Experience">

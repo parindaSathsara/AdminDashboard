@@ -472,17 +472,9 @@ const Orders = () => {
 
 
 
-            <Tabs
-              defaultActiveKey="group"
-              id="uncontrolled-tab-example"
-              className="mt-4"
-              style={{ fontSize: 16 }}
-            >
+            <Tabs defaultActiveKey="group" id="uncontrolled-tab-example" className="mt-4" style={{ fontSize: 16 }} >
               <Tab eventKey="group" title="Group Wise">
-                <MaterialReactTable
-                  table={table}
-
-                />
+                <MaterialReactTable table={table} />
               </Tab>
               <Tab eventKey="product" title="Product Wise">
                 <ProductWiseOrders />

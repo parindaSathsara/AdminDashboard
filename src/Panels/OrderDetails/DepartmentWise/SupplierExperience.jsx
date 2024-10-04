@@ -277,7 +277,7 @@ export default function SupplierExperience(props) {
         setVisible(true)
         // setVoucherSending(true)
         // var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`
-        // // console.log(email, "Supplier Data")
+        // console.log(email, "Supplier Data")
 
 
         // fetch(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`, {

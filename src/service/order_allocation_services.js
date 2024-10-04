@@ -51,7 +51,7 @@ const getAllProductsOrdersByEmployee = async (val) => {
             return [];
         }
     } catch (error) {
-        console.error("Error:", error);
+        // console.error("Error:", error);
         return [];
     }
 }
@@ -84,7 +84,7 @@ const assignEmployeesToOrders = async (checkout_id, employeeId) => {
         }
     } catch (error) {
 
-        console.error("Error occurred while allocating order:", error);
+        // console.error("Error occurred while allocating order:", error);
         return [400, "Error occurred while allocating order"];
     }
 };

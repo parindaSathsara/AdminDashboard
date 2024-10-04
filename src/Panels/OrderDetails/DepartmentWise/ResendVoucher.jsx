@@ -47,7 +47,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
             })
             .catch(error => {
                 setVoucherSending("");
-                console.error('There was a problem with the Axios request:', error);
+                // console.error('There was a problem with the Axios request:', error);
             });
     }
 

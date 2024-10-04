@@ -49,12 +49,6 @@ export default function ProductWiseOrders() {
         });
     };
 
-
-
-
-
-
-
     useEffect(() => {
         getAllProductsOrders("load");
     }, []);
@@ -98,15 +92,17 @@ export default function ProductWiseOrders() {
     }, [currentFilters, allOrdersProductsStatic]);
 
     const handleMoreInfoModal = (row) => {
-        // console.log(row);
 
         setMoreOrderModalCategory(row?.info.catid);
         if (row?.info.catid === 3) {
             setMoreOrderDetails(row?.info.lifestyle_booking_id);
+            console.log(row?.info.lifestyle_booking_id);
         } else if (row?.info.catid === 1) {
             setMoreOrderDetails(row?.info.essential_pre_order_id);
+            console.log(row?.info.essential_pre_order_id);
         } else if (row?.info.catid === 5) {
             setMoreOrderDetails(row?.info.booking_id);
+            console.log(row?.info.booking_id);
         }
         setMoreOrderModal(true);
         setMainDataSet(row);

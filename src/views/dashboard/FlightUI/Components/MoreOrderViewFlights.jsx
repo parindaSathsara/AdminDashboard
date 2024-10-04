@@ -147,7 +147,7 @@ export default function MoreOrderViewFlights({ revalidationData, customerSearchD
 
             <h5 className='mb-3'>Flight More Info</h5>
 
-            <Tabs defaultActiveKey={0} id="flight-tabs" className="mb-3" onChange={(e) => console.log(e)}>
+            <Tabs defaultActiveKey={0} id="flight-tabs" className="mb-3">
 
                 {departureArray?.map((data, datI) => {
                     return (

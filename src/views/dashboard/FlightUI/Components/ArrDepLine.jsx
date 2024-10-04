@@ -35,7 +35,7 @@ export default function ArrDepLine({ flightData, depDate, flightCodes, reVal = f
 
     useEffect(() => {
 
-        // //console.log("Arr Dep Data is", props.arrDepData)
+        //console.log("Arr Dep Data is", props.arrDepData)
         setFlightArrDepData(flightData)
         setFlightCodesData(flightCodes)
 

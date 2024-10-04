@@ -19,7 +19,7 @@ const CurrencyConverter = (conversionCurrency, amount, dataSet) => {
         //console.log(conversionCurrency)
         totalPrice = amount / conversion;
 
-        // //console.log("Total Price value is", totalPrice)
+        //console.log("Total Price value is", totalPrice)
 
         if (typeof totalPrice == 'number') {
             return currencyData?.['base'] + " " + (totalPrice).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')

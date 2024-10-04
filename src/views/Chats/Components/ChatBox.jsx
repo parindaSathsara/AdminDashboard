@@ -252,7 +252,7 @@ function Chatshome() {
                     });
                     set_customer_message_collections(sorted_result);
                     setFilteredCustomerChats(sorted_result);
-                    console.log(sorted_result);
+                    // console.log(sorted_result);
                 }
             })
         } catch (error) {
