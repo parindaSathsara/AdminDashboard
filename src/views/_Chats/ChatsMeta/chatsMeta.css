@@ -409,6 +409,7 @@
     display: grid;
     grid-template-areas:
         'chat-content-text chat-content-image'
+        'chat-content-personname chat-content-image'
         'chat-content-time chat-content-image'
     ;
     align-items: start;
@@ -423,8 +424,28 @@
     max-width: 80%;
 }
 
+.chat-content-customer {
+    display: grid;
+    grid-template-areas:
+        'chat-content-image chat-content-text'
+        'chat-content-image chat-content-personname'
+        'chat-content-image chat-content-time'
+    ;
+    text-align: start;
+    align-items: start;
+    justify-content: start;
+    width: fit-content;
+    margin: 0px auto 10px 0px;
+    background-color: rgba(211, 211, 211, 0.3);
+    padding: 10px 20px 10px 30px;
+    border-radius: 8px 8px 40px 8px;
+    gap: 0px;
+    min-width: auto;
+    max-width: 80%;
+}
+
 .chat-content-admin.lazy-load-image-background,
-.chat-content .lazy-load-image-background {
+.chat-content-customer.lazy-load-image-background {
     grid-area: chat-content-image;
     margin: auto;
 }
@@ -433,8 +454,15 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    margin: auto 0px auto 10px;
     object-fit: contain;
+}
+
+.chat-content-admin .chat-content-image {
+    margin: auto 0px auto 10px;
+}
+
+.chat-content-customer .chat-content-image {
+    margin: auto 10px auto 0px;
 }
 
 .chat-content-text {
@@ -442,13 +470,31 @@
     margin: 0px;
     padding: 0px;
     font-size: 12px;
+    line-height: 18px;
+}
+
+.chat-content-admin .chat-content-text,
+.chat-content-admin .chat-content-time,
+.chat-content-admin .chat-content-personname {
     text-align: right;
+}
+
+.chat-content-customer .chat-content-text,
+.chat-content-customer .chat-content-time,
+.chat-content-customer .chat-content-personname {
+    text-align: left;
+}
+
+.chat-content-personname {
+    grid-area: chat-content-personname;
+    margin: 0px;
+    padding: 0px;
+    font-size: 10px;
     line-height: 18px;
 }
 
 .chat-content-time {
     grid-area: chat-content-time;
-    text-align: right;
     padding: 0px;
     margin: 3px 0px 0px 0px;
     font-size: 10px;

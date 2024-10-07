@@ -11,13 +11,13 @@ function GetOrderOnTheDay({ orders, date }) {
         setOrderList(response);
     }, [date, orders]);
 
-
     const [moreOrderModal, setMoreOrderModal] = useState(false);
     const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("");
     const [moreOrderDetails, setMoreOrderDetails] = useState("");
     const [mainDataSet, setMainDataSet] = useState([]);
 
     const handleMoreInfoModal = (dataset) => {
+        console.log(dataset);
         setMoreOrderModalCategory(dataset.main_category_id);
         setMoreOrderDetails(dataset.sub_order_id);
         setMoreOrderModal(true);
@@ -25,7 +25,7 @@ function GetOrderOnTheDay({ orders, date }) {
     };
 
     const onHideModal = () => {
-        setMoreOrderModal(false)
+        setMoreOrderModal(false);
     }
 
     const handleUpdateState = () => {
@@ -34,14 +34,14 @@ function GetOrderOnTheDay({ orders, date }) {
 
     return (
         <div>
-            {/* <MoreOrderView
+            <MoreOrderView
                 show={moreOrderModal}
                 onHide={() => onHideModal()}
                 preID={moreOrderDetails}
                 category={moreOrderModalCategory}
                 productViewData
                 productViewComponent={<OrderDetails orderid={mainDataSet.order_id} orderData={mainDataSet} hideStatus={false} productViewData updatedData={() => handleUpdateState()} />}
-            /> */}
+            />
             {
                 Object.entries(ordersList).map(([key, order], index) => (
                     index < 3 && (

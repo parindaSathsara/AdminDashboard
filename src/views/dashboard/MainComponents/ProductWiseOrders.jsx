@@ -104,6 +104,7 @@ export default function ProductWiseOrders() {
             setMoreOrderDetails(row?.info.booking_id);
             console.log(row?.info.booking_id);
         }
+        console.log(row);
         setMoreOrderModal(true);
         setMainDataSet(row);
     };

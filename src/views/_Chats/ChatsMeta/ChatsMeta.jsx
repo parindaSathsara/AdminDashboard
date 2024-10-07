@@ -12,6 +12,7 @@ import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass
 
 import { UserLoginContext } from "src/Context/UserLoginContext";
 import './chatsMeta.css';
+import Modal from 'react-bootstrap/Modal';
 
 function ChatsMeta() {
 
@@ -55,6 +56,27 @@ function ChatsMeta() {
     const formatDate = (timestamp) => {
         const date = new Date(timestamp.seconds * 1000);
         return date.toISOString().split('T')[0];
+    };
+    const getDateAndtime = (value) => {
+        const totalSeconds = value.seconds + value.nanoseconds / 1e9;
+        const dateTime = new Date(totalSeconds * 1000);
+
+        const currentDate = new Date();
+        const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        let formattedDateTime;
+        const isSameDay = dateTime.toDateString() === currentDate.toDateString();
+        const isYesterday = new Date(currentDate.setDate(currentDate.getDate() - 1)).toDateString() === dateTime.toDateString();
+
+        if (isSameDay) {
+            formattedDateTime = `Today, ${formattedTime}`;
+        } else if (isYesterday) {
+            formattedDateTime = `Yesterday, ${formattedTime}`;
+        } else {
+            formattedDateTime = dateTime.toLocaleString();
+        }
+
+        return formattedDateTime;
     };
 
     const handleCloseChat = async () => {
@@ -157,6 +179,25 @@ function ChatsMeta() {
             });
             await getChatContent({ chatId: chatOpenDetails, updateState: true });
         }
+    }
+
+    const [clipBoardStatus, setClipBoardStatus] = useState({
+        status: false,
+        content: ''
+    })
+
+    const handleOpenClipBoardOpen = () => {
+        setClipBoardStatus({
+            status: true,
+            content: ''
+        })
+    }
+
+    const handleOpenClipBoardClose = () => {
+        setClipBoardStatus({
+            status: false,
+            content: ''
+        })
     }
 
     const handleKeyUp = (event) => {
@@ -388,11 +429,11 @@ function ChatsMeta() {
                                                         <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />Please start responding to resolve their issue as soon as possible.
                                                     </p>
                                                     : messages.map((value, index) => (
-                                                        <div ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `}
-                                                            style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
+                                                        <div onClick={() => console.log(value)} ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content-customer'} `} style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
                                                             <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
                                                             <h6 className="chat-content-text">{value.text}</h6>
-                                                            <p className="chat-content-time">{formatDate(value.createdAt)} by {value.name}</p>
+                                                            <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
+                                                            <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
                                                         </div>
                                                     ))
                                             }
@@ -406,19 +447,20 @@ function ChatsMeta() {
                                                         <div className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `} onClick={() => handleScrollToMessage(index, value)}  >
                                                             <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
                                                             <h6 className="chat-content-text">{value.text}</h6>
-                                                            <p className="chat-content-time">{formatDate(value.createdAt)} by {value.name}</p>
+                                                            <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
+                                                            <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
                                                         </div>
                                                     ))
                                             }
                                         </div>
                                     </div>
                                     <div className="admin-chats-clipborad">
-                                        
+
                                     </div>
                                     <div className="chat-message-input">
                                         <input type="text" value={adminMessage} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
                                         <FontAwesomeIcon icon={faPaperPlane} className="chat-message-input-icon-send" onClick={() => handleSendMessage(adminMessage)} />
-                                        <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" />
+                                        <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" onClick={() => handleOpenClipBoardOpen()} />
                                         <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
                                     </div>
                                 </div>
@@ -429,6 +471,13 @@ function ChatsMeta() {
                     }
                 </CCol>
             </CRow>
+
+            {/* clip board modal */}
+
+            <Modal show={clipBoardStatus.status} onHide={() => handleOpenClipBoardClose()}>
+                testing...
+            </Modal>
+
         </div>
     );
 }

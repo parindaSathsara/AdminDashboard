@@ -294,7 +294,11 @@ export default function TravellerExperience(props) {
                 <Tooltip title={rowData.data.category === 'Lifestyles' ? 'Allocate driver' : 'Driver allocation is not avalible'}>
                     <CButton color="info" style={{ fontSize: 14, color: 'white', backgroundColor: rowData.data.category === 'Lifestyles' ? '' : 'gray' }}
                         onClick={() => handleClickDriverAllocation(rowData)}
-                        className='btn btn-primary'>Allocate driver</CButton>
+                        className='btn btn-primary'>
+                        {
+                            rowData.data.vehicle_allocation == 1 ? 'Driver allocated' : 'Allocate driver'
+                        }
+                    </CButton>
                 </Tooltip>
         },
         {
