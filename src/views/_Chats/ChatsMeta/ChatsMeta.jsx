@@ -42,7 +42,6 @@ function ChatsMeta() {
     const [searchChat, setSearchChat] = useState('')
     const [adminMessage, setAdminMessage] = useState('');
 
-
     const handleFilterchat = (value, dataset) => {
         setSearchChat(value);
         if (value === '') {
@@ -57,6 +56,7 @@ function ChatsMeta() {
         const date = new Date(timestamp.seconds * 1000);
         return date.toISOString().split('T')[0];
     };
+    
     const getDateAndtime = (value) => {
         const totalSeconds = value.seconds + value.nanoseconds / 1e9;
         const dateTime = new Date(totalSeconds * 1000);
@@ -181,23 +181,11 @@ function ChatsMeta() {
         }
     }
 
-    const [clipBoardStatus, setClipBoardStatus] = useState({
-        status: false,
-        content: ''
-    })
+    const [clipBoardStatus, setClipBoardStatus] = useState(false);
+    const [messageClipBoard, setMessageClipBoard] = useState(false);
 
     const handleOpenClipBoardOpen = () => {
-        setClipBoardStatus({
-            status: true,
-            content: ''
-        })
-    }
-
-    const handleOpenClipBoardClose = () => {
-        setClipBoardStatus({
-            status: false,
-            content: ''
-        })
+        setClipBoardStatus(!clipBoardStatus);
     }
 
     const handleKeyUp = (event) => {
@@ -429,11 +417,20 @@ function ChatsMeta() {
                                                         <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />Please start responding to resolve their issue as soon as possible.
                                                     </p>
                                                     : messages.map((value, index) => (
-                                                        <div onClick={() => console.log(value)} ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content-customer'} `} style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
-                                                            <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
-                                                            <h6 className="chat-content-text">{value.text}</h6>
-                                                            <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
-                                                            <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
+                                                        <div className={value.role === 'Admin' ? "textingsfhvflhsjdbx" : ''}>
+                                                            <div style={{ display: value.role !== 'Admin' ? 'none' : '' }} className="more-items" onClick={() => { messageClipBoard === value.id ? setMessageClipBoard() : setMessageClipBoard(value.id) }}>
+                                                                <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} />
+                                                            </div>
+                                                            <div ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content-customer'} `} style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
+                                                                <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
+                                                                {
+                                                                    messageClipBoard === value.id ?
+                                                                        <pre className="chat-content-text">{value.text}</pre>
+                                                                        : <h6 className="chat-content-text">{value.text}</h6>
+                                                                }
+                                                                <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
+                                                                <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
+                                                            </div>
                                                         </div>
                                                     ))
                                             }
@@ -446,7 +443,7 @@ function ChatsMeta() {
                                                     : searchBarStatus.searchResultChats.map((value, index) => (
                                                         <div className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `} onClick={() => handleScrollToMessage(index, value)}  >
                                                             <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
-                                                            <h6 className="chat-content-text">{value.text}</h6>
+                                                            <pre className="chat-content-text">{value.text}</pre>
                                                             <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
                                                             <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
                                                         </div>
@@ -454,13 +451,14 @@ function ChatsMeta() {
                                             }
                                         </div>
                                     </div>
-                                    <div className="admin-chats-clipborad">
-
-                                    </div>
                                     <div className="chat-message-input">
-                                        <input type="text" value={adminMessage} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
+                                        <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} onClick={() => handleOpenClipBoardOpen()} />
+                                        {
+                                            clipBoardStatus ?
+                                                <textarea type="text" value={adminMessage} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
+                                                : <input type="text" value={adminMessage} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
+                                        }
                                         <FontAwesomeIcon icon={faPaperPlane} className="chat-message-input-icon-send" onClick={() => handleSendMessage(adminMessage)} />
-                                        <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" onClick={() => handleOpenClipBoardOpen()} />
                                         <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
                                     </div>
                                 </div>
@@ -472,11 +470,6 @@ function ChatsMeta() {
                 </CCol>
             </CRow>
 
-            {/* clip board modal */}
-
-            <Modal show={clipBoardStatus.status} onHide={() => handleOpenClipBoardClose()}>
-                testing...
-            </Modal>
 
         </div>
     );

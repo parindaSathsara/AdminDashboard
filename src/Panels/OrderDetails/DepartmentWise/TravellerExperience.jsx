@@ -53,7 +53,7 @@ export default function TravellerExperience(props) {
 
     // const createTravellerExperience = async (travellerData) => {
 
-    //     // console.log(travellerData, 'traveller new data');
+    //     console.log(travellerData, 'traveller new data');
     //     var returnData = []
 
     //     await axios.post(`/create_traveller_experience`, travellerData).then((res) => {
@@ -135,7 +135,7 @@ export default function TravellerExperience(props) {
     const QuantityContainer = ({ data }) => {
 
 
-        // // console.log(data, "Data Value is")
+        // console.log(data, "Data Value is")
 
 
         if (data.category == "Education") {

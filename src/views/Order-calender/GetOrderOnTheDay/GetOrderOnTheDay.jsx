@@ -28,20 +28,20 @@ function GetOrderOnTheDay({ orders, date }) {
         setMoreOrderModal(false);
     }
 
-    const handleUpdateState = () => {
+    const handleUpdateState = () => {   
 
     }
 
     return (
         <div>
-            <MoreOrderView
+            {/* <MoreOrderView
                 show={moreOrderModal}
                 onHide={() => onHideModal()}
                 preID={moreOrderDetails}
                 category={moreOrderModalCategory}
                 productViewData
                 productViewComponent={<OrderDetails orderid={mainDataSet.order_id} orderData={mainDataSet} hideStatus={false} productViewData updatedData={() => handleUpdateState()} />}
-            />
+            /> */}
             {
                 Object.entries(ordersList).map(([key, order], index) => (
                     index < 3 && (
