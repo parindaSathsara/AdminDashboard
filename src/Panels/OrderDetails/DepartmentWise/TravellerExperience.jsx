@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MaterialTable from 'material-table';
 import { CBadge, CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
@@ -8,6 +8,13 @@ import DeliveryDetails from 'src/Panels/DeliveryDetails/DeliveryDetails';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import rowStyle from '../Components/rowStyle';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
+import Tooltip from '@mui/material/Tooltip';
+
+import './TravellerExperience.css';
 
 export default function TravellerExperience(props) {
 
@@ -20,9 +27,14 @@ export default function TravellerExperience(props) {
         '--cui-popover-body-padding-y': '.5rem',
     }
 
-    const productData = props.dataset
+    const productData = props.dataset;
 
     // console.log(productData, "Productttttttt")
+
+    const [driverAllocationStatus, setDriverAllocationStatus] = useState({
+        status: false,
+        data: []
+    });
 
     const [travellerData, setTravellerData] = useState({
         pid: '',
@@ -36,16 +48,16 @@ export default function TravellerExperience(props) {
     const handleInputFields = (name, value) => {
         // console.log([name, value], 'hjhjhjhjhjh');
         setTravellerData({ ...travellerData, [name]: value })
-        // // console.log(travellerData.reconfirmationDate);
+        // console.log(travellerData.reconfirmationDate);
     }
 
     // const createTravellerExperience = async (travellerData) => {
 
-    //     // console.log(travellerData, 'traveller new data');
+    //     console.log(travellerData, 'traveller new data');
     //     var returnData = []
 
     //     await axios.post(`/create_traveller_experience`, travellerData).then((res) => {
-    //         // console.log(res, 'traveller Experience')
+    // console.log(res, 'traveller Experience')
     //         if (res.data.status === 200) {
     //             returnData = res.data
     //         }
@@ -113,7 +125,7 @@ export default function TravellerExperience(props) {
             }
 
         } catch (error) {
-            console.error('Error creating traveller experience:', error);
+            // console.error('Error creating traveller experience:', error);
             throw error; // Rethrow the error to handle it at a higher level if necessary
         }
     };
@@ -123,7 +135,7 @@ export default function TravellerExperience(props) {
     const QuantityContainer = ({ data }) => {
 
 
-        // // console.log(data, "Data Value is")
+        // console.log(data, "Data Value is")
 
 
         if (data.category == "Education") {
@@ -234,6 +246,14 @@ export default function TravellerExperience(props) {
     }
 
 
+    const handleClickDriverAllocation = (dataset) => {
+        if (dataset.data.category === 'Lifestyles') {
+            setDriverAllocationStatus({ status: true, data: dataset });
+        } else {
+            alert('Driver allocation is avaliable only for lifestyle products');
+        }
+    }
+
 
     const getDisableStatus = (rowData) => {
         // console.log(rowData, "Rowwwww")
@@ -249,7 +269,7 @@ export default function TravellerExperience(props) {
         return false
     }
 
-    // // console.log(value, 'fgf');
+    // console.log(value, 'fgf');
     const columns = [
         { title: 'PID', field: 'pid' },
         { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
@@ -270,40 +290,41 @@ export default function TravellerExperience(props) {
             }
         },
         {
+            title: 'Driver allocation', field: 'Driver allocation', render: rowData =>
+                <Tooltip title={rowData.data.category === 'Lifestyles' ? 'Allocate driver' : 'Driver allocation is not avalible'}>
+                    <CButton color="info" style={{ fontSize: 14, color: 'white', backgroundColor: rowData.data.category === 'Lifestyles' ? '' : 'gray' }}
+                        onClick={() => handleClickDriverAllocation(rowData)}
+                        className='btn btn-primary'>
+                        {
+                            rowData.data.vehicle_allocation == 1 ? 'Driver allocated' : 'Allocate driver'
+                        }
+                    </CButton>
+                </Tooltip>
+        },
+        {
             title: '',
             render: rowData => {
                 if (rowData?.data.status == "Approved") {
                     return (
                         <div onClick={() => createTravellerExperience(rowData)}>
-
                             <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
-
                         </div>
                     )
-                }
-
-                else if (rowData?.data.status == "Completed") {
+                } else if (rowData?.data.status == "Completed") {
                     return (
                         <CIcon icon={cilCheckCircle} size="xxl" />
                     )
-                }
-
-                else if (rowData?.data.status == "Cancel") {
+                } else if (rowData?.data.status == "Cancel") {
                     return (
                         <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>Order Cancelled</CBadge>
                     )
-                }
-
-                else {
+                } else {
                     return (
                         <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>Waiting For Approval</CBadge>
                     )
                 }
-
-
             }
         }
-
         // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
     ];
 
@@ -332,11 +353,44 @@ export default function TravellerExperience(props) {
 
     };
 
+    const [driverDetailsLoading, setDriverDetailsLoading] = useState(true);
+    const [driverDetails, setDriverDetails] = useState([]);
 
+    const getAllExistingDeivers = async () => {
+        setDriverDetailsLoading(true);
+        await axios.get('/vehicle-drivers').then((response) => {
+            setDriverDetailsLoading(false);
+            setDriverDetails(response.data.data);
+        })
+    }
+
+    useEffect(() => {
+        getAllExistingDeivers();
+    }, [driverAllocationStatus.status]);
+
+    const handleResetAllocationModal = () => {
+        setDriverAllocationStatus({
+            status: false, data: []
+        })
+    }
+
+    const handleChooseDriver = async (dataset) => {
+        let Prod_ID = driverAllocationStatus.data.data.checkoutID;
+        let Veh_ID = dataset.id;
+        await axios.post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`, { xsrfHeaderName: 'X-CSRF-Token', withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }).then((response) => {
+            if (response.data.message === "success") {
+                Swal.fire({
+                    title: "Traveller Details Updated Successfully",
+                    text: "",
+                    icon: "success"
+                });
+                handleResetAllocationModal();
+            }
+        })
+    }
 
     return (
         <>
-
             <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen">
                 <Modal.Header closeButton>
                     <Modal.Title>Location Data</Modal.Title>
@@ -344,9 +398,57 @@ export default function TravellerExperience(props) {
                 <Modal.Body>
                     <DeliveryDetails dataset={mapViewData}></DeliveryDetails>
                 </Modal.Body>
-                <Modal.Footer>
+                {/* <Modal.Footer></Modal.Footer> */}
+            </Modal>
 
-                </Modal.Footer>
+            <Modal show={driverAllocationStatus.status} size='lg' onHide={() => handleResetAllocationModal()}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Choose the driver</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='driverListModalBody-mainContainer'>
+                        {
+                            driverDetailsLoading ?
+                                <div className='d-flex flex-column align-items-center p-5'>
+                                    <FontAwesomeIcon icon={faSpinner} spinPulse />
+                                    <h6 className='m-0 p-0 py-2'>Loading...</h6>
+                                    <h6 className='m-0 p-0 py-2'>Driver information, one moment please…</h6>
+                                </div> :
+                                driverDetails.length === 0 ?
+                                    <div className='d-flex flex-column align-items-center my-5'>
+                                        <h6>Oops! Sorry</h6>
+                                        <h6>there are no drivers avalible at thie time</h6>
+                                    </div> :
+                                    driverDetails.map((value, key) => (
+                                        <div key={key} className='driver-vehicle-list'>
+                                            <div className='d-flex align-items-center vehicle-details'>
+                                                <h6>Vehicle No : {value.vehicle_number}</h6>
+                                                <h6>{value.vehicle_province}</h6>
+                                            </div>
+                                            <div className='d-flex align-items-center driver-details'>
+                                                <h6>Type : {value.vehicle_type}</h6>
+                                                <h6>Modal : {value.vehicle_model}</h6>
+                                                <h6>Color : {value.vehicle_color}</h6>
+                                                <h6>Make : {value.vehicle_make}</h6>
+                                            </div>
+                                            <div className='d-flex align-items-center vehicle-details-secondary'>
+                                                <h6>Reg date : {value.vehicle_registered_date}</h6>
+                                                <h6>Condition {value.vehicle_vehicle_condition}</h6>
+                                                <h6>Vehicle Status : {value.vehicle_status}</h6>
+                                            </div>
+                                            <div className='d-flex align-items-center driver-details-secondary'>
+                                                <h6>Driver name : {value.driver_name}</h6>
+                                                <h6>Reg country : {value.driver_registered_country}</h6>
+                                                <h6>Type : {value.driver_type}</h6>
+                                                <h6>Nic : {value.driver_nic}</h6>
+                                                <h6>Reg date : {value.driver_registered_date}</h6>
+                                                <h6>Driver Status : {value.driver_status}</h6>
+                                            </div>
+                                            <button className='btn-submit-button' onClick={() => handleChooseDriver(value)}>Select</button>
+                                        </div>
+                                    ))}
+                    </div>
+                </Modal.Body>
             </Modal>
 
             <MaterialTable
@@ -354,21 +456,12 @@ export default function TravellerExperience(props) {
                 columns={columns}
                 data={data}
                 options={{
-                    headerStyle: {
-                        fontSize: '14px',
-                    },
-                    cellStyle: {
-                        fontSize: '14px',
-                    },
-                    paging: false,
-                    search: false,
-                    columnsButton: true,
-                    exportButton: true,
-                    grouping: true,
+                    headerStyle: { fontSize: '14px', },
+                    cellStyle: { fontSize: '14px', },
+                    paging: false, search: false, columnsButton: true,
+                    exportButton: true, grouping: true,
                     rowStyle: rowStyle,
                 }}
-
-
             />
         </>
     )
