@@ -188,11 +188,13 @@ export default function SupplierExperience(props) {
         axios.post('https://gateway.aahaas.com/api/addchats', dataSet).then(res => {
             if (res.data.status === 200) {
                 console.log(res.data, "Data set value 123456789")
+
+                navigate("../Chats", { id: res.data.chat_id })
             } else {
 
             }
         });
-        navigate("../Chats")
+
 
     }
 

@@ -104,6 +104,10 @@ function OrderDetails(props) {
     const [orderMainDetails, setOrderMainDetails] = useState([])
     const [customerData, setCustomerData] = useState([])
 
+
+
+    // const checkoutId = 
+
     useEffect(() => {
 
         // console.log("Order id", props.orderid)
