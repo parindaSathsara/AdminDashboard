@@ -414,34 +414,39 @@ export default function TravellerExperience(props) {
                                     <h6 className='m-0 p-0 py-2'>Loading...</h6>
                                     <h6 className='m-0 p-0 py-2'>Driver information, one moment please…</h6>
                                 </div> :
-                                driverDetails.map((value, key) => (
-                                    <div key={key} className='driver-vehicle-list'>
-                                        <div className='d-flex align-items-center vehicle-details'>
-                                            <h6>Vehicle No : {value.vehicle_number}</h6>
-                                            <h6>{value.vehicle_province}</h6>
+                                driverDetails.length === 0 ?
+                                    <div className='d-flex flex-column align-items-center my-5'>
+                                        <h6>Oops! Sorry</h6>
+                                        <h6>there are no drivers avalible at thie time</h6>
+                                    </div> :
+                                    driverDetails.map((value, key) => (
+                                        <div key={key} className='driver-vehicle-list'>
+                                            <div className='d-flex align-items-center vehicle-details'>
+                                                <h6>Vehicle No : {value.vehicle_number}</h6>
+                                                <h6>{value.vehicle_province}</h6>
+                                            </div>
+                                            <div className='d-flex align-items-center driver-details'>
+                                                <h6>Type : {value.vehicle_type}</h6>
+                                                <h6>Modal : {value.vehicle_model}</h6>
+                                                <h6>Color : {value.vehicle_color}</h6>
+                                                <h6>Make : {value.vehicle_make}</h6>
+                                            </div>
+                                            <div className='d-flex align-items-center vehicle-details-secondary'>
+                                                <h6>Reg date : {value.vehicle_registered_date}</h6>
+                                                <h6>Condition {value.vehicle_vehicle_condition}</h6>
+                                                <h6>Vehicle Status : {value.vehicle_status}</h6>
+                                            </div>
+                                            <div className='d-flex align-items-center driver-details-secondary'>
+                                                <h6>Driver name : {value.driver_name}</h6>
+                                                <h6>Reg country : {value.driver_registered_country}</h6>
+                                                <h6>Type : {value.driver_type}</h6>
+                                                <h6>Nic : {value.driver_nic}</h6>
+                                                <h6>Reg date : {value.driver_registered_date}</h6>
+                                                <h6>Driver Status : {value.driver_status}</h6>
+                                            </div>
+                                            <button className='btn-submit-button' onClick={() => handleChooseDriver(value)}>Select</button>
                                         </div>
-                                        <div className='d-flex align-items-center driver-details'>
-                                            <h6>Type : {value.vehicle_type}</h6>
-                                            <h6>Modal : {value.vehicle_model}</h6>
-                                            <h6>Color : {value.vehicle_color}</h6>
-                                            <h6>Make : {value.vehicle_make}</h6>
-                                        </div>
-                                        <div className='d-flex align-items-center vehicle-details-secondary'>
-                                            <h6>Reg date : {value.vehicle_registered_date}</h6>
-                                            <h6>Condition {value.vehicle_vehicle_condition}</h6>
-                                            <h6>Vehicle Status : {value.vehicle_status}</h6>
-                                        </div>
-                                        <div className='d-flex align-items-center driver-details-secondary'>
-                                            <h6>Driver name : {value.driver_name}</h6>
-                                            <h6>Reg country : {value.driver_registered_country}</h6>
-                                            <h6>Type : {value.driver_type}</h6>
-                                            <h6>Nic : {value.driver_nic}</h6>
-                                            <h6>Reg date : {value.driver_registered_date}</h6>
-                                            <h6>Driver Status : {value.driver_status}</h6>
-                                        </div>
-                                        <button className='btn-submit-button' onClick={() => handleChooseDriver(value)}>Select</button>
-                                    </div>
-                                ))}
+                                    ))}
                     </div>
                 </Modal.Body>
             </Modal>
