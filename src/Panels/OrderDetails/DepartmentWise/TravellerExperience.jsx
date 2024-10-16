@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import MaterialTable from 'material-table';
-import { CBadge, CButton, CCard, CCardBody, CCol, CFormInput, CFormSelect, CPopover, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilInfo } from '@coreui/icons';
 import Modal from 'react-bootstrap/Modal';
@@ -9,12 +8,15 @@ import axios from 'axios';
 import Swal from 'sweetalert2'
 import rowStyle from '../Components/rowStyle';
 
+import { CBadge, CButton, CFormInput, CFormSelect, CCloseButton, CCol, COffcanvas, COffcanvasHeader, COffcanvasTitle, CRow } from '@coreui/react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import Tooltip from '@mui/material/Tooltip';
 
 import './TravellerExperience.css';
+import { render } from '@testing-library/react';
 
 export default function TravellerExperience(props) {
 
@@ -269,6 +271,39 @@ export default function TravellerExperience(props) {
         return false
     }
 
+    const [PNLVoucherView, setPNLVoucherView] = useState(false);
+    const [currenctOrdeId, setCurrenctOrderId] = useState('');
+    const [productPNLReport, setProductPNLReport] = useState([]);
+
+    const handlePNLReport = async (id) => {
+        await axios.get(`/pnl/order/${id}`).then((response) => {
+            setPNLVoucherView(true);
+            setCurrenctOrderId(id);
+            setProductPNLReport(response.data)
+        })
+    }
+
+    const downloadPdf = async () => {
+        try {
+            const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
+                responseType: 'blob',
+            });
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `PNL_report-OrderId-${currenctOrdeId}.pdf`;
+            link.click();
+        } catch (error) {
+            console.error('Error downloading the PDF:', error);
+        }
+    };
+
+    const handleCLosePNRLReportModal = () => {
+        setPNLVoucherView(false);
+        setCurrenctOrderId('');
+        setProductPNLReport([]);
+    }
+
     // console.log(value, 'fgf');
     const columns = [
         { title: 'PID', field: 'pid' },
@@ -278,15 +313,11 @@ export default function TravellerExperience(props) {
         { title: 'QC', field: 'qc', render: rowData => <CFormSelect disabled={getDisableStatus(rowData)} custom onChange={e => handleInputFields('qc', e.target.value)} ><option>Select QC</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
         {
             title: 'Delivery Status', field: 'delivery_status', render: rowData => {
-
-
                 return (
                     <CFormSelect custom onChange={e => handleInputFields('delivery_status', e.target.value)} disabled={getDisableStatus(rowData)}>
                         <option>Select Status</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}
                     </CFormSelect>
                 )
-
-
             }
         },
         {
@@ -300,6 +331,17 @@ export default function TravellerExperience(props) {
                         }
                     </CButton>
                 </Tooltip>
+        },
+        {
+            title: 'PNL report',
+            render: rowData => {
+                return (
+                    <CButton
+                        // onClick={() => console.log(rowData)}
+                        onClick={() => handlePNLReport(rowData.checkoutID)}
+                        style={{ fontSize: 14, color: 'white', backgroundColor: 'skyblue' }} color="info">Show PNL report</CButton>
+                )
+            }
         },
         {
             title: '',
@@ -324,7 +366,7 @@ export default function TravellerExperience(props) {
                     )
                 }
             }
-        }
+        },
         // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
     ];
 
@@ -336,7 +378,7 @@ export default function TravellerExperience(props) {
         reconfirmationDate: value?.reconfirmationDate,
         qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
         deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
-        data: value
+        data: value,
         // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
     }));
 
@@ -448,6 +490,27 @@ export default function TravellerExperience(props) {
                                         </div>
                                     ))}
                     </div>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Supplier Voucher</Modal.Title>
+                    {
+                        (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
+                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download Voucher</CButton>
+                    }
+                </Modal.Header>
+                <Modal.Body>
+                    {
+                        (productPNLReport.status === 'fail' && productPNLReport.message === 'No data to display') ?
+                            <div className='d-flex flex-column align-items-center my-5'>
+                                <h6>Oops! Sorry</h6>
+                                <p>The product has been yet to be approved !</p>
+                            </div>
+                            :
+                            <div dangerouslySetInnerHTML={{ __html: productPNLReport }} />
+                    }
                 </Modal.Body>
             </Modal>
 

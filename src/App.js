@@ -1,11 +1,13 @@
-
-import React, { Component, Suspense, useEffect, useState } from 'react'
-import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
-import './scss/style.scss'
 import axios from 'axios'
+
+import React, { Suspense, useEffect, useState } from 'react'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+
 import { UserLoginContext } from './Context/UserLoginContext'
-import InAppNotificationService from './service/InAppNotificationService'
 import { CurrencyContext } from './Context/CurrencyContext'
+
+import './scss/style.scss'
+
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
@@ -21,7 +23,6 @@ axios.defaults.data = 'https://admin-api.aahaas.com'
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
 // axios.defaults.data = 'http://172.16.26.238:8000'
 
-
 // axios.defaults.baseURL = 'https://meta-admin-api.aahaas.com/api'
 // axios.defaults.data = 'https://meta-admin-api.aahaas.com'
 
@@ -32,57 +33,40 @@ axios.defaults.data = 'https://admin-api.aahaas.com'
 //   console.error('CSRF token meta tag not found');
 // }
 
-//
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
 // axios.defaults.data = 'http://172.16.26.238:8000'
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
 
-
-
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-
   return config;
 })
 
 axios.interceptors.response.use(
   (response) => {
-    return response; // If the response is successful, simply return it
+    // If the response is successful, simply return it
+    return response;
   },
   (error) => {
-
     const status = error.response ? error.response.status : null;
-
-
     if (error.response && error.response.status === 401) {
       sessionStorage.clear();
       localStorage.clear();
       window.location.href = '/#/login';
       console.log("Auth Checking User", error)
     }
-
     else if (status === 500) {
-
       console.error('A server error occurred. Please try again later.');
-
     } else if (status === 404) {
-
       console.error('The requested resource was not found.');
-
     } else if (status >= 400 && status < 500) {
-
       console.error('A client error occurred:', error.response.data);
-
     } else {
-
       console.error('An unknown error occurred.');
-
     }
-
     return Promise.reject(error);
   }
 );
@@ -102,85 +86,55 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Orders'));
 
 function App() {
 
-  window.addEventListener('unhandledrejection', function (event) {
-    event.preventDefault();
-
-    console.error('Unhandled promise rejection:', event.reason.message);
-  });
+  const userid = localStorage.getItem("userID");
 
   const [userLogin, setUserLogin] = useState(false)
   const [userData, setUserData] = useState(false)
-
-
   const [currencyData, setCurrencyData] = useState([])
 
-  const userid = localStorage.getItem("userID");
-
+  window.addEventListener('unhandledrejection', function (event) {
+    event.preventDefault();
+    console.error('Unhandled promise rejection:', event.reason.message);
+  });
 
   useEffect(() => {
-
     if (userid) {
       const userDataVal = JSON.parse(localStorage.getItem('user'));
       setUserData(userDataVal)
       setUserLogin(true)
-
-
       axios.get(`getCurrency/${"USD"}`).then(response => {
         if (response?.data?.status == 200) {
           setCurrencyData(response.data)
         }
       })
     }
-
-
-
-
-
   }, [userid])
 
-
-
-
-
   return (
-
     <CurrencyContext.Provider value={{ currencyData, setCurrencyData }}>
       <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
-
         <HashRouter>
           <Suspense fallback={loading}>
             <Routes>
-
-              {!userLogin ?
-                <>
-                  <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-                  <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-                  <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
-                </>
-
-                :
-
-                <>
-                  {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-                <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
-
-
-
-                  <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
-                </>
-
-
+              {
+                !userLogin ?
+                  <>
+                    <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                    <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                    <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
+                  </>
+                  :
+                  <>
+                    {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} /> */}
+                    {/* <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
+                    <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
+                  </>
               }
-
-
-
-
             </Routes>
           </Suspense>
         </HashRouter>
       </UserLoginContext.Provider>
     </CurrencyContext.Provider>
-
   );
 
 }
