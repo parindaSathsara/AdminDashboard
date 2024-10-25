@@ -19,6 +19,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './ReportsMain.css';
 import getChatServices from './services/getChatServices';
 import ChatReportData from './ChatData/ChatReportData';
+import DriverAllocationData from './CategoryData/DriverAllocationData';
 
 const ReportGenerationPage = () => {
 
@@ -52,6 +53,7 @@ const ReportGenerationPage = () => {
         { value: 'orders_report', label: 'Orders Report' },
         { value: 'customer_report', label: 'Customer Report' },
         { value: 'chats_report', label: 'Chats Report' },
+        { value:'driver_allocation',label:'Driver Allocation'},
     ];
 
     const [dataEmptyState, setDataEmptyState] = useState(false);
@@ -85,6 +87,7 @@ const ReportGenerationPage = () => {
             });
         } else {
             await getReports(dataSet).then(response => {
+                console.log(response);
                 setReportDataSet(response);
                 setLoading(false);
                 if (response?.length === 0) {
@@ -116,7 +119,13 @@ const ReportGenerationPage = () => {
                 { value: '1', label: 'Active Chats' },
                 { value: '2', label: 'DeActive Chats' },
             ])
-        } else {
+        }else if(reportType?.value === 'driver_allocation'){ //handle driver allocation report selection
+            setCategories([
+                { value: '0', label: 'Lifestyles' },
+            ]); 
+            setCategory({ value: '0', label: 'Lifestyles' });
+            
+        }else {
             setCategories([
                 { value: '1', label: 'Essentials' },
                 { value: '2', label: 'Non Essentials' },
@@ -174,10 +183,10 @@ const ReportGenerationPage = () => {
                         </CRow>
 
                         {
-                            reportType?.value === 'orders_report' &&
+                            (reportType?.value === 'orders_report'||reportType?.value === 'driver_allocation') &&
                             <CRow className="mt-3">
                                 <CCol xs={12}>
-                                    <CFormLabel htmlFor="date-type">Date Type</CFormLabel>
+                                    <CFormLabel htmlFor="date-type" style={{fontWeight:"bold"}}>Date Type</CFormLabel>
                                     <br />
                                     <CFormCheck inline type="radio" id="service_date" name="dateType" value="service_date" label="Service Date" checked={dateType === 'service_date'} onChange={() => setDateType('service_date')} />
                                     <CFormCheck inline type="radio" id="booking_date" name="dateType" value="booking_date" label="Booking Date" checked={dateType === 'booking_date'} onChange={() => setDateType('booking_date')} />
@@ -193,6 +202,10 @@ const ReportGenerationPage = () => {
 
                 loading ? <LoaderPanel message="Report Data Fetching" /> :
                     reportDataSet.length > 0 ?
+                        reportType?.value === 'driver_allocation' ?
+                            <DriverAllocationData dataSet={reportDataSet} />
+                            // <p>Test</p>
+                            :
                         reportType?.value === 'products_report' ?
                             category.value == 3 ?
                                 <LifestylesCategoryData data={reportDataSet} />
