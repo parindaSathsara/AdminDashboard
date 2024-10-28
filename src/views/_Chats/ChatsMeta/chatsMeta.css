@@ -588,3 +588,19 @@
     position: relative;
     top: 0px;
 }
+
+.clipBoard-status {
+    position: absolute;
+    margin-top: -65px;
+    font-size: 10px;
+    background-color: lightgray;
+    border-radius: 20px;
+    padding: 5px 10px;
+    text-transform: capitalize;
+}
+
+.chatWise-heading {
+    font-size: 12px;
+    text-transform: capitalize;
+    margin: 5px;
+}
