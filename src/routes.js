@@ -16,6 +16,7 @@ import FlightOrderView from './views/dashboard/FlightUI/FlightOrderView'
 import Typography from './views/theme/typography/Typography'
 import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
+import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -125,6 +126,7 @@ const routes = [
   { path: '/allocation', name: 'Orders Allocations', element: AllocationsHomepage, exact: true },
 
   { path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
+  {path:'/analytics',name:'Analytics',element:UserAnalytics,exact:true},
 
 ]
 

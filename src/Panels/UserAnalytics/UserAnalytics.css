@@ -1,0 +1,14 @@
+.searchBarContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.searchResults {
+    position: absolute; 
+    z-index: 1; 
+    width: 100%;
+    background-color: #fff;  
+    border: 1px solid #ccc; 
+    border-radius: 5px;  
+
+}
