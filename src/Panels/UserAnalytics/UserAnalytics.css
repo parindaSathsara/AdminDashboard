@@ -12,3 +12,23 @@
     border-radius: 5px;  
 
 }
+.search-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  #clearIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+  }
+  
+  .form-control:focus + #clearIcon {
+    color: #212529;
+  }
+  .userDetailCard{
+    padding: 5px;
+  }

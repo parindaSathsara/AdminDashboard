@@ -7,13 +7,9 @@ import CustomerSearch from './CustomerSearch'
 import { useState } from 'react'
 import './UserAnalytics.css'
 
-
-
-
-
 const UserAnalytics = () => {
-  const [selectedUserId, setSelectedUserId] = useState(null)
-  const [selectedCustomerData,setSelectedCustomerData] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedCustomerData, setSelectedCustomerData] = useState(null)
 
   return (
     <div>
@@ -21,7 +17,7 @@ const UserAnalytics = () => {
       <div>
         <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
         <div class="searchBarContainer">
-          <CustomerSearch setSelectedUserId={setSelectedUserId} />
+          <CustomerSearch setSelectedUser={setSelectedUser} />
         </div>
 
         {/* <div>
@@ -47,43 +43,48 @@ const UserAnalytics = () => {
             </CCardBody>
           </CCard>
         </div> */}
-        <CContainer>
-          <CRow>
-            <CCol>1 of 3</CCol>
-            <CCol xs lg={2}>
-              <div>
-                <CCard className="mb-6">
-                  <CCardTitle>Customer Details</CCardTitle>
-                  <CCardBody className="p-4">
-                    <div className="p-6 bg-white rounded-lg shadow-sm">
-                      <div className="space-y-4">
-                        <div className="flex items-center">
-                          <span className="w-24 text-sm font-medium text-gray-500">ID:</span>
-                          <span className="text-gray-900">3253</span>
-                        </div>
+        {selectedUser && (
+          <CContainer>
+            <CRow>
+              <CCol>1 of 3</CCol>
+              <CCol xs lg={2}>
+                <div>
+                  <CCard className="userDetailCard">
+                    <CCardTitle>Customer Details</CCardTitle>
+                    <CCardBody className="p-4">
+                      <div className="p-6 bg-white rounded-lg shadow-sm">
+                        <div className="space-y-4">
+                          <div className="flex items-center">
+                            <span className="w-24 text-sm font-medium text-gray-500">ID:</span>
+                            <span className="text-gray-900">{selectedUser.id}</span>
+                          </div>
 
-                        <div className="flex items-center">
-                          <span className="w-24 text-sm font-medium text-gray-500">Name:</span>
-                          <span className="text-gray-900">3253</span>
-                        </div>
+                          <div className="flex items-center">
+                            <span className="w-24 text-sm font-medium text-gray-500">Name:</span>
+                            <span className="text-gray-900">{selectedUser.customer_fname}</span>
+                          </div>
 
-                        <div className="flex items-center">
-                          <span className="w-24 text-sm font-medium text-gray-500">Country:</span>
-                          <span className="text-gray-900">3253</span>
-                        </div>
-
-                        <div className="flex items-center">
-                          <span className="w-24 text-sm font-medium text-gray-500">Clicks:</span>
-                          <span className="text-gray-900">3253</span>
+                          <div className="flex items-center">
+                            <span className="w-24 text-sm font-medium text-gray-500">Country:</span>
+                            <span className="text-gray-900">
+                              {selectedUser.customer_nationality
+                                ? selectedUser.customer_nationality
+                                : 'Not Specified'}
+                            </span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-24 text-sm font-medium text-gray-500">Clicks:</span>
+                            <span className="text-gray-900">3253</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CCardBody>
-                </CCard>
-              </div>
-            </CCol>
-          </CRow>
-        </CContainer>
+                    </CCardBody>
+                  </CCard>
+                </div>
+              </CCol>
+            </CRow>
+          </CContainer>
+        )}
       </div>
     </div>
   )
