@@ -1,13 +1,14 @@
-import { CForm, CFormInput, CListGroup, CListGroupItem } from '@coreui/react'
+import { CForm, CFormInput, CListGroup, CListGroupItem, CSpinner } from '@coreui/react'
 import React, { useCallback } from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import './UserAnalytics.css'
 import { FaRegWindowClose } from 'react-icons/fa'
 
-function CustomerSearch({ setSelectedUser }) {
+function CustomerSearch({ setSelectedUser, setIsLoading }) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [searchResults, setSearchResults] = useState([])
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchingCustomers, setSearchingCustomers] = useState(false);
 
   const debounce = (func, delay) => {
     let debounceTimer
@@ -22,10 +23,12 @@ function CustomerSearch({ setSelectedUser }) {
     debounce(async (term) => {
       if (term.length > 2) {
         try {
+          setSearchingCustomers(true);
           await axios
             .get(`searchCustomers/${term}`)
             .then((response) => {
               setSearchResults(response.data)
+              setSearchingCustomers(false);
             })
             .catch((error) => {
               console.error(error)
@@ -34,6 +37,7 @@ function CustomerSearch({ setSelectedUser }) {
           console.error(error)
         }
       } else {
+        setSearchingCustomers(false);
         setSearchResults([])
       }
     }, 1000),
@@ -51,9 +55,9 @@ function CustomerSearch({ setSelectedUser }) {
   }
 
   return (
-    <div style={{ position: 'relative', width: '50%' }}>
+    <div className='search-container'>
       <CForm>
-        <div className="search-container">
+        <div style={{ position: 'relative' }}>
           <CFormInput
             type="text"
             id="search"
@@ -62,8 +66,24 @@ function CustomerSearch({ setSelectedUser }) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FaRegWindowClose id="clearIcon" onClick={() => setSearchTerm('')} />
+          {!searchingCustomers && <FaRegWindowClose id="clearIcon" onClick={() => setSearchTerm('')} />}
+          {searchingCustomers && (
+            <CSpinner
+            style={{
+              position:'absolute',
+              right:"12px",
+              bottom:"10px",
+              width:'0.8em',
+              height:'0.8em'
+            }}
+            />
+          )}
+
         </div>
+        {/* position: absolute;
+    right: 12px;
+    top: 40%;
+    transform: translateY(-50%); */}
         <CListGroup className="searchResults">
           {searchResults.map((item) => (
             <CListGroupItem

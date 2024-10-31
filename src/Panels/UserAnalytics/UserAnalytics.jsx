@@ -1,15 +1,63 @@
-import React from 'react'
-import { CButton, CCard, CCardBody, CCardTitle, CCol, CContainer, CRow } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilPlus, cilSearch, cilSettings } from '@coreui/icons'
-import { FaDownload, FaEllipsisV, FaEye } from 'react-icons/fa'
+import React, { useEffect } from 'react'
+import { CCard, CCardBody, CCardHeader, CCol, CContainer, CSpinner } from '@coreui/react'
 import CustomerSearch from './CustomerSearch'
 import { useState } from 'react'
 import './UserAnalytics.css'
+import axios from 'axios'
+import ProductChart from './ProductChart'
+import Category_Insights_Chart from './Category_Insights_Chart'
 
 const UserAnalytics = () => {
   const [selectedUser, setSelectedUser] = useState(null)
-  const [selectedCustomerData, setSelectedCustomerData] = useState(null)
+  const [totalTriggers, setTotalTriggers] = useState('Not Available');
+  const [topClickedProducts, setTopClickedProducts] = useState(null);
+  const [topClickedCategories, setTopClickedCategories] = useState(null);
+  const [Loading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (selectedUser && selectedUser.customer_id) {
+      getTotalTriggers(selectedUser.customer_id);
+      getTopClickedProducts(selectedUser.customer_id);
+      getTopClickedCategories(selectedUser.customer_id);
+    } else {
+      setTotalTriggers('Not Available');
+      setTopClickedProducts(null);
+      setTopClickedCategories(null);
+    }
+  }, [selectedUser]);
+
+  async function getTotalTriggers(id) {
+    try {
+      const response = await axios.get(`/getClickCount/${id}`);
+      setTotalTriggers(response.data);
+    } catch (error) {
+      setTotalTriggers('Not Available');
+      console.error("Error fetching trigger count:", error);
+    }
+  }
+
+  async function getTopClickedProducts(id) {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`/topClickedProducts/${id}`);
+      setIsLoading(false);
+      setTopClickedProducts(response.data);
+    } catch (error) {
+      setIsLoading(false);
+      setTopClickedProducts(null);
+      console.error("Error fetching products:", error);
+    }
+  }
+
+  async function getTopClickedCategories(id) {
+    try {
+      const response = await axios.get(`/getTopClickedCategories/${id}`);
+      setTopClickedCategories(response.data);
+    } catch (error) {
+      setTopClickedCategories(null);
+      console.error("Error fetching Categories:", error);
+    }
+  }
 
   return (
     <div>
@@ -17,72 +65,98 @@ const UserAnalytics = () => {
       <div>
         <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
         <div class="searchBarContainer">
-          <CustomerSearch setSelectedUser={setSelectedUser} />
+          <CustomerSearch setSelectedUser={setSelectedUser} setIsLoading={setIsLoading} />
         </div>
 
-        {/* <div>
-          <CCard className="mb-6">
-            <CCardBody className="p-4">
-              <div className="flex justify-between items-center mb-4">
-                <div className="h-[300px] w-full bg-gray-50 rounded-lg">
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    Chart Area
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <CButton variant="outline" className="flex items-center gap-2">
-                  <FaDownload className="h-4 w-4" />
-                  Download Report
-                </CButton>
-                <div className="flex items-center gap-2">
-                  <span className="text-green-500">+5.4%</span>
-                  <span className="text-gray-500">All Time High</span>
-                </div>
-              </div>
-            </CCardBody>
-          </CCard>
-        </div> */}
+        {selectedUser === null ? ( // Render nothing if selectedUser is null
+          <div style={{display:'flex',alignItems:"center",justifyContent:'center',textAlign:'center'}}>
+            <h2>Search customers to get customer analytics...</h2>
+          </div>
+        ):null}
+
+        {Loading && (
+          <div className='spinnerContainer'>
+            <CSpinner color="danger" style={{ width: '4rem', height: '4rem' }} />
+
+          </div>
+        )}
+
         {selectedUser && (
-          <CContainer>
-            <CRow>
-              <CCol>1 of 3</CCol>
-              <CCol xs lg={2}>
-                <div>
-                  <CCard className="userDetailCard">
-                    <CCardTitle>Customer Details</CCardTitle>
-                    <CCardBody className="p-4">
-                      <div className="p-6 bg-white rounded-lg shadow-sm">
-                        <div className="space-y-4">
-                          <div className="flex items-center">
-                            <span className="w-24 text-sm font-medium text-gray-500">ID:</span>
-                            <span className="text-gray-900">{selectedUser.id}</span>
-                          </div>
+          <CContainer fluid>
+            <div className='mainCardContainer'>
 
-                          <div className="flex items-center">
-                            <span className="w-24 text-sm font-medium text-gray-500">Name:</span>
-                            <span className="text-gray-900">{selectedUser.customer_fname}</span>
-                          </div>
-
-                          <div className="flex items-center">
-                            <span className="w-24 text-sm font-medium text-gray-500">Country:</span>
-                            <span className="text-gray-900">
-                              {selectedUser.customer_nationality
-                                ? selectedUser.customer_nationality
-                                : 'Not Specified'}
-                            </span>
-                          </div>
-                          <div className="flex items-center">
-                            <span className="w-24 text-sm font-medium text-gray-500">Clicks:</span>
-                            <span className="text-gray-900">3253</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CCardBody>
-                  </CCard>
-                </div>
+              <CCol xs={12} lg={3} >
+                <CCard className="h-100 shadow-sm">
+                  <CCardHeader className="text-white" style={{ backgroundColor: '#004e64' }}>
+                    <h5 className="mb-0">CUSTOMER DETAILS</h5>
+                  </CCardHeader>
+                  <CCardBody>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>ID:</span>
+                      <span className='detailValue'>{selectedUser.id}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>Name:</span>
+                      <span className='detailValue'>{selectedUser.customer_fname}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>Country:</span>
+                      <span className='detailValue'>{selectedUser.customer_nationality || 'Not Specified'}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>Telephone:</span>
+                      <span className='detailValue'>{selectedUser.contact_number || 'Not Specified'}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>E-mail:</span>
+                      <span className='detailValue'>{selectedUser.customer_email || 'Not Specified'}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>Address:</span>
+                      <span className='detailValue'>{selectedUser.customer_address || 'Not Specified'}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>Status:</span>
+                      <span className='detailValue'>{selectedUser.customer_status || 'Unavailable'}</span>
+                    </div>
+                    <div className="card-item d-flex justify-content-between py-2">
+                      <span className="fw-bold" style={{ color: '#004e64' }}>Total Clicks:</span>
+                      <span className='detailValue'>{totalTriggers}</span>
+                    </div>
+                  </CCardBody>
+                </CCard>
               </CCol>
-            </CRow>
+              <CCol xs={12} lg={9}>
+                {topClickedProducts && (
+                  <>
+                    <CCard style={{ marginBottom: '5px' }}>
+                      <CCardHeader style={{ backgroundColor: '#004e64', color: 'white' }}>
+                        Top Searches
+                      </CCardHeader>
+                      <CCardBody className='analyticaCardBody'>
+                        <h3>Top 5 Products</h3>
+                        <ProductChart data={topClickedProducts} />
+                      </CCardBody>
+                    </CCard>
+                  </>
+                )}
+                {topClickedCategories && (
+                  <>
+                    <CCard>
+                      <CCardBody className='analyticaCardBody'>
+                        <h3>Category Insights</h3>
+                        <Category_Insights_Chart apiData={topClickedCategories} />
+                      </CCardBody>
+                    </CCard>
+                  </>
+                )}
+              </CCol>
+
+
+
+
+
+            </div>
           </CContainer>
         )}
       </div>
