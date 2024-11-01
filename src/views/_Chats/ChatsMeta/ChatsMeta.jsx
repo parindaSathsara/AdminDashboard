@@ -1,7 +1,7 @@
 import { CCol, CRow } from '@coreui/react';
 import { useContext, useEffect, useRef, useState } from "react";
 
-import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, orderBy, query, updateDoc, writeBatch } from "firebase/firestore";
 
 import { db } from "src/firebase";
 import aahaaslogo from '../../../assets/brand/aahaslogo.png';
@@ -14,6 +14,7 @@ import { UserLoginContext } from "src/Context/UserLoginContext";
 import { Tooltip } from "@material-ui/core";
 
 import './chatsMeta.css';
+import ChatRight from './ChatRight';
 
 function ChatsMeta() {
 
@@ -26,6 +27,7 @@ function ChatsMeta() {
     const [openFilter, setOpenFilter] = useState(false);
     const [clipBoardStatus, setClipBoardStatus] = useState(false);
     const [messageClipBoard, setMessageClipBoard] = useState(false);
+
 
     const [searchBarStatus, setSearchBarStatus] = useState({
         status: false,
@@ -54,7 +56,7 @@ function ChatsMeta() {
         if (value === '') {
             setchatListFiltered(chatList);
         } else {
-            let filtered = dataset.filter((chatValue) => { return chatValue.chat_name.toString().toLowerCase().includes(value.toLowerCase()) })
+            let filtered = dataset.filter((chatValue) => { return (chatValue.chat_name + " " + chatValue.customer_name).toString().toLowerCase().includes(value.toLowerCase()) })
             setchatListFiltered(filtered);
         }
     }
@@ -158,66 +160,122 @@ function ChatsMeta() {
         }
     }
 
-    const getChatContent = async ({ chatId = chatId, updateState = false }) => {
-        console.log('getChatContent function called');
-        const q = query(
-            collection(db, "chat-updated/chats/" + chatId.id),
-            orderBy("createdAt", "desc"),
-        );
-        const getmessages = onSnapshot(q, async (QuerySnapshot) => {
-            const fetchedMessages = [];
-            QuerySnapshot.forEach((doc) => {
-                fetchedMessages.push({ ...doc.data(), id: doc.id });
-            });
-            const sortedMessages = fetchedMessages.toSorted(
-                (a, b) => a.createdAt - b.createdAt
-            );
-            setMessages(sortedMessages);
-        });
-        if (updateState === false) {
-            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: chatId.notifyCustomer, adminStatus: 'false', supplierStatus: chatId.notifySupplier, adminId: userData.name, updateState: updateState });
-        } else {
-            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: 'true', adminStatus: 'false', supplierStatus: "true", adminId: userData.name, updateState: updateState });
-        }
-        await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
-        return () => getmessages();
-    }
+    // const getChatContent = async ({ chatId = chatId, updateState = false }) => {
+    //     console.log('getChatContent function called');
+    //     const q = query(
+    //         collection(db, "chat-updated/chats/" + chatId.id),
+    //         orderBy("createdAt", "desc"),
+    //     );
+    //     const getmessages = onSnapshot(q, async (QuerySnapshot) => {
+    //         const fetchedMessages = [];
+
+    //         const batch = writeBatch(db);
+
+    //         QuerySnapshot.forEach((doc) => {
+    //             const docData = doc.data();
+
+
+    //             fetchedMessages.push({ ...docData, id: doc.id });
+
+    //             if (docData.adminReadStatus?.status === "Unread") {
+    //                 batch.update(doc.ref, {
+    //                     adminReadStatus: {
+    //                         status: "Read",
+    //                         readAt: serverTimestamp()
+    //                     }
+    //                 });
+    //             }
+
+    //             console.log(doc.id, "Doc ID is");
+    //         });
+
+    //         await batch.commit();
+
+    //         const sortedMessages = fetchedMessages.sort(
+    //             (a, b) => a.createdAt - b.createdAt
+    //         );
+    //         setMessages(sortedMessages);
+
+    //         const docRef = doc(db, "customer-chat-lists", chatId.id);
+
+    //         await updateDoc(docRef, {
+    //             admin_unreads: 0
+    //         });
+    //     });
+
+    //     if (updateState === false) {
+    //         await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: chatId.notifyCustomer, adminStatus: 'false', supplierStatus: chatId.notifySupplier, adminId: userData.name, updateState: updateState });
+    //     } else {
+    //         await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: 'true', adminStatus: 'false', supplierStatus: "true", adminId: userData.name, updateState: updateState });
+    //     }
+    //     await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
+    //     return () => getmessages();
+    // }
 
     const handleOpenChat = async (chatData) => {
         console.log('handleOpenChat function called');
         setChatOpened(true);
         setChatOpenDetails(chatData);
-        if (chatOpenDetails.length == 0) {
-            await getChatContent({ chatId: chatData, updateState: false });
-        } else if (chatData.id.toString() !== chatOpenDetails.id.toString()) {
-            await getChatContent({ chatId: chatData, updateState: false });
-        }
+
+        // if (chatOpenDetails.length == 0) {
+        //     await getChatContent({ chatId: chatData, updateState: false });
+        // } else if (chatData.id.toString() !== chatOpenDetails.id.toString()) {
+        //     await getChatContent({ chatId: chatData, updateState: false });
+        // }
     }
 
-    const handleSendMessage = async (value) => {
-        if (value !== '') {
-            setAdminMessage('')
-            await addDoc(collection(db, "chat-updated/chats/" + chatOpenDetails.id), {
-                text: value,
-                name: userData.name,
-                createdAt: new Date(),
-                role: 'Admin',
-                uid: '12',
-            });
-            console.log('handleSendMessage function called');
-            await getChatContent({ chatId: chatOpenDetails, updateState: true });
-        }
-    }
+    // const handleSendMessage = async (value) => {
+    //     if (value !== '') {
+    //         setAdminMessage('')
+    //         await addDoc(collection(db, "chat-updated/chats/" + chatOpenDetails.id), {
+    //             text: value,
+    //             name: userData.name,
+    //             createdAt: new Date(),
+    //             role: 'Admin',
+    //             uid: '12',serverTimestamp 
+    //             customerReadStatus: {
+    //                 status: "Unread",
+    //                 readAt: ""
+    //             },
+    //             adminReadStatus: {
+    //                 status: "Read",
+    //                 readAt: serverTimestamp()
+    //             },
+    //             supplierReadStatus: {
+    //                 status: "Unread",
+    //                 readAt: ""
+    //             }
+    //         });
+
+
+    //         const docRef = doc(db, "customer-chat-lists", chatOpenDetails.id);
+
+
+    //         await updateDoc(docRef, {
+    //             updatedAt: serverTimestamp(),
+    //             last_message: {
+    //                 name: userData?.name,
+    //                 value: value
+    //             },
+    //             customer_unreads: increment(1),
+    //             supplier_unreads: increment(1),
+    //             admin_unreads: 0
+    //         });
+
+    //         console.log('handleSendMessage function called');
+    //         await getChatContent({ chatId: chatOpenDetails, updateState: true });
+    //     }
+    // }
 
     const handleOpenClipBoardOpen = () => {
         setClipBoardStatus(!clipBoardStatus);
     }
 
-    const handleKeyUp = (event) => {
-        if (event.key === "Enter" && !clipBoardStatus) {
-            handleSendMessage(adminMessage);
-        }
-    };
+    // const handleKeyUp = (event) => {
+    //     if (event.key === "Enter" && !clipBoardStatus) {
+    //         handleSendMessage(adminMessage);
+    //     }
+    // };
 
     const handleFilterBoxes = (name, value) => {
         const newItem = { name, value };
@@ -229,7 +287,7 @@ function ChatsMeta() {
                 return [...prev, newItem];
             }
         });
-    };
+    }
 
     const getChatRelatedtypes = async (dataset) => {
         const result = [];
@@ -268,7 +326,7 @@ function ChatsMeta() {
     const getChatlists = async () => {
         const q = query(
             collection(db, "customer-chat-lists"),
-            orderBy("createdAt", "desc"),
+            orderBy("updatedAt", "desc"),
         );
         const getmessages = onSnapshot(q, async (QuerySnapshot) => {
             const fetchedMessages = [];
@@ -356,11 +414,11 @@ function ChatsMeta() {
         getChatlists();
     }, []);
 
-    useEffect(() => {
-        if (chatOpened) {
-            getChatContent({ chatId: chatOpenDetails, updateState: false });
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (chatOpened) {
+    //         getChatContent({ chatId: chatOpenDetails, updateState: false });
+    //     }
+    // }, [])
 
     return (
         <div className='container-fluid chat_main_row_container'>
@@ -391,6 +449,7 @@ function ChatsMeta() {
                                 <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : '' }} onClick={() => handleOpenChat(value)}>
                                     <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
                                     <h6 className="chat-name ellipsis-1-lines">{value.chat_name}</h6>
+
                                     <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
                                     <div className="reading-admins">
                                         {
@@ -423,8 +482,10 @@ function ChatsMeta() {
                                     chatListFiltered.filter((value) => !pinnedChats.includes(value.id)).map((value, key) => (
                                         <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : '' }} onClick={() => handleOpenChat(value)}>
                                             <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
-                                            <h6 className="chat-name ellipsis-1-lines">{value.chat_name}</h6>
+                                            <h6 className="chat-name ellipsis-2-lines">{value.chat_name} by {value.customer_name}</h6>
+
                                             <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
+
                                             <div className="reading-admins">
                                                 {
                                                     (value?.admin_included === undefined || value?.admin_included?.length == 0) ?
@@ -434,14 +495,20 @@ function ChatsMeta() {
                                                 <span>-</span>
                                                 {
                                                     (value?.admin_reading === undefined || value?.admin_reading?.length === 0) ?
-                                                        <span className="read-admin">No is is reading</span>
+                                                        <span className="read-admin">No one is reading</span>
                                                         : <span className="read-admin">{value?.admin_reading?.length} are reading</span>
                                                 }
                                             </div>
                                             <div className="chat-notify">
-                                                {
+                                                {/* {
                                                     value.notifyAdmin.toString() === "true" &&
                                                     <FontAwesomeIcon icon={faComment} />
+                                                } */}
+
+                                                {value?.admin_unreads != 0 ?
+                                                    <h6 style={{ backgroundColor: '#616161', borderRadius: 50, paddingRight: 5, paddingLeft: 5, fontSize: 12, color: 'white', paddingTop: 3, paddingBottom: 3 }}>{value?.admin_unreads}</h6>
+                                                    :
+                                                    null
                                                 }
                                             </div>
                                         </div>
@@ -449,92 +516,11 @@ function ChatsMeta() {
                         }
                     </div>
                 </CCol>
-                <CCol lg={9} className='chat-list-right-sidebar'>
-                    {
-                        chatOpened ?
-                            <>
-                                <div className="chat-details-head">
-                                    <LazyLoadImage className="chat-details-head-avatar mr-2" placeholderSrc={aahaaslogo} src={aahaaslogo} />
-                                    <div className="d-flex flex-column">
-                                        <h6 className="chat-details-head-name">{chatOpenDetails?.chat_name}</h6>
-                                        <h6 className="chat-details-head-related-with">{chatOpenDetails?.chat_related}</h6>
-                                    </div>
-                                    <div className={searchBarStatus.status ? 'search-bar-open' : 'search-bar-close'}>
-                                        <input type="text" placeholder="Search your messages.." value={searchBarStatus.searchKeyword} onChange={(e) => handleChatSearch(e.target.value)} />
-                                        <FontAwesomeIcon icon={faXmark} onClick={() => handleSearchBar({ status: false })} />
-                                    </div>
-                                    <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
-                                        <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block' }} onClick={() => handleSearchBar({ status: true })} />
-                                        <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: pinnedChats.includes(chatOpenDetails.id) ? 'black' : 'gray' }} />
-                                        <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} />
-                                    </div>
-                                </div>
-                                <div className="chat-details-main-content">
-                                    <div className="chat-content">
-                                        <div ref={messageContailerRef} className={searchBarStatus.status ? "chat-message-messages-open" : "chat-message-messages-close"}>
-                                            <p className="chat-notice">
-                                                <FontAwesomeIcon icon={faCircleInfo} /> {chatOpenDetails.customer_name}, the customer has initiated the chat for {chatOpenDetails.chat_related}.
-                                            </p>
-                                            {
-                                                messages.length === 0 ?
-                                                    <p className="chat-notice">
-                                                        <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />Please start responding to resolve their issue as soon as possible.
-                                                    </p>
-                                                    : messages.map((value, index) => (
-                                                        <div className={value.role === 'Admin' ? "textingsfhvflhsjdbx" : ''}>
-                                                            <div style={{ display: value.role !== 'Admin' ? 'none' : '' }} className="more-items" onClick={() => { messageClipBoard === value.id ? setMessageClipBoard() : setMessageClipBoard(value.id) }}>
-                                                                <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} />
-                                                            </div>
-                                                            <div ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content-customer'} `} style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
-                                                                <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
-                                                                {
-                                                                    messageClipBoard === value.id ?
-                                                                        <pre className="chat-content-text">{value.text}</pre>
-                                                                        : <h6 className="chat-content-text">{value.text}</h6>
-                                                                }
-                                                                <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
-                                                                <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                            }
-                                        </div>
-                                        <div className={searchBarStatus.status ? "search-resutls-open" : "search-resutls-close"}>
-                                            <h6>Your search results</h6>
-                                            {
-                                                searchBarStatus.searchResuts === false ?
-                                                    <p>enter your keyword to search</p>
-                                                    : searchBarStatus.searchResultChats.map((value, index) => (
-                                                        <div className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `} onClick={() => handleScrollToMessage(index, value)}  >
-                                                            <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
-                                                            <pre className="chat-content-text">{value.text}</pre>
-                                                            <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
-                                                            <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
-                                                        </div>
-                                                    ))
-                                            }
-                                        </div>
-                                    </div>
-                                    <div className="chat-message-input">
-                                        {clipBoardStatus && <p className="clipBoard-status">clip borad was on</p>}
-                                        <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} onClick={() => handleOpenClipBoardOpen()} />
-                                        {
-                                            clipBoardStatus ?
-                                                <textarea type="text" value={adminMessage} onKeyUp={handleKeyUp} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
-                                                : <input type="text" value={adminMessage} onKeyUp={handleKeyUp} onChange={(e) => setAdminMessage(e.target.value)} placeholder="Enter your message" className="chat-message-input-form" />
-                                        }
-                                        <FontAwesomeIcon icon={faPaperPlane} className="chat-message-input-icon-send" onClick={() => handleSendMessage(adminMessage)} />
-                                        <Tooltip title={'Under developement'}>
-                                            <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
-                                        </Tooltip>
-                                    </div>
-                                </div>
-                            </> :
-                            <div className="chat-not-open-screen">
-                                <h6>Please open the chat and engage with the customer to assist them and ensure a smooth conversation.</h6>
-                            </div>
-                    }
-                </CCol>
+
+                <ChatRight chatOpened={chatOpened} chatOpenedData={chatOpenDetails}></ChatRight>
+
+
+
             </CRow>
         </div>
     );
