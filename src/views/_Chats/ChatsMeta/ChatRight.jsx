@@ -12,23 +12,46 @@ import aahaaslogo from '../../../assets/brand/aahaslogo.png';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles } from '@fortawesome/free-solid-svg-icons';
 
 import { Tooltip } from "@material-ui/core";
 import { UserLoginContext } from 'src/Context/UserLoginContext';
+import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons';
+import SuggestionModal from './Components/SuggestionsModal';
 
 
-export default function ChatRight({ chatOpenedData }) {
+export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
 
-    const handleSearchBar = (data) => {
 
+
+    const handleSearchBar = ({ status }) => {
+        setSearchBarStatus({
+            ...searchBarStatus,
+            status: status
+        })
     }
 
-    const handleChatSearch = (data) => {
-
+    const handleChatSearch = (keyword) => {
+        if (keyword == '') {
+            setSearchBarStatus({
+                ...searchBarStatus,
+                searchKeyword: keyword,
+                searchResuts: false,
+                searchResultChats: []
+            });
+        } else {
+            let result = messages.filter((value) => {
+                return value.text.toString().toLowerCase().includes(keyword.toString().toLowerCase());
+            })
+            setSearchBarStatus({
+                ...searchBarStatus,
+                searchKeyword: keyword,
+                searchResuts: true,
+                searchResultChats: result
+            });
+        }
     }
-
 
     const handleCloseChat = () => {
 
@@ -88,26 +111,28 @@ export default function ChatRight({ chatOpenedData }) {
             });
 
             console.log('handleSendMessage function called');
-            await getChatContent({ chatId: chatOpenDetails, updateState: true });
+            // await getChatContent({ chatId: chatOpenDetails, updateState: true });
         }
     }
 
 
     const getChatContent = async ({ chatId, updateState = false }) => {
-        console.log('getChatContent function called');
+        // Clear any existing listener before creating a new one
+        if (getChatContent.unsubscribe) {
+            getChatContent.unsubscribe(); // Unsubscribe from previous snapshot listener
+        }
+
         const q = query(
             collection(db, "chat-updated/chats/" + chatId.id),
-            orderBy("createdAt", "desc"),
+            orderBy("createdAt", "desc")
         );
+
         const getmessages = onSnapshot(q, async (QuerySnapshot) => {
             const fetchedMessages = [];
-
             const batch = writeBatch(db);
 
             QuerySnapshot.forEach((doc) => {
                 const docData = doc.data();
-
-
                 fetchedMessages.push({ ...docData, id: doc.id });
 
                 if (docData.adminReadStatus?.status === "Unread") {
@@ -118,35 +143,42 @@ export default function ChatRight({ chatOpenedData }) {
                         }
                     });
                 }
-
                 console.log(doc.id, "Doc ID is");
             });
 
             await batch.commit();
 
-            const sortedMessages = fetchedMessages.sort(
-                (a, b) => a.createdAt - b.createdAt
-            );
-
-
-            console.log(sortedMessages, "Sorted Messages Are")
+            const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt);
             setMessages(sortedMessages);
 
             const docRef = doc(db, "customer-chat-lists", chatId.id);
-
-            await updateDoc(docRef, {
-                admin_unreads: 0
-            });
+            await updateDoc(docRef, { admin_unreads: 0 });
         });
 
-        if (updateState === false) {
-            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: chatId.notifyCustomer, adminStatus: 'false', supplierStatus: chatId.notifySupplier, adminId: userData.name, updateState: updateState });
+        // Save the unsubscribe function to `getChatContent` itself
+        getChatContent.unsubscribe = getmessages;
+
+        if (!updateState) {
+            await handleUpdateAdminStats({
+                chatID: chatId.id,
+                customerStatus: chatId.notifyCustomer,
+                adminStatus: 'false',
+                supplierStatus: chatId.notifySupplier,
+                adminId: userData.name,
+                updateState: updateState
+            });
         } else {
-            await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: 'true', adminStatus: 'false', supplierStatus: "true", adminId: userData.name, updateState: updateState });
+            await handleUpdateAdminStats({
+                chatID: chatId.id,
+                customerStatus: 'true',
+                adminStatus: 'false',
+                supplierStatus: "true",
+                adminId: userData.name,
+                updateState: updateState
+            });
         }
         await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
-        return () => getmessages();
-    }
+    };
 
     const removeExisting = async ({ chatID, adminId }) => {
         if (chatID !== undefined) {
@@ -184,13 +216,21 @@ export default function ChatRight({ chatOpenedData }) {
 
 
     const handlePinChats = (data) => {
-
+        handlePin(data)
     }
 
 
     const [adminMessage, setAdminMessage] = useState("")
-    const [searchBarStatus, setSearchBarStatus] = useState([])
+
+    const [searchBarStatus, setSearchBarStatus] = useState({
+        status: false,
+        searchKeyword: '',
+        searchResuts: false,
+        searchResultChats: []
+    });
+
     const [pinnedChats, setPinnedChats] = useState([])
+
     const [messages, setMessages] = useState([])
 
     const [chatOpened, setChatOpened] = useState(false)
@@ -200,25 +240,39 @@ export default function ChatRight({ chatOpenedData }) {
     const messageContailerRef = useRef()
 
 
+    const [loader, setLoader] = useState(false)
+
+
     const handleOpenChat = async (chatData) => {
         console.log('handleOpenChat function called');
         setChatOpened(true);
         setChatOpenDetails(chatData);
+
+
+        setLoader(true)
         await getChatContent({ chatId: chatData, updateState: false });
 
-
+        setLoader(false)
     }
 
-    useEffect(() => {
-        console.log(chatOpenedData, "Opened Chat Dat ais")
 
+
+    useEffect(() => {
         if (chatOpenedData?.id) {
-            handleOpenChat(chatOpenedData)
+            handleOpenChat(chatOpenedData);
         }
 
 
 
-    }, [chatOpenedData])
+
+        return () => {
+
+            if (getChatContent.unsubscribe) {
+                getChatContent.unsubscribe();
+            }
+        };
+
+    }, [chatOpenedData]);
 
     const [clipBoardStatus, setClipBoardStatus] = useState(false);
 
@@ -263,6 +317,20 @@ export default function ChatRight({ chatOpenedData }) {
     };
 
 
+    const suggestions = [
+        "Hello! How can I assist you today?",
+        "Could you please provide more details?",
+        "I’m here to help with any questions.",
+        "Let me know if you need further assistance.",
+        "Thank you for reaching out!",
+        "Feel free to share any specific concerns.",
+        "I'll get back to you as soon as possible.",
+        "Is there anything else you'd like to know?",
+        "Let me check that for you.",
+        "I appreciate your patience."
+    ];
+
+
     useEffect(() => {
         let typingTimeout;
 
@@ -293,92 +361,150 @@ export default function ChatRight({ chatOpenedData }) {
 
     console.log(chatOpenDetails, "Chat Open Details Are Data is")
 
+    const [autoSuggestionBox, setAutoSuggestionBox] = useState(false)
+
+    const handleAutoSuggestionModal = () => {
+        setAutoSuggestionBox(true)
+    }
+
+
+    const onHide = () => {
+        setAutoSuggestionBox(false)
+    }
+
+    const onMessageSelect = (data) => {
+        setAdminMessage(data)
+        setAutoSuggestionBox(false)
+    }
+
 
     return (
-        <CCol lg={9} className='chat-list-right-sidebar'>
-            {chatOpened ?
 
-                <>
-                    <div className="chat-details-head">
-                        <LazyLoadImage className="chat-details-head-avatar mr-2" placeholderSrc={aahaaslogo} src={aahaaslogo} />
-                        <div className="d-flex flex-column">
-                            <h6 className="chat-details-head-name">{chatOpenDetails?.chat_name}</h6>
-                            <h6 className="chat-details-head-related-with">{chatOpenDetails?.chat_related}</h6>
-                        </div>
-                        <div className={searchBarStatus.status ? 'search-bar-open' : 'search-bar-close'}>
-                            <input type="text" placeholder="Search your messages.." value={searchBarStatus.searchKeyword} onChange={(e) => handleChatSearch(e.target.value)} />
-                            <FontAwesomeIcon icon={faXmark} onClick={() => handleSearchBar({ status: false })} />
-                        </div>
-                        <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
-                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block' }} onClick={() => handleSearchBar({ status: true })} />
-                            <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: pinnedChats.includes(chatOpenDetails.id) ? 'black' : 'gray' }} />
-                            <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} />
-                        </div>
-                    </div>
-                    <div className="chat-details-main-content">
-                        <div className="chat-content">
-                            <div ref={messageContailerRef} className={searchBarStatus.status ? "chat-message-messages-open" : "chat-message-messages-close"}>
-                                <p className="chat-notice">
-                                    <FontAwesomeIcon icon={faCircleInfo} /> {chatOpenDetails?.customer_name}, the customer has initiated the chat for {chatOpenDetails?.chat_related}.
-                                </p>
-                                {
-                                    messages?.length === 0 ?
-                                        <p className="chat-notice">
-                                            <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />Please start responding to resolve their issue as soon as possible.
-                                        </p>
-                                        : messages?.map((value, index) => (
-                                            <div className={value.role === 'Admin' ? "textingsfhvflhsjdbx" : ''}>
-                                                <div style={{ display: value.role !== 'Admin' ? 'none' : '' }} className="more-items" onClick={() => { messageClipBoard === value.id ? setMessageClipBoard() : setMessageClipBoard(value.id) }}>
-                                                    <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} />
-                                                </div>
-                                                <div ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content-customer'} `} style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
-                                                    <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
-                                                    {
-                                                        messageClipBoard === value.id ?
-                                                            <pre className="chat-content-text">{value.text}</pre>
-                                                            : <h6 className="chat-content-text">{value.text}</h6>
-                                                    }
-                                                    <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
-                                                    <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
-                                                </div>
-                                            </div>
-                                        ))
-                                }
-                            </div>
-                            {/* <div className={searchBarStatus.status ? "search-resutls-open" : "search-resutls-close"}>
-                                <h6>Your search results</h6>
-                                {
-                                    searchBarStatus.searchResuts === false ?
-                                        <p>enter your keyword to search</p>
-                                        : searchBarStatus.searchResultChats.map((value, index) => (
-                                            <div className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content'} `} onClick={() => handleScrollToMessage(index, value)}  >
-                                                <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
-                                                <pre className="chat-content-text">{value.text}</pre>
-                                                <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
-                                                <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
-                                            </div>
-                                        ))
-                                }
-                            </div> */}
-                        </div>
-                        <div className="chat-message-input">
-                            {clipBoardStatus && <p className="clipBoard-status">clip borad was on</p>}
-                            <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} onClick={() => handleOpenClipBoardOpen()} />
+        <>
 
-                            <textarea type="text" value={adminMessage} onKeyUp={handleKeyUp} onChange={(e) => handleTyping(e)} placeholder="Enter your message" className="chat-message-input-form" />
+            {autoSuggestionBox ?
+                <SuggestionModal show={autoSuggestionBox} onHide={() => onHide()} messageList={messages.slice(-5)} chatDetails={chatOpenDetails} onMessageSelect={onMessageSelect}></SuggestionModal>
 
-                            <FontAwesomeIcon icon={faPaperPlane} className="chat-message-input-icon-send" onClick={() => handleSendMessage(adminMessage)} />
-                            <Tooltip title={'Under developement'}>
-                                <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
-                            </Tooltip>
-                        </div>
-                    </div>
-                </> :
-                <div className="chat-not-open-screen">
-                    <h6>Please open the chat and engage with the customer to assist them and ensure a smooth conversation.</h6>
-                </div>
+                :
+                null
+
             }
 
-        </CCol>
+
+            <CCol lg={9} className='chat-list-right-sidebar'>
+                {chatOpened ?
+                    <>
+
+
+                        <>
+
+                            <div className="chat-details-head">
+                                <LazyLoadImage className="chat-details-head-avatar mr-2" placeholderSrc={aahaaslogo} src={aahaaslogo} />
+                                <div className="d-flex flex-column">
+                                    <h6 className="chat-details-head-name">{chatOpenDetails?.chat_name}</h6>
+                                    <h6 className="chat-details-head-related-with">{chatOpenDetails?.chat_related}</h6>
+                                </div>
+                                <div className={searchBarStatus.status ? 'search-bar-open' : 'search-bar-close'}>
+                                    <input type="text" placeholder="Search your messages.." value={searchBarStatus.searchKeyword} onChange={(e) => handleChatSearch(e.target.value)} />
+                                    <FontAwesomeIcon icon={faXmark} onClick={() => handleSearchBar({ status: false })} />
+                                </div>
+                                <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
+                                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} />
+                                    <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: chatPinned ? '#ffd00f' : 'white' }} />
+                                    {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
+                                </div>
+                            </div>
+                            <div className="chat-details-main-content">
+                                <div className="chat-content">
+
+                                    {!loader ?
+                                        <div ref={messageContailerRef} className={searchBarStatus.status ? "chat-message-messages-open" : "chat-message-messages-close"}>
+                                            <p className="chat-notice">
+                                                <FontAwesomeIcon icon={faCircleInfo} /> {chatOpenDetails?.customer_name}, the customer has initiated the chat for {chatOpenDetails?.chat_related}.
+                                            </p>
+                                            {
+                                                messages?.length === 0 ?
+                                                    <p className="chat-notice">
+                                                        <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />Please start responding to resolve their issue as soon as possible.
+                                                    </p>
+                                                    : messages?.map((value, index) => (
+                                                        <div className={value.role === 'Admin' ? "textingsfhvflhsjdbx" : ''}>
+                                                            {/* <div style={{ display: value.role !== 'Admin' ? 'none' : '' }} className="more-items" onClick={() => { messageClipBoard === value.id ? setMessageClipBoard() : setMessageClipBoard(value.id) }}>
+                                                                <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} />
+                                                            </div> */}
+                                                            <div ref={(el) => chatRefs.current[index] = el} key={index} className={` ${value.role === 'Admin' ? 'chat-content-admin' : 'chat-content-customer'} `} style={{ backgroundColor: clickedMssage === value.id ? 'lightgray' : '' }}>
+                                                                <LazyLoadImage placeholderSrc={aahaaslogo} src={aahaaslogo} className="chat-content-image" />
+                                                                {
+                                                                    messageClipBoard === value.id ?
+                                                                        <pre className="chat-content-text">{value.text}</pre>
+                                                                        : <h6 className="chat-content-text">{value.text}</h6>
+                                                                }
+                                                                <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
+                                                                <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                            }
+                                        </div>
+                                        :
+                                        <div className={"chat-message-messages-close"}>
+                                            <p className="chat-notice" style={{ fontSize: 16, marginTop: 20 }}>
+                                                <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />Hold On Your Chat is Loading
+                                            </p>
+                                        </div>
+
+                                    }
+
+                                </div>
+
+                                {!loader ?
+
+
+                                    <div className="chat-message-input">
+                                        {clipBoardStatus && <p className="clipBoard-status">clip borad was on</p>}
+                                        <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} onClick={() => handleOpenClipBoardOpen()} />
+                                        <FontAwesomeIcon icon={faMagicWandSparkles} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleAutoSuggestionModal()} />
+
+
+
+                                        <textarea
+                                            value={adminMessage}
+                                            onKeyUp={handleKeyUp}
+                                            onChange={(e) => handleTyping(e)}
+                                            placeholder="Enter your message"
+                                            className="chat-message-input-form"
+                                            rows={4}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px',
+                                                borderRadius: '8px',
+                                                borderColor: '#ccc',
+                                                resize: 'vertical',
+                                                overflowY: 'auto',
+                                                minHeight: '80px',
+                                                maxHeight: '200px',
+                                                fontSize: 15
+                                            }}
+                                        />
+                                        <FontAwesomeIcon icon={faPaperPlane} className="chat-message-input-icon-send" onClick={() => handleSendMessage(adminMessage)} />
+                                        <Tooltip title={'Under developement'}>
+                                            <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
+                                        </Tooltip>
+                                    </div>
+                                    :
+                                    null
+                                }
+                            </div>
+                        </>
+
+                    </> :
+                    <div className="chat-not-open-screen">
+                        <h6>Please open the chat and engage with the customer to assist them and ensure a smooth conversation.</h6>
+                    </div>
+                }
+
+            </CCol>
+        </>
+
     )
 }

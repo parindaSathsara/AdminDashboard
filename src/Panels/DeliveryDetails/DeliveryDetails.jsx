@@ -58,7 +58,7 @@ export default function DeliveryDetails(props) {
                 {productData.map((data, dataIndex) => {
 
 
-                    if (data.latitude == undefined || data.latitude == null) {
+                    if (data.latitude || data.longitude) {
 
                         return (
                             <Tab key={dataIndex} eventKey={dataIndex} title={data.product_title}>

@@ -32,7 +32,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img src={logo} height={30}></img>
+        <img src={logo} height={40}></img>
 
       </CSidebarBrand>
 

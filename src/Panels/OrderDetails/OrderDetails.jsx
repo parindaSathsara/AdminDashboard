@@ -159,8 +159,6 @@ function OrderDetails(props) {
                 setProductData(res.productData)
                 setCustomerData(res.customerData)
                 setDates(res.dates)
-
-                // console.log(res.customerData, "CustomerData value is data ")
             })
         }
 
@@ -740,18 +738,23 @@ function OrderDetails(props) {
                             orderid={props.orderid}
                             component={
                                 <Tabs defaultActiveKey="bookingexperience" id="uncontrolled-tab-example" className="mt-4">
+
                                     <Tab eventKey="bookingexperience" title="Booking Experience">
                                         <BookingExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
+
                                     <Tab eventKey="supplierexperience" title="Supplier Experience">
                                         <SupplierExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
+
                                     <Tab eventKey="travellerExperience" title="Traveller Experience">
                                         <TravellerExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
+
                                     <Tab eventKey="acc" title="Accounts Details">
                                         <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                     </Tab>
+
                                 </Tabs>
                             }
                         >

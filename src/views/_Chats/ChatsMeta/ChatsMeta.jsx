@@ -53,12 +53,12 @@ function ChatsMeta() {
 
     const handleFilterchat = (value, dataset) => {
         setSearchChat(value);
-        if (value === '') {
-            setchatListFiltered(chatList);
-        } else {
-            let filtered = dataset.filter((chatValue) => { return (chatValue.chat_name + " " + chatValue.customer_name).toString().toLowerCase().includes(value.toLowerCase()) })
-            setchatListFiltered(filtered);
-        }
+        // if (value === '') {
+        //     setchatListFiltered(chatList);
+        // } else {
+        //     let filtered = dataset.filter((chatValue) => { return (chatValue.chat_name + " " + chatValue.customer_name).toString().toLowerCase().includes(value.toLowerCase()) })
+        //     setchatListFiltered(filtered);
+        // }
     }
 
     const formatDate = (timestamp) => {
@@ -97,9 +97,9 @@ function ChatsMeta() {
     const updatePinnedChats = () => {
         const existingPinnedChats = localStorage.getItem('myPinned');
         if (!existingPinnedChats) {
-            setPinnedChats([]); // No pinned chats
+            setPinnedChats([]);
         } else {
-            setPinnedChats(JSON.parse(existingPinnedChats)); // Parse and set pinned chats
+            setPinnedChats(JSON.parse(existingPinnedChats));
         }
     }
 
@@ -128,24 +128,24 @@ function ChatsMeta() {
         })
     }
 
-    const handleUpdateAdminStats = async ({ chatID, customerStatus, adminStatus, supplierStatus, adminId, updateState }) => {
-        const chatDocRef = doc(db, "customer-chat-lists/", chatID);
-        const chatDocSnap = await getDoc(chatDocRef);
-        if (chatDocSnap.exists()) {
-            const updateData = {
-                notifyCustomer: customerStatus,
-                notifyAdmin: adminStatus,
-                notifySupplier: supplierStatus,
-            };
-            if (updateState === false) {
-                updateData.admin_reading = arrayUnion(adminId);
-            } else {
-                updateData.admin_reading = arrayRemove(adminId);
-                updateData.admin_included = arrayUnion(adminId);
-            }
-            await updateDoc(chatDocRef, updateData);
-        }
-    }
+    // const handleUpdateAdminStats = async ({ chatID, customerStatus, adminStatus, supplierStatus, adminId, updateState }) => {
+    //     const chatDocRef = doc(db, "customer-chat-lists/", chatID);
+    //     const chatDocSnap = await getDoc(chatDocRef);
+    //     if (chatDocSnap.exists()) {
+    //         const updateData = {
+    //             notifyCustomer: customerStatus,
+    //             notifyAdmin: adminStatus,
+    //             notifySupplier: supplierStatus,
+    //         };
+    //         if (updateState === false) {
+    //             updateData.admin_reading = arrayUnion(adminId);
+    //         } else {
+    //             updateData.admin_reading = arrayRemove(adminId);
+    //             updateData.admin_included = arrayUnion(adminId);
+    //         }
+    //         await updateDoc(chatDocRef, updateData);
+    //     }
+    // }
 
     const removeExisting = async ({ chatID, adminId }) => {
         if (chatID !== undefined) {
@@ -160,112 +160,14 @@ function ChatsMeta() {
         }
     }
 
-    // const getChatContent = async ({ chatId = chatId, updateState = false }) => {
-    //     console.log('getChatContent function called');
-    //     const q = query(
-    //         collection(db, "chat-updated/chats/" + chatId.id),
-    //         orderBy("createdAt", "desc"),
-    //     );
-    //     const getmessages = onSnapshot(q, async (QuerySnapshot) => {
-    //         const fetchedMessages = [];
-
-    //         const batch = writeBatch(db);
-
-    //         QuerySnapshot.forEach((doc) => {
-    //             const docData = doc.data();
-
-
-    //             fetchedMessages.push({ ...docData, id: doc.id });
-
-    //             if (docData.adminReadStatus?.status === "Unread") {
-    //                 batch.update(doc.ref, {
-    //                     adminReadStatus: {
-    //                         status: "Read",
-    //                         readAt: serverTimestamp()
-    //                     }
-    //                 });
-    //             }
-
-    //             console.log(doc.id, "Doc ID is");
-    //         });
-
-    //         await batch.commit();
-
-    //         const sortedMessages = fetchedMessages.sort(
-    //             (a, b) => a.createdAt - b.createdAt
-    //         );
-    //         setMessages(sortedMessages);
-
-    //         const docRef = doc(db, "customer-chat-lists", chatId.id);
-
-    //         await updateDoc(docRef, {
-    //             admin_unreads: 0
-    //         });
-    //     });
-
-    //     if (updateState === false) {
-    //         await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: chatId.notifyCustomer, adminStatus: 'false', supplierStatus: chatId.notifySupplier, adminId: userData.name, updateState: updateState });
-    //     } else {
-    //         await handleUpdateAdminStats({ chatID: chatId.id, customerStatus: 'true', adminStatus: 'false', supplierStatus: "true", adminId: userData.name, updateState: updateState });
-    //     }
-    //     await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name });
-    //     return () => getmessages();
-    // }
-
     const handleOpenChat = async (chatData) => {
-        console.log('handleOpenChat function called');
+        console.log('handleOpenChat function calledopened', chatData);
         setChatOpened(true);
         setChatOpenDetails(chatData);
 
-        // if (chatOpenDetails.length == 0) {
-        //     await getChatContent({ chatId: chatData, updateState: false });
-        // } else if (chatData.id.toString() !== chatOpenDetails.id.toString()) {
-        //     await getChatContent({ chatId: chatData, updateState: false });
-        // }
     }
 
-    // const handleSendMessage = async (value) => {
-    //     if (value !== '') {
-    //         setAdminMessage('')
-    //         await addDoc(collection(db, "chat-updated/chats/" + chatOpenDetails.id), {
-    //             text: value,
-    //             name: userData.name,
-    //             createdAt: new Date(),
-    //             role: 'Admin',
-    //             uid: '12',serverTimestamp 
-    //             customerReadStatus: {
-    //                 status: "Unread",
-    //                 readAt: ""
-    //             },
-    //             adminReadStatus: {
-    //                 status: "Read",
-    //                 readAt: serverTimestamp()
-    //             },
-    //             supplierReadStatus: {
-    //                 status: "Unread",
-    //                 readAt: ""
-    //             }
-    //         });
 
-
-    //         const docRef = doc(db, "customer-chat-lists", chatOpenDetails.id);
-
-
-    //         await updateDoc(docRef, {
-    //             updatedAt: serverTimestamp(),
-    //             last_message: {
-    //                 name: userData?.name,
-    //                 value: value
-    //             },
-    //             customer_unreads: increment(1),
-    //             supplier_unreads: increment(1),
-    //             admin_unreads: 0
-    //         });
-
-    //         console.log('handleSendMessage function called');
-    //         await getChatContent({ chatId: chatOpenDetails, updateState: true });
-    //     }
-    // }
 
     const handleOpenClipBoardOpen = () => {
         setClipBoardStatus(!clipBoardStatus);
@@ -333,35 +235,20 @@ function ChatsMeta() {
             QuerySnapshot.forEach((doc) => {
                 fetchedMessages.push({ ...doc.data(), id: doc.id });
             });
-            setchatList(fetchedMessages);
-            setchatListFiltered(fetchedMessages);
-            let relatedResposne = await getChatRelatedtypes(fetchedMessages);
-            let statusResponse = await getChatsStatus(fetchedMessages);
-            setFilterTypes(relatedResposne.concat(statusResponse));
+
+            if (JSON.stringify(fetchedMessages) !== JSON.stringify(chatList)) {
+                setchatList(fetchedMessages);
+                setchatListFiltered(fetchedMessages);
+
+                let relatedResposne = await getChatRelatedtypes(fetchedMessages);
+                let statusResponse = await getChatsStatus(fetchedMessages);
+                setFilterTypes(relatedResposne.concat(statusResponse));
+            }
         });
         return () => getmessages();
     }
 
-    const handleChatSearch = (keyword) => {
-        if (keyword == '') {
-            setSearchBarStatus({
-                ...searchBarStatus,
-                searchKeyword: keyword,
-                searchResuts: false,
-                searchResultChats: []
-            });
-        } else {
-            let result = messages.filter((value) => {
-                return value.text.toString().toLowerCase().includes(keyword.toString().toLowerCase());
-            })
-            setSearchBarStatus({
-                ...searchBarStatus,
-                searchKeyword: keyword,
-                searchResuts: true,
-                searchResultChats: result
-            });
-        }
-    }
+
 
     const handleScrollToMessage = (index, dataset) => {
         if (chatRefs.current[index]) {
@@ -414,11 +301,29 @@ function ChatsMeta() {
         getChatlists();
     }, []);
 
-    // useEffect(() => {
-    //     if (chatOpened) {
-    //         getChatContent({ chatId: chatOpenDetails, updateState: false });
-    //     }
-    // }, [])
+
+
+    const getFilteredChats = (pinState) => {
+        if (pinState == "pinned") {
+            return chatListFiltered
+                .filter((value) => pinnedChats.includes(value.id))
+                .filter((value) =>
+                    !searchChat || `${value.chat_name} by ${value.customer_name}`.toLowerCase().includes(searchChat.toLowerCase())
+                );
+
+        }
+        else {
+            return chatListFiltered
+                .filter((value) => !pinnedChats.includes(value.id))
+                .filter((value) =>
+                    !searchChat || `${value.chat_name} by ${value.customer_name}`.toLowerCase().includes(searchChat.toLowerCase())
+                );
+
+        }
+    };
+
+
+
 
     return (
         <div className='container-fluid chat_main_row_container'>
@@ -445,11 +350,10 @@ function ChatsMeta() {
                     <div className="chat-lists">
                         <p className="chatWise-heading">My pinned chats</p>
                         {
-                            chatListFiltered.filter((value) => pinnedChats.includes(value.id)).map((value, key) => (
-                                <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : '' }} onClick={() => handleOpenChat(value)}>
+                            getFilteredChats("pinned").map((value, key) => (
+                                <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
                                     <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
-                                    <h6 className="chat-name ellipsis-1-lines">{value.chat_name}</h6>
-
+                                    <h6 className="chat-name ellipsis-2-lines">{value.chat_name} by {value.customer_name}</h6>
                                     <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
                                     <div className="reading-admins">
                                         {
@@ -474,13 +378,14 @@ function ChatsMeta() {
                             ))
                         }
                         <p className="chatWise-heading">All chats</p>
+
                         {
                             searchChat !== '' && chatListFiltered.length === 0 ?
                                 <p className="chat-lists-note">There are no chats with your search keywords try with different keywords</p>
                                 : searchChat === '' && chatListFiltered.length === 0 ?
                                     <p className="chat-lists-note">There are no chats initiated from customer</p> :
-                                    chatListFiltered.filter((value) => !pinnedChats.includes(value.id)).map((value, key) => (
-                                        <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : '' }} onClick={() => handleOpenChat(value)}>
+                                    getFilteredChats("notPinned").map((value, key) => (
+                                        <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
                                             <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
                                             <h6 className="chat-name ellipsis-2-lines">{value.chat_name} by {value.customer_name}</h6>
 
@@ -500,16 +405,13 @@ function ChatsMeta() {
                                                 }
                                             </div>
                                             <div className="chat-notify">
-                                                {/* {
-                                                    value.notifyAdmin.toString() === "true" &&
-                                                    <FontAwesomeIcon icon={faComment} />
-                                                } */}
 
                                                 {value?.admin_unreads != 0 ?
                                                     <h6 style={{ backgroundColor: '#616161', borderRadius: 50, paddingRight: 5, paddingLeft: 5, fontSize: 12, color: 'white', paddingTop: 3, paddingBottom: 3 }}>{value?.admin_unreads}</h6>
                                                     :
                                                     null
                                                 }
+
                                             </div>
                                         </div>
                                     ))
@@ -517,7 +419,7 @@ function ChatsMeta() {
                     </div>
                 </CCol>
 
-                <ChatRight chatOpened={chatOpened} chatOpenedData={chatOpenDetails}></ChatRight>
+                <ChatRight chatOpened={chatOpened} chatOpenedData={chatOpenDetails} handlePin={handlePinChats} chatPinned={pinnedChats?.includes(chatOpenDetails?.id)}></ChatRight>
 
 
 

@@ -246,6 +246,9 @@ export default function TravellerExperience(props) {
     }
 
 
+    console.log(mapViewData, "MapView Data isss")
+
+
     const handleClickDriverAllocation = (dataset) => {
         if (dataset.data.category === 'Lifestyles') {
             setDriverAllocationStatus({ status: true, data: dataset });
@@ -331,7 +334,7 @@ export default function TravellerExperience(props) {
     // Prepare the data for the Material Table
     const data = productData?.map(value => ({
         pid: value?.['PID'],
-        delivery_date: value?.service_date,
+        delivery_date: value?.DDate + " ",
         location: value?.location,
         reconfirmationDate: value?.reconfirmationDate,
         qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
@@ -339,6 +342,9 @@ export default function TravellerExperience(props) {
         data: value
         // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
     }));
+
+
+    console.log(productData, "Product Data value is")
 
 
 
