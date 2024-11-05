@@ -18,6 +18,7 @@ import { Tooltip } from "@material-ui/core";
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons';
 import SuggestionModal from './Components/SuggestionsModal';
+import sendPushNotificationsOnChats from './functions/sendPushNotificationsOnChats';
 
 
 export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
@@ -73,6 +74,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     const { userData } = useContext(UserLoginContext);
 
     const handleSendMessage = async (value) => {
+
+
         if (value !== '') {
             setAdminMessage('')
             await addDoc(collection(db, "chat-updated/chats/" + chatOpenDetails.id), {
@@ -110,9 +113,15 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                 admin_unreads: 0
             });
 
+
+            sendPushNotificationsOnChats(chatOpenDetails, value)
+
             console.log('handleSendMessage function called');
             // await getChatContent({ chatId: chatOpenDetails, updateState: true });
         }
+
+
+
     }
 
 

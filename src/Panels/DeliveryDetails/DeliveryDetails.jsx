@@ -12,7 +12,7 @@ export default function DeliveryDetails(props) {
     };
 
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyA39AkmLbtriHvMJ-uqOV4I_6hpVz-4Pbk', // Replace with your API key
+        googleMapsApiKey: 'AIzaSyA39AkmLbtriHvMJ-uqOV4I_6hpVz-4Pbk',
         libraries,
     });
 

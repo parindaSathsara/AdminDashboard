@@ -236,12 +236,8 @@ export default function TravellerExperience(props) {
 
     const getMapView = async (data) => {
 
-
         setMapView(true)
         setMapViewData(data)
-
-
-
 
     }
 
