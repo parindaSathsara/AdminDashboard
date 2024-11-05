@@ -12,7 +12,7 @@ export default function DeliveryDetails(props) {
     };
 
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyA39AkmLbtriHvMJ-uqOV4I_6hpVz-4Pbk', // Replace with your API key
+        googleMapsApiKey: 'AIzaSyA39AkmLbtriHvMJ-uqOV4I_6hpVz-4Pbk',
         libraries,
     });
 
@@ -58,7 +58,7 @@ export default function DeliveryDetails(props) {
                 {productData.map((data, dataIndex) => {
 
 
-                    if (data.latitude == undefined || data.latitude == null) {
+                    if (data.latitude || data.longitude) {
 
                         return (
                             <Tab key={dataIndex} eventKey={dataIndex} title={data.product_title}>

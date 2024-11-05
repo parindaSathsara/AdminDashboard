@@ -218,7 +218,7 @@
 
 .chat-details-head {
     height: 11%;
-    background-color: white;
+    background-color: #041d24;
     border-radius: 8px;
     margin: 10px 0px;
     padding: 10px;
@@ -278,7 +278,8 @@
     margin: 0px;
     padding: 0px;
     line-height: 16px;
-    font-size: 12px;
+    font-size: 16px;
+    color: white;
 }
 
 .chat-details-head-related-with {
@@ -286,6 +287,7 @@
     padding: 0px;
     font-size: 10px;
     line-height: 10px;
+    color: white;
 }
 
 .chat-more-items {
@@ -294,11 +296,13 @@
 }
 
 .chat-details-main-content {
-    height: 83%;
+    height: 84%;
     margin: 0px;
-    background-color: white;
+    background-color: #e3e8ec;
     border-radius: 8px;
     padding: 10px 0px 0px 0px;
+    padding-bottom: 10px;
+    padding: 10px;
 }
 
 .chat-content {
@@ -367,9 +371,13 @@
     gap: 0px;
     margin: 10px 10px 10px 10px;
     align-items: center;
-    background-color: lightgray;
-    border-radius: 8px;
-    border: 2px solid lightgray;
+    background-color: transparent;
+    /* border-radius: 8px; */
+    /* border: 2px solid lightgray; */
+
+    border-top: 1px solid #dadada;
+    margin-bottom: 20px !important;
+    padding-top: 2px;
 }
 
 
@@ -387,7 +395,7 @@
 }
 
 .chat-message-input-form {
-    all: unset;
+    /* all: unset; */
     width: 100%;
     background-color: white;
     margin: 0px;
@@ -461,6 +469,8 @@
     gap: 0px;
     min-width: auto;
     max-width: 80%;
+    background-color: #004e64;
+    color: white;
 }
 
 .chat-content-customer {
@@ -481,6 +491,8 @@
     gap: 0px;
     min-width: auto;
     max-width: 80%;
+
+    background-color: white;
 }
 
 .chat-content-admin.lazy-load-image-background,
@@ -508,14 +520,16 @@
     grid-area: chat-content-text;
     margin: 0px;
     padding: 0px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 18px;
+    font-weight: 500;
 }
 
 .chat-content-admin .chat-content-text,
 .chat-content-admin .chat-content-time,
 .chat-content-admin .chat-content-personname {
     text-align: right;
+    color: white;
 }
 
 .chat-content-customer .chat-content-text,
@@ -603,4 +617,32 @@
     font-size: 12px;
     text-transform: capitalize;
     margin: 5px;
+}
+
+
+
+
+.chat-suggestions-modal {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.chat-suggestion-item {
+    padding: 4px;
+    cursor: pointer;
+    color: #333;
+}
+
+.chat-suggestion-item:hover {
+    background-color: #eee;
 }
