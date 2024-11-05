@@ -5,7 +5,7 @@ import discountTotal from '../dcalculator';
 import moment from 'moment';
 import { PaymentStatusChange, getPaymentStatusById } from '../../service/api_calls';
 import MaterialTable from 'material-table';
-import { CButton, CCol } from '@coreui/react';
+import { CButton, CCol, CSpinner } from '@coreui/react';
 import { Modal } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -132,14 +132,24 @@ function AccountsDetails(props) {
             setCurrenctOrderId(id);
             setProductPNLReport(response.data)
             setpnlReportLoading(false);
+
+            console.log(response.data, "Handle PNL Report")
+        }).catch(error => {
+            console.log(error, "Handle PNL Report")
         })
     }
 
+
+    const [loading, setLoading] = useState(false)
+
     const downloadPdf = async () => {
         try {
+            setLoading(true)
             const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
                 responseType: 'blob',
             });
+
+            setLoading(false)
             const blob = new Blob([response.data], { type: 'application/pdf' });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
@@ -257,7 +267,15 @@ function AccountsDetails(props) {
                                                         </table>
                                                     </>
                                                     :
-                                                    null
+
+                                                    <>
+                                                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+                                                            onClick={() => handlePNLReport(dataset.id)}
+                                                        // onClick={() => console.log(dataset)}
+                                                        >Show PNL report</CButton>
+                                                        {console.log(dataset, "Data set key iss dataa")}
+                                                    </>
+
                                         }
 
                                     </div>
@@ -270,11 +288,23 @@ function AccountsDetails(props) {
 
             <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Supplier Voucher</Modal.Title>
-                    {
-                        (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
-                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download Voucher</CButton>
-                    }
+                    <Modal.Title>PNL Report</Modal.Title>
+                    <div>
+
+
+
+
+                        {(productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
+                            <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download Voucher
+
+                                {loading ? <CSpinner variant="grow" size="sm" /> : null}
+
+                            </CButton>
+                        }
+
+
+
+                    </div>
                 </Modal.Header>
                 <Modal.Body>
                     {
