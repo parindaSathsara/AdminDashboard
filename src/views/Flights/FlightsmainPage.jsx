@@ -73,7 +73,7 @@ function FlightsmainPage() {
 
     const getFlightBookingDetails = async () => {
         await axios.get('http://192.168.1.23:8000/api/bookings').then((response) => {
-            console.log(response);
+            // console.log(response);
             setBookingCounts({
                 completed: response.data.length,
                 cancelled: response.data.length,
@@ -108,7 +108,7 @@ function FlightsmainPage() {
 
     const getPaxDetails = (value) => {
         let result = JSON.parse(value)
-        console.log(result);
+        // console.log(result);
         return <p> Adult x {result.adultCount}, Childs x {result.childCount}, Infants x {result.infCount}</p>
     }
 

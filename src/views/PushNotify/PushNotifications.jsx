@@ -39,7 +39,7 @@ function PushNotifications() {
 
     const getNotifications = async () => {
         await axios.get('http://192.168.1.23:8000/api/push_notifications').then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
                 setNotifications(response.data);
                 setNotificationsCopy(response.data);
@@ -94,7 +94,7 @@ function PushNotifications() {
         }
         if (updatingNotification.status) {
             await axios.put(`http://192.168.1.23:8000/api/push_notifications/${updatingNotification.id}`, dateset).then(async (response) => {
-                console.log(response);
+                // console.log(response);
                 if (response.status === 200) {
                     await getNotifications()
                     handlecloseModal()

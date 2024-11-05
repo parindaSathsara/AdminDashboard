@@ -10,7 +10,7 @@ const fetchInAppNotifications = async (id) => {
         }
     })
 
-    console.log(dataSet, "DataSet value is")
+    // console.log(dataSet, "DataSet value is")
 
     return dataSet
 }
@@ -27,7 +27,7 @@ const fetchInAppNotificationsCount = async (id) => {
         }
     })
 
-    console.log(dataSet, "DataSet value countttt is")
+    // console.log(dataSet, "DataSet value countttt is")
 
     return dataSet
 }
@@ -54,7 +54,7 @@ const getHotListCardOrderDetails = async (id) => {
 
 const readInAppNotifications = async (id) => {
 
-    console.log(`read_in_app_notifications_by_user/${id}`)
+    // console.log(`read_in_app_notifications_by_user/${id}`)
     await axios.get(`read_in_app_notifications_by_user/${id}`).then(res => {
 
     })

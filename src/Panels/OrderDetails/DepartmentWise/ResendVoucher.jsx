@@ -24,7 +24,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
         }
 
 
-        console.log(postdata, "Posting data is")
+        // console.log(postdata, "Posting data is")
 
         axios.post(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}/${type}`, postdata, {
             headers: {
@@ -47,7 +47,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
             })
             .catch(error => {
                 setVoucherSending("");
-                console.error('There was a problem with the Axios request:', error);
+                // console.error('There was a problem with the Axios request:', error);
             });
     }
 

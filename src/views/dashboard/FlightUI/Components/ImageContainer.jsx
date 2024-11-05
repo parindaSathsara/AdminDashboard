@@ -5,7 +5,7 @@ const ImageContainer = ({ images = [] }) => {
     return (
         <div className={`image-container image-count-${images.length}`}>
             {images.map((image, index) => {
-                console.log(image, "Image value is")
+                // console.log(image, "Image value is")
 
                 return (
                     <div key={index} className={`image-item`}>

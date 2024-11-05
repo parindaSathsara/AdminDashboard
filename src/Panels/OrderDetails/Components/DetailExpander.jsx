@@ -7,6 +7,7 @@ export default function DetailExpander(props) {
             {...props}
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
+            className='details'
             centered
         >
 

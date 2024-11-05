@@ -172,7 +172,7 @@ async function getDashboardProductOrderDetails(id) {
     var dataArray = [];
 
 
-    console.log(`/fetch_order_details_by_pid/${id}`, "Fetch Orders ID is")
+    // console.log(`/fetch_order_details_by_pid/${id}`, "Fetch Orders ID is")
 
     await axios.get(`/fetch_order_details_by_pid/${id}`).then((res) => {
 
@@ -313,13 +313,13 @@ async function updateDeliveryStatus(id, value, type) {
       type: type
 
     }
-    console.log(data, "DataSet is Updated123 ")
+    // console.log(data, "DataSet is Updated123 ")
 
 
 
     await axios.post('/update_delivery_status_by_product', data).then((res) => {
 
-      console.log(res.data, "Update Delivery Status")
+      // console.log(res.data, "Update Delivery Status")
 
       if (res.data.status === 200) {
 
@@ -353,10 +353,10 @@ async function updateDeliveryStatus(id, value, type) {
 
 
     }).catch((err) => {
-      console.log(err, "Checkout err isssss")
+      // console.log(err, "Checkout err isssss")
     })
 
-    console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
+    // console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
 
     axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
 
@@ -382,7 +382,7 @@ async function candelOrder(data) {
 
 
 
-  console.log("Cancel order data set is", data)
+  // console.log("Cancel order data set is", data)
   await axios.post("cancel_order", data).then((res) => {
     if (res.data.status === 200) {
       Swal.fire({

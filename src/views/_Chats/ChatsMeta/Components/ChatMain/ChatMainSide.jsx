@@ -17,7 +17,7 @@ const ChatMainSide = ({ selectedData = [] }) => {
     const chatBodyRef = useRef(null);
 
 
-    console.log(chatMessages, "DataSet Val 123444444444444444444444444")
+    // console.log(chatMessages, "DataSet Val 123444444444444444444444444")
 
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const ChatMainSide = ({ selectedData = [] }) => {
                 fetchedMessages.push({ ...doc.data(), id: doc.id });
             });
 
-            console.log(fetchedMessages, "Fetched messages")
+            // console.log(fetchedMessages, "Fetched messages")
 
 
             if (chatBodyRef.current) {

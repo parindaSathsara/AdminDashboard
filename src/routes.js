@@ -14,6 +14,8 @@ import FlightsmainPage from './views/Flights/FlightsmainPage'
 import PushNotifications from './views/PushNotify/PushNotifications'
 import FlightOrderView from './views/dashboard/FlightUI/FlightOrderView'
 import Typography from './views/theme/typography/Typography'
+import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
+import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -118,6 +120,11 @@ const routes = [
   // flights path
   { path: '/flights/*', name: 'Flights', element: FlightsmainPage },
   { path: '/pushNotifications/*', name: 'PushNotifications', element: PushNotifications },
+
+  // driver and vechicle allocation
+  { path: '/allocation', name: 'Orders Allocations', element: AllocationsHomepage, exact: true },
+
+  { path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
 
 ]
 
