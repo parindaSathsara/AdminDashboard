@@ -32,7 +32,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img src={logo} height={30}></img>
+        <img src={logo} height={40}></img>
 
       </CSidebarBrand>
 
@@ -51,7 +51,7 @@ const AppSidebar = () => {
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       /> */}
-      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.9</CCardText>
+      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.10</CCardText>
     </CSidebar>
   )
 }

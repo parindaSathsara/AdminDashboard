@@ -1,0 +1,62 @@
+.allocation-main-page-container {
+    background-color: white;
+}
+
+
+.driver-card {
+    display: grid;
+    border: 1px solid lightgray;
+    grid-template-areas:
+        'driver-name driver-card-icons'
+        'driver-regcountry driver-regcountry'
+        'driver-details driver-details'
+    ;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.driver-name {
+    grid-area: driver-name;
+    margin: 0px;
+    padding: 0px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.driver-regcountry {
+    grid-area: driver-regcountry;
+    margin: 0px;
+    padding: 0px;
+    font-size: 12px;
+    color: gray;
+}
+
+.driver-details {
+    grid-area: driver-details;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: start; 
+    text-transform: capitalize;
+    font-size: 12px;
+    margin: 5px 0px 0px 0px;
+    column-gap: 10px;
+}
+
+.driver-details p{
+    margin: 0px;
+    padding: 0px;
+}
+
+.driver-card-icons {
+    grid-area: driver-card-icons;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+}

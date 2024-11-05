@@ -71,7 +71,7 @@ const EmailDashboard = () => {
         setCheckoutIndexLoading(true);
         getOrderIndexIds(selectedOption?.value).then(response => {
 
-            console.log(response);
+            // console.log(response);
 
             setOrderIndexIdVals(response)
 

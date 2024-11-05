@@ -41,19 +41,13 @@ export default function ProductWiseOrders() {
                 setAllOrdersProductsStatic(res.data.productData)
 
                 setCustomerData(res.data.customerData);
-                console.log(res.data);
+                // console.log(res.data);
                 setLoading(false);
             }
         }).catch(() => {
             setLoading(false);
         });
     };
-
-
-
-
-
-
 
     useEffect(() => {
         getAllProductsOrders("load");
@@ -73,7 +67,7 @@ export default function ProductWiseOrders() {
 
                     getAllProductsOrders("realtime");
                 } else {
-                    console.log("No orders found.");
+                    // console.log("No orders found.");
                 }
                 getAllProductsOrders("realtime");
             },
@@ -98,16 +92,19 @@ export default function ProductWiseOrders() {
     }, [currentFilters, allOrdersProductsStatic]);
 
     const handleMoreInfoModal = (row) => {
-        console.log(row);
 
         setMoreOrderModalCategory(row?.info.catid);
         if (row?.info.catid === 3) {
             setMoreOrderDetails(row?.info.lifestyle_booking_id);
+            console.log(row?.info.lifestyle_booking_id);
         } else if (row?.info.catid === 1) {
             setMoreOrderDetails(row?.info.essential_pre_order_id);
+            console.log(row?.info.essential_pre_order_id);
         } else if (row?.info.catid === 5) {
             setMoreOrderDetails(row?.info.booking_id);
+            console.log(row?.info.booking_id);
         }
+        console.log(row);
         setMoreOrderModal(true);
         setMainDataSet(row);
     };
@@ -127,14 +124,20 @@ export default function ProductWiseOrders() {
         {
             accessorKey: 'product_image',
             header: 'Product Image',
-            Cell: ({ row }) => (
-                <div style={{ width: "100px", height: "100px", borderRadius: 20 }}>
-                    <CCardImage
-                        src={row.original.product_image?.split(",")[0]?.includes("http") ? row.original.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + row.original.product_image?.split(",")[0]}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 20 }}
-                    />
-                </div>
-            ),
+            Cell: ({ row }) => {
+
+
+
+                return (
+                    <div style={{ width: "100px", height: "100px", borderRadius: 20 }}>
+                        <CCardImage
+                            src={row.original.product_image?.split(",")[0]?.includes("http") ? row.original.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + row.original.product_image?.split(",")[0]}
+                            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 20 }}
+                        />
+                    </div>
+                )
+
+            },
             enableColumnFilter: false
         },
         { accessorKey: 'product_id', header: 'Product ID', enableColumnFilter: false },
@@ -268,12 +271,12 @@ export default function ProductWiseOrders() {
         setMoreOrderModal(false)
         // getAllProductsOrders("realtime");
 
-        console.log("Passing Dataset")
+        // console.log("Passing Dataset")
     }
 
     const handleUpdateState = () => {
 
-        console.log("Updating State")
+        // console.log("Updating State")
         getAllProductsOrders("realtime");
     }
 

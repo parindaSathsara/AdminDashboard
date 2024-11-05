@@ -36,7 +36,7 @@ const fetchMessages = (id) => {
             fetchedMessages.push({ ...doc.data(), id: doc.id });
         });
 
-        console.log(fetchedMessages, "Fetched messages")
+        // console.log(fetchedMessages, "Fetched messages")
         return fetchedMessages
     })
 }

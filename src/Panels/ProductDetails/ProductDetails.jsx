@@ -245,8 +245,8 @@ function ProductDetails(props) {
                 hidden: props.hideStatus,
                 render: (e) => {
 
-                    console.log(e, "Data set delivery is")
-                    console.log(e.status, "Delivery status1")
+                    // console.log(e, "Data set delivery is")
+                    // console.log(e.status, "Delivery status1")
                     return (
                         <>
                             <select
@@ -558,7 +558,7 @@ function ProductDetails(props) {
         //     cancelButtonColor: "#d33",
         //     confirmButtonText: "Yes"
         // }).then((result) => {
-        //     // console.log(result, "IS Confirmed")
+            // console.log(result, "IS Confirmed")
 
         //     if (result.isConfirmed) {
 
@@ -808,8 +808,6 @@ function ProductDetails(props) {
 
                 </div>
 
-                {/* {// console.log("product data value is ", productData)} */}
-                {/* {// console.log(customerData, "Customerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")} */}
                 {props?.accounts ?
                     null :
                     <>

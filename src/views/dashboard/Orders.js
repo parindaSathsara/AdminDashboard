@@ -190,7 +190,7 @@ const Orders = () => {
         if (!querySnapshot.empty) {
           initialDataHandler("realtime");
         } else {
-          console.log("No orders found.");
+          // console.log("No orders found.");
         }
 
       },
@@ -398,7 +398,7 @@ const Orders = () => {
   const handleTest = () => {
 
     for (let index = 0; index < 50; index++) {
-      console.log("first trigger test")
+      // console.log("first trigger test")
       axios.get(`button_trigger_test`).then(response => {
 
       })
@@ -472,17 +472,9 @@ const Orders = () => {
 
 
 
-            <Tabs
-              defaultActiveKey="group"
-              id="uncontrolled-tab-example"
-              className="mt-4"
-              style={{ fontSize: 16 }}
-            >
+            <Tabs defaultActiveKey="group" id="uncontrolled-tab-example" className="mt-4" style={{ fontSize: 16 }} >
               <Tab eventKey="group" title="Group Wise">
-                <MaterialReactTable
-                  table={table}
-
-                />
+                <MaterialReactTable table={table} />
               </Tab>
               <Tab eventKey="product" title="Product Wise">
                 <ProductWiseOrders />

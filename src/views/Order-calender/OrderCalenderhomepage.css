@@ -1,0 +1,63 @@
+.OrderCalenderhomepage-home-container {
+    background-color: white;
+    min-height: 81vh;
+    padding: 30px 20px;
+}
+
+.meeting-count {
+    text-align: center;
+    font-size: 8px;
+}
+
+.react-calendar {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    padding: 20px 20px;
+    border-radius: 8px;
+}
+
+.orders-table {
+    border: 1px solid lightgray;
+    width: 100%;
+    padding: 20px 20px;
+    border-radius: 8px;
+}
+
+.order-timeline {
+    margin: 20px 0px;
+    border-left: 1px solid red;
+    padding: 0px 0px 0px 15px;
+}
+
+.order-timeline-time {
+    display: flex;
+    align-items: center;
+}
+
+.order-timeline-time span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: red;
+    position: relative;
+    bottom: 5px;
+    margin-right: 10px;
+}
+
+.order-timeline-time h6{
+    font-size: 12px;
+}
+
+.order-details{
+    padding: 0px 0px 0px 20px;
+    font-size: 12px;
+}
+
+.order-details span{
+    padding: 0px 4px;
+    font-size: 10px;
+    color: blue;
+    font-style: italic;
+    cursor: pointer;
+}

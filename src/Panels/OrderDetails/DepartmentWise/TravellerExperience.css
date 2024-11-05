@@ -2,3 +2,65 @@
     z-index: 9999 !important;
     /* Ensure it’s on top of other components */
 }
+
+.driverListModalBody-mainContainer {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.driverListModalBody-mainContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+.driverListModalBody-mainContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.driverListModalBody-mainContainer::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.driver-vehicle-list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+    margin: 10px;
+    gap: 0px;
+}
+
+.vehicle-details,
+.driver-details,
+.vehicle-details-secondary,
+.driver-details-secondary {
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.vehicle-details h6 {
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 14px !important;
+}
+
+.driver-details h6,
+.vehicle-details-secondary h6,
+.driver-details-secondary h6 {
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 12px !important;
+}
+
+.driver-vehicle-list .btn-submit-button {
+    all: unset;
+    font-size: 10px;
+    padding: 4px 10px;
+    text-align: center;
+    background-color: lightblue;
+    margin-top: 10px;
+}

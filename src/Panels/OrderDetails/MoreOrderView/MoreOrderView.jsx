@@ -29,12 +29,12 @@ export default function MoreOrderView(props) {
     useEffect(() => {
 
 
-        console.log("Modal is loading in background")
+        // console.log("Modal is loading in background")
 
         if (props?.notificationView) {
 
             setProductDataSet(props?.notificationViewData)
-            console.log(props?.notificationViewData, "Notification View Data set isi")
+            // console.log(props?.notificationViewData, "Notification View Data set isi")
 
         }
         else {
@@ -44,7 +44,7 @@ export default function MoreOrderView(props) {
                 setLoading(false)
 
             }).catch(response => {
-                console.log(response, "Catch Response is")
+                // console.log(response, "Catch Response is")
                 setLoading(false)
             })
 

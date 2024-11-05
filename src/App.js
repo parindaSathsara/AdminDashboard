@@ -1,24 +1,24 @@
 import axios from 'axios'
-
-import React, { Suspense, useEffect, useState } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
-
+import React, { Component, Suspense, useEffect, useState } from 'react'
+import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { UserLoginContext } from './Context/UserLoginContext'
+import InAppNotificationService from './service/InAppNotificationService'
 import { CurrencyContext } from './Context/CurrencyContext'
 
 import './scss/style.scss'
+import './App.css';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-axios.defaults.data = 'https://admin-api.aahaas.com'
+//
+axios.defaults.baseURL = 'https://admin-api.aahaas.com/api';
+axios.defaults.data = 'https://admin-api.aahaas.com';
 
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
 // axios.defaults.data = 'http://172.16.26.238:8000'
@@ -47,26 +47,38 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(
   (response) => {
-    // If the response is successful, simply return it
-    return response;
+    return response; // If the response is successful, simply return it
   },
   (error) => {
+
     const status = error.response ? error.response.status : null;
+
+
     if (error.response && error.response.status === 401) {
       sessionStorage.clear();
       localStorage.clear();
       window.location.href = '/#/login';
-      console.log("Auth Checking User", error)
+      // console.log("Auth Checking User", error)
     }
+
     else if (status === 500) {
+
       console.error('A server error occurred. Please try again later.');
+
     } else if (status === 404) {
+
       console.error('The requested resource was not found.');
+
     } else if (status >= 400 && status < 500) {
+
       console.error('A client error occurred:', error.response.data);
+
     } else {
+
       console.error('An unknown error occurred.');
+
     }
+
     return Promise.reject(error);
   }
 );
@@ -88,19 +100,19 @@ function App() {
 
   const userid = localStorage.getItem("userID");
 
-  const [userLogin, setUserLogin] = useState(false)
-  const [userData, setUserData] = useState(false)
-  const [currencyData, setCurrencyData] = useState([])
-
   window.addEventListener('unhandledrejection', function (event) {
     event.preventDefault();
     console.error('Unhandled promise rejection:', event.reason.message);
   });
 
+  const [userLogin, setUserLogin] = useState(false)
+  const [userData, setUserData] = useState(false)
+  const [currencyData, setCurrencyData] = useState([])
+
   useEffect(() => {
     if (userid) {
       const userDataVal = JSON.parse(localStorage.getItem('user'));
-      setUserData(userDataVal)
+      setUserData(userDataVal);
       setUserLogin(true)
       axios.get(`getCurrency/${"USD"}`).then(response => {
         if (response?.data?.status == 200) {
@@ -125,8 +137,8 @@ function App() {
                   </>
                   :
                   <>
-                    {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} /> */}
-                    {/* <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
+                    {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
+                <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
                     <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
                   </>
               }
@@ -135,6 +147,7 @@ function App() {
         </HashRouter>
       </UserLoginContext.Provider>
     </CurrencyContext.Provider>
+
   );
 
 }
