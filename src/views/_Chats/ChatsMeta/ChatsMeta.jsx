@@ -12,7 +12,6 @@ import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass
 
 import { UserLoginContext } from "src/Context/UserLoginContext";
 import { Tooltip } from "@material-ui/core";
-
 import './chatsMeta.css';
 
 function ChatsMeta() {
