@@ -143,21 +143,26 @@ function AccountsDetails(props) {
     const [loading, setLoading] = useState(false)
 
     const downloadPdf = async () => {
-        try {
-            setLoading(true)
-            const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
-                responseType: 'blob',
-            });
 
-            setLoading(false)
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = `PNL_report-OrderId-${currenctOrdeId}.pdf`;
-            link.click();
-        } catch (error) {
-            console.error('Error downloading the PDF:', error);
-        }
+        const url = `${axios.defaults.baseURL}/pnl/order/${currenctOrdeId}/pdf`;
+        console.log("Opening URL:", url);
+        window.open(url, '_blank');
+
+        // try {
+        //     setLoading(true)
+        //     const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
+        //         responseType: 'blob',
+        //     });
+
+        //     setLoading(false)
+        //     const blob = new Blob([response.data], { type: 'application/pdf' });
+        //     const link = document.createElement('a');
+        //     link.href = window.URL.createObjectURL(blob);
+        //     link.download = `PNL_report-OrderId-${currenctOrdeId}.pdf`;
+        //     link.click();
+        // } catch (error) {
+        //     console.error('Error downloading the PDF:', error);
+        // }
     };
 
     const handleCLosePNRLReportModal = () => {

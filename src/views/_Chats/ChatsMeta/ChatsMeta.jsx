@@ -339,10 +339,20 @@ function ChatsMeta() {
                         <div className="d-flex flex-wrap">
                             {
                                 filterTypes.map((value, key) => (
-                                    <div key={key} className="filter-types">
-                                        <input value="Product-support" onChange={() => handleFilterBoxes(value.filtertype, value.label_name)} type="checkbox" />
-                                        <label htmlFor="Product-support">{value.label_name} x {value.items}</label>
-                                    </div>
+                                    <>
+                                        {value?.items != 1 ?
+
+                                            <div key={key} className="filter-types">
+                                                <input value="Product-support" onChange={() => handleFilterBoxes(value.filtertype, value.label_name)} type="checkbox" />
+                                                <label htmlFor="Product-support">{value.label_name} x {value.items}</label>
+                                            </div>
+                                            :
+                                            null
+
+                                        }
+
+                                    </>
+
                                 ))
                             }
                         </div>

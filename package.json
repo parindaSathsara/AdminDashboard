@@ -3,6 +3,7 @@
   "version": "4.5.0",
   "description": "Aahaas",
   "homepage": ".",
+  "proxy": "https://staging-admin-api.aahaas.com",
   "bugs": {
     "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
   },
