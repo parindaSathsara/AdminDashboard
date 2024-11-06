@@ -319,10 +319,10 @@ export default function SupplierExperience(props) {
   async function fetchPDF() {
     try {
       // Constructing the URL for the PDF download
-      const url = `https://gateway.aahaas.com/api/downloadIndividualPDF/${selectedSupplierVoucherData?.checkout_id}/${props?.orderid}`;
+      const url = `${axios.defaults.baseURL}/supplier-voucher/${selectedSupplierVoucherData?.checkout_id}/pdf`;
 
       // Open the URL in a new tab/window
-      window.open(url, '_blank');
+      window.location.href = url
 
     } catch (error) {
       console.error('Error fetching PDF:', error);
