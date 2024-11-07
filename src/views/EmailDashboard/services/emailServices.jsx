@@ -22,10 +22,9 @@ const downloadOrderReceipt = async (id) => {
 
   try {
     // Constructing the URL for the PDF download
-    const url = `https://gateway.aahaas.com/api/downloadOrderReceipt/${id}`;
+    const url = `${axios.defaults.baseURL}/customer-voucher-by-order/${id}/pdf`;
 
-    // Open the URL in a new tab/window
-    window.open(url, '_blank');
+    window.location.href = url;
 
   } catch (error) {
     console.error('Error fetching PDF:', error);
@@ -74,7 +73,7 @@ const resendOrderEmailToCustomer = (id) => {
     }
   });
 
-  axios.post(`https://gateway.aahaas.com/api/receipt/create/mail/${id}`)
+  axios.post(`${axios.defaults.baseURL}/customer-voucher-by-order/${id}/mail`)
     .then(res => {
       if (res.data.status === 200) {
         Swal.fire(
