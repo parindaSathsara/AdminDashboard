@@ -523,12 +523,13 @@
     font-size: 14px;
     line-height: 18px;
     font-weight: 500;
+    white-space: pre-wrap;
 }
 
 .chat-content-admin .chat-content-text,
 .chat-content-admin .chat-content-time,
 .chat-content-admin .chat-content-personname {
-    text-align: right;
+    text-align: left;
     color: white;
 }
 

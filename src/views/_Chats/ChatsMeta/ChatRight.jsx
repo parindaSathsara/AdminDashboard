@@ -413,12 +413,12 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                     <h6 className="chat-details-head-name">{chatOpenDetails?.chat_name}</h6>
                                     <h6 className="chat-details-head-related-with">{chatOpenDetails?.chat_related}</h6>
                                 </div>
-                                <div className={searchBarStatus.status ? 'search-bar-open' : 'search-bar-close'}>
+                                {/* <div className={searchBarStatus.status ? 'search-bar-open' : 'search-bar-close'}>
                                     <input type="text" placeholder="Search your messages.." value={searchBarStatus.searchKeyword} onChange={(e) => handleChatSearch(e.target.value)} />
                                     <FontAwesomeIcon icon={faXmark} onClick={() => handleSearchBar({ status: false })} />
-                                </div>
+                                </div> */}
                                 <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
-                                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} />
+                                    {/* <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} /> */}
                                     <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: chatPinned ? '#ffd00f' : 'white' }} />
                                     {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
                                 </div>
@@ -446,7 +446,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                                                 {
                                                                     messageClipBoard === value.id ?
                                                                         <pre className="chat-content-text">{value.text}</pre>
-                                                                        : <h6 className="chat-content-text">{value.text}</h6>
+                                                                        : <p className="chat-content-text">{value.text}</p>
                                                                 }
                                                                 <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
                                                                 <p className="chat-content-time">by {value.name.slice(0, 7)}</p>

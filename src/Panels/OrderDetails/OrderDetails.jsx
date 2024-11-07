@@ -13,7 +13,7 @@ import AccountsDetails from '../AccountsDetails/AccountsDetails';
 import SupDetails from '../SupDetails/SupDetails';
 import FeebackDetails from '../FeebackDetails/FeebackDetails';
 import PaymentModal from '../PaymentModal/PaymentModal';
-import { CAlert, CButton, CCard, CCardBody, CCardImage, CCardText, CCardTitle, CCol, CImage, CRow } from '@coreui/react';
+import { CAlert, CButton, CCard, CCardBody, CCardImage, CCardText, CCardTitle, CCol, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, CRow } from '@coreui/react';
 import CustomerDetails from '../CustomerDetails/CustomerDetails';
 import CheckIcon from '@mui/icons-material/Check';
 import { cibAboutMe, cibAbstract, cilCheck, cilCheckAlt, cilCheckCircle, cilDescription, cilInfo, cilViewColumn, cilViewModule, cilXCircle } from '@coreui/icons';
@@ -30,6 +30,7 @@ import DateWiseSummary from './DateWiseSummary/DateWiseSummary';
 import TravellerExperience from './DepartmentWise/TravellerExperience';
 import FlightOrderView from 'src/views/dashboard/FlightUI/FlightOrderView';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
+import axios from 'axios';
 
 function OrderDetails(props) {
 
@@ -603,6 +604,13 @@ function OrderDetails(props) {
         );
     };
 
+
+    const handleDownload = (val) => {
+        const url = `${axios.defaults.baseURL}/generate-itinerary-by-order/${props.orderid}/${val}/pdf`;
+        console.log("Opening URL:", url);
+        window.open(url, '_blank');
+    };
+
     return (
         detailsLoading == true ?
             <div class="d-flex justify-content-center py-5">
@@ -649,6 +657,24 @@ function OrderDetails(props) {
                                 :
                                 <>
                                     <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
+
+                                    {!props?.productViewData ?
+                                        <CDropdown variant="btn-group">
+                                            <CDropdownToggle color="success">Download Itinerary</CDropdownToggle>
+                                            <CDropdownMenu>
+
+                                                <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleDownload("long")}>
+                                                    Long Itinerary
+                                                </CDropdownItem>
+                                                <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleDownload("short")}>
+                                                    Short Itinerary
+                                                </CDropdownItem>
+
+                                            </CDropdownMenu>
+                                        </CDropdown>
+                                        :
+                                        <></>
+                                    }
 
                                     <Tabs
                                         defaultActiveKey="service"
