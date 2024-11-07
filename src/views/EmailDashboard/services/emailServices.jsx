@@ -116,18 +116,47 @@ const confirmResendEmail = (id) => {
 
 
 const resendAllSupplierVouchers = (id, indexId, goid) => {
+
+  let url;
   if (id == "All") {
-
-    axios.post(`https://gateway.aahaas.com/api/receipt-items/create/mail/${id}`).then(res => {
-
-    })
-
+    url = `https://gateway.aahaas.com/api/receipt-items/create/mail/${id}`;
   }
   else {
-    axios.post(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${indexId}/${goid}/A`).then(res => {
-
-    })
+    url = `${axios.defaults.baseURL}/supplier-voucher/${indexId}/mail`;
   }
+
+  Swal.fire({
+    title: 'Sending...',
+    text: 'Resending the order email, please wait.',
+    allowOutsideClick: false,
+    onBeforeOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  axios.post(url)
+    .then(res => {
+      if (res.data.status === 200) {
+        Swal.fire(
+          'Email Sent!',
+          'The order email has been resent successfully.',
+          'success'
+        );
+      } else {
+        Swal.fire(
+          'Error!',
+          'There was an issue resending the order email.',
+          'error'
+        );
+      }
+    })
+    .catch(error => {
+      Swal.fire(
+        'Error!',
+        'There was an issue resending the order email.',
+        'error'
+      );
+    });
 }
 
 
