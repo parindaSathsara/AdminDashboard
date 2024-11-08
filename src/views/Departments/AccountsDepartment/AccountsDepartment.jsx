@@ -210,7 +210,7 @@ const Dashboard = () => {
                       setProgress(100);
                       Swal.fire({
                           title: "Payment Approved!",
-                          text: `Order - ${orderid} Payment Approved`,
+                          text: res.data.message,
                           icon: "success"
                       });
                   })
@@ -218,7 +218,7 @@ const Dashboard = () => {
                       setProgress(100);
                       Swal.fire({
                           title: "Error While Approving Payment",
-                          text: `Order - ${orderid} Failed to approve the payment`,
+                          text: error?.response.data.message,
                           icon: "error"
                       });
                   });
