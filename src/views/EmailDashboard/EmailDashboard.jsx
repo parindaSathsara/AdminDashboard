@@ -127,12 +127,15 @@ const EmailDashboard = () => {
                 text: `Please select the following fields: ${missingFields.join(', ')}`,
             });
             return;
+
         }
+
+
 
         if (emailType.value === "customer_invoice") {
             confirmResendEmail(selectedOrderID.value);
         } else {
-            resendAllSupplierVouchers(selectedOrderID.value);
+            resendAllSupplierVouchers(selectedOrderID?.value, selectedOrderIndexId?.value)
         }
     };
 
