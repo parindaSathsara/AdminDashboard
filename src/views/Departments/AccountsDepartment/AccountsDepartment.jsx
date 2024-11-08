@@ -191,48 +191,40 @@ const Dashboard = () => {
 
 
     const handleApprovePayment = () => {
+      setProgress(0);
 
-        setProgress(0)
+      Swal.fire({
+          title: "Are you sure?",
+          text: "You want to approve this payment",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#2eb85c",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Approve Payment"
+      }).then((result) => {
+          if (result.isConfirmed) {
+              setProgress(25);
 
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You want to approve this payment",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#2eb85c",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Approve Payment"
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-
-                setProgress(25)
-                fetch(`${axios.defaults.baseURL}/order/${orderid}/approve-payment`).then(res => {
-
-                    setProgress(100)
-                    Swal.fire({
-                        title: "Payment Approved!",
-                        text: "Order - " + orderid + " Payment Approved",
-                        icon: "success"
-                    });
-
-                    // }
-                    // else {
-                    //     setProgress(100)
-                    //     Swal.fire({
-                    //         title: "Error While Invoice Generation",
-                    //         text: "Order - " + orderid + " Failed to generate the invoice",
-                    //         icon: "error"
-                    //     });
-                    // }
-                })
-            }
-        });
-
-        // // console.log("handle approve payment")
-        // // console.log("Handle Approve Payment")
-
-    }
+              axios.post(`/order/${orderid}/approve-payment`)
+                  .then(res => {
+                      setProgress(100);
+                      Swal.fire({
+                          title: "Payment Approved!",
+                          text: `Order - ${orderid} Payment Approved`,
+                          icon: "success"
+                      });
+                  })
+                  .catch(error => {
+                      setProgress(100);
+                      Swal.fire({
+                          title: "Error While Approving Payment",
+                          text: `Order - ${orderid} Failed to approve the payment`,
+                          icon: "error"
+                      });
+                  });
+          }
+      });
+  };
 
     const handleRejectPayment = () => {
         setPaymentRejection(true)
