@@ -77,6 +77,9 @@ const ReportGenerationPage = () => {
             dateType: dateType
         };
 
+
+        console.log(dataSet, "Data set value is data")
+
         setLoading(true);
         if (reportType?.value === 'chats_report') {
             await getChatServices(dataSet).then((response) => {

@@ -31,12 +31,16 @@ function OrderDetailsAccounts(props) {
     }, [props.paymentDataSet])
 
 
+
+    console.log(paymentDataSet, "Payment Data set value is")
+
+
     return (
 
         <div className="orderDetailsMainContainer">
 
             <CRow>
-                <CCol xs={12} sm={6} lg={4}>
+                <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
                         text="Lorem ipsum dolor sit amet enim."
@@ -45,7 +49,7 @@ function OrderDetailsAccounts(props) {
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount}
                     />
                 </CCol>
-                <CCol xs={12} sm={6} lg={4}>
+                <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
 
@@ -55,12 +59,22 @@ function OrderDetailsAccounts(props) {
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.paid_amount}
                     />
                 </CCol>
-                <CCol xs={12} sm={6} lg={4}>
+                <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.balance_amount}
                         title="Balance Amount"
                         progress={{ color: 'warning', value: (paymentDataSet.balance_amount / paymentDataSet.total_amount) * 100 }}
+                        text="Lorem ipsum dolor sit amet enim."
+                    />
+                </CCol>
+
+                <CCol xs={12} sm={6} lg={3}>
+                    <CWidgetStatsC
+                        className="mb-4"
+                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.delivery_charge}
+                        title="Balance Amount"
+                        progress={{ color: 'warning', value: (paymentDataSet.delivery_charge / paymentDataSet.total_amount) * 100 }}
                         text="Lorem ipsum dolor sit amet enim."
                     />
                 </CCol>

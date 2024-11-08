@@ -19,6 +19,7 @@ import CIcon from '@coreui/icons-react';
 import { cilCloudDownload, cilReload } from '@coreui/icons';
 import { confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, downloadSupplierVoucherOneByOne, getOrderIDs, getOrderIndexIds, resendAllSupplierVouchers } from './services/emailServices';
 import RichTextEditor from './RichTextEditor';
+import Swal from 'sweetalert2';
 
 
 const EmailDashboard = () => {
@@ -115,34 +116,56 @@ const EmailDashboard = () => {
 
     const handleEmailResend = () => {
 
-        if (emailType?.value == "customer_invoice") {
-            confirmResendEmail(selectedOrderID?.value)
+        const missingFields = [];
+        if (!emailType?.value) missingFields.push("Email Type");
+        if (!selectedOrderID?.value) missingFields.push("Order ID");
+
+        if (missingFields.length > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: `Please select the following fields: ${missingFields.join(', ')}`,
+            });
+            return;
         }
-        else {
 
-            resendAllSupplierVouchers(selectedOrderID?.value)
+        if (emailType.value === "customer_invoice") {
+            confirmResendEmail(selectedOrderID.value);
+        } else {
+            resendAllSupplierVouchers(selectedOrderID.value);
         }
-
-
-    }
-
+    };
 
     const handleDownloadReceipt = () => {
-        if (emailType?.value == "customer_invoice") {
-            downloadOrderReceipt(selectedOrderID?.value)
+
+        const missingFields = [];
+        if (!emailType?.value) missingFields.push("Email Type");
+        if (!selectedOrderID?.value) missingFields.push("Order ID");
+
+        if (emailType.value !== "customer_invoice" && !selectedOrderIndexId?.value) {
+            missingFields.push("Order Index ID");
         }
-        else {
 
-            if (selectedOrderIndexId?.value == "All") {
-                downloadAllSupplierVouchers(selectedOrderID?.value, orderIndexIdVals)
-            }
-            else {
-                downloadSupplierVoucherOneByOne(selectedOrderIndexId?.value, selectedOrderID?.value)
-            }
-
-
+        if (missingFields.length > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: `Please select the following fields: ${missingFields.join(', ')}`,
+            });
+            return;
         }
-    }
+
+        if (emailType.value === "customer_invoice") {
+            downloadOrderReceipt(selectedOrderID.value);
+        } else {
+            if (selectedOrderIndexId.value === "All") {
+                downloadAllSupplierVouchers(selectedOrderID.value, orderIndexIdVals);
+            } else {
+                downloadSupplierVoucherOneByOne(selectedOrderIndexId.value, selectedOrderID.value);
+            }
+        }
+    };
+
 
 
     const [checkoutIndexLoading, setCheckoutIndexLoading] = useState(false)
