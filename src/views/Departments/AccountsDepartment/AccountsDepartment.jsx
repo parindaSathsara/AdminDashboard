@@ -207,7 +207,7 @@ const Dashboard = () => {
 
 
                 setProgress(25)
-                fetch(`https://gateway.aahaas.com/api/receipt/create/mail/${orderid}`).then(res => {
+                fetch(`${axios.defaults.baseURL}/order/${orderid}/approve-payment`).then(res => {
 
                     setProgress(100)
                     Swal.fire({
