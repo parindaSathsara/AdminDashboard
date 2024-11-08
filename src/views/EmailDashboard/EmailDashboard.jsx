@@ -120,7 +120,7 @@ const EmailDashboard = () => {
         }
         else {
 
-            resendAllSupplierVouchers(selectedOrderID?.value)
+            resendAllSupplierVouchers(selectedOrderID?.value,selectedOrderIndexId?.value)
         }
 
 
