@@ -145,7 +145,7 @@ function CustomerFeedbacks(props) {
 
                 icon: "success"
               });
-
+              props.closeModel()
             } else {
               alert('something got mistake')
             }

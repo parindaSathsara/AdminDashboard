@@ -78,7 +78,7 @@ const AccountsRefunds = () => {
         setOrderId(e)
     }
 
-
+    const closeModel = ()=>setShowModal(false);
 
 
 
@@ -218,7 +218,7 @@ const AccountsRefunds = () => {
                 </Modal.Header>
 
                 <Modal.Body className="modalBodyDef">
-                    <CustomerFeedbacks orderId={orderid} orderValue={refundDataSet} onFeedback={handleFeedback}></CustomerFeedbacks>
+                    <CustomerFeedbacks closeModel={closeModel} orderId={orderid} orderValue={refundDataSet} onFeedback={handleFeedback}></CustomerFeedbacks>
                 </Modal.Body>
 
                 <Modal.Footer className="mainFooterModal">
