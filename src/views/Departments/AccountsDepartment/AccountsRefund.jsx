@@ -125,7 +125,10 @@ const AccountsRefunds = () => {
         title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
       },
       {
-        title: 'Refund Amount', field: 'refund_amount', align: 'left', editable: 'never',
+        title: 'Reqest Refund', field: 'refund_amount', align: 'left', editable: 'never',
+      },
+      {
+        title: 'Refunded Amount', field: 'refunding_amount', align: 'left', editable: 'never',
       },
       {
         title: 'Actions', field: 'actions', align: 'center', editable: 'never',
@@ -133,6 +136,7 @@ const AccountsRefunds = () => {
     ],
     rows: refundRequests?.map((value, idx) => {
       return {
+        refunding_amount: value.refunding_amount,
         type: value.refund_type,
         oid: value.checkout_id,
         reason_refund: value.reason_for_refund,
