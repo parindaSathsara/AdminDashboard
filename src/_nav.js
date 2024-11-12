@@ -22,12 +22,12 @@ const _nav = [
   //   to: '/allocation',
   //   icon: <CIcon icon={cilGarage} customClassName="nav-icon" />,
   // },
-  {
-    component: CNavItem,
-    name: 'Orders calendar',
-    to: '/order-calendar',
-    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Orders calendar',
+  //   to: '/order-calendar',
+  //   icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+  // },
   {
     component: CNavTitle,
     name: 'Other',

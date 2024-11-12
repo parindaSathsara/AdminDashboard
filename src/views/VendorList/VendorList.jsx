@@ -299,24 +299,34 @@ const VendorList = () => {
     }
 
 
+    const [validationIssue, setValidationIssues] = useState("")
+
     const handleReject = () => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You want to reject this document",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#979797",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Reject Document"
-        }).then((result) => {
-            if (result.isConfirmed) {
 
-                handleRejectDocuments();
-                rejectPayments();
+        if (!rejectionReason) {
+            setValidationIssues("Please fill Reason for Rejection")
+        }
+        else {
+            setValidationIssues("")
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to reject this document",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#979797",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Reject Document"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    handleRejectDocuments();
+                    rejectPayments();
 
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     const rejectPayments = async () => {
@@ -416,6 +426,15 @@ const VendorList = () => {
                         <CCol md={12}>
                             <CFormLabel>Reason For Rejection</CFormLabel>
                             <CFormTextarea id="exampleFormControlTextarea1" onChange={(e) => setRejectionReason(e.target.value)} value={rejectionReason} rows={3}></CFormTextarea>
+
+                            {validationIssue ?
+
+                                <p style={{ color: 'red' }}>{validationIssue}</p>
+                                :
+                                null
+
+                            }
+
                         </CCol>
 
                     </Modal.Body>

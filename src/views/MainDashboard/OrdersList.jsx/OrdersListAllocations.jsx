@@ -17,6 +17,7 @@ import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import { Tab, Tabs } from 'react-bootstrap';
 
 import '../../dashboard/MainComponents/ProductWiseOrders.css'
+import HotelsOrderView from 'src/Panels/OrderDetails/MoreOrderView/Categories/HotelsOrderView';
 
 
 // Function to fetch and map rows
@@ -426,9 +427,15 @@ const OrderAllocate = ({ normalUser = false }) => {
     const [moreOrderDetails, setMoreOrderDetails] = useState("")
     const [mainDataSet, setMainDataSet] = useState([])
 
+
+
+    const [hotelDataSet, setHotelDataSet] = useState([])
     const handleMoreInfoModal = (row) => {
 
         // console.log(row, "Row Data iss Data set")
+
+
+        console.log(row?.info, "Info is data value")
 
         setMoreOrderModalCategory(row?.info.catid)
         if (row?.info.catid == 3) {
@@ -437,6 +444,14 @@ const OrderAllocate = ({ normalUser = false }) => {
         }
         else if (row?.info.catid == 1) {
             setMoreOrderDetails(row?.info.essential_pre_order_id)
+            setMoreOrderModal(true)
+        }
+
+
+        else if (row?.info.catid == 4) {
+            setMoreOrderDetails(row?.info.hotel_pre_booking_id)
+
+            setHotelDataSet(row?.info)
             setMoreOrderModal(true)
         }
 
@@ -462,7 +477,9 @@ const OrderAllocate = ({ normalUser = false }) => {
                 preID={moreOrderDetails}
                 category={moreOrderModalCategory}
                 productViewData
+                hotelsOrderView={hotelDataSet}
                 productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData />}
+
             >
             </MoreOrderView>
 

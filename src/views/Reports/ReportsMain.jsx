@@ -64,6 +64,14 @@ const ReportGenerationPage = () => {
         if (!reportType) errors.reportType = 'Report type is required';
         if (!category || category.value === '' || category.value === 0) errors.category = 'Category is required';
 
+        if (startDate && endDate) {
+            const start = moment(startDate);
+            const end = moment(endDate);
+            if (start.isAfter(end)) {
+                errors.startDate = 'Start date cannot be later than end date';
+            }
+        }
+
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
             return;

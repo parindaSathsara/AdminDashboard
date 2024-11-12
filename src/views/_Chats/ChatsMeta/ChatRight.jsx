@@ -12,13 +12,14 @@ import aahaaslogo from '../../../assets/brand/aahaslogo.png';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles, faMagnifyingGlassLocation, faMagnet } from '@fortawesome/free-solid-svg-icons';
 
 import { Tooltip } from "@material-ui/core";
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons';
 import SuggestionModal from './Components/SuggestionsModal';
 import sendPushNotificationsOnChats from './functions/sendPushNotificationsOnChats';
+import ProductSuggestionModal from './Components/ProductSuggestionModal';
 
 
 export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
@@ -387,6 +388,19 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     }
 
 
+
+    const [productAutoSuggestion, setProductAutoSuggestion] = useState(false)
+
+    const handleProductSuggestions = () => {
+        setProductAutoSuggestion(true)
+    }
+
+
+    const onMessageSelectProductSuggest = () => {
+        setProductAutoSuggestion(false)
+    }
+
+
     return (
 
         <>
@@ -394,6 +408,16 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
             {autoSuggestionBox ?
                 <SuggestionModal show={autoSuggestionBox} onHide={() => onHide()} messageList={messages.slice(-5)} chatDetails={chatOpenDetails} onMessageSelect={onMessageSelect}></SuggestionModal>
 
+                :
+                null
+
+            }
+
+            {productAutoSuggestion ?
+
+                <ProductSuggestionModal show={autoSuggestionBox} onHide={() => onHide()} messageList={messages.slice(-5)} chatDetails={chatOpenDetails} onMessageSelect={onMessageSelectProductSuggest}>
+
+                </ProductSuggestionModal>
                 :
                 null
 
@@ -474,7 +498,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                         <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} onClick={() => handleOpenClipBoardOpen()} />
                                         <FontAwesomeIcon icon={faMagicWandSparkles} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleAutoSuggestionModal()} />
 
-
+                                        <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} />
 
                                         <textarea
                                             value={adminMessage}
