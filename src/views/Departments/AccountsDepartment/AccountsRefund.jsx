@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import './AccountsDepartment.css'
 import {
   CAvatar,
+  CBadge,
   CButton,
   CButtonGroup,
   CCard,
@@ -125,11 +126,16 @@ const AccountsRefunds = () => {
         title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
       },
       {
-        title: 'Reqest Refund', field: 'refund_amount', align: 'left', editable: 'never',
+        title: 'Requested Amount', field: 'refund_amount', align: 'left', editable: 'never',
       },
       {
         title: 'Refunded Amount', field: 'refunding_amount', align: 'left', editable: 'never',
       },
+
+      {
+        title: 'Refund Status', field: 'status', align: 'center', editable: 'never',
+      },
+
       {
         title: 'Actions', field: 'actions', align: 'center', editable: 'never',
       }
@@ -142,14 +148,19 @@ const AccountsRefunds = () => {
         reason_refund: value.reason_for_refund,
         refund_amount: value.total_amount,
         pay_type: value.pay_category,
+        status: value.refund_type,
         actions:
           value.refund_type == "" || value.refund_type == null ?
             <div className='actions_box'>
-              {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+
               <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
             </div>
             :
-            null
+
+            <div className='actions_box'>
+
+              <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }} disabled style={{ fontSize: 12 }}>Refund Process Completed</button>
+            </div>
 
 
       }

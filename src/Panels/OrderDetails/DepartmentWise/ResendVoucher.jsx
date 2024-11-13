@@ -18,15 +18,26 @@ export default function ResendVoucher({ voucherData, orderID }) {
         setVoucherSending(type)
 
 
+        if (type == "All") {
+            if (!selected) {
+                Swal.fire({
+                    title: "Email Addresses Missing",
+                    text: "Please enter recipient email addresses to send the voucher.",
+                    icon: "error"
+                });
+            }
+        }
+
+
         var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}`
         const postdata = {
             emails: selected.toString()
         }
 
 
-        // console.log(postdata, "Posting data is")
+        console.log(postdata, "Posting data is")
 
-        axios.post(`https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}/${type}`, postdata, {
+        axios.post(`https://staging-gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}/${type}`, postdata, {
             headers: {
                 'Content-Type': 'application/json'
             }

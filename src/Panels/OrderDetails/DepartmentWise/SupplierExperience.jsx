@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 import ResendVoucher from './ResendVoucher';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
+import { db } from 'src/firebase';
 
 export default function SupplierExperience(props) {
 
@@ -156,36 +158,64 @@ export default function SupplierExperience(props) {
 
   const createChatWithSupplier = async (data) => {
 
-    // console.log(data, "Voucher ID")
+    const customerCollectionId = `AHS_SUP${data?.sid}_${data?.data?.checkoutID}CHAT`;
 
+    const chatRef = collection(db, "customer-chat-lists");
 
+    const q = query(chatRef, where("customer_collection_id", "==", customerCollectionId));
+    const querySnapshot = await getDocs(q);
 
-    const dataSet = {
-      customer_collection_id: "AHS_SUP" + data?.sid + "_" + data?.data?.checkoutID + "CHAT",
-      supplier_id: data?.sid,
-      supplier_name: data?.company_name,
+    if (!querySnapshot.empty) {
+      const existingChat = querySnapshot.docs[0].data();  // Get the existing chat data
+      const existingChatId = querySnapshot.docs[0].id;  // Get the existing chat document ID
+
+      console.log("Chat already exists");
+
+      // Navigate to the existing chat with its data
+      navigate("../Chats", {
+        state: { createdChatData: { ...existingChat, id: existingChatId } }
+      });
+      return;
+    }
+
+    const newChatData = {
+      status: 'Pending',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      supplierAdded: 'true',
+      notifyAdmin: 'true',
+      notifySupplier: 'true',
+      notifyCustomer: 'false',
+      customer_collection_id: customerCollectionId,
+      supplier_id: '',
+      supplier_name: '',
       group_chat: '',
-      customer_name: "",
-      status: "Started",
-      chat_created_date: moment().format(),
-      customer_mail_id: "",
+      customer_name: '',
+      customer_mail_id: '',
       supplier_mail_id: data?.email,
-      supplier_added_date: moment().format(),
-      comments: 'DirectSupplier',
+      supplier_added_date: '',
+      comments: '',
       chat_name: `${data?.company_name} Conversation OID (${data?.supplier_voucher})`,
-      customer_id: ""
+      customer_id: '',
+      chat_related: "Supplier Chat",
+      chat_avatar: '',
+      last_message: {
+        name: "",
+        value: "Start a Conversation"
+      },
+      customer_unreads: 0,
+      supplier_unreads: 0,
+      admin_unreads: 0
     };
 
-    axios.post('https://gateway.aahaas.com/api/addchats', dataSet).then(res => {
-      if (res.data.status === 200) {
-        // console.log(res.data, "Data set value 123456789")
-      } else {
 
-      }
+    await addDoc(chatRef, newChatData);
+
+    navigate("../Chats", {
+      state: { createdChatData: { ...newChatData, id: docRef.id } }
     });
-    navigate("../Chats")
+  };
 
-  }
 
 
 

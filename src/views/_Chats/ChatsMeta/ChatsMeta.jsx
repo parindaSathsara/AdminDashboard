@@ -15,6 +15,7 @@ import { Tooltip } from "@material-ui/core";
 
 import './chatsMeta.css';
 import ChatRight from './ChatRight';
+import { useLocation } from 'react-router-dom';
 
 function ChatsMeta() {
 
@@ -169,6 +170,23 @@ function ChatsMeta() {
 
 
 
+    const location = useLocation();
+
+
+    useEffect(() => {
+        console.log(location?.state?.createdChatData, "Created Chat data isss")
+
+        if (location?.state?.createdChatData) {
+            setChatOpened(true);
+            setChatOpenDetails(location?.state?.createdChatData);
+        }
+
+
+    }, [location?.state?.createdChatData])
+
+
+
+
     const handleOpenClipBoardOpen = () => {
         setClipBoardStatus(!clipBoardStatus);
     }
@@ -305,6 +323,7 @@ function ChatsMeta() {
 
     const getFilteredChats = (pinState) => {
         if (pinState == "pinned") {
+
             return chatListFiltered
                 .filter((value) => pinnedChats.includes(value.id))
                 .filter((value) =>
@@ -363,7 +382,10 @@ function ChatsMeta() {
                             getFilteredChats("pinned").map((value, key) => (
                                 <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
                                     <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
-                                    <h6 className="chat-name ellipsis-2-lines">{value.chat_name} by {value.customer_name}</h6>
+                                    <h6 className="chat-name ellipsis-2-lines">
+                                        {value.chat_name}{value.customer_name ? ` by ${value.customer_name}` : ''}
+                                    </h6>
+
                                     <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
                                     <div className="reading-admins">
                                         {
@@ -397,7 +419,10 @@ function ChatsMeta() {
                                     getFilteredChats("notPinned").map((value, key) => (
                                         <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
                                             <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
-                                            <h6 className="chat-name ellipsis-2-lines">{value.chat_name} by {value.customer_name}</h6>
+                                            <h6 className="chat-name ellipsis-2-lines">
+                                                {value.chat_name}{value.customer_name ? ` by ${value.customer_name}` : ''}
+                                            </h6>
+
 
                                             <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
 
