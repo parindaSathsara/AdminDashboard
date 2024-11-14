@@ -46,7 +46,7 @@ function OrderDetailsAccounts(props) {
                         text="Lorem ipsum dolor sit amet enim."
                         progress={{ color: 'info', value: 100 }}
                         title="Total Amount"
-                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount}
+                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount?.toFixed(2)}
                     />
                 </CCol>
                 <CCol xs={12} sm={6} lg={3}>
@@ -73,7 +73,7 @@ function OrderDetailsAccounts(props) {
                     <CWidgetStatsC
                         className="mb-4"
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.delivery_charge}
-                        title="Balance Amount"
+                        title="Delivery Amount"
                         progress={{ color: 'warning', value: (paymentDataSet.delivery_charge / paymentDataSet.total_amount) * 100 }}
                         text="Lorem ipsum dolor sit amet enim."
                     />

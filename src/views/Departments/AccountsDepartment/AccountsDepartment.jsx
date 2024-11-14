@@ -157,10 +157,10 @@ const Dashboard = () => {
         booking_date: value.checkout_date,
         pay_type: value.payment_type,
         pay_category: value.pay_category,
-        total_amount: value.ItemCurrency + " " + (value.total_amount || "0.00"), // Check for null or undefined
-        paid_amount: value.ItemCurrency + " " + (value.paid_amount || "0.00"), // Check for null or undefined
-        discount_amount: value.ItemCurrency + " " + (value.discount_price || "0.00"), // Check for null or undefined
-        delivery_charge: value.ItemCurrency + " " + (value.delivery_charge || "0.00"), // Check for null or undefined
+        total_amount: value.ItemCurrency + " " + (value.total_amount?.toFixed(2) || "0.00"), // Check for null or undefined
+        paid_amount: value.ItemCurrency + " " + (value.paid_amount?.toFixed(2) || "0.00"), // Check for null or undefined
+        discount_amount: value.ItemCurrency + " " + (value.discount_price?.toFixed(2) || "0.00"), // Check for null or undefined
+        delivery_charge: value.ItemCurrency + " " + (value.delivery_charge?.toFixed(2) || "0.00"), // Check for null or undefined
         actions:
           <div className='actions_box'>
             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}

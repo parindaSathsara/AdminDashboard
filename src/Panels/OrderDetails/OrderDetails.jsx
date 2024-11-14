@@ -205,6 +205,9 @@ function OrderDetails(props) {
     const [moreOrderModal, setMoreOrderModal] = useState(false)
     const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
 
+
+    const [hotelDataSet, setHotelDataSet] = useState([])
+
     const handleMoreInfoModal = (e, category) => {
         // console.log("More Info Modal", e)
 
@@ -226,8 +229,8 @@ function OrderDetails(props) {
 
         else if (category == 4) {
 
-            // console.log(e, "Console Hotel Data is")
-
+            console.log(e, "Console Hotel Data is")
+            setHotelDataSet(e)
             setMoreOrderDetails(e.booking_id)
             setMoreOrderModal(true)
         }
@@ -759,6 +762,7 @@ function OrderDetails(props) {
                             onHide={() => setMoreOrderModal(false)}
                             preID={moreOrderDetails}
                             category={moreOrderModalCategory}
+                            hotelsOrderView={hotelDataSet}
                         >
                         </MoreOrderView>
 

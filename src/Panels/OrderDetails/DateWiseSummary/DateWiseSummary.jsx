@@ -158,7 +158,7 @@ export default function DateWiseSummary(props) {
             title: 'Extra Details', field: 'ext', render: rowData =>
                 <CPopover
                     content={<QuantityContainer data={rowData.ext} />}
-                    placement="top"
+                    placement="right"
                     title="Quantity Data"
                     style={customPopoverStyle}
                     trigger="focus"

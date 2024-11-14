@@ -91,8 +91,11 @@ export default function ProductWiseOrders() {
         setLoading(false);
     }, [currentFilters, allOrdersProductsStatic]);
 
+    const [hotelDataSet, setHotelDataSet] = useState([])
+
     const handleMoreInfoModal = (row) => {
 
+        console.log(row, "Info iss valueeee")
         setMoreOrderModalCategory(row?.info.catid);
         if (row?.info.catid === 3) {
             setMoreOrderDetails(row?.info.lifestyle_booking_id);
@@ -104,6 +107,12 @@ export default function ProductWiseOrders() {
             setMoreOrderDetails(row?.info.booking_id);
             console.log(row?.info.booking_id);
         }
+        else if (row?.info?.catid == 4) {
+
+            console.log(row, "Info iss valueeee")
+            setHotelDataSet(row?.info)
+        }
+
         console.log(row);
         setMoreOrderModal(true);
         setMainDataSet(row);
@@ -290,6 +299,7 @@ export default function ProductWiseOrders() {
                 category={moreOrderModalCategory}
                 productViewData
                 productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={() => handleUpdateState()} />}
+                hotelsOrderView={hotelDataSet}
             />
 
             <Tabs
