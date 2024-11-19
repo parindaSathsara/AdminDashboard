@@ -28,7 +28,7 @@ export default function SupplierExperience(props) {
   }
 
   const productData = props.dataset
-
+  console.log("Supplier Experience", productData)
 
 
   // console.log(productData, "Product Data set is123")
@@ -265,7 +265,7 @@ export default function SupplierExperience(props) {
     var voucherID = ""
 
     if (supplierID) {
-      voucherID = `VO${props?.orderid}V${index + 1}`;
+      voucherID = `VO${value?.orderID}V${index + 1}`;
     }
     else {
       voucherID = ""
