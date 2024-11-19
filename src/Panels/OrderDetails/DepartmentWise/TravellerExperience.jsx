@@ -276,7 +276,7 @@ export default function TravellerExperience(props) {
     const [productPNLReport, setProductPNLReport] = useState([]);
 
     const handlePNLReport = async (id) => {
-        await axios.get(`/pnl/order/${id}`).then((response) => {
+        await axios.get(`/pnl/order-product/${id}`).then((response) => {
             setPNLVoucherView(true);
             setCurrenctOrderId(id);
             setProductPNLReport(response.data)
@@ -284,18 +284,7 @@ export default function TravellerExperience(props) {
     }
 
     const downloadPdf = async () => {
-        try {
-            const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
-                responseType: 'blob',
-            });
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = `PNL_report-OrderId-${currenctOrdeId}.pdf`;
-            link.click();
-        } catch (error) {
-            console.error('Error downloading the PDF:', error);
-        }
+      window.location.href = `${axios.defaults.baseURL}/pnl/order-product/${currenctOrdeId}/pdf`;
     };
 
     const handleCLosePNRLReportModal = () => {
@@ -338,7 +327,7 @@ export default function TravellerExperience(props) {
                 return (
                     <CButton
                         // onClick={() => console.log(rowData)}
-                        onClick={() => handlePNLReport(rowData.checkoutID)}
+                        onClick={() => handlePNLReport(rowData.data.checkoutID)}
                         style={{ fontSize: 14, color: 'white', backgroundColor: 'skyblue' }} color="info">Show PNL report</CButton>
                 )
             }
