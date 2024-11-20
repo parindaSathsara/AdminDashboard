@@ -17,14 +17,16 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 //
-axios.defaults.baseURL = 'https://admin-api.aahaas.com/api';
-axios.defaults.data = 'https://admin-api.aahaas.com';
+// axios.defaults.baseURL = 'https://admin-staging-api.aahaas.com/api';
+// axios.defaults.data = 'https://admin-staging-api.aahaas.com';
 
-// axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
-// axios.defaults.data = 'http://172.16.26.238:8000'
+// axios.defaults.baseURL = 'http://172.16.26.80:8000/api'
+// axios.defaults.data = 'http://172.16.26.80:8000'
+axios.defaults.baseURL = 'http://192.168.137.171:8000/api'
+axios.defaults.data = 'http://192.168.137.171:8000'
 
-// axios.defaults.baseURL = 'https://meta-admin-api.aahaas.com/api'
-// axios.defaults.data = 'https://meta-admin-api.aahaas.com'
+// axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://staging-admin-api.aahaas.com'
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {

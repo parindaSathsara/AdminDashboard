@@ -17,6 +17,7 @@ import Typography from './views/theme/typography/Typography'
 import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
+import Education from './views/Education/Education'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -106,6 +107,7 @@ const routes = [
 
   { path: '/reporting', name: 'Reports', element: ReportsMain, exact: true },
   { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
+  { path: '/education', name: 'Education Dashboard', element: Education, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
 

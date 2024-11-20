@@ -163,6 +163,14 @@ const _nav = [
     icon: <CIcon icon={cilEnvelopeLetter} customClassName="nav-icon" />,
   },
 
+  {
+    component: CNavItem,
+    name: 'Education',
+    to: '/education',
+    icon: <CIcon icon={cilEnvelopeLetter} customClassName="nav-icon" />,
+  },
+
+
 
   // {
   //   component: CNavItem,
