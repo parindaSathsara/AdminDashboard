@@ -18,48 +18,57 @@ export default function ResendVoucher({ voucherData, orderID }) {
         setVoucherSending(type)
 
 
-        if (type == "All") {
-            if (!selected) {
+        if (type === "All") {
+            console.log("email", selected.length)
+            if (selected.length === 0) {
                 Swal.fire({
                     title: "Email Addresses Missing",
                     text: "Please enter recipient email addresses to send the voucher.",
                     icon: "error"
                 });
-            }
-        }
-
-
-        var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}`
-        const postdata = {
-            emails: selected.toString()
-        }
-
-
-        console.log(postdata, "Posting data is")
-
-        axios.post(`https://staging-gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}/${type}`, postdata, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-
-            .then(data => {
                 setVoucherSending("");
+            }else{
+            var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}`
+            const postdata = {
+                emails: selected.toString()
+            }
+    
+    
+            // console.log(postdata, "Posting data is")
+    
+            let orderIdNumber;
+            if (typeof orderID === 'object' && orderID?.info?.orderID !== undefined) {
+                orderIdNumber = orderID.info.orderID;
+            } else if (typeof orderID === 'number') {
+                orderIdNumber = orderID;
+            }else{
+                orderIdNumber = orderID;
+            }
 
-                // console.log("Test", data);
-
-                if (data.status === 200) {
-                    Swal.fire({
-                        title: "Voucher Resent Successfully",
-                        text: "Voucher Sent",
-                        icon: "success"
-                    });
+            axios.post(`https://staging-gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderIdNumber}/${type}`, postdata, {
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             })
-            .catch(error => {
-                setVoucherSending("");
-                // console.error('There was a problem with the Axios request:', error);
-            });
+    
+                .then(data => {
+                    setVoucherSending("");
+    
+                    if (data.status === 200) {
+                        Swal.fire({
+                            title: "Voucher Resent Successfully",
+                            text: "Voucher Sent",
+                            icon: "success"
+                        });
+                        setSelected([]);
+                    }
+                })
+                .catch(error => {
+                    setVoucherSending("");
+                    // console.error('There was a problem with the Axios request:', error);
+                });
+        }
+    }
     }
 
 
@@ -92,7 +101,8 @@ export default function ResendVoucher({ voucherData, orderID }) {
                 <CCardTitle style={{ marginBottom: 10 }}>Type Emails Here</CCardTitle>
                 <TagsInput
                     value={selected}
-                    onChange={setSelected}
+                    // onChange={setSelected(e.target.value)}
+                     onChange={(e) => setSelected(e)}
                     name="emails"
                     placeHolder="Enter Email"
 
