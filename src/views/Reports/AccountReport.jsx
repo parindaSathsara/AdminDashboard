@@ -4,7 +4,7 @@ import { CCard, CCardBody, CCardHeader, CCol, CContainer, CFormLabel, CButton, C
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import axios from "axios"
-
+import Swal from 'sweetalert2'
 import LoaderPanel from 'src/Panels/LoaderPanel';
 
 import OrderCheckoutsReport from './OrderCheckouts/OrderCheckoutsReport';
@@ -36,25 +36,34 @@ const ReportGenerationPage = () => {
     const [statusOrderDropdown, setStatusOrderDropdown] = useState(true);
     const [statusDate, setStatusDate] = useState(false);
     const [currency, setCurrency] = useState(null);
+    const [reportData, setReportData] = useState({});
 
-    useEffect(() => {
-        if(category?.value === '1' &&  reportType?.value === 'pnl'){
-            setStatusOrderDropdown(false)
-            setStatusDate(true)
-        }else{
-            setStatusOrderDropdown(true)
-            setOrder(null)
-            setStatusDate(false)
-        }
-    }, [category,reportType]);
+    // useEffect(() => {
+    //     if(category?.value === '1' &&  reportType?.value === 'pnl'){
+    //         setStatusOrderDropdown(false)
+    //         setStatusDate(true)
+    //     }else{
+    //         setStatusOrderDropdown(true)
+    //         setOrder(null)
+    //         setStatusDate(false)
+    //     }
+    // }, [category,reportType]);
 
-    useEffect (()=>{
-
-    },[])
+    
 
     const [categories, setCategories] = useState([
         { value: '0', label: 'Summery' },
         { value: '1', label: 'Detail' },
+    ]);
+
+    const [categories2, setCategories2] = useState([
+        { value: '0', label: 'Order' },
+        { value: '1', label: 'product' },
+    ]);
+
+    const [categories3, setCategories3] = useState([
+        { value: '0', label: 'category' },
+        { value: '1', label: 'order' },
     ]);
 
     const [Orders, setOrders] = useState([
@@ -76,7 +85,7 @@ const ReportGenerationPage = () => {
     ])
 
     const reportTypes = [
-        { value: 'pnl', label: 'PNL Report' },
+        { value: 'pnl', label: 'PNL Report (Summery)' },
         { value: 'payable', label: 'Payable Report' },
         { value: 'receivable', label: 'Receivable Report' },
     ];
@@ -84,12 +93,11 @@ const ReportGenerationPage = () => {
     const [dataEmptyState, setDataEmptyState] = useState(false);
 
     const handleGenerateReport = async () => {
-
         const errors = {};
-        if (!startDate && statusDate === false) errors.startDate = 'Start date is required'
-        if (category?.value === '1' &&  reportType?.value === 'pnl' && !order) errors.order = 'Order is required';
+        if (!startDate) errors.startDate = 'Start date is required'
+        // if (category?.value === '1' &&  reportType?.value === 'pnl' && !order) errors.order = 'Order is required';
         if (!currency) errors.currency = 'Currency type is required';
-        if (!endDate && statusDate === false) errors.endDate = 'End date is required';
+        if (!endDate) errors.endDate = 'End date is required';
         if (!reportType) errors.reportType = 'Report type is required';
         if (!category || category.value === '' || category.value === 0) errors.category = 'Category is required';
 
@@ -109,15 +117,16 @@ const ReportGenerationPage = () => {
         const dataSet = {
             start: moment(startDate).format('YYYY-MM-DD'),
             end: moment(endDate).format('YYYY-MM-DD'),
-            // category: category?.value,
-            // reportType: reportType?.value,
+            category: category?.value,
+            reportType: reportType?.value,
             // orderId: order?.value,
-            // dateType: dateType,
+            dateType: dateType,
             currency: currency?.value
         };
 
 
         console.log(dataSet, "Data set value is data")
+        setReportData(dataSet);
         handlePNLReport(dataSet);
 
     };
@@ -127,12 +136,35 @@ const ReportGenerationPage = () => {
     const [productPNLReport, setProductPNLReport] = useState([]);
 
     const handlePNLReport = async (data) => {
+        console.log(data, "Data")
+        let url;
+        if(data.reportType === 'pnl' && data.category === '0'){
+            console.log("Data pnl by categories")
+            url = `pnl/by-categories?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+        }else if(data.reportType === 'pnl' && data.category === '1'){
+            console.log("Data pnl by orders")
+            url = `pnl/by-orders?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+        }else if(data.reportType === 'payable' && data.category === '0'){
+            url = `payable/summary?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+        }else if(data.reportType === 'payable' && data.category === '1'){
+            url = `payable/detailed?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+        }else if(data.reportType === 'receivable' && data.category === '0'){
+            url = `receivable/by-orders?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+        }else if(data.reportType === 'receivable' && data.category === '1'){
+            url = `receivable/by-products?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+        }
+
         // setPNLVoucherView(true)
-        await axios.get(`payable/detailed?start=${data.start}&end=${data.end}&currancy=${data.currency}`).then((response) => {
+        await axios.get(url).then((response) => {
             setPNLVoucherView(true);
             // setCurrenctOrderId(id);
-        console.log(response.data, "response data")
+        // console.log(response.data, "response data")
             setProductPNLReport(response.data)
+        }).catch((error) => {
+            Swal.fire({
+                text: "Failed to Proceed the PDF",
+                icon: "error"
+            });
         })
     }
 
@@ -141,6 +173,37 @@ const ReportGenerationPage = () => {
         setCurrenctOrderId('');
         setProductPNLReport([]);
     }
+
+    const downloadPdf = async () => {
+        try {
+            const data = reportData;
+             let url;
+             if(data.reportType === 'pnl' && data.category === '0'){
+                url = `pnl/by-categories/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            }else if(data.reportType === 'pnl' && data.category === '1'){
+                 url = `pnl/by-orders/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            }else if(data.reportType === 'payable' && data.category === '0'){
+                url = `payable/summary/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            }else if(data.reportType === 'payable' && data.category === '1'){
+                url = `payable/detailed/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            }else if(data.reportType === 'receivable' && data.category === '0'){
+                url = `receivable/by-orders/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+    
+            }else if(data.reportType === 'receivable' && data.category === '1'){
+                url = `receivable/by-products/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            }
+            console.log("URL")
+             window.location.href = `${axios.defaults.baseURL}/${url}`;
+            //  const response = await axios.get(url);
+            //  const blob = new Blob([response.data], { type: 'application/pdf' });
+            //  const link = document.createElement('a');
+            //  link.href = window.URL.createObjectURL(blob);
+            //  link.download = `PNL_report-${data.reportType}.pdf`;
+            //  link.click();
+        } catch (error) {
+            console.error('Error downloading the PDF:', error);
+        }
+    };
 
     // useEffect(() => {
     //     if (reportType?.value === 'orders_report') {
@@ -170,10 +233,14 @@ const ReportGenerationPage = () => {
     //     }
     // }, [reportType]);
 
-    useEffect(() => {
-        setReportDataSet([]);
-    }, [startDate, endDate, reportType, category]);
+    // useEffect(() => {
+    //     setReportDataSet([]);
+    // }, [startDate, endDate, reportType, category]);
 
+    // const download = async () => {
+    //     console.log('Download PDF');
+    //     window.location.href = `${axios.defaults.baseURL}/pnl/by-categories/pdf?start=2024-09-10&end=2024-11-22&currancy=LKR`;
+    // }
 
 
     return (
@@ -191,7 +258,10 @@ const ReportGenerationPage = () => {
                                 <Select options={reportTypes} value={reportType} onChange={selectedOption => {
                                     setReportType(selectedOption);
                                     setCategory([]);
-                                    setOrder([]);
+                                    setCurrency(null);
+                                    setEndDate(null);
+                                    setStartDate(null);
+                                    
                                 }}
                                     placeholder="Select a Report Type" id="report-type" />
                                 {validationErrors.reportType && <div className="text-danger">{validationErrors.reportType}</div>}
@@ -199,17 +269,17 @@ const ReportGenerationPage = () => {
                             <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Category</CFormLabel>
                                 <br />
-                                <Select options={categories} value={category} onChange={selectedOption => {
+                                <Select options={reportType?.value === 'receivable' ? categories2 : reportType?.value === 'pnl' ? categories3 : categories } value={category} onChange={selectedOption => {
                                     setCategory(selectedOption)
                                     }} placeholder="Select a category" id="category" isDisabled={reportType !== null ? false : true} />
                                 {validationErrors.category && <div className="text-danger">{validationErrors.category}</div>}
                             </CCol>
-                            <CCol xs={12} sm={6} lg={2}>
+                            {/* <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Order Id</CFormLabel>
                                 <br />
                                 <Select options={Orders} value={order} onChange={selectedOption => setOrder(selectedOption)} placeholder="Select a Order" id="order"   isDisabled={statusOrderDropdown} />
                                 {validationErrors.order && <div className="text-danger">{validationErrors.order}</div>}
-                            </CCol>
+                            </CCol> */}
                             <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="currency">Currency</CFormLabel>
                                 <br />
@@ -259,7 +329,7 @@ const ReportGenerationPage = () => {
                 </CCard>
             </CCol>
 
-            {
+            {/* {
 
                 loading ? <LoaderPanel message="Report Data Fetching" /> :
                     reportDataSet.length > 0 ?
@@ -280,18 +350,18 @@ const ReportGenerationPage = () => {
                         :
                         dataEmptyState ? <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>
                             : null
-            }
+            } */}
 
 
-        <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
+        <Modal style={{ maxHeight: '95%'}} show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Account Report</Modal.Title>
-                    {/* {
-                        (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
-                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download Voucher</CButton>
-                    } */}
+                    {
+                        // (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
+                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download PDF</CButton>
+                    }
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body >
                     {
                         (productPNLReport.status === 'fail' && productPNLReport.message === 'No data to display') ?
                             <div className='d-flex flex-column align-items-center my-5'>
