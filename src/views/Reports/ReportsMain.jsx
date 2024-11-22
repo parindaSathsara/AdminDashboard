@@ -147,7 +147,7 @@ const ReportGenerationPage = () => {
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Report Generation</strong>
+                        <strong>All Report Generation</strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className="align-items-end">

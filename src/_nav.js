@@ -148,11 +148,29 @@ const _nav = [
     icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
 
+  // {
+  //   component: CNavItem,
+  //   name: 'Reports',
+  //   to: '/reporting',
+  //   icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  // },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Reports',
     to: '/reporting',
     icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'All Reports',
+        to: '/reporting/all',
+      },
+      {
+        component: CNavItem,
+        name: 'Accounts Reports',
+        to: '/reporting/accounts',
+      }
+    ],
   },
 
 

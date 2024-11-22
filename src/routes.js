@@ -8,6 +8,7 @@ import MoreOrderView from './Panels/OrderDetails/MoreOrderView/MoreOrderView'
 import MainDashboard from './views/MainDashboard/MainDashboard'
 import OffersPromoDashboard from './views/OffersPromo/OffersPromoDashboard'
 import ReportsMain from './views/Reports/ReportsMain'
+import AccountReport from './views/Reports/AccountReport'
 import EmailDashboard from './views/EmailDashboard/EmailDashboard'
 import ChatsMeta from './views/_Chats/ChatsMeta/ChatsMeta'
 import FlightsmainPage from './views/Flights/FlightsmainPage'
@@ -103,7 +104,10 @@ const routes = [
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
   { path: '/Chats', name: 'Chats', element: ChatsMeta, exact: true },
 
-  { path: '/reporting', name: 'Reports', element: ReportsMain, exact: true },
+  { path: '/reporting/accounts', name: 'Accounts Report', element: AccountReport },
+  { path: '/reporting/all', name: 'All Report', element: ReportsMain },
+  { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
+
   { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
