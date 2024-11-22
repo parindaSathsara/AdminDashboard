@@ -344,7 +344,7 @@ export default function TravellerExperience(props) {
                 return (
                     <CButton
                         // onClick={() => console.log(rowData)}
-                        onClick={() => handlePNLReport(rowData.checkoutID)}
+                        onClick={() => handlePNLReport(rowData?.data?.orderID)}
                         style={{ fontSize: 14, color: 'white', backgroundColor: 'skyblue' }} color="info">Show PNL report</CButton>
                 )
             }
