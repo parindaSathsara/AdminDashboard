@@ -20,7 +20,7 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 // axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
 // axios.defaults.data = 'https://staging-admin-api.aahaas.com';
 
-axios.defaults.url = 'https://gateway.aahaas.com/api'
+axios.defaults.url = 'https://staging-gateway.aahaas.com/api'
 
 // axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
 // axios.defaults.data = 'http://172.16.26.67:8000'
