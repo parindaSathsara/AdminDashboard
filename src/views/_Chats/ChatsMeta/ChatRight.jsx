@@ -453,7 +453,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                     {!loader ?
                                         <div ref={messageContailerRef} className={searchBarStatus.status ? "chat-message-messages-open" : "chat-message-messages-close"}>
                                             <p className="chat-notice">
-                                                <FontAwesomeIcon icon={faCircleInfo} /> {chatOpenDetails?.customer_name}, the customer has initiated the chat for {chatOpenDetails?.chat_related}.
+                                                <FontAwesomeIcon icon={faCircleInfo} /> {chatOpenDetails?.customer_name !== '' ? chatOpenDetails?.customer_name + ", the customer" : 'The Admin'} has initiated the chat for {chatOpenDetails?.chat_related}.
                                             </p>
                                             {
                                                 messages?.length === 0 ?

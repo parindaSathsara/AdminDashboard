@@ -96,6 +96,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getAllDataUserWise().then(res => {
+      console.log(res)
       setOrderData(res)
     })
 
@@ -180,6 +181,7 @@ const Dashboard = () => {
     dataSet["oid"] = value
     setOrderId(value)
     setPaymentDataSet(dataSet)
+    console.log("Data Set", dataSet)
     setShowModal(true)
 
 
@@ -208,6 +210,11 @@ const Dashboard = () => {
         axios.post(`/order/${orderid}/approve-payment`)
           .then(res => {
             setProgress(100);
+            setPaymentDataSet({ ...paymentDataSet, MainPayStatus: "Approved" })
+            const updatedOrderData = orderData.map(order => 
+              order.OrderId === orderid ? { ...order, MainPayStatus: "Approved" } : order
+            );
+            setOrderData(updatedOrderData);
             Swal.fire({
               title: "Payment Approved!",
               text: res.data.message,

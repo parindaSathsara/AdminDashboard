@@ -74,9 +74,15 @@ export default function TravellerExperience(props) {
 
     const createTravellerExperience = async (rowData) => {
         // console.log(rowData?.data?.checkoutID, "ROWWW");
-
         travellerData["pid"] = rowData?.data?.checkoutID
 
+        if (!travellerData.reconfirmation_date || !travellerData.qc || !travellerData.delivery_status) {
+            Swal.fire({
+                text: "Please fill all the required fields",
+                icon: "error"
+            });
+            return;
+        }
 
         // console.log(travellerData, "Travellll")
 
@@ -88,7 +94,7 @@ export default function TravellerExperience(props) {
 
                 await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${rowData?.data?.checkoutID}/${"CompletedDelivery"}`).then((res) => {
                     Swal.hideLoading()
-                    // console.log(res)
+                    // console.log('res',res.data)
 
                     if (res.data.status === 200) {
                         Swal.fire({
@@ -338,7 +344,7 @@ export default function TravellerExperience(props) {
                 return (
                     <CButton
                         // onClick={() => console.log(rowData)}
-                        onClick={() => handlePNLReport(rowData.checkoutID)}
+                        onClick={() => handlePNLReport(rowData?.data?.orderID)}
                         style={{ fontSize: 14, color: 'white', backgroundColor: 'skyblue' }} color="info">Show PNL report</CButton>
                 )
             }
