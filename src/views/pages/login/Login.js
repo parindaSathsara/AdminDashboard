@@ -62,6 +62,15 @@ const Login = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    if (loginInput.email === '' || loginInput.password === '') {
+      Swal.fire({
+        title: "Login Failed",
+        text: "Please fill in all fields.",
+        icon: "error"
+      });
+      return;
+    }
+
     // const formdata = new FormData();
     // formdata.append('_token', csrfToken);
     // formdata.append('email', loginInput.username);

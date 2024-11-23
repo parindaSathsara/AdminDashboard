@@ -141,7 +141,7 @@ function CustomerFeedbacks(props) {
             if (res.data.status === 200) {
               props.onFeedback()
               Swal.fire({
-                title: "Payment Confirmed!",
+                title: "Refund request accepted!",
 
                 icon: "success"
               });
