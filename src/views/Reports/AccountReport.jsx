@@ -140,18 +140,18 @@ const ReportGenerationPage = () => {
         let url;
         if(data.reportType === 'pnl' && data.category === '0'){
             console.log("Data pnl by categories")
-            url = `pnl/by-categories?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            url = `pnl/by-categories?start=${data.start}&end=${data.end}&currency=${data.currency}`
         }else if(data.reportType === 'pnl' && data.category === '1'){
             console.log("Data pnl by orders")
-            url = `pnl/by-orders?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            url = `pnl/by-orders?start=${data.start}&end=${data.end}&currency=${data.currency}`
         }else if(data.reportType === 'payable' && data.category === '0'){
-            url = `payable/summary?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            url = `payable/summary?start=${data.start}&end=${data.end}&currency=${data.currency}`
         }else if(data.reportType === 'payable' && data.category === '1'){
-            url = `payable/detailed?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            url = `payable/detailed?start=${data.start}&end=${data.end}&currency=${data.currency}`
         }else if(data.reportType === 'receivable' && data.category === '0'){
-            url = `receivable/by-orders?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            url = `receivable/by-orders?start=${data.start}&end=${data.end}&currency=${data.currency}`
         }else if(data.reportType === 'receivable' && data.category === '1'){
-            url = `receivable/by-products?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+            url = `receivable/by-products?start=${data.start}&end=${data.end}&currency=${data.currency}`
         }
 
         // setPNLVoucherView(true)
@@ -179,18 +179,18 @@ const ReportGenerationPage = () => {
             const data = reportData;
              let url;
              if(data.reportType === 'pnl' && data.category === '0'){
-                url = `pnl/by-categories/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+                url = `pnl/by-categories/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
             }else if(data.reportType === 'pnl' && data.category === '1'){
-                 url = `pnl/by-orders/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+                 url = `pnl/by-orders/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
             }else if(data.reportType === 'payable' && data.category === '0'){
-                url = `payable/summary/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+                url = `payable/summary/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
             }else if(data.reportType === 'payable' && data.category === '1'){
-                url = `payable/detailed/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+                url = `payable/detailed/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
             }else if(data.reportType === 'receivable' && data.category === '0'){
-                url = `receivable/by-orders/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+                url = `receivable/by-orders/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
     
             }else if(data.reportType === 'receivable' && data.category === '1'){
-                url = `receivable/by-products/pdf?start=${data.start}&end=${data.end}&currancy=${data.currency}`
+                url = `receivable/by-products/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
             }
             console.log("URL")
              window.location.href = `${axios.defaults.baseURL}/${url}`;
