@@ -16,6 +16,19 @@ const _nav = [
     to: '/orders',
     icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
   },
+  {
+    component: CNavGroup,
+    name: 'Assets',
+    to: '/assests',
+    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'User Documents',
+        to: '/assets/userdoc',
+      }
+    ],
+  },
   // {
   //   component: CNavItem,
   //   name: 'Orders allocations',

@@ -18,6 +18,8 @@ import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
 import Education from './views/Education/Education'
+import UserDocuments from './views/Assets/UserDocuments'
+
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -84,6 +86,8 @@ const routes = [
 
 
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
+  // user documents routes
+  { path: '/assets/userdoc', name: 'User Documents', element: UserDocuments, exact: true },
 
 
   { path: '/offers_promo', name: 'Promotions & Offers', element: OffersPromoDashboard, exact: true },
