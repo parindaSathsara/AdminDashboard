@@ -1,18 +1,19 @@
 import React from 'react'
 
-import { CCol, CRow } from '@coreui/react';
+import { CButton, CCol, CRow } from '@coreui/react';
 import { useContext, useEffect, useRef, useState } from "react";
 
 import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, increment, onSnapshot, orderBy, query, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
-
-
+// import { assignEmployeeToChat,getAllEmployees} from 'src/service/order_allocation_services';
+import { assignEmployeeToChat,getAllEmployees} from './services/chatServices';
+import Select from 'react-select';
 
 import { db } from "src/firebase";
 import aahaaslogo from '../../../assets/brand/aahaslogo.png';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles, faMagnifyingGlassLocation, faMagnet } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles, faMagnifyingGlassLocation, faMagnet, faCog, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { Tooltip } from "@material-ui/core";
 import { UserLoginContext } from 'src/Context/UserLoginContext';
@@ -20,13 +21,15 @@ import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons';
 import SuggestionModal from './Components/SuggestionsModal';
 import sendPushNotificationsOnChats from './functions/sendPushNotificationsOnChats';
 import ProductSuggestionModal from './Components/ProductSuggestionModal';
-
+import { Modal } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import { CCardImage, CBadge, CAlert, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilTrash } from '@coreui/icons';
 
 export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
-
-
-
+   
     const handleSearchBar = ({ status }) => {
         setSearchBarStatus({
             ...searchBarStatus,
@@ -153,7 +156,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                         }
                     });
                 }
-                console.log(doc.id, "Doc ID is");
+                // console.log(doc.id, "Doc ID is");
             });
 
             await batch.commit();
@@ -254,7 +257,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
 
     const handleOpenChat = async (chatData) => {
-        console.log('handleOpenChat function called');
+        // console.log('handleOpenChat function called');
         setChatOpened(true);
         setChatOpenDetails(chatData);
 
@@ -265,11 +268,27 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         setLoader(false)
     }
 
-
+    const [chatAssignedEmployee, setChatAssignedEmployee] = useState('');
 
     useEffect(() => {
         if (chatOpenedData?.id) {
+            console.log('useEffect function called', chatOpenedData);
             handleOpenChat(chatOpenedData);
+            setAssignedEmployee({ id: '', name: '', allotStatus: '' });
+
+            if (chatOpenedData?.assign_employee) {
+                setChatAssignedEmployee(chatOpenedData?.assign_employee);
+                console.log('chatAssignedEmployee', chatOpenedData?.assign_employee);
+
+                if(chatOpenedData?.assign_employee !== ''){
+                    const user = availableEmployees.find(employee => employee.id === chatOpenedData?.assign_employee);
+                    if(user)setAssignedEmployee({ id: user.id, name: user.name, allotStatus: 'Allocated', chatId: chatOpenedData?.id });
+                    console.log("Assigned Employee: ", user);
+                }
+            } else {
+                setChatAssignedEmployee(null);
+            }
+
         }
 
 
@@ -343,7 +362,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
     useEffect(() => {
         let typingTimeout;
-
+        console.log("Status: ", userData);
         if (isTyping) {
 
             const docRef = doc(db, 'customer-chat-lists', chatOpenDetails?.id);
@@ -369,7 +388,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         };
     }, [adminMessage, isTyping]);
 
-    console.log(chatOpenDetails, "Chat Open Details Are Data is")
+    // console.log(chatOpenDetails, "Chat Open Details Are Data is")
 
     const [autoSuggestionBox, setAutoSuggestionBox] = useState(false)
 
@@ -400,6 +419,184 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         setProductAutoSuggestion(false)
     }
 
+    const [showModal, setShowModal] = useState(false);
+    const handleAssignEmployee = (data) => {
+        // Implement the function to handle the assignment of the employee
+        // // console.log("Assigned Employee:", selectedEmployee, "to Row:", selectedRow);
+        // handleCloseModal();
+
+        console.log(data)
+        
+        // setSelectedRow(rowData?.info);
+        setShowModal(true);
+
+    };
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedEmployee(null);
+    
+        // setSelectedRow([]);
+        // setSelectedEmployee(null);
+    };
+
+    const [availableEmployees, setAvailableEmployees] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const employeeOptions = availableEmployees.map((response) => ({
+        value: response.id,
+        label: response.name
+    }));
+    const [assignedEmployee, setAssignedEmployee] = useState({
+        id: '',
+        name: '',
+        allotStatus: '',
+        chatId: '',
+    });
+
+    const monitorAvailability = () => {
+        try{
+
+            getAllEmployees().then(response => {
+                setAvailableEmployees(response);
+                
+               
+
+
+                // console.log("Available Employees: ", response);
+            }).catch(error => {
+                console.error("Error fetching available employees: ", error);
+            });
+        
+
+        }catch(error){
+            console.error("Error available employee: ", error);
+        }
+    };
+
+    useEffect (()=>{
+        monitorAvailability();
+    },[])
+
+    const handleAllocateEmployee = async () => {
+        // console.log(selectedEmployee, "Selected Employee Name iss");
+
+        // Show confirmation message
+        const confirmation = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to assign employees to chat?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        });
+
+        if (confirmation.isConfirmed) {
+
+            console.log("Confirmed", selectedEmployee)  
+            console.log("chat Id", chatOpenDetails.id)  
+
+
+            assignEmployeeToChat(chatOpenDetails.id, selectedEmployee).then(res => {
+                // getRows();
+                // handleCloseModal();
+                // console.log("Employee Assigned to Chat: ", res);
+                var errorVal = res[0]
+
+                if (errorVal === 400) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: res[1]
+                    });
+                }
+                else {
+
+                    const docRef = doc(db, 'customer-chat-lists', chatOpenDetails?.id);
+
+                     updateDoc(docRef, { assign_employee: selectedEmployee?.value, assign_employee_name: selectedEmployee?.label })
+                    .then(() => {
+                         console.log("Employee assigned to chat successfully");
+                         setAssignedEmployee({ name: selectedEmployee?.label, allotStatus: 'Allocated', chatId: chatOpenedData?.id })
+                         setSelectedEmployee(null);
+                         Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: res[1]
+                        });
+                     })
+                    .catch((error) => {
+                        console.log("chat Id update function", chatOpenDetails.id)  
+                        console.error(" Employee assigned to chat failed : ", error)});
+
+                   
+                }
+
+            }).catch(error => {
+
+                console.error('Error:', error);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to assign employees to chat. Please try again later.'
+                });
+
+                Swal.hideLoading();
+            });
+        }
+    };
+
+    const customStyles = {
+        menuPortal: (base) => ({
+            ...base,
+            zIndex: 9999,
+        }),
+    };
+    
+
+    const handleDeleteEmployee = async (value) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to remove this employee?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+
+              
+                    // var newDataSet = selectedRow?.allocatedUser?.filter(resFilter => resFilter.allotId !== value);
+
+                    // handleDeleteData(selectedRow?.checkoutID, userData?.id)
+
+                    // setSelectedRow({
+                    //     ...selectedRow,
+                    //     allocatedUser: newDataSet
+                    // });
+
+                    // getRows();
+
+                    const docRef = doc(db, 'customer-chat-lists', value);
+
+                    updateDoc(docRef, { assign_employee: null, assign_employee_name: null })
+                   .then(() => {
+                    setAssignedEmployee({ id: '', name: '', allotStatus: '', chatId: '' });
+                    setSelectedEmployee(null);
+                    
+                    Swal.fire(
+                        'Deleted!',
+                        'The employee has been deleted.',
+                        'success'
+                    );
+                    })
+                   .catch((error) => {
+                       console.log("chat Id update function", chatOpenDetails.id)  
+                       console.error(" Employee assigned to chat failed : ", error)});
+                 }
+        });
+    };
 
     return (
 
@@ -444,6 +641,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                 <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
                                     {/* <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} /> */}
                                     <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: chatPinned ? '#ffd00f' : 'white' }} />
+                                    {userData.user_role == "super_admin" ?
+                                    <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => {handleAssignEmployee('Employee Asaign')}} style={{ color:"red" }} /> : userData.user_role == "admin" ?  <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => {handleAssignEmployee('Employee Asaign')}} style={{ color:"red" }} /> : null}
+
                                     {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
                                 </div>
                             </div>
@@ -537,7 +737,80 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                 }
 
             </CCol>
+
+
+            <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Assign Employee
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                   <Select
+                        isSearchable={true}
+                        options={employeeOptions}
+                        value={selectedEmployee}
+                        onChange={(selectedOption) => setSelectedEmployee(selectedOption)}
+                        menuPortalTarget={document.body}
+                        styles={customStyles}
+                    />
+ 
+                    <br></br>
+
+                    {assignedEmployee?.id !== '' ? (
+                        <>
+                            {/* <CAlert color="info">
+                                {selectedRow?.allocatedUser?.length} Employee(s) Already Allocated
+                            </CAlert> */}
+
+                            <CTable>
+                                <CTableHead>
+                                    <CTableRow>
+                                        <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col">Delete</CTableHeaderCell>
+                                    </CTableRow>
+                                </CTableHead>
+                                <CTableBody>
+                                    {/* {selectedRow?.allocatedUser?.map((response, index) => ( */}
+                                        <CTableRow key={1}>
+                                            <CTableDataCell>{assignedEmployee.name}</CTableDataCell>
+                                            <CTableDataCell>{assignedEmployee.allotStatus}</CTableDataCell>
+                                            <CTableDataCell>
+                                               
+                                                <CButton color="danger" onClick={() => {handleDeleteEmployee(assignedEmployee.chatId)}} style={{ color: 'white', fontSize: 14 }}>
+                                                    Delete   <CIcon icon={cilTrash} />
+                                                </CButton>
+                                            </CTableDataCell>
+                                        </CTableRow>
+                                    {/* ))} */}
+                                </CTableBody>
+                            </CTable>
+                        </>
+                    ) : null}
+
+
+
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                {
+                    assignedEmployee?.allotStatus === 'Allocated' ? ( null):(<CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>)
+                }
+                   
+                </Modal.Footer>
+            </Modal>
         </>
+
+
+
 
     )
 }
