@@ -433,6 +433,16 @@ export default function TravellerExperience(props) {
                     icon: "success"
                 });
                 handleResetAllocationModal();
+                props.reload();
+            }
+            else {
+                Swal.fire({
+                    title: response.data.message,
+                    text: "",
+                    icon: "success"
+                });
+                handleResetAllocationModal();
+                props.reload();
             }
         })
     }
@@ -451,7 +461,7 @@ export default function TravellerExperience(props) {
 
             <Modal show={driverAllocationStatus.status} size='lg' onHide={() => handleResetAllocationModal()}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Choose the driver</Modal.Title>
+                    <Modal.Title>Allocate Vehicle</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className='driverListModalBody-mainContainer'>
@@ -471,8 +481,14 @@ export default function TravellerExperience(props) {
                                         <div key={key} className='driver-vehicle-list'>
                                             <div className='d-flex align-items-center vehicle-details'>
                                                 <h6>Vehicle No : {value.vehicle_number}</h6>
+
+
                                                 <h6>{value.vehicle_province}</h6>
                                             </div>
+                                            <div className='d-flex align-items-center vehicle-details'>
+                                                <h6>Driver Name : {value.driver_name}</h6>
+                                            </div>
+
                                             <div className='d-flex align-items-center driver-details'>
                                                 <h6>Type : {value.vehicle_type}</h6>
                                                 <h6>Modal : {value.vehicle_model}</h6>
@@ -492,12 +508,12 @@ export default function TravellerExperience(props) {
                                                 <h6>Reg date : {value.driver_registered_date}</h6>
                                                 <h6>Driver Status : {value.driver_status}</h6>
                                             </div>
-                                            <button className='btn-submit-button' onClick={() => handleChooseDriver(value)}>Select</button>
+                                            <CButton style={{ color: 'white' }} className='select-allocation' color="info" onClick={() => handleChooseDriver(value)}>Select Vehicle</CButton>
                                         </div>
                                     ))}
                     </div>
                 </Modal.Body>
-            </Modal>
+            </Modal >
 
             <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
                 <Modal.Header closeButton>

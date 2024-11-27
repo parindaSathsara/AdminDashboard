@@ -30,6 +30,15 @@
     padding: 10px;
     margin: 10px;
     gap: 0px;
+    border-bottom: 1px solid rgb(210, 220, 224);
+}
+
+.driver-vehicle-list .select-allocation {
+    margin-top: 5px;
+    padding: 5px !important;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .vehicle-details,
