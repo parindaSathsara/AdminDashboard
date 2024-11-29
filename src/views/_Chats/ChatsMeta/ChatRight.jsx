@@ -803,7 +803,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
                 </Modal.Body>
                 <Modal.Footer>
-                {   (["assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
+                {   (["assign employer to chat"].some(permission => userData?.permissions?.includes(permission))) &&
                     assignedEmployee?.allotStatus === 'Allocated' ? ( null):(<CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>)
                 }
                    
