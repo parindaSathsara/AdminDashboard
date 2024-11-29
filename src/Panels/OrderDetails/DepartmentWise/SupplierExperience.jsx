@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import MaterialTable from 'material-table';
 import { CButton, CCard, CCardBody, CCloseButton, CCol, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow, CSpinner } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
@@ -15,9 +15,10 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
 import { db } from 'src/firebase';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 export default function SupplierExperience(props) {
-
+  const { userData } = useContext(UserLoginContext);
   const customPopoverStyle = {
     '--cui-popover-max-width': '400px',
     '--cui-popover-border-color': '#0F1A36',
@@ -234,9 +235,9 @@ export default function SupplierExperience(props) {
         return (
           <>
 
-
+          {(["reach supplier"].some(permission => userData?.permissions?.includes(permission))) &&
             <CButton color="success" style={{ fontSize: 14, color: 'white', }} onClick={() => createChatWithSupplier(e)}><CIcon icon={cilChatBubble} size="xl" /> Reach Supplier</CButton>
-
+          }
           </>
         );
       }
@@ -263,9 +264,17 @@ export default function SupplierExperience(props) {
 
 
     var voucherID = ""
+    // console.log(value, "Value is")
 
     if (supplierID) {
-      voucherID = `VO${value?.orderID}V${index + 1}`;
+      if(value?.orderID === undefined){
+        console.log("Order ID", props?.orderid)
+        voucherID = `VO${props?.orderid}V${index + 1}`;
+
+      }else{
+        console.log("Value ID", value?.orderID)
+        voucherID = `VO${value?.orderID}V${index + 1}`;
+      }
     }
     else {
       voucherID = ""
@@ -369,6 +378,7 @@ export default function SupplierExperience(props) {
       <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl">
         <Modal.Header closeButton>
           <Modal.Title>Supplier Voucher</Modal.Title>
+          {(["resend supplier voucher"].some(permission => userData?.permissions?.includes(permission))) &&
           <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher()}>
             Resend Voucher
             {voucherSending === false ?
@@ -377,7 +387,7 @@ export default function SupplierExperience(props) {
               <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
             }
           </CButton>
-
+          }
           <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => fetchPDF()}>
             Download Voucher
           </CButton>

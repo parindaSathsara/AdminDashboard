@@ -22,7 +22,7 @@ export default function DateWiseSummary(props) {
     }
 
     const productData = props?.dataset
-    const groupedDates = props?.dates
+    const groupedDates = props?.dates?.sort((a, b) => new Date(a) - new Date(b));
 
 
     const QuantityContainer = ({ data }) => {

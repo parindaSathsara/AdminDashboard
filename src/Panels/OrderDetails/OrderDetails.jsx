@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import discountTotal from '../dcalculator';
 import moment from 'moment';
@@ -31,8 +31,11 @@ import TravellerExperience from './DepartmentWise/TravellerExperience';
 import FlightOrderView from 'src/views/dashboard/FlightUI/FlightOrderView';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
 import axios from 'axios';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 function OrderDetails(props) {
+    // console.log("Props Data is",props )
+    const { userData } = useContext(UserLoginContext);
 
     // console.log(props.orderid)
 
@@ -665,14 +668,16 @@ function OrderDetails(props) {
                                         <CDropdown variant="btn-group">
                                             <CDropdownToggle color="success">Download Itinerary</CDropdownToggle>
                                             <CDropdownMenu>
-
+                                            {(["download order long itinerary","download account order long itinerary"].some(permission => userData?.permissions?.includes(permission))) &&
                                                 <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleDownload("long")}>
                                                     Long Itinerary
                                                 </CDropdownItem>
+                                             }
+                                            {(["download order short itinerary","download account order short itinerary"].some(permission => userData?.permissions?.includes(permission))) &&
                                                 <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleDownload("short")}>
                                                     Short Itinerary
                                                 </CDropdownItem>
-
+                                            }
                                             </CDropdownMenu>
                                         </CDropdown>
                                         :
@@ -782,7 +787,7 @@ function OrderDetails(props) {
                                     </Tab>
 
                                     <Tab eventKey="travellerExperience" title="Traveller Experience">
-                                        <TravellerExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
+                                        <TravellerExperience dataset={productData} orderid={props.orderid} type={'order'} reload={() => reload()} />
                                     </Tab>
 
                                     <Tab eventKey="acc" title="Accounts Details">

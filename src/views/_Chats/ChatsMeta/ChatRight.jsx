@@ -641,9 +641,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                 <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
                                     {/* <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} /> */}
                                     <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: chatPinned ? '#ffd00f' : 'white' }} />
-                                    {userData.user_role == "super_admin" ?
-                                    <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => {handleAssignEmployee('Employee Asaign')}} style={{ color:"red" }} /> : userData.user_role == "admin" ?  <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => {handleAssignEmployee('Employee Asaign')}} style={{ color:"red" }} /> : null}
 
+                                    {(["assign employer to chat","remove employer from chat", "view assign employer chat"].some(permission => userData?.permissions?.includes(permission))) &&
+                                    <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => {handleAssignEmployee('Employee Asaign')}} style={{ color:"red" }} />
+                                    }
                                     {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
                                 </div>
                             </div>
@@ -783,10 +784,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                             <CTableDataCell>{assignedEmployee.name}</CTableDataCell>
                                             <CTableDataCell>{assignedEmployee.allotStatus}</CTableDataCell>
                                             <CTableDataCell>
-                                               
+                                            {(["delete assign employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                                                 <CButton color="danger" onClick={() => {handleDeleteEmployee(assignedEmployee.chatId)}} style={{ color: 'white', fontSize: 14 }}>
                                                     Delete   <CIcon icon={cilTrash} />
                                                 </CButton>
+                                            }
                                             </CTableDataCell>
                                         </CTableRow>
                                     {/* ))} */}
@@ -801,7 +803,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
                 </Modal.Body>
                 <Modal.Footer>
-                {
+                {   (["assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                     assignedEmployee?.allotStatus === 'Allocated' ? ( null):(<CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>)
                 }
                    

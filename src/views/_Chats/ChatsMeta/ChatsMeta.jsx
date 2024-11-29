@@ -484,8 +484,8 @@ function ChatsMeta() {
                                     ))
                         }
                 </Tab>
-                {userData.user_role == "super_admin" ?
-                                   null : userData.user_role == "admin" ?  null : 
+                {userData.roles.includes("SuperAdmin") ?
+                                   null :userData.roles.includes("Admin") ?  null : 
                                    
                                    
                                    <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Assigned Chats</span>} itemID='tabPending'>

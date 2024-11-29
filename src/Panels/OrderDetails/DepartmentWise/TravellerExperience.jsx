@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import MaterialTable from 'material-table';
 import CIcon from '@coreui/icons-react';
 import { cilCheckCircle, cilInfo } from '@coreui/icons';
@@ -17,9 +17,11 @@ import Tooltip from '@mui/material/Tooltip';
 
 import './TravellerExperience.css';
 import { render } from '@testing-library/react';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 export default function TravellerExperience(props) {
 
+    const { userData } = useContext(UserLoginContext);
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
         '--cui-popover-border-color': '#0F1A36',
@@ -329,6 +331,7 @@ export default function TravellerExperience(props) {
         {
             title: 'Driver allocation', field: 'Driver allocation', render: rowData =>
                 <Tooltip title={rowData.data.category === 'Lifestyles' ? 'Allocate driver' : 'Driver allocation is not avalible'}>
+                    {(["driver allocate"].some(permission => userData?.permissions?.includes(permission))) &&
                     <CButton color="info" style={{ fontSize: 14, color: 'white', backgroundColor: rowData.data.category === 'Lifestyles' ? '' : 'gray' }}
                         onClick={() => handleClickDriverAllocation(rowData)}
                         className='btn btn-primary'>
@@ -336,16 +339,19 @@ export default function TravellerExperience(props) {
                             rowData.data.vehicle_allocation == 1 ? 'Driver allocated' : 'Allocate driver'
                         }
                     </CButton>
+        }
                 </Tooltip>
         },
         {
             title: 'PNL report',
             render: rowData => {
                 return (
+                    (["view traveler pnl","all accounts access"].some(permission => userData?.permissions?.includes(permission))) &&
                     <CButton
                         // onClick={() => console.log(rowData)}
                         onClick={() => handlePNLReport(rowData?.data?.orderID)}
                         style={{ fontSize: 14, color: 'white', backgroundColor: 'skyblue' }} color="info">Show PNL report</CButton>
+                    
                 )
             }
         },
@@ -355,7 +361,9 @@ export default function TravellerExperience(props) {
                 if (rowData?.data.status == "Approved") {
                     return (
                         <div onClick={() => createTravellerExperience(rowData)}>
+                             {(["submit traveler request"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="success" style={{ fontSize: 14, color: 'white' }}>Submit</CButton>
+                             }
                         </div>
                     )
                 } else if (rowData?.data.status == "Completed") {

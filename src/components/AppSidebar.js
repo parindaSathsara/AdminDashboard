@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CCardText, CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
@@ -16,11 +16,14 @@ import 'simplebar/dist/simplebar.min.css'
 import navigation from '../_nav'
 import logo from '../assets/brand/aahaas.png'
 import './AppSidebar.css';
+import getNavigationHook from '../_nav'
+import { UserLoginContext } from 'src/Context/UserLoginContext'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const { userData } = useContext(UserLoginContext);
 
   return (
     <CSidebar
@@ -41,7 +44,7 @@ const AppSidebar = () => {
 
       <CSidebarNav className='sideBarSub'>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav items={getNavigationHook(userData.permissions)} />
         </SimpleBar>
 
 
