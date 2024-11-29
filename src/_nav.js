@@ -69,7 +69,7 @@ function getNavigationHook(permissions){
       component: CNavItem,
       name: 'Vendors',
       to: '/vendors',
-      hidden:true,
+      hidden:false,
       icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
       // items: [
       //   {
