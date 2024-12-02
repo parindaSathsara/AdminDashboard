@@ -25,7 +25,7 @@ import Swal from 'sweetalert2';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState } from 'draft-js';
+import { EditorState,convertToRaw } from 'draft-js';
 
 const EmailGeneration = () => {
     const { userData } = useContext(UserLoginContext);
@@ -111,33 +111,48 @@ const EmailGeneration = () => {
     }, [])
 
 
-    //
-
-
-
     const handleEmailResend = () => {
 
         const missingFields = [];
+        if (!emailType?.value) missingFields.push("Email Type");
+        if (!internalEmail?.value) missingFields.push("Internal Email");
+        if (!selectedOrderID?.value && selectCustomer === '' && selectSupplier === '' && sendPersonType === null) missingFields.push("Order ID");
+        if (!sendPersonType?.value && selectedOrderID === null) missingFields.push("User Type");
+        if (!selectCustomer && selectedOrderID?.value === null) missingFields.push("Customer Name");
+        if (!selectSupplier && selectedOrderID === null) missingFields.push("Supplier Name");
+
+
+        if (missingFields.length > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: `Please select the following fields: ${missingFields.join(', ')}`,
+            });
+            return;
+        }
         console.log(editorState)
-        // if (!emailType?.value) missingFields.push("Email Type");
-        // if (!selectedOrderID?.value) missingFields.push("Order ID");
+        
 
-        // if (missingFields.length > 0) {
-        //     Swal.fire({
-        //         icon: 'warning',
-        //         title: 'Missing Fields',
-        //         text: `Please select the following fields: ${missingFields.join(', ')}`,
-        //     });
-        //     return;
-        // }
+        const rawContentState = convertToRaw(editorState.getCurrentContent());
+        const serializedEditorState = JSON.stringify(rawContentState);
+        console.log('Serialized',serializedEditorState)
+        
+        const formData = new FormData();
 
+        formData.append("emailType", emailType?.value || "");
+        formData.append("email", internalEmail?.value || "");
+        formData.append("orderID", selectedOrderID?.value || "");
+        formData.append("personType", sendPersonType?.value || "");
+        formData.append("supplier", selectSupplier?.value || "");
+        formData.append("customer", selectCustomer?.value || "");
+        formData.append("message", serializedEditorState);
+        files.forEach((file,idx) => {
+            formData.append(`attachments${idx}`, file);
+        });
 
+        formData.append("imageLength",files.length)
 
-        // if (emailType.value === "customer_invoice") {
-        //     confirmResendEmail(selectedOrderID.value);
-        // } else {
-        //     resendAllSupplierVouchers(selectedOrderID?.value, selectedOrderIndexId?.value)
-        // }
+        console.log('Send',...formData)
     };
 
     const handleDownloadReceipt = () => {
@@ -170,15 +185,33 @@ const EmailGeneration = () => {
         }
     };
 
-    const [file, setFile] = useState();
-    function handleChange(e) {
-        console.log(e.target.files);
-        setFile(URL.createObjectURL(e.target.files[0]));
-    }
+    const [files, setFiles] = useState([]);
+    const handleChange = (e) => {
+        const newFiles = Array.from(e.target.files); 
+        const validFiles = newFiles.filter((file) =>
+            file.type.startsWith('image/') || file.type === 'application/pdf'
+        );
 
-    const change = ()=>{
-        setFile(null)
-    }
+        if (validFiles.length !== newFiles.length) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Invalid File Type',
+                text: 'Only images and PDFs are allowed.',
+            });
+        }
+
+        setFiles((prevFiles) => [...prevFiles, ...validFiles]);  
+    };
+
+    const removeFile = (index) => {
+        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    };
+
+    const clearFiles = () => {
+        setFiles([]);
+    };
+
+  
 
      return (
         <CContainer fluid>
@@ -192,7 +225,7 @@ const EmailGeneration = () => {
                         <CRow className="align-items-end">
 
                             <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">Internal Emial</CFormLabel>
+                                <CFormLabel htmlFor="category">Internal Email</CFormLabel>
                                 <br></br>
                                 <Select
                                     options={internalEmails}
@@ -299,9 +332,7 @@ const EmailGeneration = () => {
                             </CCol>
                         </CRow>
                             <br></br> <br></br>
-                        <Editor 
-                        editorState={editorState}
-                        onEditorStateChange={setEditorState}  />;
+                        
 
                     </CCardBody>
                 </CCard>
@@ -314,13 +345,60 @@ const EmailGeneration = () => {
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader className="d-flex justify-content-between align-items-center">
-                        <strong>Additional Attachment</strong>
-                        <CButton style={{color:"white", }} color='info' onClick={change} >Clear</CButton>
+                        <strong>Additional Attachments</strong>
+                      
                     </CCardHeader>
                     <CCardBody>
-                        <CRow className="align-items-end">
-                             <CFormInput onChange={handleChange} type="file" placeholder="Add Image" aria-label="" />
-                             {/* <CImage rounded thumbnail src={file} width={20} height={20} /> */}
+                    <CRow className="mb-3">
+                    <Editor 
+                        editorState={editorState}
+                        onEditorStateChange={setEditorState}  />;
+                    </CRow>
+                   
+                        <CRow className="mb-3">
+                            <CFormLabel>Add Images or PDFs</CFormLabel>
+                          <CCol xs={12} sm={9} lg={11}>
+                          <CFormInput
+                                type="file"
+                                multiple
+                                onChange={handleChange}
+                                accept="image/*,application/pdf"
+                            />
+                            </CCol>
+                            <CCol xs={12} sm={3} lg={1}>
+                            <CButton  color="info" style={{color:"white"}} onClick={clearFiles}>
+                            Clear All
+                        </CButton>
+                            </CCol>
+                            
+
+
+                        </CRow>
+                        <CRow>
+                            {files.map((file, index) => (
+                                <CCol key={index} xs={12} sm={6} lg={3} className="mb-3">
+                                    {file.type.startsWith('image/') ? (
+                                        <CImage
+                                            src={URL.createObjectURL(file)}
+                                            alt={file.name}
+                                            thumbnail
+                                            width={100}
+                                            height={100}
+                                        />
+                                    ) : (
+                                        <p>{file.name}</p> // Show file name for PDFs
+                                    )}
+                                    <CButton
+                                        color="danger"
+                                        size="sm"
+                                        className="mt-2"
+                                        style={{color:"white"}}
+                                        onClick={() => removeFile(index)}
+                                    >
+                                        Remove
+                                    </CButton>
+                                </CCol>
+                            ))}
                         </CRow>
                     </CCardBody>
                 </CCard>

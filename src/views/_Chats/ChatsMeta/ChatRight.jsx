@@ -810,9 +810,5 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                 </Modal.Footer>
             </Modal>
         </>
-
-
-
-
     )
 }
