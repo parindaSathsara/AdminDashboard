@@ -284,7 +284,7 @@ export default function TravellerExperience(props) {
     const [productPNLReport, setProductPNLReport] = useState([]);
 
     const handlePNLReport = async (id) => {
-        await axios.get(`/pnl/order/${id}`).then((response) => {
+        await axios.get(`/pnl/order-product/${id}`).then((response) => {
             setPNLVoucherView(true);
             setCurrenctOrderId(id);
             setProductPNLReport(response.data)
@@ -293,14 +293,9 @@ export default function TravellerExperience(props) {
 
     const downloadPdf = async () => {
         try {
-            const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
-                responseType: 'blob',
-            });
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = `PNL_report-OrderId-${currenctOrdeId}.pdf`;
-            link.click();
+            const url = `${axios.defaults.baseURL}/generate-itinerary-by-order/${props.orderid}/${val}/pdf`;
+            console.log("Opening URL:", url);
+            window.open(url, '_blank');
         } catch (error) {
             console.error('Error downloading the PDF:', error);
         }
@@ -332,11 +327,12 @@ export default function TravellerExperience(props) {
             title: 'Driver allocation', field: 'Driver allocation', render: rowData =>
                 <Tooltip title={rowData.data.category === 'Lifestyles' ? 'Allocate driver' : 'Driver allocation is not avalible'}>
                     {(["driver allocate"].some(permission => userData?.permissions?.includes(permission))) &&
-                    <CButton color="info" style={{ fontSize: 14, color: 'white', backgroundColor: rowData.data.category === 'Lifestyles' ? '' : 'gray' }}
+                    <CButton color="info" disabled={rowData.data.category != 'Lifestyles'} style={{ fontSize: 14, color: 'white', backgroundColor: rowData.data.vehicle_allocation == 1 ? "#476e7c" : null, border: 0 }}
+
                         onClick={() => handleClickDriverAllocation(rowData)}
                         className='btn btn-primary'>
                         {
-                            rowData.data.vehicle_allocation == 1 ? 'Driver allocated' : 'Allocate driver'
+                            rowData.data.vehicle_allocation == 1 ? 'View Allocation' : 'Allocate driver'
                         }
                     </CButton>
         }
@@ -349,8 +345,9 @@ export default function TravellerExperience(props) {
                     (["view traveler pnl","all accounts access"].some(permission => userData?.permissions?.includes(permission))) &&
                     <CButton
                         // onClick={() => console.log(rowData)}
-                        onClick={() => handlePNLReport(rowData?.data?.orderID)}
-                        style={{ fontSize: 14, color: 'white', backgroundColor: 'skyblue' }} color="info">Show PNL report</CButton>
+                 
+ onClick={() => handlePNLReport(rowData?.data?.checkoutID)}
+                        style={{ fontSize: 14, color: 'white', backgroundColor: '#ed4242', border: 0 }} color="info">Show PNL report</CButton>
                     
                 )
             }
@@ -441,7 +438,24 @@ export default function TravellerExperience(props) {
                     icon: "success"
                 });
                 handleResetAllocationModal();
+                props.reload();
             }
+            else {
+                Swal.fire({
+                    title: response.data.message,
+                    text: "",
+                    icon: "success"
+                });
+                handleResetAllocationModal();
+                props.reload();
+            }
+        }).catch(response => {
+            console.log(response.response.data.message, "Catch Response Value is")
+            Swal.fire({
+                title: response.response.data.message,
+                text: "",
+                icon: "error"
+            });
         })
     }
 
@@ -457,52 +471,82 @@ export default function TravellerExperience(props) {
                 {/* <Modal.Footer></Modal.Footer> */}
             </Modal>
 
-            <Modal show={driverAllocationStatus.status} size='lg' onHide={() => handleResetAllocationModal()}>
+            <Modal
+                show={driverAllocationStatus.status}
+                size="lg"
+                onHide={handleResetAllocationModal}
+                centered
+            >
                 <Modal.Header closeButton>
-                    <Modal.Title>Choose the driver</Modal.Title>
+                    <Modal.Title>Allocate Vehicle</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className='driverListModalBody-mainContainer'>
-                        {
-                            driverDetailsLoading ?
-                                <div className='d-flex flex-column align-items-center p-5'>
-                                    <FontAwesomeIcon icon={faSpinner} spinPulse />
-                                    <h6 className='m-0 p-0 py-2'>Loading...</h6>
-                                    <h6 className='m-0 p-0 py-2'>Driver information, one moment please…</h6>
-                                </div> :
-                                driverDetails.length === 0 ?
-                                    <div className='d-flex flex-column align-items-center my-5'>
-                                        <h6>Oops! Sorry</h6>
-                                        <h6>there are no drivers avalible at thie time</h6>
-                                    </div> :
-                                    driverDetails.map((value, key) => (
-                                        <div key={key} className='driver-vehicle-list'>
-                                            <div className='d-flex align-items-center vehicle-details'>
-                                                <h6>Vehicle No : {value.vehicle_number}</h6>
-                                                <h6>{value.vehicle_province}</h6>
-                                            </div>
-                                            <div className='d-flex align-items-center driver-details'>
-                                                <h6>Type : {value.vehicle_type}</h6>
-                                                <h6>Modal : {value.vehicle_model}</h6>
-                                                <h6>Color : {value.vehicle_color}</h6>
-                                                <h6>Make : {value.vehicle_make}</h6>
-                                            </div>
-                                            <div className='d-flex align-items-center vehicle-details-secondary'>
-                                                <h6>Reg date : {value.vehicle_registered_date}</h6>
-                                                <h6>Condition {value.vehicle_vehicle_condition}</h6>
-                                                <h6>Vehicle Status : {value.vehicle_status}</h6>
-                                            </div>
-                                            <div className='d-flex align-items-center driver-details-secondary'>
-                                                <h6>Driver name : {value.driver_name}</h6>
-                                                <h6>Reg country : {value.driver_registered_country}</h6>
-                                                <h6>Type : {value.driver_type}</h6>
-                                                <h6>Nic : {value.driver_nic}</h6>
-                                                <h6>Reg date : {value.driver_registered_date}</h6>
-                                                <h6>Driver Status : {value.driver_status}</h6>
-                                            </div>
-                                            <button className='btn-submit-button' onClick={() => handleChooseDriver(value)}>Select</button>
+                    <div className="driver-allocation-modal-body">
+                        {driverDetailsLoading ? (
+                            <div className="loading-container">
+                                <FontAwesomeIcon icon={faSpinner} spinPulse className="loading-spinner" />
+                                <h6>Loading...</h6>
+                                <h6>Driver information, one moment please…</h6>
+                            </div>
+                        ) : driverDetails.length === 0 ? (
+                            <div className="no-drivers-container">
+                                <h6>Oops! Sorry</h6>
+                                <h6>There are no drivers available at this time</h6>
+                            </div>
+                        ) : (
+                            driverDetails.map((driver, index) => (
+                                <div key={index} className="driver-vehicle-card">
+                                    <div className="vehicle-primary-info">
+                                        <div className="vehicle-identification">
+                                            <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
+                                            <span className="vehicle-province">{driver.vehicle_province}</span>
                                         </div>
-                                    ))}
+                                        <div className="driver-name">
+                                            <span>Driver: {driver.driver_name}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="vehicle-details">
+                                        <div className="vehicle-characteristics">
+                                            <span>Type: {driver.vehicle_type}</span>
+                                            <span>Model: {driver.vehicle_model}</span>
+                                            <span>Color: {driver.vehicle_color}</span>
+                                            <span>Make: {driver.vehicle_make}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="secondary-info">
+
+                                        <div className="driver-secondary-details">
+                                            <span>Reg Date: {driver.vehicle_registered_date}</span>
+                                            <span>Condition: {driver.vehicle_vehicle_condition}</span>
+                                            <span>Status: {driver.vehicle_status}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="secondary-info">
+
+                                        <div className="driver-secondary-details">
+                                            <span>Country: {driver.driver_registered_country}</span>
+                                            <span>Type: {driver.driver_type}</span>
+                                            <span>NIC: {driver.driver_nic}</span>
+                                            <span>Reg Date: {driver.driver_registered_date}</span>
+                                            <span>Driver Status: {driver.driver_status}</span>
+                                        </div>
+                                    </div>
+
+                                    <CButton
+                                        color="info"
+                                        className="select-allocation-btn"
+                                        onClick={() => handleChooseDriver(driver)}
+                                    >
+                                        Select Vehicle
+                                    </CButton>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </Modal.Body>
             </Modal>
