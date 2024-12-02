@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CCard, CCardBody, CCardHeader, CCol, CContainer, CFormLabel, CButton, CRow, CFormCheck } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
@@ -20,8 +20,10 @@ import './ReportsMain.css';
 import getChatServices from './services/getChatServices';
 import ChatReportData from './ChatData/ChatReportData';
 import Modal from 'react-bootstrap/Modal';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 const ReportGenerationPage = () => {
+    const { userData } = useContext(UserLoginContext);
 
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
@@ -309,8 +311,11 @@ const ReportGenerationPage = () => {
                            
                             
                             <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                            {
+                               (["generate account report", "all accounts access"].some(permission => userData?.permissions?.includes(permission))) &&
                                 <CButton color="dark" className="full-width" onClick={handleGenerateReport}>Generate Report</CButton>
-                            </CCol>
+                            }
+                                </CCol>
                         </CRow>
 
                         {/* {

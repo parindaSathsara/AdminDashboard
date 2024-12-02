@@ -372,6 +372,7 @@ export default function LifestylesProductView(props) {
             { title: 'Max Child Occupancy', field: 'maxChildOccupancy' },
             { title: 'Total Occupancy', field: 'totalOccupancy' },
             { title: 'Rate type', field: 'rateType' },
+            { title: 'Description', field: 'description' },
             { title: 'Package Rate', field: 'packageRate' },
             { title: 'Adult Rate', field: 'adultRate' },
             { title: 'Child Rate', field: 'childRate' },
@@ -387,12 +388,14 @@ export default function LifestylesProductView(props) {
             maxChildOccupancy: packageItem.max_child_occupancy,
             totalOccupancy: packageItem.total_occupancy,
             rateType: packageItem.rate_type,
+            description: packageItem.description,
             packageRate: packageItem.package_rate,
             adultRate: packageItem.adult_rate,
             childRate: packageItem.child_rate,
             packageName: packageItem.package_name,
             packageType: packageItem.package_type,
         }));
+
 
         return (
             <CCol xs="12" lg="12">

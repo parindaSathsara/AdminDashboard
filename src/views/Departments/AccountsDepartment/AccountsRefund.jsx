@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './AccountsDepartment.css'
 import {
   CAvatar,
@@ -63,8 +63,10 @@ import axios from 'axios'
 
 import LoadingBar from 'react-top-loading-bar'
 import CustomerFeedbacks from './CustomerFeedbacks'
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 const AccountsRefunds = () => {
+  const { userData } = useContext(UserLoginContext);
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const [orderid, setOrderId] = useState('');
@@ -152,9 +154,10 @@ const AccountsRefunds = () => {
         actions:
           value.refund_type == "" || value.refund_type == null ?
             <div className='actions_box'>
-
+               {(["all accounts access","view refund customer Request","confirm refund customer Request"].some(permission => userData?.permissions?.includes(permission))) &&
               <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
-            </div>
+              }  
+              </div>
             :
 
             <div className='actions_box'>

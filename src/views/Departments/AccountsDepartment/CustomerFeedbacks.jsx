@@ -378,8 +378,9 @@ function CustomerFeedbacks(props) {
         </div>
 
         <div className="radioGroup">
+        {(["all accounts access","confirm refund customer Request"].some(permission => userData?.permissions?.includes(permission))) &&
           <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Confirm" defaultChecked onClick={handleApprovePayment} />
-
+        }
         </div>
       </>
 

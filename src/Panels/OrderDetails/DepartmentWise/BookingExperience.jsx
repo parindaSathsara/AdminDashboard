@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import MaterialTable from 'material-table';
 import { CBadge, CButton, CCard, CCardBody, CCardSubtitle, CCardText, CCardTitle, CCloseButton, CCol, CContainer, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
@@ -13,10 +13,10 @@ import { Modal } from 'react-bootstrap';
 import CancellationModal from '../CancelationModal/CancellationModal';
 import StarRating from '../Components/StarRating';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
-
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 export default function BookingExperience(props) {
-
+    const { userData } = useContext(UserLoginContext);
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
         '--cui-popover-border-color': '#0F1A36',
@@ -517,8 +517,9 @@ export default function BookingExperience(props) {
                                             <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>
 
                                             :
+                                            (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&
                                             <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
-
+                                            
                                         }
 
 

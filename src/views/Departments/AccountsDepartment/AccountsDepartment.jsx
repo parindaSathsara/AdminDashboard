@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './AccountsDepartment.css'
 import {
   CAvatar,
@@ -58,10 +58,11 @@ import OrderDetailsAccounts from './OrderDetailsAccounts'
 import Swal from 'sweetalert2'
 import PaymentRejection from './PaymentRejection'
 import axios from 'axios'
-
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 import LoadingBar from 'react-top-loading-bar'
 
 const Dashboard = () => {
+  const { userData } = useContext(UserLoginContext);
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const [orderid, setOrderId] = useState('');
@@ -108,7 +109,13 @@ const Dashboard = () => {
 
   }, []);
 
-
+  const pagePermission = ["all accounts access",
+      "view customer orders",
+      "approve customer orders",
+      "reject customer orders",
+      "view customer order pnl",
+      "download order long itinerary",
+      "download order short itinerary"]
 
   const data = {
     columns: [
@@ -165,8 +172,11 @@ const Dashboard = () => {
         actions:
           <div className='actions_box'>
             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+            {
+            (pagePermission.some(permission => userData?.permissions?.includes(permission))) &&
             <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.OrderId, value) }}>View Order</button>
-          </div>
+            }
+            </div>
       }
     })
   }
@@ -268,9 +278,13 @@ const Dashboard = () => {
           <Modal.Title>Order Details - {orderid}</Modal.Title>
           {paymentDataSet.MainPayStatus !== "Approved" ? (
             <div className="radioGroup" style={{ marginLeft: "30px" }}>
+               {(["all accounts access","approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
               <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
+               }
+               {(["all accounts access","reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
               <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
-            </div>
+              }
+              </div>
           ) : (
             <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
               Payment Approved

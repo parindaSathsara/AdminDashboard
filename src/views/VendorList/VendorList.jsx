@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import {
     CAvatar,
@@ -57,8 +57,10 @@ import VendorDetails from './VendorDetails'
 import axios from 'axios'
 import LoaderPanel from 'src/Panels/LoaderPanel'
 // import CustomerFeedbacks from './CustomerFeedbacks'
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 const VendorList = () => {
+    const { userData } = useContext(UserLoginContext);
     const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
     const [orderid, setOrderId] = useState('');
@@ -165,10 +167,14 @@ const VendorList = () => {
 
                 actions:
                     value.refund_type == "" || value.refund_type == null ?
-                        <div className='actions_box'>
+                           
+                    
+                       <div className='actions_box'>
                             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+                            {(["view vendor document","approve vendor document","reject vendor document"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton onClick={(e) => { handleModalOpen(value.id, value) }} color="dark">Review Documents</CButton>
-                        </div>
+                            }
+                            </div>
                         :
                         null
 
@@ -391,12 +397,15 @@ const VendorList = () => {
 
                         {vendorData?.status == 1 ?
                             null :
+                            
+                                (["approve vendor document"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="success" onClick={handleAcceptVendor}>Accept Document</CButton>
                         }
 
                         {vendorData?.status == 2 ?
                             null
                             :
+                            (["reject vendor document"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleRejectDocuments}>Reject Document</CButton>
                         }
 
