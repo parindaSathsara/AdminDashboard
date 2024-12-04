@@ -191,5 +191,59 @@ const getOrderIndexIds = async (id) => {
   return orderIndexes
 }
 
+const sendGenerateEmail = async (data) => {
+  console.log(data, "Data values are")
+  var returnVal = null
+  try{
+      await axios.post(`/aahaas-mail/send`, data,{
+        headers: {
+          "Content-Type": "multipart/form-data", 
+        },
+      })
+      .then(response => {
+          returnVal=  [200,response.data.data ]
+      })
+     .catch(error =>{
+      returnVal= [400,[] ]
+     })
+  }catch(error){
+      returnVal =  [400,[] ]
+  }    
 
-export { fetchAllCustomerWithEmails, getOrderIDs, resendOrderEmailToCustomer, confirmResendEmail, downloadOrderReceipt, getOrderIndexIds, resendAllSupplierVouchers, downloadAllSupplierVouchers, downloadSupplierVoucherOneByOne }
+  return returnVal
+}
+
+const getAllSuppliers = async () => {
+  var dataSet = null
+  try{
+      await axios.get(`suppliers/all`)
+      .then(response => {
+        dataSet = response.data.data
+      })
+     .catch(error =>{
+      dataSet = response.data
+     })
+  }catch(error){
+  }    
+
+  return dataSet
+}
+
+const getAllCustomer = async () => {
+  var dataSet = null
+  try{
+      await axios.get(`customers/all`)
+      .then(response => {
+        dataSet = response.data.data
+      })
+     .catch(error =>{
+      dataSet = response.data
+     })
+  }catch(error){
+  }    
+
+  return dataSet
+}
+
+
+export {getAllSuppliers, getAllCustomer,sendGenerateEmail, fetchAllCustomerWithEmails, getOrderIDs, resendOrderEmailToCustomer, confirmResendEmail, downloadOrderReceipt, getOrderIndexIds, resendAllSupplierVouchers, downloadAllSupplierVouchers, downloadSupplierVoucherOneByOne }

@@ -19,13 +19,16 @@ import axios from 'axios';
 import moment from 'moment';
 import CIcon from '@coreui/icons-react';
 import { cilCloudDownload, cilReload } from '@coreui/icons';
-import { confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, downloadSupplierVoucherOneByOne, getOrderIDs, getOrderIndexIds, resendAllSupplierVouchers } from './services/emailServices';
+import { getAllCustomer, getAllSuppliers, sendGenerateEmail, confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, downloadSupplierVoucherOneByOne, getOrderIDs, getOrderIndexIds, resendAllSupplierVouchers } from './services/emailServices';
 import RichTextEditor from './RichTextEditor';
 import Swal from 'sweetalert2';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState,convertToRaw } from 'draft-js';
+import { EditorState } from 'draft-js';
+import draftToHtml from "draftjs-to-html";
+import { convertToRaw } from "draft-js";
+
 
 const EmailGeneration = () => {
     const { userData } = useContext(UserLoginContext);
@@ -37,9 +40,11 @@ const EmailGeneration = () => {
     const [orderIndexIdVals, setOrderIndexIdVals] = useState([])
     const [checkoutIndexLoading, setCheckoutIndexLoading] = useState(false)
     
-    const [editorState, setEditorState] = React.useState(
-        () => EditorState.createEmpty(),
-    );
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const handleEditorChange = (state) => {
+        setEditorState(state);
+    };
 
     const handleONCheckoutIDClick = (selectedOption) => {
         setSelectedOrderID(selectedOption);
@@ -85,18 +90,12 @@ const EmailGeneration = () => {
     const [sendPersonType, seSendPersonType] = useState({})
 
 
-    const suppliers = [
-        { value: 'fernando', label: 'fernando' },
-        { value: 'fernando', label: 'fernando' },
-    ];
+    const [suppliers, setSuppliers] = useState([])
     const [selectSupplier, setSelectedSupplier] = useState('')
 
-    const customers = [
-        { value: 'perera', label: 'perera' },
-        { value: 'perera', label: 'perera' },
-    ];
+    const [customers, setCustomers] = useState([])
     const [selectCustomer, setSelectedCustomer] = useState('')
-
+    const [subject, setSubject] = useState('')
 
     useEffect(() => {
         getOrderIDs().then(response => {
@@ -110,42 +109,101 @@ const EmailGeneration = () => {
         })
     }, [])
 
+    const getCustomers = () => {
+        try{
+    
+            getAllCustomer().then(response => {
+            // setAllPositions(response);
+            const customerData = response.map(customer => ({
+                value: customer.id,
+                label: customer.username
+            }));
+            setCustomers(customerData);
+            }).catch(error => {
+                console.error("Error fetching available employees: ", error);
+            });
+        
+    
+        }catch(error){
+            console.error("Error available employee: ", error);
+        }
+    };
+
+    const getSuppliers = () => {
+        try{
+    
+            getAllSuppliers().then(response => {
+             const suppliersData = response.map(supplier => ({
+                value: supplier.id,
+                label: supplier.first_name
+                }));
+                setSuppliers(suppliersData);
+            }).catch(error => {
+                console.error("Error fetching available employees: ", error);
+            });
+        
+    
+        }catch(error){
+            console.error("Error available employee: ", error);
+        }
+    };
+    
+      useEffect (()=>{
+        getCustomers();
+        getSuppliers();
+      },[])
+
 
     const handleEmailResend = () => {
 
         const missingFields = [];
+        if (!subject) missingFields.push("Subject");
         if (!emailType?.value) missingFields.push("Email Type");
         if (!internalEmail?.value) missingFields.push("Internal Email");
-        if (!selectedOrderID?.value && selectCustomer === '' && selectSupplier === '' && sendPersonType === null) missingFields.push("Order ID");
-        if (!sendPersonType?.value && selectedOrderID === null) missingFields.push("User Type");
-        if (!selectCustomer && selectedOrderID?.value === null) missingFields.push("Customer Name");
-        if (!selectSupplier && selectedOrderID === null) missingFields.push("Supplier Name");
-
+        if (!selectedOrderID?.value && (sendPersonType?.value === null || sendPersonType?.value === undefined)) {
+            missingFields.push("Order ID");
+        }
+        if (emailType?.value !== 'order' && (sendPersonType?.value === null || sendPersonType?.value === undefined)) {
+            missingFields.push("User Type");
+        }
+        if (sendPersonType?.value === 'customer'  &&  selectCustomer === '') {
+            missingFields.push("Customer");
+        }
+        if (sendPersonType?.value === 'supplier' && selectSupplier === '') {
+            missingFields.push("Supplier");
+        }
 
         if (missingFields.length > 0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Missing Fields',
-                text: `Please select the following fields: ${missingFields.join(', ')}`,
+                text: `Please select the fields: ${missingFields.join(', ')}`,
             });
             return;
         }
         console.log(editorState)
         
 
-        const rawContentState = convertToRaw(editorState.getCurrentContent());
-        const serializedEditorState = JSON.stringify(rawContentState);
-        console.log('Serialized',serializedEditorState)
-        
-        const formData = new FormData();
+        // const rawContentState = convertToRaw(editorState.getCurrentContent());
+        // const serializedEditorState = JSON.stringify(rawContentState);
+        // console.log('Serialized',serializedEditorState)
 
+        const contentState = convertToRaw(editorState.getCurrentContent())
+        const htmlContent = draftToHtml(contentState);
+        console.log('htmlContent',htmlContent)
+        // const body = JSON.stringify(htmlContent); 
+        // console.log('Body',body)
+
+
+        const formData = new FormData();
+        formData.append("subject", subject || "");
         formData.append("emailType", emailType?.value || "");
         formData.append("email", internalEmail?.value || "");
         formData.append("orderID", selectedOrderID?.value || "");
         formData.append("personType", sendPersonType?.value || "");
         formData.append("supplier", selectSupplier?.value || "");
         formData.append("customer", selectCustomer?.value || "");
-        formData.append("message", serializedEditorState);
+        formData.append("message", htmlContent);
         files.forEach((file,idx) => {
             formData.append(`attachments${idx}`, file);
         });
@@ -153,6 +211,48 @@ const EmailGeneration = () => {
         formData.append("imageLength",files.length)
 
         console.log('Send',...formData)
+
+        if(formData){
+            try{
+
+                sendGenerateEmail(formData).then(response => {
+                    
+                    if(response[0] === 200){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Email Sent',
+                            text: 'Email has been sent successfully',
+                        });
+
+                        setSubject('');
+                        setEmailType({});
+                        setInternalEmail({});
+                        setSelectedOrderID({});
+                        seSendPersonType({});
+                        setSelectedSupplier('');
+                        setSelectedCustomer('');
+                        setEditorState(EditorState.createEmpty());
+                        setFiles([]);
+
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Email Generation Error',
+                            text: 'Error occurred while sending email',
+                        });
+                    }   
+
+                  }).catch(error => {
+                    console.error("Email Generation Error: ", error);
+                  });
+              
+          
+              }catch(error){
+                  console.error("Email Generation Error: ", error);
+              }
+        }
+
+       
     };
 
     const handleDownloadReceipt = () => {
@@ -211,8 +311,6 @@ const EmailGeneration = () => {
         setFiles([]);
     };
 
-  
-
      return (
         <CContainer fluid>
 
@@ -223,7 +321,11 @@ const EmailGeneration = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CRow className="align-items-end">
-
+                        <CCol xs={12} sm={6} lg={3}>
+                                <CFormLabel htmlFor="category">Subject</CFormLabel>
+                                <br></br>
+                                <CFormInput type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                            </CCol>
                             <CCol xs={12} sm={6} lg={3}>
                                 <CFormLabel htmlFor="category">Internal Email</CFormLabel>
                                 <br></br>
@@ -323,13 +425,7 @@ const EmailGeneration = () => {
                              }
 
 
-                            <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
-                   
-                                <CButton color="dark" className='full-width' onClick={handleEmailResend}>
-                                    Send
-                                </CButton>
-
-                            </CCol>
+                           
                         </CRow>
                             <br></br> <br></br>
                         
@@ -352,12 +448,12 @@ const EmailGeneration = () => {
                     <CRow className="mb-3">
                     <Editor 
                         editorState={editorState}
-                        onEditorStateChange={setEditorState}  />;
+                        onEditorStateChange={handleEditorChange}  />;
                     </CRow>
                    
                         <CRow className="mb-3">
                             <CFormLabel>Add Images or PDFs</CFormLabel>
-                          <CCol xs={12} sm={9} lg={11}>
+                          <CCol xs={12} sm={6} lg={8}>
                           <CFormInput
                                 type="file"
                                 multiple
@@ -365,12 +461,17 @@ const EmailGeneration = () => {
                                 accept="image/*,application/pdf"
                             />
                             </CCol>
-                            <CCol xs={12} sm={3} lg={1}>
+                            <CCol xs={12} sm={4} lg={2}>
                             <CButton  color="info" style={{color:"white"}} onClick={clearFiles}>
-                            Clear All
+                            Clear All Files
                         </CButton>
-                            </CCol>
-                            
+                        
+                        </CCol>
+                        <CCol xs={12} sm={2} lg={2} className="">
+                            <CButton color="dark" className='full-width' onClick={handleEmailResend}>
+                                   Send
+                            </CButton>
+                        </CCol>
 
 
                         </CRow>
