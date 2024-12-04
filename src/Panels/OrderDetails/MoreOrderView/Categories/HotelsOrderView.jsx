@@ -39,6 +39,7 @@ export default function HotelsOrderView(props) {
     console.log(props.productData, "Product Data value issss")
 
     const basicDetails = props.productData
+    console.log(basicDetails?.decoded_data?.hotelMainRequest?.hotelData?.images, "Basic Details value is")
 
     // const InventoryDetails = () => {
     //     const columns = [
@@ -265,7 +266,7 @@ export default function HotelsOrderView(props) {
                 <CCol xs="12" lg="3">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.["product_image"]}
+                            src={basicDetails?.decoded_data?.hotelMainRequest?.hotelData?.['images']}
                             fluid
                             style={{
                                 position: 'absolute',

@@ -114,7 +114,7 @@ function OrderDetails(props) {
 
     useEffect(() => {
 
-        // console.log("Order id", props.orderid)
+        console.log("Order id", props.orderData)
 
         setOrderMainDetails(props.orderData)
         setDetailsLoading(true)
@@ -137,6 +137,7 @@ function OrderDetails(props) {
             // console.log(props?.orderData?.info?.checkoutID, "Checkout ID")
 
             getDashboardProductOrderDetails(props?.orderData?.info?.checkoutID).then((res) => {
+                console.log("Hotellll", res)
                 setDetailsLoading(false)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
@@ -158,6 +159,7 @@ function OrderDetails(props) {
         }
         else {
             getDashboardOrdersIdWise(props.orderid).then((res) => {
+                console.log("Hotellll", res)
                 setDetailsLoading(false)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
@@ -177,6 +179,7 @@ function OrderDetails(props) {
         if (props?.productViewData) {
             getDashboardProductOrderDetails(props.orderid?.info?.checkoutID).then((res) => {
                 // setDetailsLoading(false)
+                console.log("Hotellll", res)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
                 setEducationData(res.educationData)
@@ -191,6 +194,7 @@ function OrderDetails(props) {
 
             getDashboardOrdersIdWise(props.orderid).then((res) => {
                 // setDetailsLoading(false)
+                // console.log("Hotellll", res)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
                 setEducationData(res.educationData)
@@ -233,7 +237,7 @@ function OrderDetails(props) {
         else if (category == 4) {
 
             console.log(e, "Console Hotel Data is")
-            setHotelDataSet(e)
+            setHotelDataSet(e?.hotelData)
             setMoreOrderDetails(e.booking_id)
             setMoreOrderModal(true)
         }
@@ -563,7 +567,8 @@ function OrderDetails(props) {
             paid_amount: CurrencyConverter(value.currency, value.paid_amount),
             total_amount: CurrencyConverter(value.currency, value.total_amount),
             supplier_order: value.supplier_status,
-            status: value.status
+            status: value.status,
+            hotelData:value
         }))
     }
 
