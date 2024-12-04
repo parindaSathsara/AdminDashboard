@@ -27,6 +27,7 @@ export default function BookingExperience(props) {
     }
 
     const productData = props.dataset
+    console.log(productData, "Product Data is")
 
 
 
@@ -353,21 +354,21 @@ export default function BookingExperience(props) {
         { title: 'Name', field: 'name' },
         {
             title: 'QTY', field: 'qty', render: rowData => {
-                rowData?.category != "flights" ?
-                    <CPopover
-                        content={<QuantityContainer data={rowData.qty} />}
-                        placement="top"
-                        title="Quantity Data"
-                        style={customPopoverStyle}
-                        trigger="focus"
-                    >
-                        <CButton color="success" style={{ fontSize: 14, color: 'white' }}>View</CButton>
-                    </CPopover>
-
-                    :
-                    null
+                return rowData?.category !== "flights" ? (
+                    // <CPopover
+                    //     content={<QuantityContainer data={rowData?.data} />}
+                    //     placement="right"
+                    //     title="Quantity Data"
+                    //     style={customPopoverStyle}
+                    //     trigger="focus"
+                    // >
+                    //     <CButton color="info" style={{ fontSize: 14, color: 'white' }}>View</CButton>
+                    // </CPopover>
+                    <span>{rowData?.data?.Quantity !== null ? rowData?.data?.Quantity : 'Not mention' }</span>
+                ) : (
+                    <span>{rowData?.qty}</span>
+                );
             }
-
 
         },
         { title: 'Date', field: 'date' },
@@ -543,7 +544,7 @@ export default function BookingExperience(props) {
     const data = productData?.map(value => ({
         pid: value?.['PID'],
         name: value?.['PName'],
-        qty: value,
+        qty: value?.['Quantity'],
         date: value?.['DDate'],
         address: value?.['DAddress'],
         total_amount: CurrencyConverter(value.currency, value?.['total_amount']),
