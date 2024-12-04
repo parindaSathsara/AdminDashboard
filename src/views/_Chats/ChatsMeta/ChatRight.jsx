@@ -699,7 +699,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                         <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} onClick={() => handleOpenClipBoardOpen()} />
                                         <FontAwesomeIcon icon={faMagicWandSparkles} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleAutoSuggestionModal()} />
 
-                                        <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} />
+                                        {/* <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} /> */}
 
                                         <textarea
                                             value={adminMessage}
