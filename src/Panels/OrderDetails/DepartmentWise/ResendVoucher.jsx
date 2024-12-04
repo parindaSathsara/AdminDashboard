@@ -30,11 +30,11 @@ export default function ResendVoucher({ voucherData, orderID }) {
             }else{
             var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}`
             const postdata = {
-                emails: selected.toString()
+                emails: selected
             }
     
     
-            // console.log(postdata, "Posting data is")
+            console.log(selected, "Posting data is")
     
             let orderIdNumber;
             if (typeof orderID === 'object' && orderID?.info?.orderID !== undefined) {
@@ -45,7 +45,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
                 orderIdNumber = orderID;
             }
 
-            axios.post(`https://staging-gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderIdNumber}/${type}`, postdata, {
+            axios.post(`supplier-voucher/${voucherData?.checkout_id}/custom-mails`, postdata, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -77,8 +77,12 @@ export default function ResendVoucher({ voucherData, orderID }) {
     }
 
 
-    return (
+    const validateEmails = (emails) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emails.every(email => emailPattern.test(email));
+    }
 
+    return (
         <>
             <CContainer>
                 <CCardTitle>Send to Supplier Email</CCardTitle>
@@ -90,40 +94,44 @@ export default function ResendVoucher({ voucherData, orderID }) {
                         :
                         null
                     }
-
                 </CButton>
             </CContainer>
 
             <br></br>
 
-
             <CContainer>
                 <CCardTitle style={{ marginBottom: 10 }}>Type Emails Here</CCardTitle>
                 <TagsInput
                     value={selected}
-                    // onChange={setSelected(e.target.value)}
-                     onChange={(e) => setSelected(e)}
+                    onChange={(e) => setSelected(e)}
                     name="emails"
                     placeHolder="Enter Email"
-
                 />
-                <CButton title='Send to Supplier Origin Email' color='info' style={{ color: 'white', marginTop: 10 }} onClick={() => sendToSupplierEmail("All")} disabled={voucherSending != ""}>
-
+                <CButton 
+                    title='Send to Supplier Origin Email' 
+                    color='info' 
+                    style={{ color: 'white', marginTop: 10 }} 
+                    onClick={() => {
+                        if (validateEmails(selected)) {
+                            sendToSupplierEmail("All");
+                        } else {
+                            Swal.fire({
+                                title: "Invalid Email Addresses",
+                                text: "Please enter valid email addresses.",
+                                icon: "error"
+                            });
+                        }
+                    }} 
+                    disabled={voucherSending != ""}
+                >
                     Send To Selected
-
-
                     {voucherSending === "All" ?
                         <CSpinner style={{ height: 18, width: 18, marginLeft: 10 }} />
                         :
                         null
                     }
-
                 </CButton>
-
             </CContainer>
         </>
-
-
-
     )
 }
