@@ -255,9 +255,11 @@ export default function TravellerExperience(props) {
 
     }
 
-
+    const [driverId, setDriverId]=useState('')  
     const handleClickDriverAllocation = (dataset) => {
+        // console.log(dataset, "Dataset Value is")
         if (dataset.data.category === 'Lifestyles') {
+            setDriverId(dataset.data.vehicle_driver_id)
             setDriverAllocationStatus({ status: true, data: dataset });
         } else {
             alert('Driver allocation is avaliable only for lifestyle products');
@@ -413,6 +415,7 @@ export default function TravellerExperience(props) {
         setDriverDetailsLoading(true);
         await axios.get('/vehicle-drivers').then((response) => {
             setDriverDetailsLoading(false);
+            console.log('driverrrrrrrrrrr', response.data.data);
             setDriverDetails(response.data.data);
         })
     }
@@ -428,6 +431,7 @@ export default function TravellerExperience(props) {
     }
 
     const handleChooseDriver = async (dataset) => {
+        console.log(dataset, "Dataset Value is")
         let Prod_ID = driverAllocationStatus.data.data.checkoutID;
         let Veh_ID = dataset.id;
         await axios.post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`, { xsrfHeaderName: 'X-CSRF-Token', withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }).then((response) => {
@@ -495,7 +499,7 @@ export default function TravellerExperience(props) {
                             </div>
                         ) : (
                             driverDetails.map((driver, index) => (
-                                <div key={index} className="driver-vehicle-card">
+                                <div key={index} className="driver-vehicle-card" style={{backgroundColor:  driverId === driver.id ? "#f0e68c " : null,}} >
                                     <div className="vehicle-primary-info">
                                         <div className="vehicle-identification">
                                             <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
@@ -536,14 +540,26 @@ export default function TravellerExperience(props) {
                                             <span>Driver Status: {driver.driver_status}</span>
                                         </div>
                                     </div>
-
-                                    <CButton
-                                        color="info"
+                                    {
+                                        driverId === driver.id ?
+                                        <CButton
+                                        color="dark"
+                                        disabled
+                                        className="select-allocation-btn"
+                                        onClick={() => handleChooseDriver(driver)}
+                                    >
+                                        Selected
+                                    </CButton>
+                                            :
+                                            <CButton
+                                        color="warning"
                                         className="select-allocation-btn"
                                         onClick={() => handleChooseDriver(driver)}
                                     >
                                         Select Vehicle
                                     </CButton>
+                                    }
+                                    
                                 </div>
                             ))
                         )}
