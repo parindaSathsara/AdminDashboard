@@ -22,6 +22,7 @@ export default function DateWiseSummary(props) {
     }
 
     const productData = props?.dataset
+    console.log("Product Data is",productData )
     const groupedDates = props?.dates?.sort((a, b) => new Date(a) - new Date(b));
 
 
@@ -126,6 +127,38 @@ export default function DateWiseSummary(props) {
 
 
 
+                </CCol>
+            )
+        }else if (data?.category == "Hotels") {
+            return (
+                <CCol style={{ width: '320px' }}>
+
+
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Number of Nights</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.NoOfNights}</h6></CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Adult Count</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data.NoOfAdults}</h6></CCol>
+                    </CRow>
+
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Child Count</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data?.decoded_data.NoOfChild}</h6></CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Number of rooms</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data?.decoded_data.NoOfRooms}</h6></CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Provider</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data?.decoded_data.Provider}</h6></CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol style={{ flex: 2 }}><h6>Child Count</h6></CCol>
+                        <CCol style={{ flex: 0.7, textAlign: 'right' }}><h6>{data?.decoded_data.NoOfChild}</h6></CCol>
+                    </CRow>
                 </CCol>
             )
         }
