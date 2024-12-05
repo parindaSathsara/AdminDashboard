@@ -33,7 +33,7 @@ export default function TravellerExperience(props) {
 
     const productData = props.dataset;
 
-    // console.log(productData, "Productttttttt")
+    console.log(productData, "Productttttttt")
 
     const [driverAllocationStatus, setDriverAllocationStatus] = useState({
         status: false,
@@ -94,9 +94,9 @@ export default function TravellerExperience(props) {
             if (response.data.status == 200) {
 
 
-                await axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${rowData?.data?.checkoutID}/${"CompletedDelivery"}`).then((res) => {
+                await axios.post(`${axios.defaults.url}/sendConfirmationMail/${rowData?.data?.checkoutID}/${"CompletedDelivery"}`).then((res) => {
                     Swal.hideLoading()
-                    // console.log('res',res.data)
+                    console.log('res',res.data)
 
                     if (res.data.status === 200) {
                         Swal.fire({
@@ -104,7 +104,7 @@ export default function TravellerExperience(props) {
                             text: "",
                             icon: "success"
                         });
-
+                        props.reload()
                     }
 
                 }).catch((err) => {
@@ -314,13 +314,13 @@ export default function TravellerExperience(props) {
         { title: 'PID', field: 'pid' },
         { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
         { title: 'Location', field: 'location1', render: rowData => <CButton color="info" style={{ fontSize: 14, color: 'white', }} onClick={() => getMapView(rowData.data)}>Show in Map</CButton> },
-        { title: 'Reconfirmation Date', field: 'reconfirmation_date', type: 'date', render: rowData => <CFormInput disabled={getDisableStatus(rowData)} type="date" value={rowData.reconfirmation_date} onChange={e => handleInputFields('reconfirmation_date', e.target.value)} /> },
-        { title: 'QC', field: 'qc', render: rowData => <CFormSelect disabled={getDisableStatus(rowData)} custom onChange={e => handleInputFields('qc', e.target.value)} ><option>Select QC</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
+        { title: 'Reconfirmation Date', field: 'reconfirmation_date', type: 'date', render: rowData => <CFormInput disabled={getDisableStatus(rowData)} type="date" value={rowData.reconfirmationDate} onChange={e => handleInputFields('reconfirmation_date', e.target.value)} /> },
+        { title: 'QC', field: 'qc', render: rowData => <CFormSelect disabled={getDisableStatus(rowData)} custom onChange={e => handleInputFields('qc', e.target.value)} ><option>{rowData.qc !== null ? rowData?.qc : "Select QC" }</option>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect> },
         {
             title: 'Delivery Status', field: 'delivery_status', render: rowData => {
                 return (
                     <CFormSelect custom onChange={e => handleInputFields('delivery_status', e.target.value)} disabled={getDisableStatus(rowData)}>
-                        <option>Select Status</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}
+                        <option>{rowData.deliveryStatus !== null ? rowData?.deliveryStatus : "Select Status"}</option>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}
                     </CFormSelect>
                 )
             }
@@ -348,7 +348,7 @@ export default function TravellerExperience(props) {
                     <CButton
                         // onClick={() => console.log(rowData)}
                  
- onClick={() => handlePNLReport(rowData?.data?.checkoutID)}
+                    onClick={() => handlePNLReport(rowData?.data?.checkoutID)}
                         style={{ fontSize: 14, color: 'white', backgroundColor: '#ed4242', border: 0 }} color="info">Show PNL report</CButton>
                     
                 )
@@ -388,9 +388,10 @@ export default function TravellerExperience(props) {
         pid: value?.['PID'],
         delivery_date: value?.service_date,
         location: value?.location,
-        reconfirmationDate: value?.reconfirmationDate,
-        qc: <CFormSelect custom>{qcValues.map(qc => <option key={qc} value={qc}>{qc}</option>)}</CFormSelect>,
-        deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
+        reconfirmationDate: value?.reconfirmation_date,
+        qc: value?.qc,
+        // deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
+        deliveryStatus: value?.delivery_status,
         data: value,
         // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
     }));
