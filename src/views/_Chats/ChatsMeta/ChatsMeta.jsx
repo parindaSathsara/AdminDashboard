@@ -16,6 +16,8 @@ import { Tooltip } from "@material-ui/core";
 import './chatsMeta.css';
 import ChatRight from './ChatRight';
 import { useLocation } from 'react-router-dom';
+import { Tab, Tabs } from 'react-bootstrap';
+import { assignEmployeeToChat,getAllEmployees} from './services/chatServices';
 
 function ChatsMeta() {
 
@@ -256,6 +258,7 @@ function ChatsMeta() {
 
             if (JSON.stringify(fetchedMessages) !== JSON.stringify(chatList)) {
                 setchatList(fetchedMessages);
+                // console.log( "Fetched messagesssssss",fetchedMessages.length)
                 setchatListFiltered(fetchedMessages);
 
                 let relatedResposne = await getChatRelatedtypes(fetchedMessages);
@@ -319,7 +322,7 @@ function ChatsMeta() {
         getChatlists();
     }, []);
 
-
+    const [lentChatList , setLentChatList] = useState(0);
 
     const getFilteredChats = (pinState) => {
         if (pinState == "pinned") {
@@ -330,17 +333,30 @@ function ChatsMeta() {
                     !searchChat || `${value.chat_name} by ${value.customer_name}`.toLowerCase().includes(searchChat.toLowerCase())
                 );
 
+        } else if(pinState == "assigned") {
+            const data =  chatListFiltered
+            .filter((value) => !pinnedChats.includes(value.id))
+            .filter((value) =>
+                !searchChat || `${value.chat_name} by ${value.customer_name}`.toLowerCase().includes(searchChat.toLowerCase())
+            ).filter((value) => value?.assign_employee === userData.id);
+            
+            return data;
         }
         else {
             return chatListFiltered
-                .filter((value) => !pinnedChats.includes(value.id))
-                .filter((value) =>
-                    !searchChat || `${value.chat_name} by ${value.customer_name}`.toLowerCase().includes(searchChat.toLowerCase())
-                );
-
+            .filter((value) => !pinnedChats.includes(value.id))
+            .filter((value) =>
+                !searchChat || `${value.chat_name} by ${value.customer_name}`.toLowerCase().includes(searchChat.toLowerCase())
+            );
+            
         }
     };
 
+
+    const [currentFilters, setCurrentFilters] = useState("All")
+    const handleSelect = (key) => {
+        setCurrentFilters(key)
+    };
 
 
 
@@ -351,7 +367,7 @@ function ChatsMeta() {
                     <div className="chat-search-input-main">
                         <input placeholder='Search chats' className='chat-search-input' value={searchChat} onChange={(e) => handleFilterchat(e.target.value, chatList)} />
                         {searchChat !== '' && <FontAwesomeIcon className="chat-search-input-main-icon" icon={faXmark} onClick={() => handleFilterchat('', chatList)} />}
-                        <FontAwesomeIcon icon={faFilter} className="chat-search-input-main-icon" onClick={() => setOpenFilter(!openFilter)} />
+                        <FontAwesomeIcon icon={faFilter} className="chat-search-input-main-icon" onClick={() => setOpenFilter(!openFilter)} /> 
                     </div>
                     <div className={openFilter ? 'filter-open' : 'filter-close'}>
                         <p>Filter by groups</p>
@@ -383,7 +399,9 @@ function ChatsMeta() {
                                 <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
                                     <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
                                     <h6 className="chat-name ellipsis-2-lines">
-                                        {value.chat_name}{value.customer_name ? ` by ${value.customer_name}` : ''}
+                                        {value.chat_name}
+                                        {value.customer_name ? ` by ${value.customer_name}` : ''}
+                                        {value?.assign_employee_name ? `( handle by ${value?.assign_employee_name})` : ''}
                                     </h6>
 
                                     <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
@@ -409,18 +427,32 @@ function ChatsMeta() {
                                 </div>
                             ))
                         }
-                        <p className="chatWise-heading">All chats</p>
+                        {/* <p className="chatWise-heading">All chats</p> */}
 
-                        {
+                        <Tabs
+                defaultActiveKey="All"
+                id="uncontrolled-tab-example"
+                className="mt-4"
+                style={{
+                    fontSize: 14,
+                }}
+                onSelect={handleSelect}
+            >
+                <Tab eventKey="All" title={<span className="custom-tab-all">All Chats</span>} itemID='tabAll'>
+                {
                             searchChat !== '' && chatListFiltered.length === 0 ?
                                 <p className="chat-lists-note">There are no chats with your search keywords try with different keywords</p>
                                 : searchChat === '' && chatListFiltered.length === 0 ?
                                     <p className="chat-lists-note">There are no chats initiated from customer</p> :
                                     getFilteredChats("notPinned").map((value, key) => (
+                                        
                                         <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
                                             <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
                                             <h6 className="chat-name ellipsis-2-lines">
-                                                {value.chat_name}{value.customer_name ? ` by ${value.customer_name}` : ''}
+                                                {value.chat_name}
+                                                {value.customer_name ? ` by ${value.customer_name}` : ''}
+                                                {value?.assign_employee_name ? `( handle by ${value?.assign_employee_name})` : ''}
+                                                 
                                             </h6>
 
 
@@ -451,6 +483,66 @@ function ChatsMeta() {
                                         </div>
                                     ))
                         }
+                </Tab>
+                {userData.roles.includes("SuperAdmin") ?
+                                   null :userData.roles.includes("Admin") ?  null : 
+                                   
+                                   
+                                   <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Assigned Chats</span>} itemID='tabPending'>
+              
+                                   {
+                                               searchChat !== '' && chatListFiltered.length === 0 ?
+                                                   <p className="chat-lists-note">There are no chats with your search keywords try with different keywords</p>
+                                                   : searchChat === '' && chatListFiltered.length === 0 ?
+                                                       <p className="chat-lists-note">There are no chats initiated from customer</p> :
+                                                       getFilteredChats("assigned").length === 0 ?
+                                                       <p className="chat-lists-note">There are no chats assigned</p> :
+                                                       getFilteredChats("assigned").map((value, key) => (
+                                                           
+                                                           <div key={key} className="chat-head" style={{ backgroundColor: value.id === chatOpenDetails.id ? '#f2f2f2' : value?.admin_unreads ? "#b9e4ff" : '' }} onClick={() => handleOpenChat(value)}>
+                                                               <LazyLoadImage className="chat-avatar" placeholderSrc={aahaaslogo} src={aahaaslogo} />
+                                                               <h6 className="chat-name ellipsis-2-lines">
+                                                                   {value.chat_name}
+                                                                   {value.customer_name ? ` by ${value.customer_name}` : ''}
+                                                                   {value?.assign_employee_name ? `( handle by ${value?.assign_employee_name})` : ''}
+                                                               </h6>
+                   
+                   
+                                                               <p className="chat-created-date">Initiate at {formatDate(value.createdAt)} - {value?.admin_included?.length === undefined ? 'No active admins' : `Active admins x ${value?.admin_included?.length}`}</p>
+                   
+                                                               <div className="reading-admins">
+                                                                   {
+                                                                       (value?.admin_included === undefined || value?.admin_included?.length == 0) ?
+                                                                           <span className="chat-admin">Yet to be replied</span>
+                                                                           : <span className="chat-admin">{value?.admin_included?.length} admin are in chat</span>
+                                                                   }
+                                                                   <span>-</span>
+                                                                   {
+                                                                       (value?.admin_reading === undefined || value?.admin_reading?.length === 0) ?
+                                                                           <span className="read-admin">No one is reading</span>
+                                                                           : <span className="read-admin">{value?.admin_reading?.length} are reading</span>
+                                                                   }
+                                                               </div>
+                                                               <div className="chat-notify">
+                   
+                                                                   {value?.admin_unreads != 0 ?
+                                                                       <h6 style={{ backgroundColor: '#616161', borderRadius: 50, paddingRight: 5, paddingLeft: 5, fontSize: 12, color: 'white', paddingTop: 3, paddingBottom: 3 }}>{value?.admin_unreads}</h6>
+                                                                       :
+                                                                       null
+                                                                   }
+                   
+                                                               </div>
+                                                           </div>
+                                                       ))
+                                           }
+                   
+                   
+                                   </Tab>
+                                   }
+               
+            </Tabs >
+                           
+                        
                     </div>
                 </CCol>
 

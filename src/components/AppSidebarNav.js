@@ -21,37 +21,50 @@ export const AppSidebarNav = ({ items }) => {
   }
 
   const navItem = (item, index) => {
-    const { component, name, badge, icon, ...rest } = item
+    const { component, name, badge, icon,hidden, ...rest } = item
     const Component = component
-    return (
-      <Component
-        {...(rest.to &&
-          !rest.items && {
-          component: NavLink,
-        })}
-        key={index}
-        {...rest}
-      >
-        {navLink(name, icon, badge)}
-      </Component>
-    )
+    if(!hidden){
+      return (
+        <Component
+          {...(rest.to &&
+            !rest.items && {
+            component: NavLink,
+          })}
+          key={index}
+          {...rest}
+        >
+          {navLink(name, icon, badge)}
+        </Component>
+      )
+    }
+    else{
+      return null
+    }
+   
   }
   const navGroup = (item, index) => {
-    const { component, name, icon, to, ...rest } = item
+    const { component, name, icon, to,hidden, ...rest } = item
     const Component = component
-    return (
-      <Component
-        idx={String(index)}
-        key={index}
-        toggler={navLink(name, icon)}
-        visible={location.pathname.startsWith(to)}
-        {...rest}
-      >
-        {item.items?.map((item, index) =>
-          item.items ? navGroup(item, index) : navItem(item, index),
-        )}
-      </Component>
-    )
+
+    if(!hidden){
+      return (
+        <Component
+          idx={String(index)}
+          key={index}
+          toggler={navLink(name, icon)}
+          visible={location.pathname.startsWith(to)}
+          {...rest}
+        >
+          {item.items?.map((item, index) =>
+            item.items ? navGroup(item, index) : navItem(item, index),
+          )}
+        </Component>
+      )
+    }
+    else{
+      return null
+    }
+   
   }
 
   return (

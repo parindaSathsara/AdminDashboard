@@ -155,7 +155,7 @@ const OrderAllocate = ({ normalUser = false }) => {
         // // console.log("Assigned Employee:", selectedEmployee, "to Row:", selectedRow);
         // handleCloseModal();
 
-        // console.log(rowData.info.checkoutID, "Row Data is")
+        console.log(rowData)
         setSelectedRow(rowData?.info);
         setShowModal(true);
 
@@ -286,14 +286,14 @@ const OrderAllocate = ({ normalUser = false }) => {
                     return (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-
+                        {(["view assign employee order","delete assign employee order", "assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="dark" className="position-relative" onClick={() => handleAssignEmployee(cell.row.original)}>
                                 Assign Employees
                                 <CBadge color="danger" position="top-end" shape="rounded-pill">
                                     {allocatedUsers?.length}
                                 </CBadge>
                             </CButton>
-
+                        }
 
 
                         </div>
@@ -527,9 +527,11 @@ const OrderAllocate = ({ normalUser = false }) => {
                                             <CTableDataCell>{response.name}</CTableDataCell>
                                             <CTableDataCell>{response.allotStatus}</CTableDataCell>
                                             <CTableDataCell>
+                                            {(["delete assign employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                                                 <CButton color="danger" onClick={() => handleDeleteEmployee(response.allotId, response?.checkout_id)} style={{ color: 'white', fontSize: 14 }}>
                                                     Delete   <CIcon icon={cilTrash} />
                                                 </CButton>
+                                            }
                                             </CTableDataCell>
                                         </CTableRow>
                                     ))}
@@ -544,7 +546,9 @@ const OrderAllocate = ({ normalUser = false }) => {
 
                 </Modal.Body>
                 <Modal.Footer>
+                {(["assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                     <CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>
+                }
                 </Modal.Footer>
             </Modal>
 

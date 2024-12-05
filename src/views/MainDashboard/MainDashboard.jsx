@@ -45,11 +45,12 @@ const MainDashboard = () => {
 
               {/* {// console.log(userData, "User Data issssss")} */}
 
-              {userData.user_role == "super_admin" ?
+              {userData.user_role == "super_admin"|| userData.roles.includes("Sales") || userData.roles.includes("Booking")  ?
+                // <OrderAllocate normalUser={false}></OrderAllocate>
                 <OrderAllocate normalUser={false}></OrderAllocate>
-                :
-                <OrderAllocate normalUser={true}></OrderAllocate>
-              }
+                : 
+                <OrderAllocate normalUser={false}></OrderAllocate> 
+               }
 
 
             </CCardBody>

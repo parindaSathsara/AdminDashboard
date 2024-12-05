@@ -32,7 +32,7 @@ import '../MoreProductView.css'
 import MaterialTable from 'material-table';
 
 
-export default function LifestylesProductView(props) {
+export default function HotelProductView(props) {
 
     const basicDetails = props.productData?.productBasicData
     const inventory = props.productData?.productInventory
@@ -40,41 +40,27 @@ export default function LifestylesProductView(props) {
     const packageData = props.productData?.productPackages
     const details = props.productData?.productDetails
 
-
+    console.log(props, "Basic Details")
 
     const LifestylesDetails = () => {
         const columns = [
-            { title: 'Detail ID', field: 'lifestyle_detail_id' },
-            { title: 'Lifestyle ID', field: 'lifestyle_id' },
-            { title: 'Entrance', field: 'entrance' },
-            { title: 'Guide', field: 'guide' },
-            { title: 'Meal', field: 'meal' },
-            { title: 'Meal Transfer', field: 'meal_transfer' },
+            { title: 'Detail ID', field: 'id' },
+            { title: 'Hotel ID', field: 'hotel_id' },
             { title: 'COVID Safe', field: 'covid_safe' },
-            { title: 'Operating Dates', field: 'operating_dates' },
-            { title: 'Operating Days', field: 'operating_days' },
-            { title: 'Opening Time', field: 'opening_time' },
-            { title: 'Closing Time', field: 'closing_time' },
-            { title: 'Closed Days', field: 'closed_days' },
-            { title: 'Closed Dates', field: 'closed_dates' },
-
+            { title: 'AC Status', field: 'ac_status' },
+            { title: 'Driver Accommodation', field: 'driver_accomadation' },
+            { title: 'Lift Status', field: 'lift_status' },
+            { title: 'Vehicle Approachable', field: 'vehicle_approchable' },
         ];
 
         const data = details?.map(lifestyleDetail => ({
-            lifestyle_detail_id: lifestyleDetail?.lifestyle_detail_id,
-            lifestyle_id: lifestyleDetail?.lifestyle_id,
-            entrance: lifestyleDetail?.entrance,
-            guide: lifestyleDetail?.guide,
-            meal: lifestyleDetail?.meal,
-            meal_transfer: lifestyleDetail?.meal_transfer,
+            id: lifestyleDetail?.id,
+            hotel_id: lifestyleDetail?.hotel_id,
             covid_safe: lifestyleDetail?.covid_safe,
-            operating_dates: lifestyleDetail?.operating_dates,
-            operating_days: lifestyleDetail?.operating_days,
-            opening_time: lifestyleDetail?.opening_time,
-            closing_time: lifestyleDetail?.closing_time,
-            closed_days: lifestyleDetail?.closed_days,
-            closed_dates: lifestyleDetail?.closed_dates,
-
+            ac_status: lifestyleDetail?.ac_status,
+            driver_accomadation: lifestyleDetail?.driver_accomadation,
+            lift_status: lifestyleDetail?.lift_status,
+            vehicle_approchable: lifestyleDetail?.vehicle_approchable,
         }));
 
         return (
@@ -112,55 +98,49 @@ export default function LifestylesProductView(props) {
 
     const BasicDetails = () => {
         const columns = [
-            { title: 'ID', field: 'lifestyle_id' },
-            { title: 'City', field: 'lifestyle_city' },
-            { title: 'Attraction Type', field: 'lifestyle_attraction_type' },
-
+            { title: 'ID', field: 'id' },
+            { title: 'City', field: 'city' },
+            { title: 'Country', field: 'country' },
+            { title: 'Hotel Name', field: 'hotel_name' },
+            // { title: 'Hotel Description', field: 'hotel_description' },
+            { title: 'Hotel Address', field: 'hotel_address' },
+            { title: 'Hotel Classification', field: 'hotel_classification' },
+            { title: 'Star Classification', field: 'star_classification' },
             { title: 'Latitude', field: 'latitude' },
             { title: 'Longitude', field: 'longitude' },
-            { title: 'Address', field: 'address' },
             { title: 'Micro Location', field: 'micro_location' },
-            { title: 'TripAdvisor', field: 'tripadvisor' },
-            { title: 'Preferred', field: 'preferred' },
-            { title: 'Selling Points', field: 'selling_points' },
-            { title: 'Start Date', field: 'pref_start_date' },
-            { title: 'End Date', field: 'pref_end_date' },
-            { title: 'Vendor ID', field: 'vendor_id' },
+            { title: 'TripAdvisor Link', field: 'trip_advisor_link' },
             { title: 'Provider', field: 'provider' },
-            { title: 'Provider ID', field: 'provider_id' },
-            { title: 'Active Status', field: 'active_status' },
-
-            { title: 'Category 1', field: 'category1' },
-            { title: 'Category 2', field: 'category2' },
-            { title: 'Category 3', field: 'category3' },
-            { title: 'Category 4', field: 'category4' },
-
+            { title: 'Vendor ID', field: 'vendor_id' },
+            { title: 'Start Date', field: 'start_date' },
+            { title: 'End Date', field: 'end_date' },
+            { title: 'Hotel Status', field: 'hotel_status' },
+            { title: 'Markup', field: 'markup' },
+            { title: 'Sub Description', field: 'sub_description' },
+            { title: 'Triggers', field: 'triggers' },
         ];
 
         const data = basicDetails?.map(basicDetails => ({
-            lifestyle_id: basicDetails?.lifestyle_id,
-            lifestyle_city: basicDetails?.lifestyle_city,
-            lifestyle_attraction_type: basicDetails?.lifestyle_attraction_type,
-
+            id: basicDetails?.id,
+            city: basicDetails?.city,
+            country: basicDetails?.country,
+            hotel_name: basicDetails?.hotel_name,
+            // hotel_description: basicDetails?.hotel_description,
+            hotel_address: basicDetails?.hotel_address,
+            hotel_classification: basicDetails?.hotel_classification,
+            star_classification: basicDetails?.star_classification,
             latitude: basicDetails?.latitude,
             longitude: basicDetails?.longitude,
-            address: basicDetails?.address,
             micro_location: basicDetails?.micro_location,
-            tripadvisor: basicDetails?.tripadvisor,
-            preferred: basicDetails?.preferred,
-            selling_points: basicDetails?.selling_points,
-            pref_start_date: basicDetails?.pref_start_date,
-            pref_end_date: basicDetails?.pref_end_date,
-            vendor_id: basicDetails?.vendor_id,
+            trip_advisor_link: basicDetails?.trip_advisor_link,
             provider: basicDetails?.provider,
-            provider_id: basicDetails?.provider_id,
-            active_status: basicDetails?.active_status,
-
-            category1: inventory?.category1,
-            category2: inventory?.category2,
-            category3: inventory?.category3,
-            category4: inventory?.category4,
-
+            vendor_id: basicDetails?.vendor_id,
+            start_date: basicDetails?.start_date,
+            end_date: basicDetails?.end_date,
+            hotel_status: basicDetails?.hotel_status,
+            markup: basicDetails?.markup,
+            sub_description: basicDetails?.sub_description,
+            triggers: basicDetails?.triggers,
         }));
 
 
@@ -196,43 +176,68 @@ export default function LifestylesProductView(props) {
 
     const InventoryDetails = () => {
         const columns = [
-            { title: 'Inventory ID', field: 'inventoryId' },
-            { title: 'Rate ID', field: 'rateId' },
-            { title: 'Pickup Location', field: 'pickupLocation' },
-            { title: 'Inventory Date', field: 'inventoryDate' },
-            { title: 'Pickup Time', field: 'pickupTime' },
-            { title: 'Max Adult Occupancy', field: 'maxAdultOccupancy' },
-            { title: 'Max Children Occupancy', field: 'maxChildrenOccupancy' },
-            { title: 'Max Total Occupancy', field: 'maxTotalOccupancy' },
-            { title: 'Total Inventory', field: 'totalInventory' },
+            { title: 'ID', field: 'id' },
+            { title: 'Rate ID', field: 'rate_id' },
+            { title: 'Actual Adult Rate', field: 'actual_adult_rate' },
+            { title: 'Actual Child With Bed Rate', field: 'actual_child_with_bed_rate' },
+            { title: 'Actual Child Without Bed Rate', field: 'actual_child_without_bed_rate' },
+            { title: 'Adult Age', field: 'adult_age' },
+            { title: 'Adult Rate', field: 'adult_rate' },
             { title: 'Allotment', field: 'allotment' },
-            { title: 'Used', field: 'used' },
-            { title: 'Balance', field: 'balance' },
-            { title: 'Vehicle Type', field: 'vehicleType' },
-            { title: 'Inclusions', field: 'inclusions' },
-            { title: 'Exclusions', field: 'exclusions' },
+            { title: 'Blackout Dates', field: 'blackout_dates' },
+            { title: 'Blackout Days', field: 'blackout_days' },
+            { title: 'Book By Days', field: 'book_by_days' },
+            { title: 'Booking End Date', field: 'booking_end_date' },
+            { title: 'Booking Start Date', field: 'booking_start_date' },
+            { title: 'Card ID', field: 'card_id' },
+            { title: 'Child FOC Age', field: 'child_foc_age' },
+            { title: 'Child With Bed Age', field: 'child_with_bed_age' },
+            { title: 'Child With Bed Rate', field: 'child_with_bed_rate' },
+            { title: 'Child With No Bed Age', field: 'child_with_no_bed_age' },
+            { title: 'Child Without Bed Rate', field: 'child_without_bed_rate' },
+            { title: 'Created At', field: 'created_at' },
+            { title: 'Currency', field: 'currency' },
+            { title: 'Deleted At', field: 'deleted_at' },
+            { title: 'Hotel ID', field: 'hotel_id' },
+            { title: 'Market Nationality', field: 'market_nationality' },
+            { title: 'Meal Plan', field: 'meal_plan' },
+            { title: 'Payment Type', field: 'payment_type' },
+            { title: 'Room Category ID', field: 'room_category_id' },
+            { title: 'Room Type ID', field: 'room_type_id' },
+            { title: 'Stop Sale Date', field: 'stop_sale_date' },
         ];
 
-
-
-
         const data = inventory?.map(inventory => ({
-            inventoryId: inventory?.lifestyle_inventory_id,
-            rateId: inventory?.rate_id,
-            pickupLocation: inventory?.pickup_location,
-            inventoryDate: inventory?.inventory_date,
-            pickupTime: inventory?.pickup_time,
-            maxAdultOccupancy: inventory?.max_adult_occupancy,
-            maxChildrenOccupancy: inventory?.max_children_occupancy,
-            maxTotalOccupancy: inventory?.max_total_occupancy,
-            totalInventory: inventory?.total_inventory,
+            id: inventory?.id,
+            rate_id: inventory?.rate_id,
+            actual_adult_rate: inventory?.actual_adult_rate,
+            actual_child_with_bed_rate: inventory?.actual_child_with_bed_rate,
+            actual_child_without_bed_rate: inventory?.actual_child_without_bed_rate,
+            adult_age: inventory?.adult_age,
+            adult_rate: inventory?.adult_rate,
             allotment: inventory?.allotment,
-            used: inventory?.used,
-            balance: inventory?.balance,
-            vehicleType: inventory?.vehicle_type,
-            inclusions: inventory?.inclusions,
-            exclusions: inventory?.exclusions,
-        }))
+            blackout_dates: inventory?.blackout_dates,
+            blackout_days: inventory?.blackout_days,
+            book_by_days: inventory?.book_by_days,
+            booking_end_date: inventory?.booking_end_date,
+            booking_start_date: inventory?.booking_start_date,
+            card_id: inventory?.card_id,
+            child_foc_age: inventory?.child_foc_age,
+            child_with_bed_age: inventory?.child_with_bed_age,
+            child_with_bed_rate: inventory?.child_with_bed_rate,
+            child_with_no_bed_age: inventory?.child_with_no_bed_age,
+            child_without_bed_rate: inventory?.child_without_bed_rate,
+            created_at: inventory?.created_at,
+            currency: inventory?.currency,
+            deleted_at: inventory?.deleted_at,
+            hotel_id: inventory?.hotel_id,
+            market_nationality: inventory?.market_nationality,
+            meal_plan: inventory?.meal_plan,
+            payment_type: inventory?.payment_type,
+            room_category_id: inventory?.room_category_id,
+            room_type_id: inventory?.room_type_id,
+            stop_sale_date: inventory?.stop_sale_date,
+        }));
 
 
 
@@ -272,65 +277,63 @@ export default function LifestylesProductView(props) {
 
     const RateDetails = () => {
         const columns = [
-            { title: 'Rate ID', field: 'lifestyle_rate_id' },
-            { title: 'Lifestyle ID', field: 'lifestyle_id' },
-            { title: 'Booking Start Date', field: 'booking_start_date' },
-            { title: 'Booking End Date', field: 'booking_end_date' },
-            { title: 'Travel Start Date', field: 'travel_start_date' },
-            { title: 'Travel End Date', field: 'travel_end_date' },
-            { title: 'Attraction Category', field: 'attraction_category' },
-            { title: 'Meal Plan', field: 'meal_plan' },
-            { title: 'Market', field: 'market' },
-            { title: 'Currency', field: 'currency' },
-            { title: 'Adult Rate', field: 'adult_rate' },
-            { title: 'Child Rate', field: 'child_rate' },
-            { title: 'Student Rate', field: 'student_rate' },
-            { title: 'Senior Rate', field: 'senior_rate' },
-            { title: 'Military Rate', field: 'military_rate' },
-            { title: 'Other Rate', field: 'other_rate' },
-            { title: 'Child FOC Age', field: 'child_foc_age' },
-            { title: 'Child Age', field: 'child_age' },
+            { title: 'ID', field: 'id' },
+            { title: 'Hotel ID', field: 'hotel_id' },
+            { title: 'Actual Adult Rate', field: 'actual_adult_rate' },
+            { title: 'Actual Child With Bed Rate', field: 'actual_child_with_bed_rate' },
+            { title: 'Actual Child Without Bed Rate', field: 'actual_child_without_bed_rate' },
             { title: 'Adult Age', field: 'adult_age' },
-            { title: 'CWB Age', field: 'cwb_age' },
-            { title: 'CNB Age', field: 'cnb_age' },
-            { title: 'Payment Policy', field: 'payment_policy' },
-            { title: 'Book By Days', field: 'book_by_days' },
-            { title: 'Cancellation Days', field: 'cancellation_days' },
-            { title: 'Cancellation Policy', field: 'cancel_policy' },
-            { title: 'Stop Sales Dates', field: 'stop_sales_Dates' },
-            { title: 'Blackout Days', field: 'blackout_days' },
+            { title: 'Adult Rate', field: 'adult_rate' },
             { title: 'Blackout Dates', field: 'blackout_dates' },
+            { title: 'Blackout Days', field: 'blackout_days' },
+            { title: 'Book By Days', field: 'book_by_days' },
+            { title: 'Booking End Date', field: 'booking_end_date' },
+            { title: 'Booking Start Date', field: 'booking_start_date' },
+            { title: 'Card ID', field: 'card_id' },
+            { title: 'Child FOC Age', field: 'child_foc_age' },
+            { title: 'Child With Bed Age', field: 'child_with_bed_age' },
+            { title: 'Child With Bed Rate', field: 'child_with_bed_rate' },
+            { title: 'Child With No Bed Age', field: 'child_with_no_bed_age' },
+            { title: 'Child Without Bed Rate', field: 'child_without_bed_rate' },
+            { title: 'Created At', field: 'created_at' },
+            { title: 'Currency', field: 'currency' },
+            { title: 'Deleted At', field: 'deleted_at' },
+            { title: 'Market Nationality', field: 'market_nationality' },
+            { title: 'Meal Plan', field: 'meal_plan' },
+            { title: 'Payment Type', field: 'payment_type' },
+            { title: 'Room Category ID', field: 'room_category_id' },
+            { title: 'Room Type ID', field: 'room_type_id' },
+            { title: 'Updated At', field: 'updated_at' },
         ];
 
         const data = rate?.map(rate => ({
-            lifestyle_rate_id: rate?.lifestyle_rate_id,
-            lifestyle_id: rate?.lifestyle_id,
-            booking_start_date: rate?.booking_start_date,
-            booking_end_date: rate?.booking_end_date,
-            travel_start_date: rate?.travel_start_date,
-            travel_end_date: rate?.travel_end_date,
-            attraction_category: rate?.attraction_category,
-            meal_plan: rate?.meal_plan,
-            market: rate?.market,
-            currency: rate?.currency,
-            adult_rate: rate?.adult_rate,
-            child_rate: rate?.child_rate,
-            student_rate: rate?.student_rate,
-            senior_rate: rate?.senior_rate,
-            military_rate: rate?.military_rate,
-            other_rate: rate?.other_rate,
-            child_foc_age: rate?.child_foc_age,
-            child_age: rate?.child_age,
+            id: rate?.id,
+            hotel_id: rate?.hotel_id,
+            actual_adult_rate: rate?.actual_adult_rate,
+            actual_child_with_bed_rate: rate?.actual_child_with_bed_rate,
+            actual_child_without_bed_rate: rate?.actual_child_without_bed_rate,
             adult_age: rate?.adult_age,
-            cwb_age: rate?.cwb_age,
-            cnb_age: rate?.cnb_age,
-            payment_policy: rate?.payment_policy,
-            book_by_days: rate?.book_by_days,
-            cancellation_days: rate?.cancellation_days,
-            cancel_policy: rate?.cancel_policy,
-            stop_sales_Dates: rate?.stop_sales_Dates,
-            blackout_days: rate?.blackout_days,
+            adult_rate: rate?.adult_rate,
             blackout_dates: rate?.blackout_dates,
+            blackout_days: rate?.blackout_days,
+            book_by_days: rate?.book_by_days,
+            booking_end_date: rate?.booking_end_date,
+            booking_start_date: rate?.booking_start_date,
+            card_id: rate?.card_id,
+            child_foc_age: rate?.child_foc_age,
+            child_with_bed_age: rate?.child_with_bed_age,
+            child_with_bed_rate: rate?.child_with_bed_rate,
+            child_with_no_bed_age: rate?.child_with_no_bed_age,
+            child_without_bed_rate: rate?.child_without_bed_rate,
+            created_at: rate?.created_at,
+            currency: rate?.currency,
+            deleted_at: rate?.deleted_at,
+            market_nationality: rate?.market_nationality,
+            meal_plan: rate?.meal_plan,
+            payment_type: rate?.payment_type,
+            room_category_id: rate?.room_category_id,
+            room_type_id: rate?.room_type_id,
+            updated_at: rate?.updated_at,
         }));
 
         return (
@@ -350,8 +353,8 @@ export default function LifestylesProductView(props) {
                             cellStyle: {
                                 fontSize: '14px', // Adjust the column font size here
                             },
-                            paging: false,
-                            search: false,
+                            paging: true,
+                            search: true,
                             columnsButton: true,
                             exportButton: true,
                         }}
@@ -443,7 +446,7 @@ export default function LifestylesProductView(props) {
                 <CCol xs="12" lg="4">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.[0]?.["image"]?.split(",")[0]}
+                            src={basicDetails?.[0]?.["hotel_image"]?.split(",")[0]}
                             fluid
                             style={{
                                 position: 'absolute',
@@ -503,9 +506,9 @@ export default function LifestylesProductView(props) {
             </CCol>
 
 
-            <CCol className='my-4'>
+            {/* <CCol className='my-4'>
                 <PackageDetails />
-            </CCol>
+            </CCol> */}
 
 
 

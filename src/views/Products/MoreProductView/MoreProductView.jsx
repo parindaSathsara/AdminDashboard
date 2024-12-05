@@ -10,11 +10,12 @@ import { getProductData } from './functions/getProductData';
 import LifestylesProductView from './Categories/LifestylesProductView';
 import EssentialsProductView from './Categories/EssentialsProductView';
 import EducationProductView from './Categories/EducationProductView';
+import HotelProductView from './Categories/HotelProductView';
 
 export default function MoreProductView(props) {
 
 
-
+    console.log(props, "Props Value is")
     var category = props.productData.category
     var productData = props.productData
 
@@ -90,6 +91,11 @@ export default function MoreProductView(props) {
 
                         {category == "Educations" ?
                             <EducationProductView productData={productDataSet}></EducationProductView>
+                            :
+                            null
+                        }
+                        {category == "Hotels" ?
+                            <HotelProductView productData={productDataSet}></HotelProductView>
                             :
                             null
                         }

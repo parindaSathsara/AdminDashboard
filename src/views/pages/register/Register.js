@@ -44,7 +44,7 @@ const Register = () => {
         name: username,
         email: email,
         password: password,
-        role: role,
+        // role: role,
     }, { headers: headers })
       .then(response => {
 
@@ -122,7 +122,7 @@ const Register = () => {
                     />
                   </CInputGroup>
                   {/* Role selection dropdown */}
-                  <CInputGroup className="mb-3">
+                  {/* <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
@@ -137,7 +137,7 @@ const Register = () => {
                       <option value="supplier">Supplier</option>
                       <option value="booking">Booking</option>
                     </select>
-                  </CInputGroup>
+                  </CInputGroup> */}
                   <div className="d-grid">
                     <CButton color="success" onClick={handleRegister}>Create Account</CButton>
                   </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import './AccountsDetails.css';
 // import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import discountTotal from '../dcalculator';
@@ -8,9 +8,10 @@ import MaterialTable from 'material-table';
 import { CButton, CCol, CSpinner } from '@coreui/react';
 import { Modal } from 'react-bootstrap';
 import axios from 'axios';
-
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 function AccountsDetails(props) {
+    const { userData } = useContext(UserLoginContext);
     const [toggle, setToggle] = useState(true);
 
     // useMemo(() => {
@@ -225,10 +226,13 @@ function AccountsDetails(props) {
                                                                         style={{ objectFit: 'cover' }} />
                                                                 </a></td>
                                                                 <td>{dataset['checkout_date']}</td>
-                                                                <td><CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+                                                                <td>
+                                                                {(["all accounts access","view customer order pnl", "view account pnl"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                                    <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
                                                                     onClick={() => handlePNLReport(dataset.checkout_id)}
                                                                 // onClick={() => console.log(dataset)}
-                                                                >Show PNL report</CButton></td>
+                                                                >Show PNL report</CButton>
+                                                            }</td>
                                                             </tr>
 
                                                         </tbody>
@@ -261,10 +265,13 @@ function AccountsDetails(props) {
                                                                     <td>{dataset['trans_token']}</td>
                                                                     <td>{dataset['gateway_type']}</td>
                                                                     <td>{dataset['created_at']}</td>
-                                                                    <td><CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+                                                                    <td>
+                                                                    {(["all accounts access","view customer order pnl", "view account pnl"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
                                                                         onClick={() => handlePNLReport(dataset.checkout_id)}
                                                                     // onClick={() => console.log(dataset)}
-                                                                    >Show PNL report</CButton></td>
+                                                                    >Show PNL report</CButton>
+                                                                    }</td>
                                                                 </tr>
 
                                                             </tbody>
@@ -274,10 +281,12 @@ function AccountsDetails(props) {
                                                     :
 
                                                     <>
+                                                     {(["all accounts access","view customer order pnl", "view account pnl"].some(permission => userData?.permissions?.includes(permission))) &&
                                                         <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
                                                             onClick={() => handlePNLReport(dataset.id)}
                                                         // onClick={() => console.log(dataset)}
                                                         >Show PNL report</CButton>
+                                                     }
                                                         {console.log(dataset, "Data set key iss dataa")}
                                                     </>
 
