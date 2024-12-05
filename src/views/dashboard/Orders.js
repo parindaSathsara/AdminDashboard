@@ -212,6 +212,7 @@ const Orders = () => {
 
       { accessorKey: 'oid', header: 'Order Id', align: 'left' },
       { accessorKey: 'booking_date', header: 'Booking Date | Time', align: 'left' },
+      { accessorKey: 'minServiceDate', header: 'MinService Date', align: 'left' },
       { accessorKey: 'pay_type', header: 'Payment Type', align: 'left' },
       { accessorKey: 'pay_category', header: 'Payment Category', align: 'left' },
       {
@@ -277,6 +278,7 @@ const Orders = () => {
 
       oid: value.OrderId,
       booking_date: value.checkout_date,
+      minServiceDate: value.minServiceDate,
       pay_type: value.payment_type,
       pay_category: value.pay_category,
       total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount),
