@@ -137,12 +137,15 @@ function App() {
 
 
   useEffect(() => {
-    if (!userLogin) {
-
-      console.log("User logged as guest")
-      window.location.href = '/#/login';
-    }
-  }, [userid])
+    const timeout = setTimeout(() => {
+      if (!userLogin) {
+        console.log("User logged as guest");
+        window.location.href = '/#/login';
+      }
+    }, 1000); 
+  
+    return () => clearTimeout(timeout);
+  }, [userLogin]);
 
   return (
     <CurrencyContext.Provider value={{ currencyData, setCurrencyData }}>
