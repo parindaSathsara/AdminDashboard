@@ -154,7 +154,7 @@ const AccountsRefunds = () => {
         actions:
           value.refund_type == "" || value.refund_type == null ?
             <div className='actions_box'>
-               {(["all accounts access","view refund customer Request","confirm refund customer Request"].some(permission => userData?.permissions?.includes(permission))) &&
+               {(["all accounts access","view refund customer request","confirm refund customer request"].some(permission => userData?.permissions?.includes(permission))) &&
               <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
               }  
               </div>
