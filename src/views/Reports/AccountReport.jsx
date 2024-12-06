@@ -166,57 +166,57 @@ const ReportGenerationPage = () => {
     }
 
     const dataSet = {
-      start: moment(startDate).format('YYYY-MM-DD'),
-      end: moment(endDate).format('YYYY-MM-DD'),
-      category: category?.value,
-      reportType: reportType?.value,
-      // orderId: order?.value,
-      dateType: dateType,
-      currencyValue: currency?.value,
-      currencyType: currencyType?.value,
-      dateType: typeDate?.value,
+        start: moment(startDate).format('YYYY-MM-DD'),
+        end: moment(endDate).format('YYYY-MM-DD'),
+        category: category?.value,
+        reportType: reportType?.value,
+        // orderId: order?.value,
+        dateType: dateType,
+        currencyValue: currency?.value,
+        currencyType: currencyType?.value,
+        dateType: typeDate?.value,
+      }
+  
+      console.log(dataSet, 'Data set value is data')
+      setReportData(dataSet)
+      handlePNLReport(dataSet)
     }
-
-    console.log(dataSet, 'Data set value is data')
-    setReportData(dataSet)
-    handlePNLReport(dataSet)
-  }
-
-  const [PNLVoucherView, setPNLVoucherView] = useState(false)
-  const [currenctOrdeId, setCurrenctOrderId] = useState('')
-  const [productPNLReport, setProductPNLReport] = useState([])
-
-  const returnURL = (data, dataType) =>{
-
-    let url;
-    if (data.reportType === 'pnl' && data.category === '0') {
-        console.log('Data pnl by categories')
-        url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`
-      } else if (data.reportType === 'pnl' && data.category === '1') {
-        console.log('Data pnl by orders')
-        url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`
-      } else if (data.reportType === 'payable' && data.category === '0') {
-        url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue}`
-      } else if (data.reportType === 'payable' && data.category === '1') {
-        url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue}`
-      } else if (data.reportType === 'receivable' && data.category === '0') {
-        url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency|| currencyData?.base}&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
-      } else if (data.reportType === 'receivable' && data.category === '1') {
-        url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency|| currencyData?.base}&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
-      }
-      else if(data.reportType === "cashflow"){
-     url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
-      }
-
-      return url
-  }
-
-
-  const handlePNLReport = async (data) => {
-    console.log(data, 'Data')
-    let url
-   
-    url = returnURL(data,"")
+  
+    const [PNLVoucherView, setPNLVoucherView] = useState(false)
+    const [currenctOrdeId, setCurrenctOrderId] = useState('')
+    const [productPNLReport, setProductPNLReport] = useState([])
+  
+    const returnURL = (data, dataType) =>{
+  
+      let url;
+      if (data.reportType === 'pnl' && data.category === '0') {
+          console.log('Data pnl by categories')
+          url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`
+        } else if (data.reportType === 'pnl' && data.category === '1') {
+          console.log('Data pnl by orders')
+          url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`
+        } else if (data.reportType === 'payable' && data.category === '0') {
+          url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue}`
+        } else if (data.reportType === 'payable' && data.category === '1') {
+          url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue}`
+        } else if (data.reportType === 'receivable' && data.category === '0') {
+          url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency|| currencyData?.base}&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
+        } else if (data.reportType === 'receivable' && data.category === '1') {
+          url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency|| currencyData?.base}&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
+        }
+        else if(data.reportType === "cashflow"){
+       url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
+        }
+  
+        return url
+    }
+  
+  
+    const handlePNLReport = async (data) => {
+      console.log(data, 'Data')
+      let url
+     
+      url = returnURL(data,"")
 
     // setPNLVoucherView(true)
     await axios

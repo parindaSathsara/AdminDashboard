@@ -32,6 +32,7 @@ axios.defaults.url = 'https://staging-gateway.aahaas.com/api'
 // axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 // axios.defaults.data = 'https://admin-api.aahaas.com'
 
+
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
 //   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfTokenMeta.getAttribute('content');
