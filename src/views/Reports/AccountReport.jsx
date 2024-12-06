@@ -1,324 +1,519 @@
-import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
-import { CCard, CCardBody, CCardHeader, CCol, CContainer, CFormLabel, CButton, CRow, CFormCheck } from '@coreui/react';
-import DatePicker from 'react-datepicker';
-import Select from 'react-select';
-import axios from "axios"
+import moment from 'moment'
+import React, { useContext, useEffect, useState } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CContainer,
+  CFormLabel,
+  CButton,
+  CRow,
+  CFormCheck,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+} from '@coreui/react'
+import DatePicker from 'react-datepicker'
+import Select from 'react-select'
+import axios from 'axios'
 import Swal from 'sweetalert2'
-import LoaderPanel from 'src/Panels/LoaderPanel';
+import LoaderPanel from 'src/Panels/LoaderPanel'
 
-import OrderCheckoutsReport from './OrderCheckouts/OrderCheckoutsReport';
+import OrderCheckoutsReport from './OrderCheckouts/OrderCheckoutsReport'
 
-import LifestylesCategoryData from './CategoryData/LifestylesCategoryData';
-import EssentialsCategoryData from './CategoryData/EssentialsCategoryData';
-import EducationCategoryData from './CategoryData/EducationCategoryData';
+import LifestylesCategoryData from './CategoryData/LifestylesCategoryData'
+import EssentialsCategoryData from './CategoryData/EssentialsCategoryData'
+import EducationCategoryData from './CategoryData/EducationCategoryData'
 
-import CustomersData from './CustomersData/CustomersData';
+import CustomersData from './CustomersData/CustomersData'
 
-import 'react-datepicker/dist/react-datepicker.css';
-import './ReportsMain.css';
-import getChatServices from './services/getChatServices';
-import ChatReportData from './ChatData/ChatReportData';
-import Modal from 'react-bootstrap/Modal';
-import { UserLoginContext } from 'src/Context/UserLoginContext';
+import 'react-datepicker/dist/react-datepicker.css'
+import './ReportsMain.css'
+import getChatServices from './services/getChatServices'
+import ChatReportData from './ChatData/ChatReportData'
+import Modal from 'react-bootstrap/Modal'
+import { UserLoginContext } from 'src/Context/UserLoginContext'
+import { CurrencyContext } from 'src/Context/CurrencyContext'
 
 const ReportGenerationPage = () => {
-    const { userData } = useContext(UserLoginContext);
+  const { userData } = useContext(UserLoginContext)
 
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [category, setCategory] = useState(null);
-    const [reportType, setReportType] = useState(null);
-    const [order, setOrder] = useState(null);
+  const { currencyData } = useContext(CurrencyContext)
 
-    const [reportDataSet, setReportDataSet] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [dateType, setDateType] = useState('service_date');
-    const [validationErrors, setValidationErrors] = useState({});
-    const [statusOrderDropdown, setStatusOrderDropdown] = useState(true);
-    const [statusDate, setStatusDate] = useState(false);
-    const [currency, setCurrency] = useState(null);
-    const [reportData, setReportData] = useState({});
+  console.log(currencyData?.base, 'Currency Base is')
 
-    // useEffect(() => {
-    //     if(category?.value === '1' &&  reportType?.value === 'pnl'){
-    //         setStatusOrderDropdown(false)
-    //         setStatusDate(true)
-    //     }else{
-    //         setStatusOrderDropdown(true)
-    //         setOrder(null)
-    //         setStatusDate(false)
-    //     }
-    // }, [category,reportType]);
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [category, setCategory] = useState(null)
+  const [reportType, setReportType] = useState(null)
+  const [order, setOrder] = useState(null)
 
-    
+  console.log(reportType, 'Report Type is')
 
-    const [categories, setCategories] = useState([
-        { value: '0', label: 'Summery' },
-        { value: '1', label: 'Detail' },
-    ]);
+  const [reportDataSet, setReportDataSet] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [dateType, setDateType] = useState('service_date')
+  const [validationErrors, setValidationErrors] = useState({})
+  const [statusOrderDropdown, setStatusOrderDropdown] = useState(true)
+  const [statusDate, setStatusDate] = useState(false)
+  const [currency, setCurrency] = useState({
+    value: currencyData?.base,
+    label: currencyData?.base,
+  })
+  const [currencyType, setCurrencyType] = useState(null)
+  const [reportData, setReportData] = useState({})
+  const [typeDate, setTypeDate] = useState(null)
 
-    const [categories2, setCategories2] = useState([
-        { value: '0', label: 'Order' },
-        { value: '1', label: 'product' },
-    ]);
+  // useEffect(() => {
+  //     if(category?.value === '1' &&  reportType?.value === 'pnl'){
+  //         setStatusOrderDropdown(false)
+  //         setStatusDate(true)
+  //     }else{
+  //         setStatusOrderDropdown(true)
+  //         setOrder(null)
+  //         setStatusDate(false)
+  //     }
+  // }, [category,reportType]);
 
-    const [categories3, setCategories3] = useState([
-        { value: '0', label: 'category' },
-        { value: '1', label: 'order' },
-    ]);
+  useEffect(() => {
+    setCurrency({
+      value: currencyData?.base,
+      label: currencyData?.base,
+    })
+  }, [currencyData?.base])
 
-    const [Orders, setOrders] = useState([
-        { value: '131', label: '131' },
-        { value: '132', label: '132' },
-    ]);
+  const [categories, setCategories] = useState([
+    { value: '0', label: 'Summery' },
+    { value: '1', label: 'Detail' },
+  ])
 
-    const [currencies, setCurrencies] = useState([
-        { value: 'USD', label: 'USD' },
-        { value: 'LKR', label: 'LKR' },
-        { value: 'INR', label: 'INR' },
-    ]);
+  const [categories2, setCategories2] = useState([
+    { value: '0', label: 'Order' },
+    { value: '1', label: 'product' },
+  ])
+
+  const [categories3, setCategories3] = useState([
+    { value: '0', label: 'category' },
+    { value: '1', label: 'order' },
+  ])
+
+  const [categories4, setCategories4] = useState([{ value: '0', label: 'product' }])
+
+  const [Orders, setOrders] = useState([
+    { value: '131', label: '131' },
+    { value: '132', label: '132' },
+  ])
+
+  const [currencies, setCurrencies] = useState([
+    { value: 'all', label: 'ALL' },
+    { value: 'USD', label: 'USD' },
+    { value: 'LKR', label: 'LKR' },
+    { value: 'INR', label: 'INR' },
+    { value: 'SDG', label: 'SDG' },
+    { value: 'MYR', label: 'MYR' },
+  ])
+
+  const [currencieType, setCurrencieType] = useState([
+    { value: 'all', label: 'ALL' },
+    { value: 'payable', label: 'Payable' },
+    { value: 'receivable', label: 'Receivable' },
+  ])
+
+  const [TypeDates, setDateTypes] = useState([
+    { value: 'service_date', label: 'Service Date' },
+    { value: 'booked_date', label: 'Booked Date' },
+  ])
+
+  const [chatCategories, setChatCategories] = useState([
+    { value: '0', label: 'All Categories' },
+    { value: '1', label: 'Active Chats' },
+    { value: '2', label: 'DeActive Chats' },
+  ])
+
+  const reportTypes = [
+    { value: 'pnl', label: 'PNL Report (Summery)' },
+    { value: 'payable', label: 'Payable Report' },
+    { value: 'receivable', label: 'Receivable Report' },
+    { value: 'cashflow', label: 'CashFlow' },
+  ]
+
+  const [dataEmptyState, setDataEmptyState] = useState(false)
+
+  const handleGenerateReport = async () => {
+    const errors = {}
+    // if (!startDate) errors.startDate = 'Start date is required'
+    // // if (category?.value === '1' &&  reportType?.value === 'pnl' && !order) errors.order = 'Order is required';
+    // // if (!currency && currencyType === all) errors.currency = 'Currency Value is required'
+    // if (!currencyType) errors.currencyType = 'Currency type is required'
+    // if (!endDate) errors.endDate = 'End date is required'
+    // if (!typeDate) errors.typeDate = 'Date type is required'
+    // if (!reportType) errors.reportType = 'Report type is required'
+    // if (!category) errors.category = 'Category is required'
+
+    if (startDate && endDate) {
+      const start = moment(startDate)
+      const end = moment(endDate)
+      if (start.isAfter(end)) {
+        errors.startDate = 'Start date cannot be later than end date'
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      return
+    }
+
+    const dataSet = {
+      start: moment(startDate).format('YYYY-MM-DD'),
+      end: moment(endDate).format('YYYY-MM-DD'),
+      category: category?.value,
+      reportType: reportType?.value,
+      // orderId: order?.value,
+      dateType: dateType,
+      currencyValue: currency?.value,
+      currencyType: currencyType?.value,
+      dateType: typeDate?.value,
+    }
+
+    console.log(dataSet, 'Data set value is data')
+    setReportData(dataSet)
+    handlePNLReport(dataSet)
+  }
+
+  const [PNLVoucherView, setPNLVoucherView] = useState(false)
+  const [currenctOrdeId, setCurrenctOrderId] = useState('')
+  const [productPNLReport, setProductPNLReport] = useState([])
+
+  const returnURL = (data, dataType) =>{
+
+    let url;
+    if (data.reportType === 'pnl' && data.category === '0') {
+        console.log('Data pnl by categories')
+        url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`
+      } else if (data.reportType === 'pnl' && data.category === '1') {
+        console.log('Data pnl by orders')
+        url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`
+      } else if (data.reportType === 'payable' && data.category === '0') {
+        url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue}`
+      } else if (data.reportType === 'payable' && data.category === '1') {
+        url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue}`
+      } else if (data.reportType === 'receivable' && data.category === '0') {
+        url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency|| currencyData?.base}&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
+      } else if (data.reportType === 'receivable' && data.category === '1') {
+        url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency|| currencyData?.base}&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
+      }
+      else if(data.reportType === "cashflow"){
+     url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
+      }
+
+      return url
+  }
 
 
-    const [chatCategories, setChatCategories] = useState([
-        { value: '0', label: 'All Categories' },
-        { value: '1', label: 'Active Chats' },
-        { value: '2', label: 'DeActive Chats' },
-    ])
+  const handlePNLReport = async (data) => {
+    console.log(data, 'Data')
+    let url
+   
+    url = returnURL(data,"")
 
-    const reportTypes = [
-        { value: 'pnl', label: 'PNL Report (Summery)' },
-        { value: 'payable', label: 'Payable Report' },
-        { value: 'receivable', label: 'Receivable Report' },
-    ];
-
-    const [dataEmptyState, setDataEmptyState] = useState(false);
-
-    const handleGenerateReport = async () => {
-        const errors = {};
-        if (!startDate) errors.startDate = 'Start date is required'
-        // if (category?.value === '1' &&  reportType?.value === 'pnl' && !order) errors.order = 'Order is required';
-        if (!currency) errors.currency = 'Currency type is required';
-        if (!endDate) errors.endDate = 'End date is required';
-        if (!reportType) errors.reportType = 'Report type is required';
-        if (!category || category.value === '' || category.value === 0) errors.category = 'Category is required';
-
-        if (startDate && endDate) {
-            const start = moment(startDate);
-            const end = moment(endDate);
-            if (start.isAfter(end)) {
-                errors.startDate = 'Start date cannot be later than end date';
-            }
-        }
-
-        if (Object.keys(errors).length > 0) {
-            setValidationErrors(errors);
-            return;
-        }
-
-        const dataSet = {
-            start: moment(startDate).format('YYYY-MM-DD'),
-            end: moment(endDate).format('YYYY-MM-DD'),
-            category: category?.value,
-            reportType: reportType?.value,
-            // orderId: order?.value,
-            dateType: dateType,
-            currency: currency?.value
-        };
-
-
-        console.log(dataSet, "Data set value is data")
-        setReportData(dataSet);
-        handlePNLReport(dataSet);
-
-    };
-
-    const [PNLVoucherView, setPNLVoucherView] = useState(false);
-    const [currenctOrdeId, setCurrenctOrderId] = useState('');
-    const [productPNLReport, setProductPNLReport] = useState([]);
-
-    const handlePNLReport = async (data) => {
-        console.log(data, "Data")
-        let url;
-        if(data.reportType === 'pnl' && data.category === '0'){
-            console.log("Data pnl by categories")
-            url = `pnl/by-categories?start=${data.start}&end=${data.end}&currency=${data.currency}`
-        }else if(data.reportType === 'pnl' && data.category === '1'){
-            console.log("Data pnl by orders")
-            url = `pnl/by-orders?start=${data.start}&end=${data.end}&currency=${data.currency}`
-        }else if(data.reportType === 'payable' && data.category === '0'){
-            url = `payable/summary?start=${data.start}&end=${data.end}&currency=${data.currency}`
-        }else if(data.reportType === 'payable' && data.category === '1'){
-            url = `payable/detailed?start=${data.start}&end=${data.end}&currency=${data.currency}`
-        }else if(data.reportType === 'receivable' && data.category === '0'){
-            url = `receivable/by-orders?start=${data.start}&end=${data.end}&currency=${data.currency}`
-        }else if(data.reportType === 'receivable' && data.category === '1'){
-            url = `receivable/by-products?start=${data.start}&end=${data.end}&currency=${data.currency}`
-        }
-
-        // setPNLVoucherView(true)
-        await axios.get(url).then((response) => {
-            setPNLVoucherView(true);
-            // setCurrenctOrderId(id);
+    // setPNLVoucherView(true)
+    await axios
+      .get(url)
+      .then((response) => {
+        setPNLVoucherView(true)
+        // setCurrenctOrderId(id);
         // console.log(response.data, "response data")
-            setProductPNLReport(response.data)
-        }).catch((error) => {
-            Swal.fire({
-                text: "Failed to Proceed the PDF",
-                icon: "error"
-            });
+        setProductPNLReport(response.data)
+      })
+      .catch((error) => {
+        Swal.fire({
+          text: 'Failed to Proceed the PDF',
+          icon: 'error',
         })
+      })
+  }
+
+  const handleCLosePNRLReportModal = () => {
+    setPNLVoucherView(false)
+    setCurrenctOrderId('')
+    setProductPNLReport([])
+  }
+
+  const downloadPdf = async () => {
+    try {
+      const data = reportData
+
+
+      console.log(data,"data set report is")
+      let url
+      
+      url = returnURL(data,"/pdf")
+
+      console.log('URL',url , "URL Value issss")
+      window.location.href = `${axios.defaults.baseURL}/${url}`
+      //  const response = await axios.get(url);
+      //  const blob = new Blob([response.data], { type: 'application/pdf' });
+      //  const link = document.createElement('a');
+      //  link.href = window.URL.createObjectURL(blob);
+      //  link.download = `PNL_report-${data.reportType}.pdf`;
+      //  link.click();
+    } catch (error) {
+      console.error('Error downloading the PDF:', error)
     }
+  }
 
-    const handleCLosePNRLReportModal = () => {
-        setPNLVoucherView(false);
-        setCurrenctOrderId('');
-        setProductPNLReport([]);
+  const downloadExcel = async () => {
+    try {
+      const data = reportData
+      let url
+      url = returnURL(data,"/excel")
+      console.log('URL excel is',url)
+      window.location.href = `${axios.defaults.baseURL}/${url}`
+    } catch (error) {
+      console.error('Error downloading the Excel:', error)
     }
+  }
 
-    const downloadPdf = async () => {
-        try {
-            const data = reportData;
-             let url;
-             if(data.reportType === 'pnl' && data.category === '0'){
-                url = `pnl/by-categories/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
-            }else if(data.reportType === 'pnl' && data.category === '1'){
-                 url = `pnl/by-orders/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
-            }else if(data.reportType === 'payable' && data.category === '0'){
-                url = `payable/summary/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
-            }else if(data.reportType === 'payable' && data.category === '1'){
-                url = `payable/detailed/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
-            }else if(data.reportType === 'receivable' && data.category === '0'){
-                url = `receivable/by-orders/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
-    
-            }else if(data.reportType === 'receivable' && data.category === '1'){
-                url = `receivable/by-products/pdf?start=${data.start}&end=${data.end}&currency=${data.currency}`
-            }
-            console.log("URL")
-             window.location.href = `${axios.defaults.baseURL}/${url}`;
-            //  const response = await axios.get(url);
-            //  const blob = new Blob([response.data], { type: 'application/pdf' });
-            //  const link = document.createElement('a');
-            //  link.href = window.URL.createObjectURL(blob);
-            //  link.download = `PNL_report-${data.reportType}.pdf`;
-            //  link.click();
-        } catch (error) {
-            console.error('Error downloading the PDF:', error);
-        }
-    };
+  const [currencyStatus, setCurrencyStatus] = useState(false)
 
-    // useEffect(() => {
-    //     if (reportType?.value === 'orders_report') {
-    //         setCategories([
-    //             { value: '0', label: 'All Categories' },
-    //             { value: '1', label: 'Essentials' },
-    //             { value: '2', label: 'Non Essentials' },
-    //             { value: '3', label: 'Lifestyles' },
-    //             { value: '5', label: 'Education' },
-    //             { value: '4', label: 'Hotels' },
-    //         ]);
-    //     }
-    //     else if (reportType?.value === 'chats_report') {
-    //         setChatCategories([
-    //             { value: '0', label: 'All Categories' },
-    //             { value: '1', label: 'Active Chats' },
-    //             { value: '2', label: 'DeActive Chats' },
-    //         ])
-    //     } else {
-    //         setCategories([
-    //             { value: '1', label: 'Essentials' },
-    //             { value: '2', label: 'Non Essentials' },
-    //             { value: '3', label: 'Lifestyles' },
-    //             { value: '5', label: 'Education' },
-    //             { value: '4', label: 'Hotels' },
-    //         ]);
-    //     }
-    // }, [reportType]);
+  useEffect(() => {
+    console.log('aaaaaaaaaaaaaa')
+    if (currencyType?.value !== 'all') {
+      setCurrencyStatus(true)
+    } else {
+      setCurrencyStatus(false)
+    }
+  }, [currencyType])
 
-    // useEffect(() => {
-    //     setReportDataSet([]);
-    // }, [startDate, endDate, reportType, category]);
+  const [status, setStatus] = useState(true)
 
-    // const download = async () => {
-    //     console.log('Download PDF');
-    //     window.location.href = `${axios.defaults.baseURL}/pnl/by-categories/pdf?start=2024-09-10&end=2024-11-22&currancy=LKR`;
-    // }
+  //   useEffect(() => {
+  //     console.log('receivablelll')
+  //     if (reportType?.value === 'receivable') {
+  //         console.log('receivable')
+  //       setStatus(false)
+  //     } else {
+  //       setStatus(true)
+  //     }
+  //   }, [reportType])
 
+  //   useEffect(() => {
+  //     console.log('receivablelll')
+  //     if (reportType?.value === 'cashflow') {
+  //         console.log('receivable')
+  //       setStatus(false)
+  //     } else {
+  //       setStatus(true)
+  //     }
+  //   }, [reportType])
 
-    return (
-        <CContainer fluid>
-            <CCol xs={12}>
-                <CCard className="mb-4">
-                    <CCardHeader>
-                        <strong>Account Report Generation</strong>
-                    </CCardHeader>
-                    <CCardBody>
-                        <CRow className="align-items-end">
-                        <CCol xs={12} sm={6} lg={2}>
-                                <CFormLabel htmlFor="report-type">Report Type</CFormLabel>
-                                <br />
-                                <Select options={reportTypes} value={reportType} onChange={selectedOption => {
-                                    setReportType(selectedOption);
-                                    setCategory([]);
-                                    setCurrency(null);
-                                    setEndDate(null);
-                                    setStartDate(null);
-                                    
-                                }}
-                                    placeholder="Select a Report Type" id="report-type" />
-                                {validationErrors.reportType && <div className="text-danger">{validationErrors.reportType}</div>}
-                            </CCol>
-                            <CCol xs={12} sm={6} lg={2}>
-                                <CFormLabel htmlFor="category">Category</CFormLabel>
-                                <br />
-                                <Select options={reportType?.value === 'receivable' ? categories2 : reportType?.value === 'pnl' ? categories3 : categories } value={category} onChange={selectedOption => {
-                                    setCategory(selectedOption)
-                                    }} placeholder="Select a category" id="category" isDisabled={reportType !== null ? false : true} />
-                                {validationErrors.category && <div className="text-danger">{validationErrors.category}</div>}
-                            </CCol>
-                            {/* <CCol xs={12} sm={6} lg={2}>
+  // useEffect(() => {
+  //     if (reportType?.value === 'orders_report') {
+  //         setCategories([
+  //             { value: '0', label: 'All Categories' },
+  //             { value: '1', label: 'Essentials' },
+  //             { value: '2', label: 'Non Essentials' },
+  //             { value: '3', label: 'Lifestyles' },
+  //             { value: '5', label: 'Education' },
+  //             { value: '4', label: 'Hotels' },
+  //         ]);
+  //     }
+  //     else if (reportType?.value === 'chats_report') {
+  //         setChatCategories([
+  //             { value: '0', label: 'All Categories' },
+  //             { value: '1', label: 'Active Chats' },
+  //             { value: '2', label: 'DeActive Chats' },
+  //         ])
+  //     } else {
+  //         setCategories([
+  //             { value: '1', label: 'Essentials' },
+  //             { value: '2', label: 'Non Essentials' },
+  //             { value: '3', label: 'Lifestyles' },
+  //             { value: '5', label: 'Education' },
+  //             { value: '4', label: 'Hotels' },
+  //         ]);
+  //     }
+  // }, [reportType]);
+
+  // useEffect(() => {
+  //     setReportDataSet([]);
+  // }, [startDate, endDate, reportType, category]);
+
+  // const download = async () => {
+  //     console.log('Download PDF');
+  //     window.location.href = `${axios.defaults.baseURL}/pnl/by-categories/pdf?start=2024-09-10&end=2024-11-22&currancy=LKR`;
+  // }
+
+  return (
+    <CContainer fluid>
+      <CCol xs={12}>
+        <CCard className="mb-4">
+          <CCardHeader>
+            <strong>Account Report Generation</strong>
+          </CCardHeader>
+          <CCardBody>
+            <CRow className="align-items-end">
+              <CCol xs={12} sm={6} lg={2}>
+                <CFormLabel htmlFor="report-type">Report Type</CFormLabel>
+                <br />
+                <Select
+                  options={reportTypes}
+                  value={reportType}
+                  onChange={(selectedOption) => {
+                    setReportType(selectedOption)
+                    setCategory([])
+                    setCurrency(null)
+                    setEndDate(null)
+                    setStartDate(null)
+                  }}
+                  placeholder="Select a Report Type"
+                  id="report-type"
+                />
+                {validationErrors.reportType && (
+                  <div className="text-danger">{validationErrors.reportType}</div>
+                )}
+              </CCol>
+              <CCol xs={12} sm={6} lg={2}>
+                <CFormLabel htmlFor="category">Category</CFormLabel>
+                <br />
+                <Select
+                  options={
+                    reportType?.value === 'receivable'
+                      ? categories2
+                      : reportType?.value === 'pnl'
+                      ? categories3
+                      : reportType?.value === 'cashflow'
+                      ? categories4
+                      : categories
+                  }
+                  value={category}
+                  onChange={(selectedOption) => {
+                    setCategory(selectedOption)
+                  }}
+                  placeholder="Select a category"
+                  id="category"
+                  isDisabled={reportType !== null ? false : true}
+                />
+                {validationErrors.category && (
+                  <div className="text-danger">{validationErrors.category}</div>
+                )}
+              </CCol>
+              {/* <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Order Id</CFormLabel>
                                 <br />
                                 <Select options={Orders} value={order} onChange={selectedOption => setOrder(selectedOption)} placeholder="Select a Order" id="order"   isDisabled={statusOrderDropdown} />
                                 {validationErrors.order && <div className="text-danger">{validationErrors.order}</div>}
                             </CCol> */}
-                            <CCol xs={12} sm={6} lg={2}>
-                                <CFormLabel htmlFor="currency">Currency</CFormLabel>
-                                <br />
-                                <Select options={currencies} value={currency} onChange={selectedOption => {
-                                    setCurrency(selectedOption)
-                                    }} placeholder="Select a Currency" id="currency" />
-                                {validationErrors.currency && <div className="text-danger">{validationErrors.currency}</div>}
-                            </CCol>
-                            
-                           
-                                    <> 
-                                <CCol xs={12} sm={6} lg={3}>
-                                    <CFormLabel htmlFor="start-date">Start Date</CFormLabel>
-                                    <br />
-                                    <DatePicker disabled={statusDate} selected={startDate} onChange={date => setStartDate(date)} className="form-control full-width" placeholderText="Select start date" id="start-date" />
-                                    {validationErrors.startDate && <div className="text-danger">{validationErrors.startDate}</div>}
-                                </CCol>
-                                <CCol xs={12} sm={6} lg={3}>
-                                    <CFormLabel htmlFor="end-date">End Date</CFormLabel>
-                                    <br />
-                                    <DatePicker  disabled={statusDate} selected={endDate} onChange={date => setEndDate(date)} className="form-control full-width" placeholderText="Select end date" id="end-date" />
-                                    {validationErrors.endDate && <div className="text-danger">{validationErrors.endDate}</div>}
-                                </CCol>
-                                </>
-                            
-                          
-                           
-                            
-                            <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
-                            {
-                               (["generate account report", "all accounts access"].some(permission => userData?.permissions?.includes(permission))) &&
-                                <CButton color="dark" className="full-width" onClick={handleGenerateReport}>Generate Report</CButton>
-                            }
-                                </CCol>
-                        </CRow>
+              {reportType?.value == 'payable' ? (
+                <CCol xs={12} sm={6} lg={2}>
+                  <CFormLabel htmlFor="currencyType">Currency Type</CFormLabel>
+                  <br />
+                  <Select
+                    options={currencieType}
+                    value={currencyType}
+                    onChange={(selectedOption) => {
+                      setCurrencyType(selectedOption)
+                    }}
+                    placeholder="Select a Currency Type"
+                    id="currencyType"
+                  />
+                  {validationErrors.currencyType && (
+                    <div className="text-danger">{validationErrors.currencyType}</div>
+                  )}
+                </CCol>
+              ) : null}
 
-                        {/* {
+              {reportType?.value != 'pnl' ? (
+                <CCol xs={12} sm={6} lg={2}>
+                  <CFormLabel htmlFor="currency">Currency</CFormLabel>
+                  <br />
+                  <Select
+                    options={currencies?.filter((res) => {
+                    if(reportType?.value === 'payable'){
+                        return  res.value !== 'all'
+                    }
+                    else{
+                        return res
+                    }
+                    
+                    })}
+                    value={currency}
+                    onChange={(selectedOption) => {
+                      setCurrency(selectedOption)
+                    }}
+                    placeholder="Select a Currency"
+                    id="currency"
+                  />
+                  {validationErrors.currency && (
+                    <div className="text-danger">{validationErrors.currency}</div>
+                  )}
+                </CCol>
+              ) : null}
+
+              <CCol xs={12} sm={6} lg={2}>
+                <CFormLabel htmlFor="typeDate">Date Type</CFormLabel>
+                <br />
+                <Select
+                  options={TypeDates}
+                  value={typeDate}
+                  onChange={(selectedOption) => {
+                    setTypeDate(selectedOption)
+                  }}
+                  placeholder="Select a Date Type"
+                  id="typeDate"
+                />
+                {validationErrors.typeDate && (
+                  <div className="text-danger">{validationErrors.typeDate}</div>
+                )}
+              </CCol>
+
+              <>
+                <CCol xs={12} sm={6} lg={3}>
+                  <CFormLabel htmlFor="start-date">Start Date</CFormLabel>
+                  <br />
+                  <DatePicker
+                    disabled={statusDate}
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    className="form-control full-width"
+                    placeholderText="Select start date"
+                    id="start-date"
+                  />
+                  {validationErrors.startDate && (
+                    <div className="text-danger">{validationErrors.startDate}</div>
+                  )}
+                </CCol>
+                <CCol xs={12} sm={6} lg={3}>
+                  <CFormLabel htmlFor="end-date">End Date</CFormLabel>
+                  <br />
+                  <DatePicker
+                    disabled={statusDate}
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    className="form-control full-width"
+                    placeholderText="Select end date"
+                    id="end-date"
+                  />
+                  {validationErrors.endDate && (
+                    <div className="text-danger">{validationErrors.endDate}</div>
+                  )}
+                </CCol>
+              </>
+
+              <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                {['generate account report', 'all accounts access'].some((permission) =>
+                  userData?.permissions?.includes(permission),
+                ) && (
+                  <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
+                    Generate Report
+                  </CButton>
+                )}
+              </CCol>
+            </CRow>
+
+            {/* {
                             reportType?.value === 'orders_report' &&
                             <CRow className="mt-3">
                                 <CCol xs={12}>
@@ -329,12 +524,11 @@ const ReportGenerationPage = () => {
                                 </CCol>
                             </CRow>
                         } */}
+          </CCardBody>
+        </CCard>
+      </CCol>
 
-                    </CCardBody>
-                </CCard>
-            </CCol>
-
-            {/* {
+      {/* {
 
                 loading ? <LoaderPanel message="Report Data Fetching" /> :
                     reportDataSet.length > 0 ?
@@ -357,30 +551,51 @@ const ReportGenerationPage = () => {
                             : null
             } */}
 
+      <Modal
+        style={{ maxHeight: '95%' }}
+        show={PNLVoucherView}
+        size="xl"
+        onHide={handleCLosePNRLReportModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Account Report</Modal.Title>
+          {/* {
+            // (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
+            <CButton
+              color="info"
+              style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+              onClick={downloadPdf}
+            >
+              Download PDF
+            </CButton>
+          } */}
+          <CDropdown variant="btn-group">
+            <CDropdownToggle color="success">Download File</CDropdownToggle>
+            <CDropdownMenu>
+              <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadPdf()}>
+                Download PDF
+              </CDropdownItem>
 
-        <Modal style={{ maxHeight: '95%'}} show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Account Report</Modal.Title>
-                    {
-                        // (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
-                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download PDF</CButton>
-                    }
-                </Modal.Header>
-                <Modal.Body >
-                    {
-                        (productPNLReport.status === 'fail' && productPNLReport.message === 'No data to display') ?
-                            <div className='d-flex flex-column align-items-center my-5'>
-                                <h6>Oops! Sorry</h6>
-                                <p>The product has been yet to be approved !</p>
-                            </div>
-                            :
-                            <div dangerouslySetInnerHTML={{ __html: productPNLReport }} />
-                    }
-                </Modal.Body>
-            </Modal>
+              <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadExcel()}>
+                Download Excel
+              </CDropdownItem>
+            </CDropdownMenu>
+          </CDropdown>
+        </Modal.Header>
+        <Modal.Body>
+          {productPNLReport.status === 'fail' &&
+          productPNLReport.message === 'No data to display' ? (
+            <div className="d-flex flex-column align-items-center my-5">
+              <h6>Oops! Sorry</h6>
+              <p>The product has been yet to be approved !</p>
+            </div>
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: productPNLReport }} />
+          )}
+        </Modal.Body>
+      </Modal>
+    </CContainer>
+  )
+}
 
-        </CContainer>
-    );
-};
-
-export default ReportGenerationPage;
+export default ReportGenerationPage
