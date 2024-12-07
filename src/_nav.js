@@ -201,7 +201,7 @@ function getNavigationHook(permissions){
         },
         // {
         //   component: CNavItem,
-        //   name: 'Generate Emails',
+        //   name: 'Generate Emailss',
         //   to: '/emails/generate',
         // }
       ],

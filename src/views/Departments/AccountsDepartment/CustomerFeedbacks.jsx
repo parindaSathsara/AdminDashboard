@@ -1,14 +1,15 @@
 import MaterialTable from 'material-table'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getAllFeedbacks, getAllRefundRequests } from 'src/service/api_calls';
 import { GoStarFill } from "react-icons/go";
 import axios from 'axios';
 import { CCol, CFormCheck, CFormInput, CFormLabel, CFormSelect, CImage, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 function CustomerFeedbacks(props) {
 
-
+  const { userData } = useContext(UserLoginContext);
   const defaultMaterialTheme = createTheme();
 
 
@@ -383,13 +384,6 @@ function CustomerFeedbacks(props) {
         }
         </div>
       </>
-
-
-
-
-
-
-
     </div>
   );
 }
