@@ -269,7 +269,8 @@ const OrderAllocate = ({ normalUser = false }) => {
                         <CIcon icon={cilInfo} className="text-info" size="xl" />
                     </CButton>
                 ),
-                size: 50, // Fixed size for the Info column
+                size: 50, 
+                enableSorting: false
             },
             {
                 accessorKey: 'order_id',
@@ -278,7 +279,7 @@ const OrderAllocate = ({ normalUser = false }) => {
             {
                 accessorKey: 'assigned_user',
                 header: 'Assigned User',
-
+                enableSorting: false,
                 Cell: ({ cell }) => {
 
                     // console.log(cell.row.original, "Cell Value is")
@@ -307,6 +308,7 @@ const OrderAllocate = ({ normalUser = false }) => {
             {
                 accessorKey: 'product_image',
                 header: 'Product Image',
+                enableSorting: false,
                 Cell: ({ cell }) => (
                     <div style={{ width: "120px", height: "100px", borderRadius: "10px", overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <CCardImage
@@ -563,25 +565,24 @@ const OrderAllocate = ({ normalUser = false }) => {
                 }}
                 onSelect={handleSelect}
             >
-                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders</span>} itemID='tabAll'>
+                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{ordersDataStatic.length}</span></span>} itemID='tabAll'>
 
                 </Tab>
-                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending</span>} itemID='tabPending'>
+                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class="text-white  badge text-bg-secondary">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} itemID='tabPending'>
 
                 </Tab>
-                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing</span>} itemID='tabApproved'>
+                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} itemID='tabApproved'>
 
                 </Tab>
-                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed</span>} itemID='tabCompleted'>
+                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Completed").length}</span></span>} itemID='tabCompleted'>
 
                 </Tab>
-                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled</span>} itemID='tabCompleted'>
+                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Cancel").length}</span></span>} itemID='tabCompleted'>
 
                 </Tab>
             </Tabs >
 
             <MaterialReactTable table={table} />
-
 
         </>
     );
