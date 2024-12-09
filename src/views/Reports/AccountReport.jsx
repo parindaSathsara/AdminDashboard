@@ -620,7 +620,7 @@ const ReportGenerationPage = () => {
               Download PDF
             </CButton>
           } */}
-          <CDropdown variant="btn-group">
+          <CDropdown style={{marginLeft:"68%"}} variant="btn-group">
             <CDropdownToggle color="success">Download File</CDropdownToggle>
             <CDropdownMenu>
               <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadPdf()}>

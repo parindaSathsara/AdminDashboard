@@ -27,7 +27,10 @@ function CustomerDetails(props) {
 
             try {
                 const result = await axios.post("sendMesageToCustomer", dataSet);
-                if (result?.data?.status === 200) {
+                // console.log(dataSet, "dataSet");
+                // console.log(result, "result");
+                // console.log(result?.status, "result");
+                if (result?.status === 200) {
                     Swal.fire({
                         title: "Message Sent to customer",
                         text: "Message Sent",

@@ -127,14 +127,26 @@ function App() {
     if (userid) {
       const userDataVal = JSON.parse(localStorage.getItem('user'));
       setUserData(userDataVal);
-      setUserLogin(true)
-      axios.get(`getCurrency/${"USD"}`).then(response => {
-        if (response?.data?.status == 200) {
-          setCurrencyData(response.data)
-        }
-      })
+      setUserLogin(true);
+        axios.get(`getCurrency/${"USD"}`).then(response => {
+          if (response?.data?.status == 200) {
+            console.log(response.data, "Currency Data")
+            setCurrencyData(response.data);
+          }
+        });
     }
-  }, [userid])
+  }, [userid]);
+
+  useEffect(() => {
+        axios.get(`getCurrency/${"USD"}`).then(response => {
+          if (response?.data?.status == 200) {
+            console.log(response.data, "Currency Data")
+            setCurrencyData(response.data);
+          }
+        });
+  }, []);
+
+  
 
 
   useEffect(() => {
