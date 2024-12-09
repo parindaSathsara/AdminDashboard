@@ -8,6 +8,8 @@ import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
 const EducationCategoryData = ({ data }) => {
     const [tableData, setTableData] = useState([]);
 
+
+
     useEffect(() => {
         // Assuming `data` contains the fetched data from edu_tbl_education
         const transformedData = data.map(item => ({
