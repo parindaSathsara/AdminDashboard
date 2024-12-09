@@ -20,6 +20,7 @@ import './ReportsMain.css';
 import getChatServices from './services/getChatServices';
 import ChatReportData from './ChatData/ChatReportData';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
+import HotelsCategoryData from './CategoryData/HotelsCategoryData';
 
 const ReportGenerationPage = () => {
     const { userData } = useContext(UserLoginContext);
@@ -215,6 +216,7 @@ const ReportGenerationPage = () => {
                                     <EssentialsCategoryData data={reportDataSet} category={category.value} />
                                     : category.value == 5 ?
                                         <EducationCategoryData data={reportDataSet} />
+                                        : category.value == 4 ? <HotelsCategoryData data={reportDataSet} />
                                         : null
                             : reportType.value === "customer_report" ?
                                 <CustomersData dataSet={reportDataSet} category={category.value} />
