@@ -190,6 +190,7 @@ const Dashboard = () => {
 
     dataSet["oid"] = value
     setOrderId(value)
+    // console.log("Dataaa settttt", dataSet.MainPayStatus)
     setPaymentDataSet(dataSet)
     console.log("Data Set", dataSet)
     setShowModal(true)
@@ -266,6 +267,15 @@ const Dashboard = () => {
   }
 
 
+  const handleRejectionSuccess = () =>{
+    setPaymentRejection(false)
+    setPaymentDataSet({ ...paymentDataSet, MainPayStatus: "Rejected" })
+    const updatedOrderData = orderData.map(order => 
+      order.OrderId === orderid ? { ...order, MainPayStatus: "Rejected" } : order
+    );
+    setOrderData(updatedOrderData);
+  }
+
   return (
     <>
       {/* <WidgetsDropdown /> */}
@@ -276,7 +286,7 @@ const Dashboard = () => {
         <Modal.Header closeButton>
 
           <Modal.Title>Order Details - {orderid}</Modal.Title>
-          {paymentDataSet.MainPayStatus !== "Approved" ? (
+          {paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
             <div className="radioGroup" style={{ marginLeft: "30px" }}>
                {(["all accounts access","approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
               <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
@@ -285,7 +295,12 @@ const Dashboard = () => {
               <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
               }
               </div>
-          ) : (
+          ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
+          <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
+            Payment Rejected
+          </div>
+          
+          ): (
             <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
               Payment Approved
             </div>
@@ -313,7 +328,7 @@ const Dashboard = () => {
         </Modal.Header>
 
         <Modal.Body className="modalBodyDef">
-          <PaymentRejection paymentDataSet={paymentDataSet} orderid={orderid}></PaymentRejection>
+          <PaymentRejection paymentDataSet={paymentDataSet} orderid={orderid} handleRejectionSuccess={handleRejectionSuccess}></PaymentRejection>
         </Modal.Body>
 
         <Modal.Footer className="mainFooterModal">

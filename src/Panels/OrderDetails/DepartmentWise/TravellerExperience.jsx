@@ -286,6 +286,7 @@ export default function TravellerExperience(props) {
     const [productPNLReport, setProductPNLReport] = useState([]);
 
     const handlePNLReport = async (id) => {
+
         await axios.get(`/pnl/order-product/${id}`).then((response) => {
             setPNLVoucherView(true);
             setCurrenctOrderId(id);
@@ -295,7 +296,8 @@ export default function TravellerExperience(props) {
 
     const downloadPdf = async () => {
         try {
-            const url = `${axios.defaults.baseURL}/generate-itinerary-by-order/${props.orderid}/${val}/pdf`;
+            // console.log(productData?.[0].checkoutID, "chechout id")
+            const url = `${axios.defaults.baseURL}/pnl/order-product/${productData?.[0].checkoutID}/pdf`;
             console.log("Opening URL:", url);
             window.open(url, '_blank');
         } catch (error) {
