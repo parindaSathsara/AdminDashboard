@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import {
@@ -14,14 +14,33 @@ import {
 } from '@coreui/react'
 
 import { UserLoginContext } from 'src/Context/UserLoginContext'
+import { CurrencyContext } from 'src/Context/CurrencyContext'
 import { DocsExample } from 'src/components'
 import OrderAllocate from './OrdersList.jsx/OrdersListAllocations'
+import axios from 'axios'
 
 const MainDashboard = () => {
 
   const { userData, setUserData } = useContext(UserLoginContext);
+  const {currencyData, setCurrencyData} = useContext(CurrencyContext);
 
 
+//   useEffect(() => {
+//     const currencyDataL = localStorage.getItem('currencyData');
+
+//     if (currencyDataL) {
+//         setCurrencyData(JSON.parse(currencyDataL));
+//     } else {
+//         axios.get(`getCurrency/${"USD"}`).then(response => {
+//             if (response?.data?.status == 200) {
+//                 console.log(response.data, "Currency Data");
+//                 setCurrencyData(response.data);
+//                 localStorage.setItem('currencyData', JSON.stringify(response.data));
+//                 window.location.reload();
+//             }
+//         });
+//     }
+// }, []);
   // console.log(userData, "User Data is")
 
   return (

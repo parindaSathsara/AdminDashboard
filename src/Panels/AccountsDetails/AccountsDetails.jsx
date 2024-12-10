@@ -220,8 +220,8 @@ function AccountsDetails(props) {
                                                             <tr>
                                                                 <td><b>{dataset['reference_no']}</b></td>
                                                                 <td>{dataset['reference_email']}</td>
-                                                                <td><a target="_blank" href={'https://gateway.aahaas.com/' + dataset['reference_Image']}>
-                                                                    <img src={'https://gateway.aahaas.com/' + dataset['reference_Image']} width="150"
+                                                              <td><a target="_blank" href={`${axios.defaults.imageUrl}/${dataset['reference_Image']}`}>
+                                                                    <img src={`${axios.defaults.imageUrl}/${dataset['reference_Image']}`} width="150"
                                                                         height="150"
                                                                         style={{ objectFit: 'cover' }} />
                                                                 </a></td>

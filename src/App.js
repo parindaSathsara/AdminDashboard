@@ -18,6 +18,9 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 //
+axios.defaults.imageUrl = 'https://staging-gateway.aahaas.com/';
+// axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
+
 axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
 axios.defaults.data = 'https://staging-admin-api.aahaas.com';
 
@@ -128,23 +131,33 @@ function App() {
       const userDataVal = JSON.parse(localStorage.getItem('user'));
       setUserData(userDataVal);
       setUserLogin(true);
-        axios.get(`getCurrency/${"USD"}`).then(response => {
-          if (response?.data?.status == 200) {
-            console.log(response.data, "Currency Data")
-            setCurrencyData(response.data);
-          }
-        });
+        // axios.get(`getCurrency/${"USD"}`).then(response => {
+        //   if (response?.data?.status == 200) {
+        //     console.log(response.data, "Currency Data")
+        //     setCurrencyData(response.data);
+        //   }
+        // });
     }
   }, [userid]);
 
   useEffect(() => {
+    const currencyDataVal = localStorage.getItem('currencyData');
+
+    console.log(currencyDataVal, "Currency Data value is 123")
+
+    if (currencyDataVal) {
+        setCurrencyData(JSON.parse(currencyDataVal));
+    } else {
         axios.get(`getCurrency/${"USD"}`).then(response => {
-          if (response?.data?.status == 200) {
-            console.log(response.data, "Currency Data")
-            setCurrencyData(response.data);
-          }
+            if (response?.data?.status == 200) {
+                console.log(response.data, "Currency Data");
+                setCurrencyData(response.data);
+                localStorage.setItem('currencyData', JSON.stringify(response.data));
+            }
         });
-  }, []);
+    }
+
+}, []);
 
   
 
