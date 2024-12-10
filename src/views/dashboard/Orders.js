@@ -182,29 +182,38 @@ const Orders = () => {
     });
   };
 
+  const [detailPanelExpanded, setDetailPanelExpanded] = useState(false)
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, 'order_ids'),
-      (querySnapshot) => {
-        if (!querySnapshot.empty) {
-          initialDataHandler("realtime");
-        } else {
-          // console.log("No orders found.");
+
+    if (detailPanelExpanded == false) {
+      const unsubscribe = onSnapshot(
+        collection(db, 'order_ids'),
+        (querySnapshot) => {
+          if (!querySnapshot.empty) {
+
+            initialDataHandler("realtime");
+
+
+          } else {
+            // console.log("No orders found.");
+          }
+
+        },
+        (error) => {
+          console.error("Error fetching real-time data: ", error);
         }
+      );
 
-      },
-      (error) => {
-        console.error("Error fetching real-time data: ", error);
-      }
-    );
+      return () => unsubscribe();
+    }
 
-    return () => unsubscribe();
-
-  }, [])
+  }, [detailPanelExpanded])
 
 
   const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+
+
 
 
   const data = useMemo(() => ({
@@ -319,6 +328,8 @@ const Orders = () => {
     setDetailExpander(true)
   }
 
+
+
   const table = useMaterialReactTable({
     columns: data.columns,
     data: data.rows,
@@ -376,9 +387,16 @@ const Orders = () => {
         backgroundColor: 'white'
       }),
     }),
-    //custom expand button rotation
+
     muiExpandButtonProps: ({ row, table }) => ({
-      onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //only 1 detail panel open at a time
+      onClick: () => {
+        const isExpanded = row.getIsExpanded();
+        table.setExpanded({ [row.id]: !isExpanded });
+        setDetailPanelExpanded(!isExpanded);
+
+
+        console.log(isExpanded, "Expanded value iss")
+      },
       sx: {
         transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
         transition: 'transform 0.2s',

@@ -9,6 +9,7 @@ import {
     CButton,
     CRow,
     CFormInput,
+    CSpinner,
     CImage
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
@@ -74,7 +75,7 @@ const EmailGeneration = () => {
 
     const emailTypes = [
         { value: 'order', label: 'Order' },
-        { value: 'product_wise', label: 'Product Wise' },
+        // { value: 'product_wise', label: 'Product Wise' },
         { value: 'general_chat', label: 'General Chat' },
     ];
 
@@ -96,6 +97,8 @@ const EmailGeneration = () => {
     const [customers, setCustomers] = useState([])
     const [selectCustomer, setSelectedCustomer] = useState('')
     const [subject, setSubject] = useState('')
+    const [loading, setLoading] = useState(false)
+
 
     useEffect(() => {
         getOrderIDs().then(response => {
@@ -155,23 +158,32 @@ const EmailGeneration = () => {
 
 
     const handleEmailResend = () => {
-
         const missingFields = [];
         if (!subject) missingFields.push("Subject");
         if (!emailType?.value) missingFields.push("Email Type");
         if (!internalEmail?.value) missingFields.push("Internal Email");
-        if (!selectedOrderID?.value && (sendPersonType?.value === null || sendPersonType?.value === undefined)) {
-            missingFields.push("Order ID");
+
+        if(emailType?.value === 'order'){
+            if (!selectedOrderID?.value) missingFields.push("Order ID");
+
+        }else if(emailType?.value === 'product_wise' || emailType?.value === 'general_chat'){
+            if (!sendPersonType?.value) missingFields.push("User Type");
+            if (sendPersonType?.value === 'customer' && !selectCustomer) missingFields.push("Customer");
+            if (sendPersonType?.value === 'supplier' && !selectSupplier) missingFields.push("Supplier");
         }
-        if (emailType?.value !== 'order' && (sendPersonType?.value === null || sendPersonType?.value === undefined)) {
-            missingFields.push("User Type");
-        }
-        if (sendPersonType?.value === 'customer'  &&  selectCustomer === '') {
-            missingFields.push("Customer");
-        }
-        if (sendPersonType?.value === 'supplier' && selectSupplier === '') {
-            missingFields.push("Supplier");
-        }
+
+        // if (!selectedOrderID?.value && (sendPersonType?.value === null || sendPersonType?.value === undefined)) {
+        //     missingFields.push("Order ID");
+        // }
+        // if (emailType?.value !== 'order' && (sendPersonType?.value === null || sendPersonType?.value === undefined)) {
+        //     missingFields.push("User Type");
+        // }
+        // if (sendPersonType?.value === 'customer'  &&  selectCustomer === '') {
+        //     missingFields.push("Customer");
+        // }
+        // if (sendPersonType?.value === 'supplier' && selectSupplier === '') {
+        //     missingFields.push("Supplier");
+        // }
 
         if (missingFields.length > 0) {
             Swal.fire({
@@ -179,6 +191,7 @@ const EmailGeneration = () => {
                 title: 'Missing Fields',
                 text: `Please select the fields: ${missingFields.join(', ')}`,
             });
+            setLoading(false)
             return;
         }
         console.log(editorState)
@@ -214,10 +227,12 @@ const EmailGeneration = () => {
 
         if(formData){
             try{
-
+                setLoading(true)
                 sendGenerateEmail(formData).then(response => {
                     
                     if(response[0] === 200){
+
+                        setLoading(false)
                         Swal.fire({
                             icon: 'success',
                             title: 'Email Sent',
@@ -235,6 +250,7 @@ const EmailGeneration = () => {
                         setFiles([]);
 
                     }else{
+                        setLoading(false)
                         Swal.fire({
                             icon: 'error',
                             title: 'Email Generation Error',
@@ -243,11 +259,13 @@ const EmailGeneration = () => {
                     }   
 
                   }).catch(error => {
+                    setLoading(false)
                     console.error("Email Generation Error: ", error);
                   });
               
           
               }catch(error){
+                setLoading(false)
                   console.error("Email Generation Error: ", error);
               }
         }
@@ -271,6 +289,7 @@ const EmailGeneration = () => {
                 title: 'Missing Fields',
                 text: `Please select the following fields: ${missingFields.join(', ')}`,
             });
+
             return;
         }
 
@@ -313,8 +332,8 @@ const EmailGeneration = () => {
 
      return (
         <CContainer fluid>
-
-            <CCol xs={12}>
+             { loading ?  <div className="d-flex justify-content-center"><CSpinner style={{marginTop:"15%"}}/></div> :
+            <> <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
                         <strong>Email Generation</strong>
@@ -436,7 +455,6 @@ const EmailGeneration = () => {
 
             
 
-            {/* <RichTextEditor></RichTextEditor> */}
 
             <CCol xs={12}>
                 <CCard className="mb-4">
@@ -505,7 +523,7 @@ const EmailGeneration = () => {
                 </CCard>
             </CCol>
 
-
+  </>}
         </CContainer>
     );
 };
