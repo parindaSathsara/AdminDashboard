@@ -3,6 +3,7 @@ import React, { useCallback } from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import './UserAnalytics.css'
+import '../PushNotifications/PushNotifications.css';
 import { FaRegWindowClose } from 'react-icons/fa'
 
 function CustomerSearch({ setSelectedUser, setIsLoading }) {
@@ -55,14 +56,15 @@ function CustomerSearch({ setSelectedUser, setIsLoading }) {
   }
 
   return (
-    <div className='search-container'>
+    <div>
       <CForm>
-        <div style={{ position: 'relative' }}>
+        <div  style={{  }}>
+          <div className='search-container'>
           <CFormInput
             type="text"
             id="search"
-            placeholder="Search any customer...."
-            style={{ borderRadius: '20px', paddingRight: '35px' }}
+            placeholder="Search customer...."
+            style={{ }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -78,29 +80,38 @@ function CustomerSearch({ setSelectedUser, setIsLoading }) {
             }}
             />
           )}
+          </div>
+         
 
         </div>
         {/* position: absolute;
     right: 12px;
     top: 40%;
     transform: translateY(-50%); */}
-        <CListGroup className="searchResults">
-          {searchResults.map((item) => (
-            <CListGroupItem
-              key={item.id}
-              onClick={() => handleCustomerSelection(item)}
-              onMouseOver={(e) => {
-                e.currentTarget.style.cursor = 'pointer'
-                e.currentTarget.style.backgroundColor = '#f0f0f0'
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = ''
-              }}
-            >
-              {item.customer_fname}
-            </CListGroupItem>
-          ))}
-        </CListGroup>
+    {
+      searchResults.length !== 0 ? (
+          <CListGroup  style={{width:"20%"}} className="searchResults">
+        {searchResults.map((item) => (
+          <CListGroupItem
+            key={item.id}
+            // style={{width:"30%"}}
+            onClick={() => handleCustomerSelection(item)}
+            onMouseOver={(e) => {
+              e.currentTarget.style.cursor = 'pointer'
+              e.currentTarget.style.backgroundColor = '#f0f0f0'
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = ''
+            }}
+          >
+            {item.customer_fname}
+          </CListGroupItem>
+        ))}
+      </CListGroup>
+        
+      ): null 
+    }
+      
       </CForm>
     </div>
   )

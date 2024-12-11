@@ -105,6 +105,7 @@ const AccountsRefunds = () => {
 
 
     getAllRefundRequests().then(res => {
+      console.log("Refund Requests", res)
       setRefundRequests(res)
     })
     // setOrderData(getAllDataUserWise());
@@ -120,6 +121,9 @@ const AccountsRefunds = () => {
       // },
       {
         title: 'Order Id', field: 'oid', align: 'left', editable: 'never', width: 10
+      },
+      {
+        title: 'Checkout Id', field: 'cid', align: 'left', editable: 'never', width: 10
       },
       {
         title: 'Reason for Refund', field: 'reason_refund', align: 'left', editable: 'never',
@@ -146,7 +150,8 @@ const AccountsRefunds = () => {
       return {
         refunding_amount: value.refunding_amount,
         type: value.refund_type,
-        oid: value.checkout_id,
+        oid: value.order_id,
+        cid: value.checkout_id,
         reason_refund: value.reason_for_refund,
         refund_amount: value.total_amount,
         pay_type: value.pay_category,
@@ -247,7 +252,7 @@ const AccountsRefunds = () => {
         <CCardBody>
           <CRow>
             <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
+              <h4 id="traffic" className="mb-0">
                 Refund Requests
               </h4>
               {/* <div className="small text-medium-emphasis">January - July 2021</div> */}

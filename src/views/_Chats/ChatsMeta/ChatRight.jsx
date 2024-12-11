@@ -78,9 +78,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     const { userData } = useContext(UserLoginContext);
 
     const handleSendMessage = async (value) => {
-
-
-        if (value !== '') {
+        if(value === '' || !value.trim()){
+            console.log('Empty message');
+            return;
+        }
+        else {
             setAdminMessage('')
             await addDoc(collection(db, "chat-updated/chats/" + chatOpenDetails.id), {
                 text: value,

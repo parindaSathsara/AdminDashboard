@@ -151,7 +151,7 @@ const AccessManagement = () => {
     "values": [
       "email resend",
      "download order receipt",
-     "generate emails",
+     "generate email",
      
     ]
   } 

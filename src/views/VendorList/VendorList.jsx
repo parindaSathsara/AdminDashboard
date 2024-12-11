@@ -460,7 +460,7 @@ const VendorList = () => {
                     <CCardBody>
                         <CRow>
                             <CCol sm={5}>
-                                <h4 id="traffic" className="card-title mb-0">
+                                <h4 id="traffic" className="mb-0">
                                     Vendors
                                 </h4>
                             </CCol>

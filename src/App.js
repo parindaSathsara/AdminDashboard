@@ -20,7 +20,6 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 //
 
 
-=======
 axios.defaults.imageUrl = 'https://staging-gateway.aahaas.com/';
 // axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
 

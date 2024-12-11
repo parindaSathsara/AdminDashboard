@@ -88,13 +88,30 @@ function getNavigationHook(permissions){
     },
   
   
+    // {
+    //   component: CNavItem,
+    //   name: 'Customers',
+    //   to: '/customers',
+    //   icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    // },
     {
-      component: CNavItem,
+      component: CNavGroup,
       name: 'Customers',
       to: '/customers',
-      icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+      icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Customers',
+          to: '/emails/all',
+        },
+        // {
+        //   component: CNavItem,
+        //   name: 'Customer Analytics',
+        //   to: '/analytics',
+        // }
+      ],
     },
-  
   
   
     {
@@ -207,18 +224,18 @@ function getNavigationHook(permissions){
         }
       ],
     },
-   {
-    component:CNavItem,
-    name:'Customer Analytics',
-    to:'/analytics',
-    icon: <CIcon icon={cilBarChart}  customClassName="nav-icon"/>
-  },
-  {
-    component:CNavItem,
-    name:'Push Notifications',
-    to:'/pushNotifications',
-    icon: <CIcon icon={cilCommentSquare}  customClassName="nav-icon"/>
-  },
+  //  {
+  //   component:CNavItem,
+  //   name:'Customer Analytics',
+  //   to:'/analytics',
+  //   icon: <CIcon icon={cilBarChart}  customClassName="nav-icon"/>
+  // },
+  // {
+  //   component:CNavItem,
+  //   name:'Push Notifications',
+  //   to:'/pushNotifications',
+  //   icon: <CIcon icon={cilCommentSquare}  customClassName="nav-icon"/>
+  // },
     {
       component: CNavItem,
       name: 'Access',
