@@ -199,11 +199,11 @@ function getNavigationHook(permissions){
           name: 'Resend Emails',
           to: '/emails/all',
         },
-        // {
-        //   component: CNavItem,
-        //   name: 'Generate Emailss',
-        //   to: '/emails/generate',
-        // }
+        {
+          component: CNavItem,
+          name: 'Generate Emails',
+          to: '/emails/generate',
+        }
       ],
     },
     {

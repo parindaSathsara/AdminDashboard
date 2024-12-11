@@ -30,7 +30,6 @@ import { EditorState } from 'draft-js';
 import draftToHtml from "draftjs-to-html";
 import { convertToRaw } from "draft-js";
 
-
 const EmailGeneration = () => {
     const { userData } = useContext(UserLoginContext);
     const [emailType, setEmailType] = useState({})
@@ -80,7 +79,11 @@ const EmailGeneration = () => {
     ];
 
     const internalEmails = [
-        { value: 'product@aahaas.com', label: 'product@aahaas.com' },
+        { value: 'supplier.experience@aahaas.com', label: 'supplier.experience@aahaas.com' },
+        { value: 'products.experience@aahaas.com', label: 'products.experience@aahaas.com' },
+        { value: 'traveller.experience@aahaas.com', label: 'traveller.experience@aahaas.com' },
+        { value: 'booking.experience@aahaas.com', label: 'booking.experience@aahaas.com' },
+        { value: 'finance@aahaas.com', label: 'finance@aahaas.com' },
     ];
     const [internalEmail, setInternalEmail] = useState({})
 
@@ -486,9 +489,10 @@ const EmailGeneration = () => {
                         
                         </CCol>
                         <CCol xs={12} sm={2} lg={2} className="">
-                            <CButton color="dark" className='full-width' onClick={handleEmailResend}>
+                        {(["generate emails"].some(permission => userData?.permissions?.includes(permission))) && <CButton color="dark" className='full-width' onClick={handleEmailResend}>
                                    Send
                             </CButton>
+                        }
                         </CCol>
 
 
