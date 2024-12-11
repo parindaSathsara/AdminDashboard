@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import './AccountsDetails.css';
 // import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import discountTotal from '../dcalculator';
 import moment from 'moment';
 import { PaymentStatusChange, getPaymentStatusById } from '../../service/api_calls';
 import MaterialTable from 'material-table';
-import { CCol } from '@coreui/react';
-
+import { CButton, CCol, CSpinner } from '@coreui/react';
+import { Modal } from 'react-bootstrap';
+import axios from 'axios';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 function AccountsDetails(props) {
+    const { userData } = useContext(UserLoginContext);
     const [toggle, setToggle] = useState(true);
 
     // useMemo(() => {
@@ -118,6 +121,56 @@ function AccountsDetails(props) {
 
     // }
 
+    const [pnlReportLoading, setpnlReportLoading] = useState(false);
+    const [PNLVoucherView, setPNLVoucherView] = useState(false);
+    const [currenctOrdeId, setCurrenctOrderId] = useState('');
+    const [productPNLReport, setProductPNLReport] = useState([]);
+
+    const handlePNLReport = async (id) => {
+        setpnlReportLoading(true);
+        await axios.get(`/pnl/order/${id}`).then((response) => {
+            setPNLVoucherView(true);
+            setCurrenctOrderId(id);
+            setProductPNLReport(response.data)
+            setpnlReportLoading(false);
+
+            console.log(response.data, "Handle PNL Report")
+        }).catch(error => {
+            console.log(error, "Handle PNL Report")
+        })
+    }
+
+
+    const [loading, setLoading] = useState(false)
+
+    const downloadPdf = async () => {
+
+        const url = `${axios.defaults.baseURL}/pnl/order/${currenctOrdeId}/pdf`;
+        console.log("Opening URL:", url);
+        window.open(url, '_blank');
+
+        // try {
+        //     setLoading(true)
+        //     const response = await axios.get(`/pnl/order/${currenctOrdeId}/pdf`, {
+        //         responseType: 'blob',
+        //     });
+
+        //     setLoading(false)
+        //     const blob = new Blob([response.data], { type: 'application/pdf' });
+        //     const link = document.createElement('a');
+        //     link.href = window.URL.createObjectURL(blob);
+        //     link.download = `PNL_report-OrderId-${currenctOrdeId}.pdf`;
+        //     link.click();
+        // } catch (error) {
+        //     console.error('Error downloading the PDF:', error);
+        // }
+    };
+
+    const handleCLosePNRLReportModal = () => {
+        setPNLVoucherView(false);
+        setCurrenctOrderId('');
+        setProductPNLReport([]);
+    }
 
     return (
         <>
@@ -159,6 +212,7 @@ function AccountsDetails(props) {
                                                                 <th scope="col">Reference E-mail</th>
                                                                 <th scope="col">Reference Image</th>
                                                                 <th scope="col">Checkout Date</th>
+                                                                <th scope="col">PNL report</th>
                                                             </tr>
                                                         </thead>
 
@@ -166,12 +220,19 @@ function AccountsDetails(props) {
                                                             <tr>
                                                                 <td><b>{dataset['reference_no']}</b></td>
                                                                 <td>{dataset['reference_email']}</td>
-                                                                <td><a target="_blank" href={'https://gateway.aahaas.com/' + dataset['reference_Image']}>
-                                                                    <img src={'https://gateway.aahaas.com/' + dataset['reference_Image']} width="150"
+                                                              <td><a target="_blank" href={`${axios.defaults.imageUrl}/${dataset['reference_Image']}`}>
+                                                                    <img src={`${axios.defaults.imageUrl}/${dataset['reference_Image']}`} width="150"
                                                                         height="150"
                                                                         style={{ objectFit: 'cover' }} />
                                                                 </a></td>
                                                                 <td>{dataset['checkout_date']}</td>
+                                                                <td>
+                                                                {(["all accounts access","view customer order pnl", "view account pnl"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                                    <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+                                                                    onClick={() => handlePNLReport(dataset.checkout_id)}
+                                                                // onClick={() => console.log(dataset)}
+                                                                >Show PNL report</CButton>
+                                                            }</td>
                                                             </tr>
 
                                                         </tbody>
@@ -204,6 +265,13 @@ function AccountsDetails(props) {
                                                                     <td>{dataset['trans_token']}</td>
                                                                     <td>{dataset['gateway_type']}</td>
                                                                     <td>{dataset['created_at']}</td>
+                                                                    <td>
+                                                                    {(["all accounts access","view customer order pnl", "view account pnl"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+                                                                        onClick={() => handlePNLReport(dataset.checkout_id)}
+                                                                    // onClick={() => console.log(dataset)}
+                                                                    >Show PNL report</CButton>
+                                                                    }</td>
                                                                 </tr>
 
                                                             </tbody>
@@ -211,7 +279,17 @@ function AccountsDetails(props) {
                                                         </table>
                                                     </>
                                                     :
-                                                    null
+
+                                                    <>
+                                                     {(["all accounts access","view customer order pnl", "view account pnl"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                        <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }}
+                                                            onClick={() => handlePNLReport(dataset.id)}
+                                                        // onClick={() => console.log(dataset)}
+                                                        >Show PNL report</CButton>
+                                                     }
+                                                        {console.log(dataset, "Data set key iss dataa")}
+                                                    </>
+
                                         }
 
                                     </div>
@@ -221,6 +299,39 @@ function AccountsDetails(props) {
                     )
                 }
             </div>
+
+            <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>PNL Report</Modal.Title>
+                    <div>
+
+
+
+
+                        {(productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
+                            <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={downloadPdf}>Download Voucher
+
+                                {loading ? <CSpinner variant="grow" size="sm" /> : null}
+
+                            </CButton>
+                        }
+
+
+
+                    </div>
+                </Modal.Header>
+                <Modal.Body>
+                    {
+                        (productPNLReport.status === 'fail' && productPNLReport.message === 'No data to display') ?
+                            <div className='d-flex flex-column align-items-center my-5'>
+                                <h6>Oops! Sorry</h6>
+                                <p>The product has been yet to be approved !</p>
+                            </div>
+                            :
+                            <div dangerouslySetInnerHTML={{ __html: productPNLReport }} />
+                    }
+                </Modal.Body>
+            </Modal>
 
 
         </>

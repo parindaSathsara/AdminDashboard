@@ -182,29 +182,38 @@ const Orders = () => {
     });
   };
 
+  const [detailPanelExpanded, setDetailPanelExpanded] = useState(false)
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, 'order_ids'),
-      (querySnapshot) => {
-        if (!querySnapshot.empty) {
-          initialDataHandler("realtime");
-        } else {
-          // console.log("No orders found.");
+
+    if (detailPanelExpanded == false) {
+      const unsubscribe = onSnapshot(
+        collection(db, 'order_ids'),
+        (querySnapshot) => {
+          if (!querySnapshot.empty) {
+
+            initialDataHandler("realtime");
+
+
+          } else {
+            // console.log("No orders found.");
+          }
+
+        },
+        (error) => {
+          console.error("Error fetching real-time data: ", error);
         }
+      );
 
-      },
-      (error) => {
-        console.error("Error fetching real-time data: ", error);
-      }
-    );
+      return () => unsubscribe();
+    }
 
-    return () => unsubscribe();
-
-  }, [])
+  }, [detailPanelExpanded])
 
 
   const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+
+
 
 
   const data = useMemo(() => ({
@@ -212,6 +221,7 @@ const Orders = () => {
 
       { accessorKey: 'oid', header: 'Order Id', align: 'left' },
       { accessorKey: 'booking_date', header: 'Booking Date | Time', align: 'left' },
+      { accessorKey: 'minServiceDate', header: 'MinService Date', align: 'left' },
       { accessorKey: 'pay_type', header: 'Payment Type', align: 'left' },
       { accessorKey: 'pay_category', header: 'Payment Category', align: 'left' },
       {
@@ -277,6 +287,7 @@ const Orders = () => {
 
       oid: value.OrderId,
       booking_date: value.checkout_date,
+      minServiceDate: value.minServiceDate,
       pay_type: value.payment_type,
       pay_category: value.pay_category,
       total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount),
@@ -316,6 +327,8 @@ const Orders = () => {
     setSelectedOrderDetails(rowData)
     setDetailExpander(true)
   }
+
+
 
   const table = useMaterialReactTable({
     columns: data.columns,
@@ -374,9 +387,16 @@ const Orders = () => {
         backgroundColor: 'white'
       }),
     }),
-    //custom expand button rotation
+
     muiExpandButtonProps: ({ row, table }) => ({
-      onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //only 1 detail panel open at a time
+      onClick: () => {
+        const isExpanded = row.getIsExpanded();
+        table.setExpanded({ [row.id]: !isExpanded });
+        setDetailPanelExpanded(!isExpanded);
+
+
+        console.log(isExpanded, "Expanded value iss")
+      },
       sx: {
         transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
         transition: 'transform 0.2s',

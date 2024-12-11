@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import discountTotal from '../dcalculator';
 import moment from 'moment';
@@ -13,7 +13,7 @@ import AccountsDetails from '../AccountsDetails/AccountsDetails';
 import SupDetails from '../SupDetails/SupDetails';
 import FeebackDetails from '../FeebackDetails/FeebackDetails';
 import PaymentModal from '../PaymentModal/PaymentModal';
-import { CAlert, CButton, CCard, CCardBody, CCardImage, CCardText, CCardTitle, CCol, CImage, CRow } from '@coreui/react';
+import { CAlert, CButton, CCard, CCardBody, CCardImage, CCardText, CCardTitle, CCol, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, CRow } from '@coreui/react';
 import CustomerDetails from '../CustomerDetails/CustomerDetails';
 import CheckIcon from '@mui/icons-material/Check';
 import { cibAboutMe, cibAbstract, cilCheck, cilCheckAlt, cilCheckCircle, cilDescription, cilInfo, cilViewColumn, cilViewModule, cilXCircle } from '@coreui/icons';
@@ -30,8 +30,12 @@ import DateWiseSummary from './DateWiseSummary/DateWiseSummary';
 import TravellerExperience from './DepartmentWise/TravellerExperience';
 import FlightOrderView from 'src/views/dashboard/FlightUI/FlightOrderView';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
+import axios from 'axios';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 function OrderDetails(props) {
+    // console.log("Props Data is",props )
+    const { userData } = useContext(UserLoginContext);
 
     // console.log(props.orderid)
 
@@ -104,9 +108,13 @@ function OrderDetails(props) {
     const [orderMainDetails, setOrderMainDetails] = useState([])
     const [customerData, setCustomerData] = useState([])
 
+
+
+    // const checkoutId = 
+
     useEffect(() => {
 
-        // console.log("Order id", props.orderid)
+        console.log("Order id", props.orderData)
 
         setOrderMainDetails(props.orderData)
         setDetailsLoading(true)
@@ -129,6 +137,7 @@ function OrderDetails(props) {
             // console.log(props?.orderData?.info?.checkoutID, "Checkout ID")
 
             getDashboardProductOrderDetails(props?.orderData?.info?.checkoutID).then((res) => {
+                console.log("Hotellll", res)
                 setDetailsLoading(false)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
@@ -150,6 +159,7 @@ function OrderDetails(props) {
         }
         else {
             getDashboardOrdersIdWise(props.orderid).then((res) => {
+                console.log("Hotellll", res)
                 setDetailsLoading(false)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
@@ -159,8 +169,6 @@ function OrderDetails(props) {
                 setProductData(res.productData)
                 setCustomerData(res.customerData)
                 setDates(res.dates)
-
-                // console.log(res.customerData, "CustomerData value is data ")
             })
         }
 
@@ -171,6 +179,7 @@ function OrderDetails(props) {
         if (props?.productViewData) {
             getDashboardProductOrderDetails(props.orderid?.info?.checkoutID).then((res) => {
                 // setDetailsLoading(false)
+                console.log("Hotellll", res)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
                 setEducationData(res.educationData)
@@ -185,6 +194,7 @@ function OrderDetails(props) {
 
             getDashboardOrdersIdWise(props.orderid).then((res) => {
                 // setDetailsLoading(false)
+                // console.log("Hotellll", res)
                 setLifestylesData(res.lifestyleData)
                 setEssNEssData(res.essNEssData)
                 setEducationData(res.educationData)
@@ -201,6 +211,9 @@ function OrderDetails(props) {
     const [moreOrderDetails, setMoreOrderDetails] = useState("")
     const [moreOrderModal, setMoreOrderModal] = useState(false)
     const [moreOrderModalCategory, setMoreOrderModalCategory] = useState("")
+
+
+    const [hotelDataSet, setHotelDataSet] = useState([])
 
     const handleMoreInfoModal = (e, category) => {
         // console.log("More Info Modal", e)
@@ -223,8 +236,8 @@ function OrderDetails(props) {
 
         else if (category == 4) {
 
-            // console.log(e, "Console Hotel Data is")
-
+            console.log(e, "Console Hotel Data is")
+            setHotelDataSet(e?.hotelData)
             setMoreOrderDetails(e.booking_id)
             setMoreOrderModal(true)
         }
@@ -554,7 +567,8 @@ function OrderDetails(props) {
             paid_amount: CurrencyConverter(value.currency, value.paid_amount),
             total_amount: CurrencyConverter(value.currency, value.total_amount),
             supplier_order: value.supplier_status,
-            status: value.status
+            status: value.status,
+            hotelData:value
         }))
     }
 
@@ -599,6 +613,13 @@ function OrderDetails(props) {
                 {/* {renderTable(flights.rows, flights.columns, "Flights Details")} */}
             </>
         );
+    };
+
+
+    const handleDownload = (val) => {
+        const url = `${axios.defaults.baseURL}/generate-itinerary-by-order/${props.orderid}/${val}/pdf`;
+        console.log("Opening URL:", url);
+        window.open(url, '_blank');
     };
 
     return (
@@ -647,6 +668,26 @@ function OrderDetails(props) {
                                 :
                                 <>
                                     <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
+
+                                    {!props?.productViewData ?
+                                        <CDropdown variant="btn-group">
+                                            <CDropdownToggle color="success">Download Itinerary</CDropdownToggle>
+                                            <CDropdownMenu>
+                                            {(["download order long itinerary","download account order long itinerary"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleDownload("long")}>
+                                                    Long Itinerary
+                                                </CDropdownItem>
+                                             }
+                                            {(["download order short itinerary","download account order short itinerary"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleDownload("short")}>
+                                                    Short Itinerary
+                                                </CDropdownItem>
+                                            }
+                                            </CDropdownMenu>
+                                        </CDropdown>
+                                        :
+                                        <></>
+                                    }
 
                                     <Tabs
                                         defaultActiveKey="service"
@@ -731,6 +772,7 @@ function OrderDetails(props) {
                             onHide={() => setMoreOrderModal(false)}
                             preID={moreOrderDetails}
                             category={moreOrderModalCategory}
+                            hotelsOrderView={hotelDataSet}
                         >
                         </MoreOrderView>
 
@@ -740,18 +782,23 @@ function OrderDetails(props) {
                             orderid={props.orderid}
                             component={
                                 <Tabs defaultActiveKey="bookingexperience" id="uncontrolled-tab-example" className="mt-4">
+
                                     <Tab eventKey="bookingexperience" title="Booking Experience">
                                         <BookingExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
+
                                     <Tab eventKey="supplierexperience" title="Supplier Experience">
                                         <SupplierExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
                                     </Tab>
+
                                     <Tab eventKey="travellerExperience" title="Traveller Experience">
-                                        <TravellerExperience dataset={productData} orderid={props.orderid} reload={() => reload()} />
+                                        <TravellerExperience dataset={productData} orderid={props.orderid} type={'order'} reload={() => reload()} />
                                     </Tab>
+
                                     <Tab eventKey="acc" title="Accounts Details">
                                         <AccountsDetails dataset={orderMainDetails} orderid={props.orderid} relord={() => reload()} paymentproof={(val) => handlePaymentProof(val)} />
                                     </Tab>
+
                                 </Tabs>
                             }
                         >

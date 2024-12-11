@@ -4,7 +4,7 @@ const rowStyle = (data) => {
 
     if (data?.data?.status == "Approved") {
         return ({
-            backgroundColor: '#FFF5E2',
+            backgroundColor: '#ffe3af',
             color: '#5D4211',
             fontSize: 16
         })

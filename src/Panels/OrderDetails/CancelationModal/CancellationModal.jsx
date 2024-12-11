@@ -10,10 +10,16 @@ export default function CancellationModal({ show, onHide, onConfirm }) {
     const [validationError, setValidationError] = useState('');
 
     const handleConfirm = async () => {
-        if (!reason) {
+        if (!reason || !reason.trim()) {
             setValidationError('Reason is required');
+            console.log("Reason is required")
             return;
         }
+
+        // if (!reason.trim()) {
+        //     setValidationError('Reason is required and cannot be empty spaces');
+        //     return;
+        // }
 
         setValidationError('');
         setIsSubmitting(true);

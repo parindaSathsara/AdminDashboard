@@ -4,9 +4,10 @@ import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-d
 import { UserLoginContext } from './Context/UserLoginContext'
 import InAppNotificationService from './service/InAppNotificationService'
 import { CurrencyContext } from './Context/CurrencyContext'
-
 import './scss/style.scss'
 import './App.css';
+
+
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
@@ -17,14 +18,27 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 //
-axios.defaults.baseURL = 'http://172.16.26.244:8000/api';
-axios.defaults.data = 'http://172.16.26.244:8000/';
+
+
+=======
+axios.defaults.imageUrl = 'https://staging-gateway.aahaas.com/';
+// axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
+
+axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
+axios.defaults.data = 'https://staging-admin-api.aahaas.com';
+
+axios.defaults.url = 'https://staging-gateway.aahaas.com/api'
+
+// axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
+// axios.defaults.data = 'http://172.16.26.67:8000'
+
 
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
 // axios.defaults.data = 'http://172.16.26.238:8000'
 
-// axios.defaults.baseURL = 'https://meta-admin-api.aahaas.com/api'
-// axios.defaults.data = 'https://meta-admin-api.aahaas.com'
+// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://admin-api.aahaas.com'
+
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
@@ -39,8 +53,15 @@ axios.defaults.data = 'http://172.16.26.244:8000/';
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
+
+  console.log(token,"Token value id is")
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
+    console.log(`Bearer ${token}`)
+
+  }
+  else{
+    window.location.href = '/#/login';
   }
   return config;
 })
@@ -113,14 +134,48 @@ function App() {
     if (userid) {
       const userDataVal = JSON.parse(localStorage.getItem('user'));
       setUserData(userDataVal);
-      setUserLogin(true)
-      axios.get(`getCurrency/${"USD"}`).then(response => {
-        if (response?.data?.status == 200) {
-          setCurrencyData(response.data)
-        }
-      })
+      setUserLogin(true);
+        // axios.get(`getCurrency/${"USD"}`).then(response => {
+        //   if (response?.data?.status == 200) {
+        //     console.log(response.data, "Currency Data")
+        //     setCurrencyData(response.data);
+        //   }
+        // });
     }
-  }, [userid])
+  }, [userid]);
+
+  useEffect(() => {
+    const currencyDataVal = localStorage.getItem('currencyData');
+
+    console.log(currencyDataVal, "Currency Data value is 123")
+
+    if (currencyDataVal) {
+        setCurrencyData(JSON.parse(currencyDataVal));
+    } else {
+        axios.get(`getCurrency/${"USD"}`).then(response => {
+            if (response?.data?.status == 200) {
+                console.log(response.data, "Currency Data");
+                setCurrencyData(response.data);
+                localStorage.setItem('currencyData', JSON.stringify(response.data));
+            }
+        });
+    }
+
+}, []);
+
+  
+
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!userLogin) {
+        console.log("User logged as guest");
+        window.location.href = '/#/login';
+      }
+    }, 1000); 
+  
+    return () => clearTimeout(timeout);
+  }, [userLogin]);
 
   return (
     <CurrencyContext.Provider value={{ currencyData, setCurrencyData }}>
@@ -131,15 +186,19 @@ function App() {
               {
                 !userLogin ?
                   <>
+                 
+
                     <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                     <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                     <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} />
+                    <Route exact path="*" name="404" element={<Page404 />} errorElement={<Page404></Page404>} />
                   </>
                   :
                   <>
                     {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                 <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
                     <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
+                      
                   </>
               }
             </Routes>

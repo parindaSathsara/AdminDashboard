@@ -11,6 +11,7 @@ import {
 } from '@coreui/react-chartjs'
 import { createTheme, ThemeProvider } from '@mui/material'
 import MaterialTable from 'material-table'
+import './SalesAnalytics.css'
 
 
 const Charts = () => {

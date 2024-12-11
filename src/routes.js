@@ -8,6 +8,7 @@ import MoreOrderView from './Panels/OrderDetails/MoreOrderView/MoreOrderView'
 import MainDashboard from './views/MainDashboard/MainDashboard'
 import OffersPromoDashboard from './views/OffersPromo/OffersPromoDashboard'
 import ReportsMain from './views/Reports/ReportsMain'
+import AccountReport from './views/Reports/AccountReport'
 import EmailDashboard from './views/EmailDashboard/EmailDashboard'
 import ChatsMeta from './views/_Chats/ChatsMeta/ChatsMeta'
 import FlightsmainPage from './views/Flights/FlightsmainPage'
@@ -27,6 +28,8 @@ const DeliveryDepartment = React.lazy(() => import('./views/Departments/Delivery
 
 const ChatsHome = React.lazy(() => import('./views/Chats/Chatshome'))
 const ChatsIndex = React.lazy(() => import('./views/_Chats/ChatsIndex'))
+const UserAccessManage = React.lazy(() => import('./views/ManageAccess/AccessManagement'))
+const EmailGeneration = React.lazy(() => import('./views/EmailDashboard/EmailGeneration'))
 
 
 // // Base
@@ -77,11 +80,13 @@ const ChatsIndex = React.lazy(() => import('./views/_Chats/ChatsIndex'))
 
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
+import AccessManagement from './views/ManageAccess/AccessManagement';
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
 
 
+  { path: '/user/access/manage', name: 'Manage Access', element: UserAccessManage, exact: true },
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
 
 
@@ -104,7 +109,12 @@ const routes = [
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
   { path: '/Chats', name: 'Chats', element: ChatsMeta, exact: true },
 
-  { path: '/reporting', name: 'Reports', element: ReportsMain, exact: true },
+  { path: '/reporting/accounts', name: 'Accounts Report', element: AccountReport },
+  { path: '/reporting/all', name: 'All Report', element: ReportsMain },
+  { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
+
+  { path: '/emails/generate', name: 'Email Generate', element: EmailGeneration },
+  { path: '/emails/all', name: 'Email Resend', element: EmailDashboard },
   { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },

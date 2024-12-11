@@ -24,13 +24,7 @@ const Page404 = () => {
                 The page you are looking for was not found.
               </p>
             </div>
-            <CInputGroup className="input-prepend">
-              <CInputGroupText>
-                <CIcon icon={cilMagnifyingGlass} />
-              </CInputGroupText>
-              <CFormInput type="text" placeholder="What are you looking for?" />
-              <CButton color="info">Search</CButton>
-            </CInputGroup>
+          
           </CCol>
         </CRow>
       </CContainer>
