@@ -20,6 +20,7 @@ export default function ProductWiseOrders() {
     const defaultMaterialTheme = createTheme();
 
     const [allOrdersProducts, setAllOrdersProducts] = useState([]);
+    const [statusProducts, setStatusProducts] = useState([]);
     const [allOrdersProductsStatic, setAllOrdersProductsStatic] = useState([]);
     const [customerData, setCustomerData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -38,6 +39,7 @@ export default function ProductWiseOrders() {
         await axios.get("fetch_all_orders_product_wise").then(res => {
             if (res.data.status === 200) {
                 setAllOrdersProducts(res.data.productData);
+                setStatusProducts(res.data.productData);
                 setAllOrdersProductsStatic(res.data.productData)
 
                 setCustomerData(res.data.customerData);
@@ -127,12 +129,14 @@ export default function ProductWiseOrders() {
                     <CIcon icon={cilInfo} className="text-info" size="xl" />
                 </CButton>
             ),
-            enableColumnFilter: false
+            enableColumnFilter: false,
+            enableSorting: false,
         },
         { accessorKey: 'order_id', header: 'Order ID', enableColumnFilter: false },
         {
             accessorKey: 'product_image',
             header: 'Product Image',
+            enableSorting: false,
             Cell: ({ row }) => {
 
 
@@ -308,12 +312,13 @@ export default function ProductWiseOrders() {
                 className="mt-4"
                 style={{ fontSize: 16 }}
                 onSelect={handleSelect}
+                
             >
-                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders</span>} />
-                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending</span>} />
-                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing</span>} />
-                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed</span>} />
-                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled</span>} />
+                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{statusProducts.length}</span></span>} />
+                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class=" text-white badge text-bg-secondary">{statusProducts.filter(filterData => filterData?.status == "CustomerOrdered").length}</span></span>} />
+                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{statusProducts.filter(filterData => filterData?.status == "Approved").length}</span></span>} />
+                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{statusProducts.filter(filterData => filterData?.status == "Completed").length}</span></span>} />
+                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{statusProducts.filter(filterData => filterData?.status == "Cancel").length}</span></span>} />
             </Tabs>
 
             {loading ? (

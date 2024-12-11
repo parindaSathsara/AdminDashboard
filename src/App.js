@@ -18,6 +18,8 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 //  axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 //
+
+
 axios.defaults.imageUrl = 'https://staging-gateway.aahaas.com/';
 // axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
 
@@ -28,6 +30,7 @@ axios.defaults.url = 'https://staging-gateway.aahaas.com/api'
 
 // axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
 // axios.defaults.data = 'http://172.16.26.67:8000'
+
 
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
 // axios.defaults.data = 'http://172.16.26.238:8000'

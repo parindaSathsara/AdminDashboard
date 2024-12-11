@@ -481,7 +481,7 @@ const Orders = () => {
           <CCardBody>
             <CRow>
               <CCol sm={5}>
-                <h4 id="traffic" className="card-title mb-0">
+                <h4 id="traffic" className="mb-0">
                   Customer Orders
                 </h4>
 

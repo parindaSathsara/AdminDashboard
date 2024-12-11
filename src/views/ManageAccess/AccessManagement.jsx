@@ -146,10 +146,12 @@ const AccessManagement = () => {
     "permissions": [
      "Email resend",
      "Download order receipt",
+     "Generate Emails",
     ],
     "values": [
       "email resend",
      "download order receipt",
+     "generate email",
      
     ]
   } 
@@ -197,7 +199,7 @@ const AccessManagement = () => {
         permissions: selectedPermissions
     }
     console.log("Data", data, selectedRole,selectedPermissions);
-    const result = await assignPermissionToEmp(data);
+    // const result = await assignPermissionToEmp(data);
     console.log("Result: ", result);
     if(result[0] !== 200){
       Swal.fire({
@@ -250,6 +252,7 @@ const AccessManagement = () => {
 
   const [allPositions, setAllPositions] = useState([]);
   const positionsOptions = allPositions;
+  console.log("Positions: ", positionsOptions);
   const getPositions = () => {
     try{
 
@@ -273,6 +276,8 @@ const AccessManagement = () => {
 
   const getPermissions = (role) => {
     try{
+      console.log("Role", role)
+      if(role === ''){}
       getPermissionByRole(role).then(response => {
         // console.log("Permissions: ", response);
         setSelectedPermissions(response[1]);

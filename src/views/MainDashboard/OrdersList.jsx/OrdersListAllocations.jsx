@@ -571,7 +571,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class="text-white  badge text-bg-secondary">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} itemID='tabPending'>
 
                 </Tab>
-                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} itemID='tabApproved'>
+                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Approved").length}</span></span>} itemID='tabApproved'>
 
                 </Tab>
                 <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Completed").length}</span></span>} itemID='tabCompleted'>
