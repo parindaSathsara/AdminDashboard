@@ -489,11 +489,11 @@ const EmailGeneration = () => {
                         
                         </CCol>
                         <CCol xs={12} sm={2} lg={2} className="">
-                        {/* {(["generate email"].some(permission => userData?.permissions?.includes(permission))) && */}
+                        {(["generate email"].some(permission => userData?.permissions?.includes(permission))) &&
                          <CButton color="dark" className='full-width' onClick={handleEmailResend}>
                                    Send Email 
                             </CButton>
-                       {/* } */}
+        }
                         </CCol>
 
 

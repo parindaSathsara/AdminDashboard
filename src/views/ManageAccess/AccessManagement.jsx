@@ -199,7 +199,7 @@ const AccessManagement = () => {
         permissions: selectedPermissions
     }
     console.log("Data", data, selectedRole,selectedPermissions);
-    // const result = await assignPermissionToEmp(data);
+    const result = await assignPermissionToEmp(data);
     console.log("Result: ", result);
     if(result[0] !== 200){
       Swal.fire({
