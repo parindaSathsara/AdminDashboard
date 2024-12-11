@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings } from '@coreui/icons'
+
+import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings,cilBarChart, cilCommentSquare } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
@@ -206,6 +207,18 @@ function getNavigationHook(permissions){
         }
       ],
     },
+   {
+    component:CNavItem,
+    name:'Customer Analytics',
+    to:'/analytics',
+    icon: <CIcon icon={cilBarChart}  customClassName="nav-icon"/>
+  },
+  {
+    component:CNavItem,
+    name:'Push Notifications',
+    to:'/pushNotifications',
+    icon: <CIcon icon={cilCommentSquare}  customClassName="nav-icon"/>
+  },
     {
       component: CNavItem,
       name: 'Access',
