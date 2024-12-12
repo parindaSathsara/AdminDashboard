@@ -59,6 +59,13 @@ const UserAnalytics = () => {
     }
   }
 
+  const handleClearUserSuccess = () => {
+    setSelectedUser(null)
+    setTotalTriggers('Not Available')
+    setTopClickedProducts(null)
+    setTopClickedCategories(null)
+  }
+
   return (
     <div>
       {/* Header */}
@@ -71,7 +78,7 @@ const UserAnalytics = () => {
               </CCol>
 
               <CCol>
-                <CustomerSearch setSelectedUser={setSelectedUser} setIsLoading={setIsLoading} />
+                <CustomerSearch setSelectedUser={setSelectedUser} setIsLoading={setIsLoading} handleClearUserSuccess={handleClearUserSuccess} />
               </CCol>
             </CRow>
           </CCardHeader>

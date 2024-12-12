@@ -6,7 +6,7 @@ import './UserAnalytics.css'
 import '../PushNotifications/PushNotifications.css';
 import { FaRegWindowClose } from 'react-icons/fa'
 
-function CustomerSearch({ setSelectedUser, setIsLoading }) {
+function CustomerSearch({ setSelectedUser, setIsLoading , handleClearUserSuccess}) {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([]);
   const [searchingCustomers, setSearchingCustomers] = useState(false);
@@ -68,7 +68,10 @@ function CustomerSearch({ setSelectedUser, setIsLoading }) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          {!searchingCustomers && <FaRegWindowClose id="clearIcon" onClick={() => setSearchTerm('')} />}
+          {!searchingCustomers && <FaRegWindowClose id="clearIcon" onClick={() => {
+            setSearchTerm('')
+            handleClearUserSuccess();
+            }} />}
           {searchingCustomers && (
             <CSpinner
             style={{
