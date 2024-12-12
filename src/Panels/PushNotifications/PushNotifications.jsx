@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { CButton, CFormSelect, CSpinner } from '@coreui/react';
 import SentNotifications from './SentNotifications';
-import './PushNotifications.css';
+// import './PushNotifications.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
 

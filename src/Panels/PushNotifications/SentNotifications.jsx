@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CCard, CCardBody, CRow, CCol, CModal, CModalBody, CModalHeader, CModalFooter, CButton } from '@coreui/react';
-import './SentNotifications.css'; // Import the custom CSS file
+// import './SentNotifications.css'; // Import the custom CSS file
 import CIcon from '@coreui/icons-react';
 import { cilX } from '@coreui/icons';
 

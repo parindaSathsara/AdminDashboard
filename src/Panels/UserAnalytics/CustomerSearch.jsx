@@ -2,8 +2,8 @@ import { CForm, CFormInput, CListGroup, CListGroupItem, CSpinner } from '@coreui
 import React, { useCallback } from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import './UserAnalytics.css'
-import '../PushNotifications/PushNotifications.css';
+// import './UserAnalytics.css'
+// import '../PushNotifications/PushNotifications.css';
 import { FaRegWindowClose } from 'react-icons/fa'
 
 function CustomerSearch({ setSelectedUser, setIsLoading }) {
