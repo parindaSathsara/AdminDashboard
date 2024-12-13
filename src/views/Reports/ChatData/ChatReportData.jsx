@@ -7,7 +7,7 @@ import { mkConfig, generateCsv, download } from 'export-to-csv';
 import moment from 'moment';
 
 const getDateAndtime = (value) => {
-    const totalSeconds = value.seconds + value.nanoseconds / 1e9;
+    const totalSeconds = value?.seconds + value?.nanoseconds / 1e9 || 0;
     const dateTime = new Date(totalSeconds * 1000);
     return moment(dateTime).format('MM-DD-YYYY');
 };

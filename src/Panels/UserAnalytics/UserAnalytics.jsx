@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CContainer, CRow, CSpinner } from '@coreui/react'
 import CustomerSearch from './CustomerSearch'
 import { useState } from 'react'
-// import './UserAnalytics.css'
+import './UserAnalytics.css'
 import axios from 'axios'
 import ProductChart from './ProductChart'
 import Category_Insights_Chart from './Category_Insights_Chart'
@@ -58,9 +58,13 @@ const UserAnalytics = () => {
       console.error('Error fetching Categories:', error)
     }
   }
+  const handleRemoveKeyword = () => {
+    setSelectedUser(null)
+
+  }
 
   return (
-    <div>
+    <div className='userAnalytics'>
       {/* Header */}
       <div>
         <CCard>
@@ -71,7 +75,7 @@ const UserAnalytics = () => {
               </CCol>
 
               <CCol>
-                <CustomerSearch setSelectedUser={setSelectedUser} setIsLoading={setIsLoading} />
+                <CustomerSearch setSelectedUser={setSelectedUser} setIsLoading={setIsLoading} handleRemoveKeyword={handleRemoveKeyword} />
               </CCol>
             </CRow>
           </CCardHeader>
@@ -105,6 +109,9 @@ const UserAnalytics = () => {
           <CContainer fluid>
             <br />
             <div className="mainCardContainer">
+              <CRow>
+
+              
               <CCol xs={12} lg={3}>
                 <CCard className="h-100 shadow-sm">
                   <CCardHeader className="text-white" style={{ backgroundColor: '#004e64' }}>
@@ -186,6 +193,10 @@ const UserAnalytics = () => {
                     </CCard>
                   </>
                 )}
+                </CCol>
+                </CRow>
+                <CRow>
+                <CCol xs={12} lg={12}>
                 {topClickedCategories && (
                   <>
                     <CCard>
@@ -197,6 +208,8 @@ const UserAnalytics = () => {
                   </>
                 )}
               </CCol>
+                </CRow>
+               
             </div>
           </CContainer>
         )}

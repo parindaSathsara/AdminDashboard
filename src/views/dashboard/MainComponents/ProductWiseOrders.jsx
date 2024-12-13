@@ -97,19 +97,20 @@ export default function ProductWiseOrders() {
 
     const handleMoreInfoModal = (row) => {
 
-        console.log(row, "Info iss valueeee")
+        console.log(row?.info?.lifestyle_booking_id, "ROWWWWWWWWWW", row?.info?.catid)
         setMoreOrderModalCategory(row?.info.catid);
-        if (row?.info.catid === 3) {
-            setMoreOrderDetails(row?.info.lifestyle_booking_id);
-            console.log(row?.info.lifestyle_booking_id);
-        } else if (row?.info.catid === 1) {
+        if (row?.info?.catid === '3') {
+
+            setMoreOrderDetails(row?.info?.lifestyle_booking_id);
+            console.log(row?.info?.lifestyle_booking_id,"LS Booking iD value isss");
+        } else if (row?.info?.catid === '1') {
             setMoreOrderDetails(row?.info.essential_pre_order_id);
-            console.log(row?.info.essential_pre_order_id);
-        } else if (row?.info.catid === 5) {
-            setMoreOrderDetails(row?.info.booking_id);
-            console.log(row?.info.booking_id);
+            console.log(row?.info?.essential_pre_order_id);
+        } else if (row?.info?.catid === '5') {
+            setMoreOrderDetails(row?.info?.booking_id);
+            console.log(row?.info?.booking_id);
         }
-        else if (row?.info?.catid == 4) {
+        else if (row?.info?.catid == '4') {
 
             console.log(row, "Info iss valueeee")
             setHotelDataSet(row?.info)
@@ -293,6 +294,8 @@ export default function ProductWiseOrders() {
         getAllProductsOrders("realtime");
     }
 
+
+    console.log(moreOrderDetails,"Props value data issss")
 
     return (
         <>

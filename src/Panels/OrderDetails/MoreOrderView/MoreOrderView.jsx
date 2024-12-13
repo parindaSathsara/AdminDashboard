@@ -13,7 +13,7 @@ import HotelsOrderView from './Categories/HotelsOrderView';
 export default function MoreOrderView(props) {
 
 
-    // console.log(props.dataSet)
+    console.log(props, "Props in More Order View")
     var category = props.category
 
     var orderData = []
@@ -46,6 +46,9 @@ export default function MoreOrderView(props) {
                 setProductDataSet(props.hotelsOrderView)
             }
             else {
+
+
+                console.log(props?.preID,"Props value data issss")
                 setLoading(true)
                 getMoreDataSet(category, props.preID).then(response => {
                     setProductDataSet(response)

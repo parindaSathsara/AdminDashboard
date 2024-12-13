@@ -34,6 +34,7 @@ import { io } from 'socket.io-client'
 import productSound from '../../assets/productSound.mp3'
 import LoaderPanel from 'src/Panels/LoaderPanel'
 
+
 function ProductList() {
 
     const [productList, setProductList] = useState([])
@@ -114,6 +115,7 @@ function ProductList() {
     const data = {
         columns: [
             {
+                title: 'Info',
                 field: 'view', align: 'left', editable: 'never', filtering: false, render: (e) => {
                     return (
                         <>
@@ -262,11 +264,11 @@ function ProductList() {
                         sorting: true, search: true,
                         searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
                         filtering: true, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 20,
-                        paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                        paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both",
                         exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                         showSelectAllCheckbox: false, showTextRowsSelected: false,
                         grouping: true, columnsButton: true,
-                        headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                        // headerStyle: { background: 'red', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                         rowStyle: rowStyle,
 
                         // fixedColumns: {

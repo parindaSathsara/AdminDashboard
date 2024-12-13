@@ -105,11 +105,11 @@ function getNavigationHook(permissions){
           name: 'Customers',
           to: '/customers',
         },
-        //  {
-        //    component: CNavItem,
-        //   name: 'Customer Analytics',
-        //    to: '/analytics',
-        //  }
+         {
+           component: CNavItem,
+          name: 'Customer Analytics',
+           to: '/analytics',
+         }
       ],
     },
   

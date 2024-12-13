@@ -2,11 +2,11 @@ import { CForm, CFormInput, CListGroup, CListGroupItem, CSpinner } from '@coreui
 import React, { useCallback } from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-// import './UserAnalytics.css'
+import './UserAnalytics.css'
 // import '../PushNotifications/PushNotifications.css';
 import { FaRegWindowClose } from 'react-icons/fa'
 
-function CustomerSearch({ setSelectedUser, setIsLoading }) {
+function CustomerSearch({ setSelectedUser, setIsLoading, handleRemoveKeyword }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([]);
   const [searchingCustomers, setSearchingCustomers] = useState(false);
@@ -56,9 +56,9 @@ function CustomerSearch({ setSelectedUser, setIsLoading }) {
   }
 
   return (
-    <div>
+    <div className='userAnalytics'> 
       <CForm>
-        <div  style={{  }}>
+        <div   style={{  }}>
           <div className='search-container'>
           <CFormInput
             type="text"
@@ -68,7 +68,9 @@ function CustomerSearch({ setSelectedUser, setIsLoading }) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          {!searchingCustomers && <FaRegWindowClose id="clearIcon" onClick={() => setSearchTerm('')} />}
+          {!searchingCustomers && <FaRegWindowClose id="clearIcon" onClick={() => {
+            handleRemoveKeyword()
+            setSearchTerm('')}} />}
           {searchingCustomers && (
             <CSpinner
             style={{

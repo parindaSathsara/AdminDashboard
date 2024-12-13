@@ -99,7 +99,7 @@ export default function LifestylesProductView(props) {
                             },
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                             paging: false,
 
                         }}
@@ -182,7 +182,7 @@ export default function LifestylesProductView(props) {
 
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                     paging: false
 
                 }}
@@ -259,7 +259,7 @@ export default function LifestylesProductView(props) {
                             paging: true,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                             grouping: true
                         }}
                     />
@@ -353,7 +353,7 @@ export default function LifestylesProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -417,7 +417,7 @@ export default function LifestylesProductView(props) {
                             paging: true,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
