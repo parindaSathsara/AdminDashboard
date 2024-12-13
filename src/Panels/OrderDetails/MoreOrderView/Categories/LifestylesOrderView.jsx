@@ -34,6 +34,8 @@ import MaterialTable from 'material-table';
 
 export default function LifestylesOrderView(props) {
 
+    console.log(props.productData, "Lifestyle Data")
+
     const basicDetails = props.productData?.lifestyleBasic
     const inventory = props.productData?.lifestyleInventory
     const rate = props.productData?.lifestyleRateData

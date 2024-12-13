@@ -78,6 +78,8 @@ const ReportGenerationPage = () => {
             }
         }
 
+        console.log(category, "Category value is")
+
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
             return;
@@ -98,6 +100,7 @@ const ReportGenerationPage = () => {
         if (reportType?.value === 'chats_report') {
             await getChatServices(dataSet).then((response) => {
                 setReportDataSet(response);
+                // console.log(response);
                 setLoading(false);
             });
         } else {

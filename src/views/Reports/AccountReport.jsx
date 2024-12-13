@@ -159,7 +159,7 @@ const ReportGenerationPage = () => {
                 console.log('payable');
                 if (category.length === 0) errors.category = 'Category is required';
                 if (!currencyType) errors.currencyType = 'Currency type is required';
-                if (!currency?.value) errors.currency = 'Currency type is required';
+                if (reportType?.value === 'payable' && currencyType?.value != 'all' && !currency?.value ) errors.currency = 'Currency type is required';
                 break;
     
             case 'receivable':
@@ -478,7 +478,9 @@ const ReportGenerationPage = () => {
                 </CCol>
               ) : null}
 
-              {reportType?.value != 'pnl' ? (
+              { reportType?.value === 'payable' && currencyType?.value === 'all'?(
+                null
+              ):(reportType?.value != 'pnl'? (
                 <CCol xs={12} sm={6} lg={2}>
                   <CFormLabel htmlFor="currency">Currency</CFormLabel>
                   <br />
@@ -501,7 +503,8 @@ const ReportGenerationPage = () => {
                     <div className="text-danger">{validationErrors.currency}</div>
                   )}
                 </CCol>
-              ) : null}
+              ) : null)
+              }
 
               <CCol xs={12} sm={6} lg={2}>
                 <CFormLabel htmlFor="typeDate">Date Type</CFormLabel>

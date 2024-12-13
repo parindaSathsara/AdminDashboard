@@ -104,7 +104,7 @@ export default function EssentialsProductView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
 
@@ -176,7 +176,7 @@ export default function EssentialsProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -237,7 +237,7 @@ export default function EssentialsProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -310,7 +310,7 @@ export default function EssentialsProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
