@@ -33,7 +33,7 @@ export default function TravellerExperience(props) {
 
     const productData = props.dataset;
 
-    console.log(productData, "Productttttttt")
+    // console.log(productData, "Productttttttt")
 
     const [driverAllocationStatus, setDriverAllocationStatus] = useState({
         status: false,
@@ -96,7 +96,7 @@ export default function TravellerExperience(props) {
 
                 await axios.post(`${axios.defaults.url}/sendConfirmationMail/${rowData?.data?.checkoutID}/${"CompletedDelivery"}`).then((res) => {
                     Swal.hideLoading()
-                    console.log('res',res.data)
+                    // console.log('res',res.data)
 
                     if (res.data.status === 200) {
                         Swal.fire({
@@ -108,21 +108,18 @@ export default function TravellerExperience(props) {
                     }
 
                 }).catch((err) => {
-
-                    Swal.fire({
-                        title: "Traveller Details Updated Successfully",
-                        text: "",
-                        icon: "success"
-                    });
-
-                    throw new Error(err);
+                    console.log(err, "Error")
+                   
+                    
                 })
 
                 props.reload()
             }
             else if (response.data.status == 400) {
+                console.log('res',response.data)
                 Swal.fire({
-                    text: "Please Fill All Details",
+                    title: "Failed to Proceed the Order",
+                    text: response.data.validation_errors.reconfirmation_date[0],
                     icon: "error"
                 });
             }

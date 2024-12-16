@@ -13,7 +13,7 @@ import HotelsOrderView from './Categories/HotelsOrderView';
 export default function MoreOrderView(props) {
 
 
-    console.log(props, "Props in More Order View")
+    // console.log(props, "Props in More Order View")
     var category = props.category
 
     var orderData = []
@@ -25,14 +25,9 @@ export default function MoreOrderView(props) {
 
     const [loading, setLoading] = useState(false)
 
-
+    // console.log("Modal is loading in background 123333",props.preID)
 
     useEffect(() => {
-
-
-        // console.log("Modal is loading in background")
-
-
         if (props?.notificationView) {
 
             setProductDataSet(props?.notificationViewData)
@@ -43,6 +38,7 @@ export default function MoreOrderView(props) {
 
 
             if (props?.category == 4) {
+                setProductDataSet([])
                 setProductDataSet(props.hotelsOrderView)
             }
             else {
@@ -65,7 +61,7 @@ export default function MoreOrderView(props) {
         }
 
 
-    }, [props.preID, props?.notificationViewData])
+    }, [props.preID, props?.notificationViewData,props.hotelsOrderView])
 
 
     useEffect(() => {
@@ -77,7 +73,7 @@ export default function MoreOrderView(props) {
     }, [])
 
 
-
+    
 
 
 

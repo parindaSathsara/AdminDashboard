@@ -309,10 +309,9 @@ const VendorList = () => {
 
     const handleReject = () => {
 
-        if (!rejectionReason) {
+        if (!rejectionReason || !rejectionReason.trim()) {
             setValidationIssues("Please fill Reason for Rejection")
-        }
-        else {
+        } else {
             setValidationIssues("")
             Swal.fire({
                 title: "Are you sure?",
@@ -327,7 +326,7 @@ const VendorList = () => {
 
                     handleRejectDocuments();
                     rejectPayments();
-
+                    setRejectionReason("")
 
                 }
             });
@@ -336,6 +335,7 @@ const VendorList = () => {
     }
 
     const rejectPayments = async () => {
+        
         const data = {
             vendor_id: vendorId,
             vendor_rejection_remarks: rejectionReason
@@ -350,6 +350,7 @@ const VendorList = () => {
                     text: "Vendor - " + vendorId + " Rejected",
                     icon: "success"
                 });
+                setShowModal(false)
                 getVendorDetails().then(res => {
                     setVendorDetails(res)
                 })
@@ -490,7 +491,7 @@ const VendorList = () => {
                                     exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                                     grouping: true, columnsButton: true,
-                                    headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                    headerStyle: { background: '	#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                     rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
 
                                     // fixedColumns: {

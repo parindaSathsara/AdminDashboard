@@ -60,22 +60,25 @@ const UserAnalytics = () => {
   }
   const handleRemoveKeyword = () => {
     setSelectedUser(null)
-
   }
 
   return (
-    <div className='userAnalytics'>
+    <div className="userAnalytics">
       {/* Header */}
       <div>
         <CCard>
           <CCardHeader>
             <CRow>
-              <CCol >
+              <CCol>
                 <h4 className="text-2xl font-bold"> Customer Analytics Dashboard</h4>
               </CCol>
 
               <CCol>
-                <CustomerSearch setSelectedUser={setSelectedUser} setIsLoading={setIsLoading} handleRemoveKeyword={handleRemoveKeyword} />
+                <CustomerSearch
+                  setSelectedUser={setSelectedUser}
+                  setIsLoading={setIsLoading}
+                  handleRemoveKeyword={handleRemoveKeyword}
+                />
               </CCol>
             </CRow>
           </CCardHeader>
@@ -110,106 +113,150 @@ const UserAnalytics = () => {
             <br />
             <div className="mainCardContainer">
               <CRow>
-
-              
-              <CCol xs={12} lg={3}>
-                <CCard className="h-100 shadow-sm">
-                  <CCardHeader className="text-white" style={{ backgroundColor: '#004e64' }}>
-                    <h5 className="mb-0">CUSTOMER DETAILS</h5>
-                  </CCardHeader>
-                  <CCardBody>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        ID:
-                      </span>
-                      <span className="detailValue">{selectedUser.id}</span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        Name:
-                      </span>
-                      <span className="detailValue">{selectedUser.customer_fname}</span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        Country:
-                      </span>
-                      <span className="detailValue">
-                        {selectedUser.customer_nationality || 'Not Specified'}
-                      </span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        Telephone:
-                      </span>
-                      <span className="detailValue">
-                        {selectedUser.contact_number || 'Not Specified'}
-                      </span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        E-mail:
-                      </span>
-                      <span className="detailValue">
-                        {selectedUser.customer_email || 'Not Specified'}
-                      </span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        Address:
-                      </span>
-                      <span className="detailValue">
-                        {selectedUser.customer_address || 'Not Specified'}
-                      </span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        Status:
-                      </span>
-                      <span className="detailValue">
-                        {selectedUser.customer_status || 'Unavailable'}
-                      </span>
-                    </div>
-                    <div className="card-item d-flex justify-content-between py-2">
-                      <span className="fw-bold" style={{ color: '#004e64' }}>
-                        Total Clicks:
-                      </span>
-                      <span className="detailValue">{totalTriggers}</span>
-                    </div>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-              <CCol xs={12} lg={9}>
-                {topClickedProducts && (
-                  <>
-                    <CCard style={{ marginBottom: '5px' }}>
-                      <CCardHeader style={{ backgroundColor: '#004e64', color: 'white' }}>
-                        Top Searches
-                      </CCardHeader>
-                      <CCardBody className="analyticaCardBody">
-                        <h3>Top 5 Products</h3>
-                        <ProductChart data={topClickedProducts} />
-                      </CCardBody>
-                    </CCard>
-                  </>
-                )}
+                <CCol xs={12} lg={3}>
+                  <CCard className="h-100 shadow-sm">
+                    <CCardHeader className="text-white" style={{ backgroundColor: '#004e64' }}>
+                      <h5 className="mb-0">CUSTOMER DETAILS</h5>
+                    </CCardHeader>
+                    <CCardBody>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span className="fw-bold" style={{ color: '#004e64' }}>
+                          ID:
+                        </span>
+                        <span className="detailValue">{selectedUser.id}</span>
+                      </div>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span className="fw-bold" style={{ color: '#004e64' }}>
+                          Name:
+                        </span>
+                        <span className="detailValue">{selectedUser.customer_fname}</span>
+                      </div>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span className="fw-bold" style={{ color: '#004e64' }}>
+                          Country:
+                        </span>
+                        <span className="detailValue">
+                          {selectedUser.customer_nationality || 'Not Specified'}
+                        </span>
+                      </div>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span
+                          className="fw-bold"
+                          style={{ color: '#004e64', flex: '1 1 auto', minWidth: '80px' }}
+                        >
+                          Telephone:
+                        </span>
+                        <span
+                          className="detailValue"
+                          style={{
+                            flex: '2 1 auto',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
+                            whiteSpace: 'normal',
+                            maxWidth: '70%',
+                            textAlign: 'left',
+                          }}
+                        >
+                          {selectedUser.contact_number || 'Not Specified'}
+                        </span>
+                      </div>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span
+                          className="fw-bold"
+                          style={{ color: '#004e64', flex: '1 1 auto', minWidth: '80px' }}
+                        >
+                          E-mail:
+                        </span>
+                        <span
+                          className="detailValue"
+                          style={{
+                            flex: '2 1 auto',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
+                            whiteSpace: 'normal',
+                            maxWidth: '70%',
+                            textAlign: 'left',
+                          }}
+                        >
+                          {selectedUser.customer_email || 'Not Specified'}
+                        </span>
+                      </div>
+                      <div
+                        className="card-item d-flex justify-content-between py-2"
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        <span
+                          className="fw-bold"
+                          style={{ color: '#004e64', flex: '1 1 auto', minWidth: '80px' }}
+                        >
+                          Address:
+                        </span>
+                        <span
+                          className="detailValue"
+                          style={{
+                            flex: '2 1 auto',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'break-word',
+                            whiteSpace: 'normal',
+                            maxWidth: '70%',
+                            textAlign: 'left',
+                          }}
+                        >
+                          {selectedUser.customer_address || 'Not Specified'}
+                        </span>
+                      </div>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span className="fw-bold" style={{ color: '#004e64' }}>
+                          Status:
+                        </span>
+                        <span className="detailValue">
+                          {selectedUser.customer_status || 'Unavailable'}
+                        </span>
+                      </div>
+                      <div className="card-item d-flex justify-content-between py-2">
+                        <span className="fw-bold" style={{ color: '#004e64' }}>
+                          Total Clicks:
+                        </span>
+                        <span className="detailValue">{totalTriggers}</span>
+                      </div>
+                    </CCardBody>
+                  </CCard>
                 </CCol>
-                </CRow>
-                <CRow>
+                <CCol xs={12} lg={9}>
+                  {topClickedProducts && (
+                    <>
+                      <CCard style={{ marginBottom: '5px' }}>
+                        <CCardHeader style={{ backgroundColor: '#004e64', color: 'white' }}>
+                          Top Searches
+                        </CCardHeader>
+                        <CCardBody className="analyticaCardBody">
+                          <h3>Top 5 Products</h3>
+                          <ProductChart data={topClickedProducts} />
+                        </CCardBody>
+                      </CCard>
+                    </>
+                  )}
+                </CCol>
+              </CRow>
+              <CRow>
                 <CCol xs={12} lg={12}>
-                {topClickedCategories && (
-                  <>
-                    <CCard>
-                      <CCardBody className="analyticaCardBody">
-                        <h3>Category Insights</h3>
-                        <Category_Insights_Chart apiData={topClickedCategories} />
-                      </CCardBody>
-                    </CCard>
-                  </>
-                )}
-              </CCol>
-                </CRow>
-               
+                  {topClickedCategories && (
+                    <>
+                      <CCard>
+                        <CCardBody className="analyticaCardBody">
+                          <h3>Category Insights</h3>
+                          <Category_Insights_Chart apiData={topClickedCategories} />
+                        </CCardBody>
+                      </CCard>
+                    </>
+                  )}
+                </CCol>
+              </CRow>
             </div>
           </CContainer>
         )}
