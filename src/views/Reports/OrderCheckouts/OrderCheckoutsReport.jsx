@@ -9,11 +9,17 @@ import './OrderCheckoutsReport.css'
 
 const OrderCheckoutsReport = ({ dataSet, category }) => {
     const [data, setData] = useState([]);
-
+    console.log(dataSet,category, "Data Set Value is")
     useEffect(() => {
         const dataVal = dataSet.map(item => ({
             PID: item?.PID,
             product_title: item?.product_title,
+            // category_id: item?.catid,
+            category_name: item?.catid === 1 ? "Essentials" :
+                item?.catid === 2 ? "Non Essentials" :
+                    item?.catid === 3 ? "Lifestyles" :
+                        item?.catid === 4 ? "Hotels" :
+                            item?.catid === 5 ? "Education" : "Flights",
             balance_amount: item?.balance_amount,
             paid_amount: item?.paid_amount,
             total_amount: item?.total_amount,
@@ -37,7 +43,7 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
 
     const columns = useMemo(() => [
         { accessorKey: 'PID', header: 'Product ID', size: 40 },
-        { accessorKey: 'category_id', header: 'Category', size: 40 },
+        { accessorKey: 'category_name', header: 'Category', size: 40 },
         { accessorKey: 'status', header: 'Status', size: 40 },
         { accessorKey: 'product_title', header: 'Product Title', size: 120 },
         { accessorKey: 'currency', header: 'Currency', size: 120 },
@@ -84,7 +90,7 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
         positionToolbarAlertBanner: 'bottom',
-        state: { columnVisibility: { category_id: category === 0 ? true : false } },
+        state: { },
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>
                 <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>

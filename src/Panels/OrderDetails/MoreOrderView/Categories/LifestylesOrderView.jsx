@@ -42,6 +42,9 @@ export default function LifestylesOrderView(props) {
     const packageData = props.productData?.lifestylePackageData
     const bookData = props.productData?.lifestyleBookingData
 
+    console.log( basicDetails?.["image"],"Image Data")
+
+
     const InventoryDetails = () => {
         const columns = [
             { title: 'Inventory ID', field: 'inventoryId' },
@@ -267,7 +270,12 @@ export default function LifestylesOrderView(props) {
                 <CCol xs="12" lg="3">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.["image"]}
+                            // src={basicDetails?.["image"]}
+                            src={
+                                basicDetails?.["image"]?.includes(',')
+                                    ? basicDetails["image"].split(',')[0].trim() // Use the first image from the list
+                                    : basicDetails?.["image"] // Use the single image
+                            }
                             fluid
                             style={{
                                 position: 'absolute',

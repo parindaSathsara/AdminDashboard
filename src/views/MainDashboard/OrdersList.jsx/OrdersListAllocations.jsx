@@ -41,7 +41,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
         if (val == false) {
             const response = await getAllProductsOrders();
-
+            console.log(response, "Response dataaaaaaaaaa")
             return response.map((result, index) => ({
                 id: index + 1,
                 product_id: result.PID,

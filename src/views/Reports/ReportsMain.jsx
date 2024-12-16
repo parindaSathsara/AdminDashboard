@@ -105,7 +105,7 @@ const ReportGenerationPage = () => {
             });
         } else {
             await getReports(dataSet).then(response => {
-                console.log(response);
+                // console.log(response);
                 setReportDataSet(response);
                 setLoading(false);
                 if (response?.length === 0) {
@@ -139,9 +139,9 @@ const ReportGenerationPage = () => {
             ])
         }else if(reportType?.value === 'driver_allocation'){ //handle driver allocation report selection
             setCategories([
-                { value: '0', label: 'Lifestyles' },
+                { value: '3', label: 'Lifestyles' },
             ]); 
-            setCategory({ value: '0', label: 'Lifestyles' });
+            setCategory({ value: '3', label: 'Lifestyles' });
             
         }else {
             setCategories([

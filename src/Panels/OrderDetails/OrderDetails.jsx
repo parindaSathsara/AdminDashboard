@@ -65,7 +65,7 @@ import axios from 'axios'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
 function OrderDetails(props) {
-//   console.log("Props Data isSSSSSSSSSS",props )
+  // console.log("Props Data isSSSSSSSSSS",props )
   const { userData } = useContext(UserLoginContext)
 
   // console.log(props.orderid)
@@ -231,20 +231,19 @@ function OrderDetails(props) {
   const [hotelDataSet, setHotelDataSet] = useState([])
 
   const handleMoreInfoModal = (e, category) => {
-    // console.log("More Info Modal", e)
+    // console.log("More Info Modal", e, category)
 
     setMoreOrderModalCategory(category)
     if (category == 3) {
       setMoreOrderDetails(e.lifestyle_booking_id)
       setMoreOrderModal(true)
     } else if (category == 1) {
-      setMoreOrderDetails(e.essential_pre_order_id)
+      setMoreOrderDetails(e?.essential_pre_order_id)
       setMoreOrderModal(true)
     } else if (category == 5) {
       setMoreOrderDetails(e.booking_id)
       setMoreOrderModal(true)
     } else if (category == 4) {
-      console.log(e, 'Console Hotel Data is')
       setHotelDataSet(e?.hotelData)
       setMoreOrderDetails(e.booking_id)
       setMoreOrderModal(true)
@@ -739,6 +738,14 @@ function OrderDetails(props) {
         )}
       </div>
 
+      <MoreOrderView
+            show={moreOrderModal}
+            onHide={() => setMoreOrderModal(false)}
+            preID={moreOrderDetails}
+            category={moreOrderModalCategory}
+            hotelsOrderView={hotelDataSet}
+          ></MoreOrderView>
+
       {props?.accounts ? null : (
         <>
           <CCol style={{ width: '100%' }}>
@@ -806,13 +813,7 @@ function OrderDetails(props) {
             />
           ) : null}
 
-          <MoreOrderView
-            show={moreOrderModal}
-            onHide={() => setMoreOrderModal(false)}
-            preID={moreOrderDetails}
-            category={moreOrderModalCategory}
-            hotelsOrderView={hotelDataSet}
-          ></MoreOrderView>
+       
 
           <DetailExpander
             show={detailExpander}

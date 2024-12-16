@@ -16,6 +16,7 @@ const DriverAllocationData = ({ dataSet }) => {
             const transformedData = dataSet.map(item => ({
                 order_id: item.OrderId,
                 product_name: item.productName,
+                booking_date: item.booking_date,
                 service_date: item.service_date,
                 service_time: item.pickupTime,
                 driver_name: item.driver_name,
@@ -34,6 +35,7 @@ const DriverAllocationData = ({ dataSet }) => {
     const columns = useMemo(() => [
         { accessorKey: 'order_id', header: 'Checkout ID', size: 40 },
         { accessorKey: 'product_name', header: 'Product', size: 200 },
+        { accessorKey: 'booking_date', header: 'Booking Date', size: 120 },
         { accessorKey: 'service_date', header: 'Service Date', size: 120 },
         { accessorKey: 'service_time', header: 'Time', size: 200 },
         { accessorKey: 'driver_name', header: 'Driver', size: 200 },
@@ -75,7 +77,7 @@ const DriverAllocationData = ({ dataSet }) => {
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
         positionToolbarAlertBanner: 'bottom',
-        state: { columnVisibility: { category_id: true } },
+        state: {},
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>
                 <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>

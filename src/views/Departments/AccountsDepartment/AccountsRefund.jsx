@@ -283,7 +283,7 @@ const AccountsRefunds = () => {
                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                 grouping: true, columnsButton: true,
-                headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                headerStyle: { background: '#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                 rowStyle: rowData => ({
                   fontSize: "15px",
                   width: "100%",

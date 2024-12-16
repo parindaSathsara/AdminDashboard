@@ -268,7 +268,7 @@ function ProductList() {
                         exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                         showSelectAllCheckbox: false, showTextRowsSelected: false,
                         grouping: true, columnsButton: true,
-                        // headerStyle: { background: 'red', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                        headerStyle: { background: '#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                         rowStyle: rowStyle,
 
                         // fixedColumns: {
