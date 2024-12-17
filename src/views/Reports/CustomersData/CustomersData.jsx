@@ -65,7 +65,7 @@ const CustomersData = ({ dataSet, category }) => {
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
         positionToolbarAlertBanner: 'bottom',
-        state: { columnVisibility: { category_id: category === 0 ? true : false } },
+        state: { },
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>
                 <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>

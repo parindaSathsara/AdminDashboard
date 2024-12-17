@@ -22,7 +22,7 @@ const getMoreDataSet = async (id, preID) => {
 
     var returnData = []
 
-
+    console.log(id,preID,"Pre ID value isss")
     if (id && preID) {
 
         await axios.post(`/fetch_more_order_data/${id}/${preID}`).then((res) => {

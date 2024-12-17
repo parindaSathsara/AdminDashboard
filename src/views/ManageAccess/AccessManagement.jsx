@@ -233,10 +233,12 @@ const AccessManagement = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const employeeOptions = availableEmployees.map((response) => ({
       value: response.id,
-      label: response.name,
+      email: response.email,
+      label: response.name + ' (' + response.email + ')',
       role: response?.roles[0],
       permissions: response?.permissions || [], 
   }));
+  console.log("Available Employees: ", employeeOptions);
 
   const monitorAvailability = () => {
       try{

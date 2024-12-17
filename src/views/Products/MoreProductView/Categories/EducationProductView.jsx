@@ -110,7 +110,7 @@ export default function EducationProductView(props) {
                     paging: true,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
@@ -192,7 +192,7 @@ export default function EducationProductView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );

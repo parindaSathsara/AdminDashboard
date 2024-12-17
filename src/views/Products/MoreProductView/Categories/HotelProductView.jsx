@@ -85,7 +85,7 @@ export default function HotelProductView(props) {
                             },
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                             paging: false,
 
                         }}
@@ -162,7 +162,7 @@ export default function HotelProductView(props) {
 
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                     paging: false
 
                 }}
@@ -264,7 +264,7 @@ export default function HotelProductView(props) {
                             paging: true,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                             grouping: true
                         }}
                     />
@@ -356,7 +356,7 @@ export default function HotelProductView(props) {
                             paging: true,
                             search: true,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -420,7 +420,7 @@ export default function HotelProductView(props) {
                             paging: true,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>

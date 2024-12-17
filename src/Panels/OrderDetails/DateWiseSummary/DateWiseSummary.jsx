@@ -11,7 +11,7 @@ import CurrencyConverter from 'src/Context/CurrencyConverter';
 
 
 export default function DateWiseSummary(props) {
-
+    console.log("DateWiseSummary", props)
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
         '--cui-popover-border-color': '#0F1A36',

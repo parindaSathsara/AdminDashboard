@@ -1,6 +1,13 @@
 const rowStyle = (data) => {
 
-    // console.log(data)
+
+    if(data?.deliveryStatus == "Pending"){
+        return ({
+            backgroundColor: '#f6cefc',
+            color: '#39153e',
+            fontSize: 16
+        })
+    }
 
     if (data?.data?.status == "Approved") {
         return ({

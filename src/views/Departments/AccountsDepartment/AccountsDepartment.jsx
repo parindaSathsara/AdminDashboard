@@ -372,7 +372,7 @@ const Dashboard = () => {
                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                 grouping: true, columnsButton: true,
-                headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                headerStyle: { background: '#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
 
                 // fixedColumns: {

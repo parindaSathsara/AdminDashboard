@@ -78,6 +78,8 @@ const ReportGenerationPage = () => {
             }
         }
 
+        console.log(category, "Category value is")
+
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
             return;
@@ -98,11 +100,12 @@ const ReportGenerationPage = () => {
         if (reportType?.value === 'chats_report') {
             await getChatServices(dataSet).then((response) => {
                 setReportDataSet(response);
+                // console.log(response);
                 setLoading(false);
             });
         } else {
             await getReports(dataSet).then(response => {
-                console.log(response);
+                // console.log(response);
                 setReportDataSet(response);
                 setLoading(false);
                 if (response?.length === 0) {
@@ -136,9 +139,9 @@ const ReportGenerationPage = () => {
             ])
         }else if(reportType?.value === 'driver_allocation'){ //handle driver allocation report selection
             setCategories([
-                { value: '0', label: 'Lifestyles' },
+                { value: '3', label: 'Lifestyles' },
             ]); 
-            setCategory({ value: '0', label: 'Lifestyles' });
+            setCategory({ value: '3', label: 'Lifestyles' });
             
         }else {
             setCategories([
