@@ -18,6 +18,9 @@ import Typography from './views/theme/typography/Typography'
 import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
+import Education from './views/Education/Education'
+import UserDocuments from './views/Assets/UserDocuments'
+
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -88,6 +91,8 @@ const routes = [
 
   { path: '/user/access/manage', name: 'Manage Access', element: UserAccessManage, exact: true },
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
+  // user documents routes
+  { path: '/assets/userdoc', name: 'User Documents', element: UserDocuments, exact: true },
 
 
   { path: '/offers_promo', name: 'Promotions & Offers', element: OffersPromoDashboard, exact: true },
@@ -116,6 +121,7 @@ const routes = [
   { path: '/emails/generate', name: 'Email Generate', element: EmailGeneration },
   { path: '/emails/all', name: 'Email Resend', element: EmailDashboard },
   { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
+  { path: '/education', name: 'Education Dashboard', element: Education, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
 

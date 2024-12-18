@@ -33,11 +33,20 @@ axios.defaults.url = 'https://staging-gateway.aahaas.com/api'
 // axios.defaults.data = 'http://172.16.26.67:8000'
 
 
-// axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
-// axios.defaults.data = 'http://172.16.26.238:8000'
+
+axios.defaults.baseURL = 'http://172.16.26.236:8000/api'
+axios.defaults.data = 'http://172.16.26.236:8000'
+
+// axios.defaults.baseURL = 'http://192.168.137.171:8000/api'
+// axios.defaults.data = 'http://192.168.137.171:8000'
+
+// axios.defaults.baseURL = 'http://192.168.137.171:8000/api'
+// axios.defaults.data = 'http://192.168.137.171:8000'
+
 
 // axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 // axios.defaults.data = 'https://admin-api.aahaas.com'
+
 
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');

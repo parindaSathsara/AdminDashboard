@@ -1,0 +1,152 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "checkout_id": 175,
+      "file_urls": "uploads/more_docs/8016985.jpg",
+      "customer_lat_lon": {
+        "latitude":6.0329,
+        "longitude":80.2168
+      },
+      "user_id": 197,
+      "created_at": "2024-11-07 07:26:35",
+      "updated_at": "2024-11-07 07:26:35"
+    },
+    {
+      "id": 2,
+      "checkout_id": 175,
+      "file_urls": "uploads/more_docs/6769346.jpg",
+      "customer_lat_lon": "",
+      "user_id": 197,
+      "created_at": "2024-11-07 07:26:45",
+      "updated_at": "2024-11-07 07:26:45"
+    },
+    {
+      "id": 3,
+      "checkout_id": 182,
+      "file_urls": "uploads/more_docs/4124709.jpg",
+      "customer_lat_lon": "",
+      "user_id": 211,
+      "created_at": "2024-11-07 11:50:14",
+      "updated_at": "2024-11-07 11:50:14"
+    },
+    {
+      "id": 4,
+      "checkout_id": 182,
+      "file_urls": "uploads/more_docs/5685004.jpg",
+      "customer_lat_lon": "",
+      "user_id": 211,
+      "created_at": "2024-11-07 11:50:30",
+      "updated_at": "2024-11-07 11:50:30"
+    },
+    {
+      "id": 5,
+      "checkout_id": 175,
+      "file_urls": "uploads/more_docs/2213047.PNG",
+      "customer_lat_lon": "",
+      "user_id": 197,
+      "created_at": "2024-11-07 12:04:24",
+      "updated_at": "2024-11-07 12:04:24"
+    },
+    {
+      "id": 6,
+      "checkout_id": 175,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 197,
+      "created_at": "2024-11-07 13:10:06",
+      "updated_at": "2024-11-07 13:10:06"
+    },
+    {
+      "id": 7,
+      "checkout_id": 175,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 197,
+      "created_at": "2024-11-07 13:10:23",
+      "updated_at": "2024-11-07 13:10:23"
+    },
+    {
+      "id": 8,
+      "checkout_id": 182,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 0,
+      "created_at": "2024-11-07 15:55:06",
+      "updated_at": "2024-11-07 15:55:06"
+    },
+    {
+      "id": 9,
+      "checkout_id": 182,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 211,
+      "created_at": "2024-11-07 15:57:05",
+      "updated_at": "2024-11-07 15:57:05"
+    },
+    {
+      "id": 10,
+      "checkout_id": 182,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 211,
+      "created_at": "2024-11-07 15:57:05",
+      "updated_at": "2024-11-07 15:57:05"
+    },
+    {
+      "id": 11,
+      "checkout_id": 183,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 585,
+      "created_at": "2024-11-07 16:28:07",
+      "updated_at": "2024-11-07 16:28:07"
+    },
+    {
+      "id": 12,
+      "checkout_id": 168,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 47,
+      "created_at": "2024-11-08 04:41:09",
+      "updated_at": "2024-11-08 04:41:09"
+    },
+    {
+      "id": 13,
+      "checkout_id": 183,
+      "file_urls": "",
+      "customer_lat_lon": "",
+      "user_id": 585,
+      "created_at": "2024-11-08 10:08:50",
+      "updated_at": "2024-11-08 10:08:50"
+    },
+    {
+      "id": 14,
+      "checkout_id": 183,
+      "file_urls": "uploads/more_docs/8159390.png",
+      "customer_lat_lon": "",
+      "user_id": 585,
+      "created_at": "2024-11-08 10:09:41",
+      "updated_at": "2024-11-08 10:09:41"
+    },
+    {
+      "id": 15,
+      "checkout_id": 186,
+      "file_urls": "uploads/more_docs/2376962.jpg",
+      "customer_lat_lon": "",
+      "user_id": 47,
+      "created_at": "2024-11-12 12:14:18",
+      "updated_at": "2024-11-12 12:14:18"
+    },
+    {
+      "id": 16,
+      "checkout_id": 163,
+      "file_urls": "uploads/more_docs/9377343.jpg",
+      "customer_lat_lon": "",
+      "user_id": 15,
+      "created_at": "2024-11-13 11:58:58",
+      "updated_at": "2024-11-13 11:58:58"
+    }
+  ]
+}
