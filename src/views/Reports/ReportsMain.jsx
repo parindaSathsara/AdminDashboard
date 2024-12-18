@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CCard, CCardBody, CCardHeader, CCol, CContainer, CFormLabel, CButton, CRow, CFormCheck } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
@@ -19,10 +19,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './ReportsMain.css';
 import getChatServices from './services/getChatServices';
 import ChatReportData from './ChatData/ChatReportData';
+
 import DriverAllocationData from './CategoryData/DriverAllocationData';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
+import HotelsCategoryData from './CategoryData/HotelsCategoryData';
+
 
 const ReportGenerationPage = () => {
-
+    const { userData } = useContext(UserLoginContext);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [category, setCategory] = useState({ value: 0 });
@@ -66,6 +70,16 @@ const ReportGenerationPage = () => {
         if (!reportType) errors.reportType = 'Report type is required';
         if (!category || category.value === '' || category.value === 0) errors.category = 'Category is required';
 
+        if (startDate && endDate) {
+            const start = moment(startDate);
+            const end = moment(endDate);
+            if (start.isAfter(end)) {
+                errors.startDate = 'Start date cannot be later than end date';
+            }
+        }
+
+        console.log(category, "Category value is")
+
         if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
             return;
@@ -79,15 +93,19 @@ const ReportGenerationPage = () => {
             dateType: dateType
         };
 
+
+        console.log(dataSet, "Data set value is data")
+
         setLoading(true);
         if (reportType?.value === 'chats_report') {
             await getChatServices(dataSet).then((response) => {
                 setReportDataSet(response);
+                // console.log(response);
                 setLoading(false);
             });
         } else {
             await getReports(dataSet).then(response => {
-                console.log(response);
+                // console.log(response);
                 setReportDataSet(response);
                 setLoading(false);
                 if (response?.length === 0) {
@@ -121,9 +139,9 @@ const ReportGenerationPage = () => {
             ])
         }else if(reportType?.value === 'driver_allocation'){ //handle driver allocation report selection
             setCategories([
-                { value: '0', label: 'Lifestyles' },
+                { value: '3', label: 'Lifestyles' },
             ]); 
-            setCategory({ value: '0', label: 'Lifestyles' });
+            setCategory({ value: '3', label: 'Lifestyles' });
             
         }else {
             setCategories([
@@ -145,7 +163,7 @@ const ReportGenerationPage = () => {
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Report Generation</strong>
+                        <strong>All Report Generation</strong>
                     </CCardHeader>
                     <CCardBody>
                         <CRow className="align-items-end">
@@ -178,8 +196,11 @@ const ReportGenerationPage = () => {
                                 {validationErrors.category && <div className="text-danger">{validationErrors.category}</div>}
                             </CCol>
                             <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                            {(["generate all report", "all accounts access"].some(permission => userData?.permissions?.includes(permission))) &&
                                 <CButton color="dark" className="full-width" onClick={handleGenerateReport}>Generate Report</CButton>
-                            </CCol>
+                             }
+                                </CCol>
+
                         </CRow>
 
                         {
@@ -213,6 +234,7 @@ const ReportGenerationPage = () => {
                                     <EssentialsCategoryData data={reportDataSet} category={category.value} />
                                     : category.value == 5 ?
                                         <EducationCategoryData data={reportDataSet} />
+                                        : category.value == 4 ? <HotelsCategoryData data={reportDataSet} />
                                         : null
                             : reportType.value === "customer_report" ?
                                 <CustomersData dataSet={reportDataSet} category={category.value} />

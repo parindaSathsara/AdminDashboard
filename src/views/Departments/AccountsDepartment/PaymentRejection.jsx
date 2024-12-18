@@ -1,4 +1,5 @@
 import { CButton, CCol, CForm, CFormCheck, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CFormTextarea } from "@coreui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -9,6 +10,7 @@ function PaymentRejection(props) {
         remarks: '',
         paidAmount: '',
     });
+
     const [balanceAmount, setBalanceAmount] = useState({
         paidAmount: 0.00,
         balanceAmountToPay: 0.00
@@ -59,12 +61,25 @@ function PaymentRejection(props) {
                 confirmButtonText: "Reject Payment"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Add your API call or action here
-                    Swal.fire({
+                    axios.post(`/order/${props.orderid}/reject-payment`, formData)
+                      .then(res => {
+                        Swal.fire({
+                          title: "Payment Rejected!",
+                          text: res.data.message,
+                          icon: "success"
+                        });
+
+                        props.handleRejectionSuccess();
+                      })
+                      .catch(error => {
+                      Swal.fire({
                         title: "Payment Rejected!",
-                        text: "Order - " + props.orderid + " Payment Rejected",
-                        icon: "success"
+                        text: error.response.data.message,
+                        icon: "error"
                     });
+                    
+                      });
+                    
                 }
             });
         }
@@ -101,9 +116,6 @@ function PaymentRejection(props) {
                     <option value="The payment method used is not approved or accepted by the organization">The payment method used is not approved or accepted by the organization</option>
                     <option value="The payment or receipt violates the organization's financial policies">The payment or receipt violates the organization's financial policies</option>
                 </CFormSelect>
-                {/* <CFormFeedback type="invalid">
-                    Please select a reason for payment rejection.
-                </CFormFeedback> */}
             </CCol>
 
             <CCol md={12}>
@@ -111,10 +123,15 @@ function PaymentRejection(props) {
                     type="text"
                     name="remarks"
                     id="validationCustom01"
+                    feedbackInvalid="Please add the remarks"
                     label="Remarks"
                     value={formData.remarks}
                     onChange={handleFormData}
-                />
+                    required
+                />  {/* <CFormFeedback type="invalid">
+                    Please provide remarks.
+                </CFormFeedback>
+               */}
             </CCol>
 
             {formData.reasonRejection === "Indicates that only a portion of the total amount has been paid" &&

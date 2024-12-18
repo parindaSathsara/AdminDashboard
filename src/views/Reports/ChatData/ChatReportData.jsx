@@ -7,7 +7,7 @@ import { mkConfig, generateCsv, download } from 'export-to-csv';
 import moment from 'moment';
 
 const getDateAndtime = (value) => {
-    const totalSeconds = value.seconds + value.nanoseconds / 1e9;
+    const totalSeconds = value?.seconds + value?.nanoseconds / 1e9 || 0;
     const dateTime = new Date(totalSeconds * 1000);
     return moment(dateTime).format('MM-DD-YYYY');
 };
@@ -71,7 +71,7 @@ const ChatReportData = ({ dataSet, category }) => {
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
         positionToolbarAlertBanner: 'bottom',
-        state: { columnVisibility: { category_id: category === 0 ? true : false } },
+        state: { },
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>
                 <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>
@@ -107,7 +107,7 @@ const ChatReportData = ({ dataSet, category }) => {
             <CCol xs={12}>
                 <CCard className="mb-4">
                     <CCardHeader>
-                        <strong>Customer Report</strong>
+                        <strong>Chats Report</strong>
                     </CCardHeader>
                     <CCardBody className='orderCheckoutDiv'>
                         <MaterialReactTable table={table} />

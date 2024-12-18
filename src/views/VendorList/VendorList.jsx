@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import {
     CAvatar,
@@ -57,8 +57,10 @@ import VendorDetails from './VendorDetails'
 import axios from 'axios'
 import LoaderPanel from 'src/Panels/LoaderPanel'
 // import CustomerFeedbacks from './CustomerFeedbacks'
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 const VendorList = () => {
+    const { userData } = useContext(UserLoginContext);
     const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
     const [orderid, setOrderId] = useState('');
@@ -165,10 +167,14 @@ const VendorList = () => {
 
                 actions:
                     value.refund_type == "" || value.refund_type == null ?
-                        <div className='actions_box'>
+                           
+                    
+                       <div className='actions_box'>
                             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
+                            {(["view vendor document","approve vendor document","reject vendor document"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton onClick={(e) => { handleModalOpen(value.id, value) }} color="dark">Review Documents</CButton>
-                        </div>
+                            }
+                            </div>
                         :
                         null
 
@@ -299,27 +305,37 @@ const VendorList = () => {
     }
 
 
+    const [validationIssue, setValidationIssues] = useState("")
+
     const handleReject = () => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You want to reject this document",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#979797",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Reject Document"
-        }).then((result) => {
-            if (result.isConfirmed) {
 
-                handleRejectDocuments();
-                rejectPayments();
+        if (!rejectionReason || !rejectionReason.trim()) {
+            setValidationIssues("Please fill Reason for Rejection")
+        } else {
+            setValidationIssues("")
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to reject this document",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#979797",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Reject Document"
+            }).then((result) => {
+                if (result.isConfirmed) {
 
+                    handleRejectDocuments();
+                    rejectPayments();
+                    setRejectionReason("")
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     const rejectPayments = async () => {
+        
         const data = {
             vendor_id: vendorId,
             vendor_rejection_remarks: rejectionReason
@@ -334,6 +350,7 @@ const VendorList = () => {
                     text: "Vendor - " + vendorId + " Rejected",
                     icon: "success"
                 });
+                setShowModal(false)
                 getVendorDetails().then(res => {
                     setVendorDetails(res)
                 })
@@ -381,12 +398,15 @@ const VendorList = () => {
 
                         {vendorData?.status == 1 ?
                             null :
+                            
+                                (["approve vendor document"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="success" onClick={handleAcceptVendor}>Accept Document</CButton>
                         }
 
                         {vendorData?.status == 2 ?
                             null
                             :
+                            (["reject vendor document"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="danger" style={{ marginLeft: 10 }} onClick={handleRejectDocuments}>Reject Document</CButton>
                         }
 
@@ -416,6 +436,15 @@ const VendorList = () => {
                         <CCol md={12}>
                             <CFormLabel>Reason For Rejection</CFormLabel>
                             <CFormTextarea id="exampleFormControlTextarea1" onChange={(e) => setRejectionReason(e.target.value)} value={rejectionReason} rows={3}></CFormTextarea>
+
+                            {validationIssue ?
+
+                                <p style={{ color: 'red' }}>{validationIssue}</p>
+                                :
+                                null
+
+                            }
+
                         </CCol>
 
                     </Modal.Body>
@@ -432,7 +461,7 @@ const VendorList = () => {
                     <CCardBody>
                         <CRow>
                             <CCol sm={5}>
-                                <h4 id="traffic" className="card-title mb-0">
+                                <h4 id="traffic" className="mb-0">
                                     Vendors
                                 </h4>
                             </CCol>
@@ -462,7 +491,7 @@ const VendorList = () => {
                                     exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                                     grouping: true, columnsButton: true,
-                                    headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                    headerStyle: { background: '	#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                     rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
 
                                     // fixedColumns: {

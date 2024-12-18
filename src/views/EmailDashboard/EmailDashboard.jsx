@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
     CCard,
     CCardBody,
@@ -19,9 +19,11 @@ import CIcon from '@coreui/icons-react';
 import { cilCloudDownload, cilReload } from '@coreui/icons';
 import { confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, downloadSupplierVoucherOneByOne, getOrderIDs, getOrderIndexIds, resendAllSupplierVouchers } from './services/emailServices';
 import RichTextEditor from './RichTextEditor';
-
+import Swal from 'sweetalert2';
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 const EmailDashboard = () => {
+    const { userData } = useContext(UserLoginContext);
 
     const [searchData, setSearchData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -109,40 +111,65 @@ const EmailDashboard = () => {
     }, [])
 
 
-
+    //
 
 
 
     const handleEmailResend = () => {
 
-        if (emailType?.value == "customer_invoice") {
-            confirmResendEmail(selectedOrderID?.value)
+        const missingFields = [];
+        if (!emailType?.value) missingFields.push("Email Type");
+        if (!selectedOrderID?.value) missingFields.push("Order ID");
+
+        if (missingFields.length > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: `Please select the following fields: ${missingFields.join(', ')}`,
+            });
+            return;
+
         }
-        else {
 
-            resendAllSupplierVouchers(selectedOrderID?.value)
+
+
+        if (emailType.value === "customer_invoice") {
+            confirmResendEmail(selectedOrderID.value);
+        } else {
+            resendAllSupplierVouchers(selectedOrderID?.value, selectedOrderIndexId?.value)
         }
-
-
-    }
-
+    };
 
     const handleDownloadReceipt = () => {
-        if (emailType?.value == "customer_invoice") {
-            downloadOrderReceipt(selectedOrderID?.value)
+
+        const missingFields = [];
+        if (!emailType?.value) missingFields.push("Email Type");
+        if (!selectedOrderID?.value) missingFields.push("Order ID");
+
+        if (emailType.value !== "customer_invoice" && !selectedOrderIndexId?.value) {
+            missingFields.push("Order Index ID");
         }
-        else {
 
-            if (selectedOrderIndexId?.value == "All") {
-                downloadAllSupplierVouchers(selectedOrderID?.value, orderIndexIdVals)
-            }
-            else {
-                downloadSupplierVoucherOneByOne(selectedOrderIndexId?.value, selectedOrderID?.value)
-            }
-
-
+        if (missingFields.length > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: `Please select the following fields: ${missingFields.join(', ')}`,
+            });
+            return;
         }
-    }
+
+        if (emailType.value === "customer_invoice") {
+            downloadOrderReceipt(selectedOrderID.value);
+        } else {
+            if (selectedOrderIndexId.value === "All") {
+                downloadAllSupplierVouchers(selectedOrderID.value, orderIndexIdVals);
+            } else {
+                downloadSupplierVoucherOneByOne(selectedOrderIndexId.value, selectedOrderID.value);
+            }
+        }
+    };
+
 
 
     const [checkoutIndexLoading, setCheckoutIndexLoading] = useState(false)
@@ -206,17 +233,24 @@ const EmailDashboard = () => {
 
 
                             <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                               {
+                                userData?.permissions?.includes("email resend") &&
                                 <CButton color="dark" className='full-width' onClick={handleEmailResend}>
                                     Resend
                                     <CIcon icon={cilReload} style={{ marginLeft: 10 }} />
                                 </CButton>
+                               }
+
                             </CCol>
 
                             <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                            {
+                                userData?.permissions?.includes("download order receipt") &&
                                 <CButton color="dark" className='full-width' onClick={handleDownloadReceipt}>
                                     Download
                                     <CIcon icon={cilCloudDownload} style={{ marginLeft: 10 }} />
                                 </CButton>
+                            }
                             </CCol>
 
                         </CRow>

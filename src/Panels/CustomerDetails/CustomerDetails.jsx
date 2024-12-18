@@ -6,6 +6,9 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 function CustomerDetails(props) {
+
+    console.log(props, "props");
+
     const [toggle, setToggle] = useState(true);
     const [visible, setVisible] = useState(false);
     const [contactDetails, setContactDetail] = useState({
@@ -27,7 +30,10 @@ function CustomerDetails(props) {
 
             try {
                 const result = await axios.post("sendMesageToCustomer", dataSet);
-                if (result?.data?.status === 200) {
+                // console.log(dataSet, "dataSet");
+                // console.log(result, "result");
+                // console.log(result?.status, "result");
+                if (result?.status === 200) {
                     Swal.fire({
                         title: "Message Sent to customer",
                         text: "Message Sent",
@@ -115,8 +121,9 @@ function CustomerDetails(props) {
                         options={[
                             { label: 'Select Option', value: '' },
                             { label: "Push Notification", value: "push" },
-                            { label: "Send Email", value: "email", disabled: !props.dataset?.customer_email },
-                            { label: "Send Message", value: "message", disabled: !props.dataset?.contact_number }
+                            
+                            { label: "Send Email", value: "email", disabled: props.dataset?.customer_email === "-"? true : false },
+                            // { label: "Send Message", value: "message", disabled: props.dataset?.contact_number === "-"? true : false }
                         ]}
                         name='reach_type'
                         label="How to Reach Customer"

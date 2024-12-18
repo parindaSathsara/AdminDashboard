@@ -20,6 +20,7 @@ export default function ProductWiseOrders() {
     const defaultMaterialTheme = createTheme();
 
     const [allOrdersProducts, setAllOrdersProducts] = useState([]);
+    const [statusProducts, setStatusProducts] = useState([]);
     const [allOrdersProductsStatic, setAllOrdersProductsStatic] = useState([]);
     const [customerData, setCustomerData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -38,6 +39,7 @@ export default function ProductWiseOrders() {
         await axios.get("fetch_all_orders_product_wise").then(res => {
             if (res.data.status === 200) {
                 setAllOrdersProducts(res.data.productData);
+                setStatusProducts(res.data.productData);
                 setAllOrdersProductsStatic(res.data.productData)
 
                 setCustomerData(res.data.customerData);
@@ -91,19 +93,29 @@ export default function ProductWiseOrders() {
         setLoading(false);
     }, [currentFilters, allOrdersProductsStatic]);
 
+    const [hotelDataSet, setHotelDataSet] = useState([])
+
     const handleMoreInfoModal = (row) => {
 
+        console.log(row?.info?.lifestyle_booking_id, "ROWWWWWWWWWW", row?.info?.catid)
         setMoreOrderModalCategory(row?.info.catid);
-        if (row?.info.catid === 3) {
-            setMoreOrderDetails(row?.info.lifestyle_booking_id);
-            console.log(row?.info.lifestyle_booking_id);
-        } else if (row?.info.catid === 1) {
+        if (row?.info?.catid === '3') {
+
+            setMoreOrderDetails(row?.info?.lifestyle_booking_id);
+            console.log(row?.info?.lifestyle_booking_id,"LS Booking iD value isss");
+        } else if (row?.info?.catid === '1') {
             setMoreOrderDetails(row?.info.essential_pre_order_id);
-            console.log(row?.info.essential_pre_order_id);
-        } else if (row?.info.catid === 5) {
-            setMoreOrderDetails(row?.info.booking_id);
-            console.log(row?.info.booking_id);
+            console.log(row?.info?.essential_pre_order_id);
+        } else if (row?.info?.catid === '5') {
+            setMoreOrderDetails(row?.info?.booking_id);
+            console.log(row?.info?.booking_id);
         }
+        else if (row?.info?.catid == '4') {
+
+            console.log(row, "Info iss valueeee")
+            setHotelDataSet(row?.info)
+        }
+
         console.log(row);
         setMoreOrderModal(true);
         setMainDataSet(row);
@@ -118,20 +130,28 @@ export default function ProductWiseOrders() {
                     <CIcon icon={cilInfo} className="text-info" size="xl" />
                 </CButton>
             ),
-            enableColumnFilter: false
+            enableColumnFilter: false,
+            enableSorting: false,
         },
         { accessorKey: 'order_id', header: 'Order ID', enableColumnFilter: false },
         {
             accessorKey: 'product_image',
             header: 'Product Image',
-            Cell: ({ row }) => (
-                <div style={{ width: "100px", height: "100px", borderRadius: 20 }}>
-                    <CCardImage
-                        src={row.original.product_image?.split(",")[0]?.includes("http") ? row.original.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + row.original.product_image?.split(",")[0]}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 20 }}
-                    />
-                </div>
-            ),
+            enableSorting: false,
+            Cell: ({ row }) => {
+
+
+
+                return (
+                    <div style={{ width: "100px", height: "100px", borderRadius: 20 }}>
+                        <CCardImage
+                            src={row.original.product_image?.split(",")[0]?.includes("http") ? row.original.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + row.original.product_image?.split(",")[0]}
+                            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 20 }}
+                        />
+                    </div>
+                )
+
+            },
             enableColumnFilter: false
         },
         { accessorKey: 'product_id', header: 'Product ID', enableColumnFilter: false },
@@ -275,6 +295,8 @@ export default function ProductWiseOrders() {
     }
 
 
+    console.log(moreOrderDetails,"Props value data issss")
+
     return (
         <>
             <MoreOrderView
@@ -284,6 +306,7 @@ export default function ProductWiseOrders() {
                 category={moreOrderModalCategory}
                 productViewData
                 productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={() => handleUpdateState()} />}
+                hotelsOrderView={hotelDataSet}
             />
 
             <Tabs
@@ -292,12 +315,13 @@ export default function ProductWiseOrders() {
                 className="mt-4"
                 style={{ fontSize: 16 }}
                 onSelect={handleSelect}
+                
             >
-                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders</span>} />
-                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending</span>} />
-                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing</span>} />
-                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed</span>} />
-                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled</span>} />
+                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{statusProducts.length}</span></span>} />
+                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class=" text-white badge text-bg-secondary">{statusProducts.filter(filterData => filterData?.status == "CustomerOrdered").length}</span></span>} />
+                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{statusProducts.filter(filterData => filterData?.status == "Approved").length}</span></span>} />
+                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{statusProducts.filter(filterData => filterData?.status == "Completed").length}</span></span>} />
+                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{statusProducts.filter(filterData => filterData?.status == "Cancel").length}</span></span>} />
             </Tabs>
 
             {loading ? (

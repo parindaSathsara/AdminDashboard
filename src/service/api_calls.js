@@ -358,7 +358,7 @@ async function updateDeliveryStatus(id, value, type) {
 
     // console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
 
-    axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
+    axios.post(`${axios.defaults.url}/sendConfirmationMail/${id}/${value}`).then((res) => {
 
       // console.log(res)
 

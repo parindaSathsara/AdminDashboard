@@ -34,6 +34,7 @@ export default function CurrencyController() {
                 onChange={(e) => handleOnCurrencyClick(e)}
                 defaultValue={{ value: currencyData?.base, label: currencyData?.base }}
                 styles={{ width: 200 }}
+                value={{ value: currencyData?.base, label: currencyData?.base }}
             />
 
         </div>

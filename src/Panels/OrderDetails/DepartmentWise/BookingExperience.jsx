@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import MaterialTable from 'material-table';
 import { CBadge, CButton, CCard, CCardBody, CCardSubtitle, CCardText, CCardTitle, CCloseButton, CCol, CContainer, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
@@ -13,10 +13,10 @@ import { Modal } from 'react-bootstrap';
 import CancellationModal from '../CancelationModal/CancellationModal';
 import StarRating from '../Components/StarRating';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
-
+import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 export default function BookingExperience(props) {
-
+    const { userData } = useContext(UserLoginContext);
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
         '--cui-popover-border-color': '#0F1A36',
@@ -27,6 +27,7 @@ export default function BookingExperience(props) {
     }
 
     const productData = props.dataset
+    console.log(productData, "Product Data is")
 
 
 
@@ -353,21 +354,21 @@ export default function BookingExperience(props) {
         { title: 'Name', field: 'name' },
         {
             title: 'QTY', field: 'qty', render: rowData => {
-                rowData?.category != "flights" ?
-                    <CPopover
-                        content={<QuantityContainer data={rowData.qty} />}
-                        placement="top"
-                        title="Quantity Data"
-                        style={customPopoverStyle}
-                        trigger="focus"
-                    >
-                        <CButton color="success" style={{ fontSize: 14, color: 'white' }}>View</CButton>
-                    </CPopover>
-
-                    :
-                    null
+                return rowData?.category !== "flights" ? (
+                    // <CPopover
+                    //     content={<QuantityContainer data={rowData?.data} />}
+                    //     placement="right"
+                    //     title="Quantity Data"
+                    //     style={customPopoverStyle}
+                    //     trigger="focus"
+                    // >
+                    //     <CButton color="info" style={{ fontSize: 14, color: 'white' }}>View</CButton>
+                    // </CPopover>
+                    <span>{rowData?.data?.Quantity !== null ? rowData?.data?.Quantity : 'Not mention' }</span>
+                ) : (
+                    <span>{rowData?.qty}</span>
+                );
             }
-
 
         },
         { title: 'Date', field: 'date' },
@@ -496,7 +497,9 @@ export default function BookingExperience(props) {
                         return (
                             <>
 
-                                {e?.data?.checkoutID == clickedStatus ?
+                          
+
+                                {e?.data?.checkoutID == clickedStatus && status == "CustomerOrdered" ?
                                     <select
                                         className='form-select required'
                                         name='delivery_status'
@@ -514,11 +517,14 @@ export default function BookingExperience(props) {
                                     <>
 
                                         {status == "Approved" ?
-                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>
+                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>:
+                                            status == "Completed"?
+<CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
 
                                             :
+                                            (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&
                                             <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
-
+                                            
                                         }
 
 
@@ -542,7 +548,7 @@ export default function BookingExperience(props) {
     const data = productData?.map(value => ({
         pid: value?.['PID'],
         name: value?.['PName'],
-        qty: value,
+        qty: value?.['Quantity'],
         date: value?.['DDate'],
         address: value?.['DAddress'],
         total_amount: CurrencyConverter(value.currency, value?.['total_amount']),

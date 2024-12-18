@@ -123,7 +123,7 @@ const LifestylesCategoryData = ({ data }) => {
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
         positionToolbarAlertBanner: 'bottom',
-        state: { columnVisibility: { category_id: true } }, // Assuming default visibility
+        state: {  }, // Assuming default visibility
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>
                 <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>
