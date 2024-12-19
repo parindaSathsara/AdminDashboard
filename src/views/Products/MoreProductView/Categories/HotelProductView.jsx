@@ -35,6 +35,7 @@ import MaterialTable from 'material-table';
 export default function HotelProductView(props) {
 
     const basicDetails = props.productData?.productBasicData
+    console.log(basicDetails, "Basic Detailss")
     const inventory = props.productData?.productInventory
     const rate = props.productData?.productRates
     const packageData = props.productData?.productPackages
@@ -431,7 +432,11 @@ export default function HotelProductView(props) {
 
 
 
-
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -465,9 +470,9 @@ export default function HotelProductView(props) {
 
                 <CCol className='py-4' xs="12" lg="8">
 
-                    <h4 className='mb-2'>{basicDetails?.[0]?.['lifestyle_name']}</h4>
+                    <h4 className='mb-2'>{stripHtmlTags(basicDetails?.[0]?.['hotel_name'])}</h4>
 
-                    <CCardText className='mb-4'>{basicDetails?.[0]?.["lifestyle_description"]}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.[0]?.["hotel_description"])}</CCardText>
 
 
                     {/* <div style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '10px', backgroundColor: '#f8f9fa', marginBottom: '20px' }}> */}

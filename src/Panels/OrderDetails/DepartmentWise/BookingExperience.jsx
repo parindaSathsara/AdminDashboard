@@ -497,7 +497,9 @@ export default function BookingExperience(props) {
                         return (
                             <>
 
-                                {e?.data?.checkoutID == clickedStatus ?
+                          
+
+                                {e?.data?.checkoutID == clickedStatus && status == "CustomerOrdered" ?
                                     <select
                                         className='form-select required'
                                         name='delivery_status'
@@ -515,7 +517,9 @@ export default function BookingExperience(props) {
                                     <>
 
                                         {status == "Approved" ?
-                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>
+                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>:
+                                            status == "Completed"?
+<CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
 
                                             :
                                             (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&

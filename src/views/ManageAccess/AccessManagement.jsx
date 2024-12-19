@@ -473,7 +473,7 @@ const AccessManagement = () => {
                 {/* Submit Button */}
                 <CRow>
                   <CCol className="text-left">
-                    <CButton style={{color:"white"}} color="info" size="lg" onClick={handleSubmit}>
+                    <CButton style={{color:"white"}} color="info" size="" onClick={handleSubmit}>
                       Update Access
                     </CButton>
                   </CCol>

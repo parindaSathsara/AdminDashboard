@@ -41,7 +41,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
         if (val == false) {
             const response = await getAllProductsOrders();
-            console.log(response, "Response dataaaaaaaaaa")
+            // console.log(response, "Response dataaaaaaaaaa")
             return response.map((result, index) => ({
                 id: index + 1,
                 product_id: result.PID,
@@ -336,6 +336,9 @@ const OrderAllocate = ({ normalUser = false }) => {
         muiTableBodyRowProps: ({ row }) => ({
             sx: rowStyle(row.original), // Apply row style based on the data
         }),
+        muiTableContainerProps: { sx: { maxHeight: '500px' } },
+    enableStickyHeader: true,
+    
     });
 
     const rowStyle = (data) => {
