@@ -45,7 +45,7 @@ function OrderDetailsAccounts(props) {
                         className="mb-4"
                         text="Lorem ipsum dolor sit amet enim."
                         progress={{ color: 'info', value: 100 }}
-                        title="Total Amountt"
+                        title="Total Amount"
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount?.toFixed(2)}
                     />
                 </CCol>
