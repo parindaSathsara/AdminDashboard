@@ -58,6 +58,7 @@ function CustomerDetails(props) {
         }
     };
 
+    
     const data = {
         columns: [
             { title: 'First Name', field: 'customer_fname', align: 'left' },
