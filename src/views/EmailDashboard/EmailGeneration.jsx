@@ -20,7 +20,7 @@ import axios from 'axios';
 import moment from 'moment';
 import CIcon from '@coreui/icons-react';
 import { cilCloudDownload, cilReload } from '@coreui/icons';
-import { getAllCustomer, getAllSuppliers, sendGenerateEmail, confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, downloadSupplierVoucherOneByOne, getOrderIDs, getOrderIndexIds, resendAllSupplierVouchers } from './services/emailServices';
+import { getAllCustomer, getAllSuppliers, sendGenerateEmail, confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, downloadSupplierVoucherOneByOne, getAllInternalEmails, getOrderIDs, getOrderIndexIds, resendAllSupplierVouchers } from './services/emailServices';
 import RichTextEditor from './RichTextEditor';
 import Swal from 'sweetalert2';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
@@ -78,13 +78,13 @@ const EmailGeneration = () => {
         { value: 'general_chat', label: 'General Chat' },
     ];
 
-    const internalEmails = [
-        { value: 'supplier.experience@aahaas.com', label: 'supplier.experience@aahaas.com' },
-        { value: 'products.experience@aahaas.com', label: 'products.experience@aahaas.com' },
-        { value: 'traveller.experience@aahaas.com', label: 'traveller.experience@aahaas.com' },
-        { value: 'booking.experience@aahaas.com', label: 'booking.experience@aahaas.com' },
-        { value: 'finance@aahaas.com', label: 'finance@aahaas.com' },
-    ];
+    // const internalEmails = [
+    //     { value: 'supplier.experience@aahaas.com', label: 'supplier.experience@aahaas.com' },
+    //     { value: 'products.experience@aahaas.com', label: 'products.experience@aahaas.com' },
+    //     { value: 'traveller.experience@aahaas.com', label: 'traveller.experience@aahaas.com' },
+    //     { value: 'booking.experience@aahaas.com', label: 'booking.experience@aahaas.com' },
+    //     { value: 'finance@aahaas.com', label: 'finance@aahaas.com' },
+    // ];
     const [internalEmail, setInternalEmail] = useState({})
 
     const sendPersonTypes = [
@@ -153,10 +153,34 @@ const EmailGeneration = () => {
             console.error("Error available employee: ", error);
         }
     };
+
+    const [internalEmails, setInternalEmails] = useState([])
+
+    const allInternalEmails = () => {
+        try{
+    
+            getAllInternalEmails().then(response => {
+            // setAllPositions(response);
+            console.log(response, "Internal Emails")
+            const emailData = response.map(email => ({
+                value: email.email,
+                label: email.email
+            }));
+            setInternalEmails(emailData);
+            }).catch(error => {
+                console.error("Error fetching available emails: ", error);
+            });
+        
+    
+        }catch(error){
+            console.error("Error available emails: ", error);
+        }
+    };
     
       useEffect (()=>{
         getCustomers();
         getSuppliers();
+        allInternalEmails();
       },[])
 
 
