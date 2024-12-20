@@ -73,6 +73,7 @@ import FlightOrderView from './FlightUI/FlightOrderView';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
 import { CurrencyContext } from 'src/Context/CurrencyContext';
 import axios from 'axios';
+import Scrollbar from 'react-scrollbars-custom';
 
 const Orders = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -343,6 +344,9 @@ const Orders = () => {
     pageSizes: [20, 25, 50, 100],
     initialState: { expanded: false },
     enableColumnResizing: true,
+    muiTableContainerProps: { sx: { maxHeight: '500px' } },
+    enableStickyHeader: true,
+    
     // initialState: { pagination: { pageSize: 10 } },
     paginationType: 'stepped',
 
@@ -368,6 +372,7 @@ const Orders = () => {
 
       cellStyle: {},
     },
+    
     enableRowActions: true,
 
     renderRowActions: ({ row }) => [
@@ -494,7 +499,10 @@ const Orders = () => {
 
             <Tabs defaultActiveKey="group" id="uncontrolled-tab-example" className="mt-4" style={{ fontSize: 16 }} >
               <Tab eventKey="group" title="Group Wise">
-                <MaterialReactTable table={table} />
+              {/* <Scrollbar style={{ width: '100%', height: '40vh' }}> */}
+              <MaterialReactTable table={table}/>
+              {/* </Scrollbar> */}
+     
               </Tab>
               <Tab eventKey="product" title="Product Wise">
                 <ProductWiseOrders />

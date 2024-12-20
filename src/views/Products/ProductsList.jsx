@@ -112,6 +112,12 @@ function ProductList() {
         setMoreData(data)
     }
 
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
+
     const data = {
         columns: [
             {
@@ -182,7 +188,7 @@ function ProductList() {
         ],
         rows: productList.map(product => ({
             product_title: product.title,
-            product_description: product.description,
+            product_description: stripHtmlTags(product.description),
             product_image: product.image,
             category: toTitleCase(product.category),
             created_date: moment(product.dateCreated).format("YYYY-MM-DD"),

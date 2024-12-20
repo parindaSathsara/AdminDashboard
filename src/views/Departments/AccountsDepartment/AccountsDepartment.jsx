@@ -138,9 +138,17 @@ const Dashboard = () => {
         title: 'Payment Category', field: 'pay_category', align: 'left', editable: 'never',
       },
 
+
+
       {
         title: 'Total Amount', field: 'total_amount', align: 'right', editable: 'never',
       },
+
+      {
+        title: 'Refunding Amount', field: 'refunding_amount', align: 'right', editable: 'never',
+      },
+
+
       {
         title: 'Paid Amount', field: 'paid_amount', align: 'right', editable: 'never',
       },
@@ -158,6 +166,9 @@ const Dashboard = () => {
 
     ],
     rows: orderData?.map((value, idx) => {
+
+
+      console.log(value,"data set value refund is")
       return {
         // id: value.MainTId,
         data: value,
@@ -169,6 +180,7 @@ const Dashboard = () => {
         paid_amount: value.ItemCurrency + " " + (value.paid_amount?.toFixed(2) || "0.00"), // Check for null or undefined
         discount_amount: value.ItemCurrency + " " + (value.discount_price?.toFixed(2) || "0.00"), // Check for null or undefined
         delivery_charge: value.ItemCurrency + " " + (value.delivery_charge?.toFixed(2) || "0.00"), // Check for null or undefined
+        refunding_amount:value.ItemCurrency + " " + (value.refundableAmount?.toFixed(2) || "0.00"), // Check for null or undefined
         actions:
           <div className='actions_box'>
             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
@@ -190,7 +202,7 @@ const Dashboard = () => {
 
     dataSet["oid"] = value
     setOrderId(value)
-    // console.log("Dataaa settttt", dataSet.MainPayStatus)
+    console.log("Dataaa settttt", dataSet.pay_category)
     setPaymentDataSet(dataSet)
     console.log("Data Set", dataSet)
     setShowModal(true)
@@ -286,25 +298,32 @@ const Dashboard = () => {
         <Modal.Header closeButton>
 
           <Modal.Title>Order Details - {orderid}</Modal.Title>
-          {paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
-            <div className="radioGroup" style={{ marginLeft: "30px" }}>
-               {(["all accounts access","approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
-              <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
-               }
-               {(["all accounts access","reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
-              <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
-              }
-              </div>
-          ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
-          <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
-            Payment Rejected
-          </div>
-          
-          ): (
-            <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
-              Payment Approved
+          {
+          paymentDataSet?.pay_category === "Card Payment"?(
+            null
+          ):(
+            paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
+              <div className="radioGroup" style={{ marginLeft: "30px" }}>
+                 {(["all accounts access","approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
+                <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
+                 }
+                 {(["all accounts access","reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
+                <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
+                }
+                </div>
+            ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
+            <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
+              Payment Rejected
             </div>
-          )}
+            
+            ): (
+              <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
+                Payment Approved
+              </div>
+            )
+          )
+          
+          }
 
 
         </Modal.Header>

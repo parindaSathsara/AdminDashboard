@@ -245,5 +245,23 @@ const getAllCustomer = async () => {
   return dataSet
 }
 
+const getAllInternalEmails = async () => {
+  var dataSet = null
+  console.log("Get All Internal Emails")
+  try{
+      await axios.get(`get-company-emails`)
+      .then(response => {
+        dataSet = response.data.data
+        console.log(response, "Data Set Values are")
+      })
+     .catch(error =>{
+      dataSet = response.data
+     })
+  }catch(error){
+  }    
 
-export {getAllSuppliers, getAllCustomer,sendGenerateEmail, fetchAllCustomerWithEmails, getOrderIDs, resendOrderEmailToCustomer, confirmResendEmail, downloadOrderReceipt, getOrderIndexIds, resendAllSupplierVouchers, downloadAllSupplierVouchers, downloadSupplierVoucherOneByOne }
+  return dataSet
+}
+
+
+export {getAllInternalEmails, getAllSuppliers, getAllCustomer,sendGenerateEmail, fetchAllCustomerWithEmails, getOrderIDs, resendOrderEmailToCustomer, confirmResendEmail, downloadOrderReceipt, getOrderIndexIds, resendAllSupplierVouchers, downloadAllSupplierVouchers, downloadSupplierVoucherOneByOne }
