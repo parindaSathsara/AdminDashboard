@@ -54,7 +54,7 @@ const AppSidebar = () => {
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       /> */}
-      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.27</CCardText>
+      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.20</CCardText>
     </CSidebar>
   )
 }
