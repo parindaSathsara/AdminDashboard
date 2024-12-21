@@ -261,7 +261,8 @@ export default function ProductWiseOrders() {
         muiTableBodyRowProps: ({ row }) => ({
             sx: rowStyle(row.original), // Apply row style based on the data
         }),
-
+        muiTableContainerProps: { sx: { maxHeight: '500px' } },
+        enableStickyHeader: true,
     });
 
     const handleSelect = (key) => {
