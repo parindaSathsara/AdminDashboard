@@ -243,6 +243,26 @@ function getNavigationHook(permissions){
       icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
       hidden: !permissions.includes("manage user access"),
     },
+    
+    {
+      component: CNavGroup,
+      name: 'Blogs',
+      to: '/blogs',
+      icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Add Blog',
+          to: '/blogs/newBlog',
+        },
+        {
+          component: CNavItem,
+          name: 'List Blogs',
+          to: '/blogs/listBlogs',
+        }
+      ],
+    },
+    
   ]
 
   return _nav;

@@ -18,6 +18,7 @@ import Typography from './views/theme/typography/Typography'
 import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
+import BlogMainPage from './Panels/BlogWriting/BlogMainPage'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -81,6 +82,8 @@ const EmailGeneration = React.lazy(() => import('./views/EmailDashboard/EmailGen
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 import AccessManagement from './views/ManageAccess/AccessManagement';
+import ListBlogs from './Panels/BlogWriting/ListBlogs'
+import VIewBlog from './Panels/BlogWriting/VIewBlog'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -118,6 +121,9 @@ const routes = [
   { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
+  { path: '/blogs/newBlog', name: 'Add Blog', element: BlogMainPage, exact: true },
+  { path: '/blogs/listBlogs', name: 'List Blogs', element: ListBlogs, exact: true },
+  { path: '/blogs/viewBlog/:id', name: 'View Blog', element: VIewBlog, exact: true },
 
   { path: '/customers', name: 'Customers', element: Typography },
   // { path: '/theme/AccountSystem', name: 'AccountSystem', element: AccountSystem },
