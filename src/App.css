@@ -7,4 +7,10 @@
     margin: 0px;
     padding: 0px;
   }
-  
+  .rti--container{
+    width: '100%' !important;
+  }
+
+  .rti--input{
+    width: '100%' !important;
+  }

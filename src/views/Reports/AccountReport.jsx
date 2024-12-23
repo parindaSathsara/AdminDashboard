@@ -133,7 +133,7 @@ const ReportGenerationPage = () => {
   ])
 
   const reportTypes = [
-    { value: 'pnl', label: 'PNL Report (Summery)' },
+    { value: 'pnl', label: 'PNL Report (Summary)' },
     { value: 'payable', label: 'Payable Report' },
     { value: 'receivable', label: 'Receivable Report' },
     { value: 'cashflow', label: 'CashFlow' },

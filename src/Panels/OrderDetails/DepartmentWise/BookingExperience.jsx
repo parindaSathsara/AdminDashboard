@@ -194,8 +194,8 @@ export default function BookingExperience(props) {
     const [selectedStatusCheckout, setSelectedStatusCheckout] = useState("")
 
     const handleDelStatusChange = async (e, val) => {
-        // console.log(e, "Value Data set is 123")
-        // console.log(val.target.value, "Target Value is")
+        // console.log(val, "Value Data set is 123")
+        // console.log(e.checkoutID, "Target Value is")
 
         var title = "";
 
@@ -228,7 +228,7 @@ export default function BookingExperience(props) {
 
                         // console.log("Show Loading")
                         updateDeliveryStatus(e.checkoutID, targetvalue, "").then(result => {
-                            // console.log(result)
+                            console.log("resulttt",result)
 
                             props.reload();
 
@@ -239,7 +239,7 @@ export default function BookingExperience(props) {
                         }).catch(error => {
 
 
-                            // console.log(error, "Error Value is 1234")
+                            console.log(error, "Error Value is 1234")
                             Swal.fire({
                                 title: "Error!",
                                 text: "Failed to update order",

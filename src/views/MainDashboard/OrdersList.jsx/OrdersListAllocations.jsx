@@ -483,7 +483,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 category={moreOrderModalCategory}
                 productViewData
                 hotelsOrderView={hotelDataSet}
-                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData />}
+                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e=>console.log(e)}/>}
 
             >
             </MoreOrderView>
