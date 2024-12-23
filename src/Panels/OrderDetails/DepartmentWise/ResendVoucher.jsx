@@ -110,6 +110,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
           onChange={(e) => setSelected(e)}
           name="emails"
           placeHolder="Enter Email"
+         
         />
        
         <CButton
