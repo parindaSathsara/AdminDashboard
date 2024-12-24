@@ -18,7 +18,6 @@ import Typography from './views/theme/typography/Typography'
 import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
-import UserDocuments from './views/Assets/UserDocuments'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
@@ -85,8 +84,6 @@ import AccessManagement from './views/ManageAccess/AccessManagement';
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/assets/userdoc', name: 'User Documents', element: UserDocuments},
-  { path: '/assets', name: 'User Documents', element: UserDocuments, exact: true },
 
   { path: '/user/access/manage', name: 'Manage Access', element: UserAccessManage, exact: true },
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },

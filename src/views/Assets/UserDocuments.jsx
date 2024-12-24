@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserDocuments.css';
 import jsonData from './UserDocument.json'
+import { Icon, ThemeProvider, createTheme } from '@mui/material'
+import MaterialTable from 'material-table'
+import { CCard, CCardBody, CRow, CCol, CModal, CModalBody, CModalHeader, CModalFooter, CButton, CModalTitle, CImage } from '@coreui/react';  
 
 const UserDocuments = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const defaultMaterialTheme = createTheme();
+  const [showModal, setShowModal] = useState(false);
+  const [files, setFiles] = useState([]);
+  
+  
   const openGoogleMaps = (latitude, longitude) => {
     if (!isNaN(latitude) && !isNaN(longitude)) {
       const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
@@ -23,6 +30,7 @@ const UserDocuments = () => {
       .get(url)
       .then((response) => {
         if (Array.isArray(response.data.data)) {
+          console.log(response.data.data,"document data");
           setData(response.data.data);
         } else {
           setError('Data format is incorrect or missing "data" array');
@@ -54,72 +62,87 @@ const UserDocuments = () => {
     );
   }
 
+  
+      const handleCloseModal = () => {
+          setShowModal(false);
+      }
+
   return (
-    <div className="userDoc">
-
-    <div className="container">
-      <h2 className="page-title">Documents</h2>
-      <div className="table-container">
-        <div className="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Files</th>
-                <th>Location</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((document, index) => (
-                <tr key={document.id}>
-                  <td>{document.checkout_id}</td>
-                  <td>
-                    {document.file_urls ? (
-                      <a
-                        href={document.file_urls}
-                        className="file-link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {document.file_urls.split('/').pop()}
-                      </a>
-                    ) : (
-                      <span className="empty-data">-</span>
+    <div className="">
+      <ThemeProvider theme={defaultMaterialTheme}>
+        <MaterialTable
+          title="User Documents"
+          data={data}
+          columns={[
+            { title: 'Order ID', field: 'checkout_id' },
+            {
+              title: 'Files',
+              field: 'file_urls',
+              render: rowData => (
+                rowData.file_urls ? (
+                  <>
+                    <CButton onClick={() => {
+                      setShowModal(true);
+                      // console.log(axios.defaults.imageUrl+rowData.file_urls);
+                      setFiles(axios.defaults.imageUrl+rowData.file_urls);
+                    }} color="primary" variant="outline" size="sm">
+                      View Documents
+                    </CButton>
+                  </>
+                ) : (
+                  <span className="empty-data">-</span>
+                )
+              )
+            },
+            {
+              title: 'Location',
+              field: 'customer_lat_lon',
+              render: rowData => (
+                rowData.customer_lat_lon && 
+                rowData.customer_lat_lon.latitude && 
+                rowData.customer_lat_lon.longitude ? (
+                  <span 
+                    className="location-link"
+                    onClick={() => openGoogleMaps(
+                      rowData.customer_lat_lon.latitude, 
+                      rowData.customer_lat_lon.longitude
                     )}
-                  </td>
-                  <td>
-                    {document.customer_lat_lon && 
-                     document.customer_lat_lon.latitude && 
-                     document.customer_lat_lon.longitude ? (
-                      <span 
-                        className="location-link"
-                        onClick={() => openGoogleMaps(
-                          document.customer_lat_lon.latitude, 
-                          document.customer_lat_lon.longitude
-                        )}
-                      >
-                        {`${document.customer_lat_lon.latitude.toFixed(4)}, 
-                          ${document.customer_lat_lon.longitude.toFixed(4)}`}
-                      </span>
-                    ) : (
-                      <span className="empty-data">-</span>
-                    )}
-                  </td>
-                  <td>
+                  >
                     <button className="view-details-btn">
-                      View Details
+                      View location
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    </div>
+                  </span>
+                ) : (
+                  <span className="empty-data">-</span>
+                )
+              )
+            }
+          ]}
+          options={{
+            sorting: true,
+            search: true,
+          }}
+        />
+      </ThemeProvider>
 
+      <CModal visible={showModal} onClose={handleCloseModal} size="lg">
+        <CModalHeader closeButton>
+          <CModalTitle>Modal title</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {files.length > 0 ? (
+            <div className="image-gallery">
+             <CImage rounded thumbnail src={files} width={200} height={200} />
+              
+            </div>
+          ) : (
+            <div>No documents available</div>
+          )}
+        </CModalBody>
+        <CModalFooter>
+        </CModalFooter>
+      </CModal>
+    </div>
   );
 
   
