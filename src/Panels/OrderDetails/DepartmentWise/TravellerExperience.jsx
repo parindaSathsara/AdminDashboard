@@ -521,7 +521,7 @@ export default function TravellerExperience(props) {
           ) && (
             <CButton
               color="info"
-              disabled={rowData.data.category != 'Lifestyles'}
+              disabled={rowData.data.category != 'Lifestyles' || rowData?.data?.status ==="Cancel" || rowData?.data?.status ==="CustomerOrdered" || rowData?.data?.status ==="Completed"}
               style={{
                 fontSize: 14,
                 color: 'white',

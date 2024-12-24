@@ -7,13 +7,15 @@ import { CBadge, CButton, CCard, CCardBody, CCardSubtitle, CCardText, CCardTitle
 import Swal from 'sweetalert2';
 import { updateDeliveryStatus, candelOrder } from 'src/service/api_calls';
 import rowStyle from '../Components/rowStyle';
-import { cilInfo } from '@coreui/icons';
+import { cilCloudDownload, cilEyedropper, cilInfo } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Carousel  } from 'react-bootstrap';
 import CancellationModal from '../CancelationModal/CancellationModal';
 import StarRating from '../Components/StarRating';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
+import { render } from '@testing-library/react';
+import axios from 'axios';
 
 export default function BookingExperience(props) {
     const { userData } = useContext(UserLoginContext);
@@ -27,7 +29,7 @@ export default function BookingExperience(props) {
     }
 
     const productData = props.dataset
-    console.log(productData, "Product Data is")
+    console.log(productData, "Product Data issss")
 
 
 
@@ -194,8 +196,8 @@ export default function BookingExperience(props) {
     const [selectedStatusCheckout, setSelectedStatusCheckout] = useState("")
 
     const handleDelStatusChange = async (e, val) => {
-        // console.log(e, "Value Data set is 123")
-        // console.log(val.target.value, "Target Value is")
+        // console.log(val, "Value Data set is 123")
+        // console.log(e.checkoutID, "Target Value is")
 
         var title = "";
 
@@ -228,7 +230,7 @@ export default function BookingExperience(props) {
 
                         // console.log("Show Loading")
                         updateDeliveryStatus(e.checkoutID, targetvalue, "").then(result => {
-                            // console.log(result)
+                            console.log("resulttt",result)
 
                             props.reload();
 
@@ -239,7 +241,7 @@ export default function BookingExperience(props) {
                         }).catch(error => {
 
 
-                            // console.log(error, "Error Value is 1234")
+                            console.log(error, "Error Value is 1234")
                             Swal.fire({
                                 title: "Error!",
                                 text: "Failed to update order",
@@ -345,8 +347,37 @@ export default function BookingExperience(props) {
 
 
     const [cancellationReasonModal, setCancellationReasonModal] = useState(false)
+    // const [documentViewModal, setDocumentViewModal] = useState(false)
+    // const [selectedDocument, setSelectedDocument] = useState([])
 
+    // const handleDocment = (data) => {
+    //         console.log(data.data.orderMoreInfo, "Document Data issss");
+        
+    //         const fileUrls = data.data.orderMoreInfo?.[0]?.file_urls
+    //             ? data.data.orderMoreInfo[0].file_urls.split(',').map(url => url.trim())
+    //             : [];
+        
+    //         console.log(fileUrls, "Extracted File URLs");
+    //         setSelectedDocument(fileUrls)
+    //         setDocumentViewModal(true);
+    //     };4
 
+    const [documentViewModal, setDocumentViewModal] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState([]);
+    const isImage = (url) => /\.(jpg|jpeg|png|gif|webp|heic)$/i.test(url); // Check for image formats
+const isPDF = (url) => /\.pdf$/i.test(url);
+
+    const handleDocment = (data) => {
+        console.log(data.data.orderMoreInfo, "Document Data issss");
+        const fileUrls = data.data.orderMoreInfo?.[0]?.file_urls
+            ? data.data.orderMoreInfo[0].file_urls.split(',').map(url => url.trim())
+            : [];
+        console.log(fileUrls, "Extracted File URLs");
+        setSelectedDocument(fileUrls);
+        setDocumentViewModal(true);
+    };
+
+        
 
     const columns = [
         { title: 'Product ID', field: 'pid' },
@@ -406,6 +437,15 @@ export default function BookingExperience(props) {
         {
             title: 'Supplier Confirmation', field: 'supplier_status', render: rowData => rowData?.supplier_status == "Pending" ?
                 <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Pending</CBadge> : rowData?.supplier_status == "Cancel" ? <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Cancelled</CBadge> : <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Confirmed</CBadge>
+        },
+        {
+            title: 'View Documents', 
+            field: 'orderMoreInfo', 
+            render: (rowData) => {
+                return (
+                    <CButton color="info" style={{ fontSize: 12, color: 'white' }} onClick={() => handleDocment(rowData)}>View</CButton>
+                )
+            }
         },
 
 
@@ -556,6 +596,7 @@ export default function BookingExperience(props) {
         balance_amount: CurrencyConverter(value.currency, value?.['balance_amount']),
         checkoutID: value?.checkoutID,
         supplier_status: value?.supplier_status,
+        data: value,
         data: value
     }))
 
@@ -649,6 +690,62 @@ export default function BookingExperience(props) {
                 }}
 
             />
+
+
+
+
+<Modal show={documentViewModal} style={{marginTop:'10%'}}onHide={() => setDocumentViewModal(false)} size="sm">
+    <Modal.Header closeButton>
+        <Modal.Title>Document View</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        {selectedDocument && selectedDocument.length > 0 ? (
+            <ul style={{ padding: 0, listStyleType: 'none' }}>
+                {selectedDocument.map((url, index) => {
+                    const fileName = url.split('/').pop(); // Extract the file name from the URL
+                    return (
+                        <li
+                            key={index}
+                            style={{
+                                marginBottom: '10px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between', // Align file name and icon
+                                borderBottom: '1px solid #ddd', // Add a divider between items
+                                paddingBottom: '5px',
+                            }}
+                        >
+                            <span style={{ fontWeight: '500' }}>{fileName}</span>
+                            <a
+                                href={axios.defaults.imageUrl + url}
+                                download={fileName} // This attribute will prompt a download
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: '#007bff',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <CIcon icon={cilInfo} size="lg" />
+                            </a>
+                        </li>
+                    );
+                })}
+            </ul>
+        ) : (
+            <p>No documents available to display.</p>
+        )}
+    </Modal.Body>
+</Modal>
+
+
+
+
+
+
+
         </>
     )
 }

@@ -1,10 +1,13 @@
-import { CButton, CCardText, CCardTitle, CCol, CContainer, CSpinner } from '@coreui/react'
+import { CBadge, CButton, CCardText, CCardTitle, CCol, CContainer, CSpinner } from '@coreui/react'
 import React, { useState } from 'react'
 import { TagsInput } from 'react-tag-input-component'
 
 import './ResendVoucher.css'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import CIcon from '@coreui/icons-react'
+import { cilInfo } from '@coreui/icons'
+
 
 export default function ResendVoucher({ voucherData, orderID }) {
   const [selected, setSelected] = useState([])
@@ -97,12 +100,19 @@ export default function ResendVoucher({ voucherData, orderID }) {
 
       <CContainer>
         <CCardTitle style={{ marginBottom: 10 }}>Type Emails Here</CCardTitle>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+         
+          <h6 style={{ color:"#c3b9b9",fontSize:'14px' }}> <CIcon icon={cilInfo} className="text-info" size="sm" />   Please press enter after adding the email</h6>
+        </div>
+          
         <TagsInput
-          value={selected}
+          value={selected} 
           onChange={(e) => setSelected(e)}
           name="emails"
           placeHolder="Enter Email"
+         
         />
+       
         <CButton
           title="Send to Supplier Origin Email"
           color="info"

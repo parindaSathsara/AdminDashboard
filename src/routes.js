@@ -85,7 +85,6 @@ import AccessManagement from './views/ManageAccess/AccessManagement';
 const routes = [
   { path: '/', exact: true, name: 'Home' },
 
-
   { path: '/user/access/manage', name: 'Manage Access', element: UserAccessManage, exact: true },
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
 
