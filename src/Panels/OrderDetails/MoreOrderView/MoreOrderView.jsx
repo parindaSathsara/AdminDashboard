@@ -9,6 +9,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 
 import $ from 'jquery';
 import HotelsOrderView from './Categories/HotelsOrderView';
+import './MoreOrderView.css'
 
 export default function MoreOrderView(props) {
 
@@ -83,8 +84,7 @@ export default function MoreOrderView(props) {
             {...props}
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
-
-
+            className='modal-open'
         >
 
             <Modal.Header closeButton>
