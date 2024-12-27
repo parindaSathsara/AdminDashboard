@@ -677,7 +677,7 @@ export default function TravellerExperience(props) {
 
   return (
     <>
-      <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen">
+      <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen" style={{zIndex: 999999999}}>
         <Modal.Header closeButton>
           <Modal.Title>Location Data</Modal.Title>
         </Modal.Header>
@@ -692,8 +692,9 @@ export default function TravellerExperience(props) {
         size="lg"
         onHide={handleResetAllocationModal}
         centered
+        style={{zIndex: 999999999}}
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton >
           <Modal.Title>Allocate Vehicle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -777,7 +778,7 @@ export default function TravellerExperience(props) {
         </Modal.Body>
       </Modal>
 
-      <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal}>
+      <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal} style={{zIndex: 999999999}}>
         <Modal.Header closeButton>
           <Modal.Title>Supplier Voucher</Modal.Title>
           {productPNLReport.status !== 'fail' &&

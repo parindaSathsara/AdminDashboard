@@ -8,6 +8,7 @@ import CIcon from '@coreui/icons-react';
 import { cilInfo } from '@coreui/icons';
 import { CurrencyContext } from 'src/Context/CurrencyContext';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 export default function DateWiseSummary(props) {
@@ -19,6 +20,7 @@ export default function DateWiseSummary(props) {
         '--cui-popover-header-color': 'var(--cui-white)',
         '--cui-popover-body-padding-x': '1rem',
         '--cui-popover-body-padding-y': '.5rem',
+        zIndex: 99999999
     }
 
     const productData = props?.dataset

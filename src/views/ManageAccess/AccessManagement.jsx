@@ -156,6 +156,19 @@ const AccessManagement = () => {
     ]
   } 
 
+  const blogPermissions = {
+    "name": "Blogs",
+    "permissions": [
+     "Add blog",
+     "Remove blog",
+    ],
+    "values": [
+      "add blog",
+     "remove blog",
+     
+    ]
+  } 
+
   
 
   // State for selected user, role, and permissions
@@ -464,6 +477,24 @@ const AccessManagement = () => {
                           value={emailPermissions.values[index]}
                           checked={selectedPermissions.includes(emailPermissions.values[index])}
                           onChange={() => handlePermissionChange(emailPermissions.values[index])}
+                        />
+                      ))}
+                    </div>
+                  </CCol>
+                </CRow>
+
+                <CRow className="mb-4">
+                  <CCol>
+                    <CFormLabel style={{ fontWeight: 'bold' }}>{blogPermissions.name}</CFormLabel>
+                    <div className="d-flex flex-wrap gap-3">
+                      {blogPermissions.permissions.map((permission, index) => (
+                        <CFormCheck
+                          key={permission}
+                          id={permission}
+                          label={permission}
+                          value={blogPermissions.values[index]}
+                          checked={selectedPermissions.includes(blogPermissions.values[index])}
+                          onChange={() => handlePermissionChange(blogPermissions.values[index])}
                         />
                       ))}
                     </div>
