@@ -115,6 +115,7 @@ export default function EducationOrderView(props) {
                 title="Inventory Details"
                 columns={columns}
                 data={data}
+                // style={{zIndex:1}}
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
@@ -125,7 +126,8 @@ export default function EducationOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    
+                    // exportButton: true,
                 }}
             />
         );
@@ -204,7 +206,7 @@ export default function EducationOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
