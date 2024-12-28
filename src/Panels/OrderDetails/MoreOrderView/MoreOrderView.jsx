@@ -85,7 +85,8 @@ export default function MoreOrderView(props) {
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
             className='modal-open'
-            style={{zIndex:99999999}}       >
+            // style={{zIndex:1301}}  
+                 >
 
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">

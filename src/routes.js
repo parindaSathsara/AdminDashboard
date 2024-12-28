@@ -19,6 +19,7 @@ import AllocationsHomepage from './views/Allocations/AllocationsHomepage'
 import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage'
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
 import BlogMainPage from './Panels/BlogWriting/BlogMainPage'
+import SupplierSupport from './views/SupplierSupport/SupplierSupport'
 
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
@@ -88,6 +89,7 @@ import AccessManagement from './views/ManageAccess/AccessManagement';
 const routes = [
   { path: '/', exact: true, name: 'Home' },
 
+  { path: '/supplier/support', name: 'Supplier Support', element: SupplierSupport, exact: true },
   { path: '/user/access/manage', name: 'Manage Access', element: UserAccessManage, exact: true },
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
   { path: '/blogs/newBlog', name: 'Add Blog', element: BlogMainPage, exact: true },
