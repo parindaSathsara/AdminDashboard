@@ -251,6 +251,12 @@ function getNavigationHook(permissions){
   // },
     {
       component: CNavItem,
+      name: 'Supplier Support',
+      to: '/supplier/support',
+      icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavItem,
       name: 'Access',
       to: '/user/access/manage',
       icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,

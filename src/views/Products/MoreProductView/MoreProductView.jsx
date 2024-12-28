@@ -56,6 +56,7 @@ export default function MoreProductView(props) {
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
             centered
+            // style={{ zIndex: 999999999 }}
         >
 
             <Modal.Header closeButton>

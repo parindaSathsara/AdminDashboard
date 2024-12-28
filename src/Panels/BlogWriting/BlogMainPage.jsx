@@ -8,8 +8,20 @@ import draftToHtml from 'draftjs-to-html'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import { CSpinner } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext';
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CContainer,
+  CFormLabel,
+  CButton,
+  CRow,
+  CFormInput,
+  CSpinner,
+  CImage
+} from '@coreui/react';
 
 const BlogSchema = Yup.object().shape({
   title: Yup.string()
@@ -29,6 +41,7 @@ const BlogMainPage = () => {
   const [generatingSummery, setGeneratingSummery] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const { userData } = useContext(UserLoginContext);
+  const [isLoading, setIsLoading] = useState(false)
 
   const styles = {
     formLabel: {
@@ -101,6 +114,7 @@ const BlogMainPage = () => {
     })
 
     try {
+      setIsLoading(true)
       const response = await axios.post('/addBlog', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -118,6 +132,7 @@ const BlogMainPage = () => {
       setEditorState(EditorState.createEmpty())
       setImageFiles([])
       setImagePreviews([])
+      setIsLoading(false)
 
     } catch (error) {
       console.error('Submission error:', error)
@@ -145,13 +160,16 @@ const BlogMainPage = () => {
   }
 
   return (
-    <div className="container-fluid">
+<CContainer>
+ { isLoading ? <div className="d-flex justify-content-center"><CSpinner style={{marginTop:"15%"}}/></div> :
+  <div className="container-fluid">
       <div className="row justify-content-center">
         <div className="col-12">
           <div className="card shadow-sm">
             <div className="card-header bg-secondary text-white">
               <h4 className="mb-0">Share a creative experience 🎨✨</h4>
             </div>
+
             <div className="card-body">
               <Formik
                 initialValues={{
@@ -185,13 +203,11 @@ const BlogMainPage = () => {
                       <label style={styles.formLabel} className="form-label">
                         Images
                       </label>
-                      <input
+                      <CFormInput
                         type="file"
                         accept="image/*"
                         multiple
                         onChange={handleImageChange}
-                        className="form-control"
-                        disabled={submitting}
                       />
                     </div>
 
@@ -321,6 +337,9 @@ const BlogMainPage = () => {
         </div>
       )}
     </div>
+}
+</CContainer>
+
   )
 }
 
