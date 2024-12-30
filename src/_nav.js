@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import CIcon from '@coreui/icons-react'
 
-import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings,cilBarChart, cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload } from '@coreui/icons'
+import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings,cilBarChart, cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
@@ -194,7 +194,24 @@ function getNavigationHook(permissions){
         }
       ],
     },
-  
+    {
+      component: CNavGroup,
+      name: 'Blogs',
+      to: '/blogs',
+      icon: <CIcon icon={cilNewspaper} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Add Blog',
+          to: '/blogs/newBlog',
+        },
+        {
+          component: CNavItem,
+          name: 'List Blogs',
+          to: '/blogs/listBlogs',
+        }
+      ],
+    },
   
     // {
     //   component: CNavItem,
@@ -232,6 +249,12 @@ function getNavigationHook(permissions){
   //   to:'/pushNotifications',
   //   icon: <CIcon icon={cilCommentSquare}  customClassName="nav-icon"/>
   // },
+    {
+      component: CNavItem,
+      name: 'Supplier Support',
+      to: '/supplier/support',
+      icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
+    },
     {
       component: CNavItem,
       name: 'Access',

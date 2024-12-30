@@ -694,7 +694,7 @@ const isPDF = (url) => /\.pdf$/i.test(url);
 
 
 
-<Modal show={documentViewModal} style={{marginTop:'10%'}}onHide={() => setDocumentViewModal(false)} size="sm">
+<Modal show={documentViewModal} style={{marginTop:'10%',zIndex: 999999999}}onHide={() => setDocumentViewModal(false)} size="sm">
     <Modal.Header closeButton>
         <Modal.Title>Document View</Modal.Title>
     </Modal.Header>

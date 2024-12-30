@@ -19,7 +19,7 @@ import {
   CBadge,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilBell, cilMenu } from '@coreui/icons';
+import { cilBell, cilMenu,cilHeadphones } from '@coreui/icons';
 
 import { AppBreadcrumb } from './index';
 import { AppHeaderDropdown } from './header/index';
@@ -30,7 +30,9 @@ import CurrencyController from './CurrencyController';
 import HotList from 'src/views/HotList/HotList';
 import { fetchInAppNotifications, fetchInAppNotificationsCount, readInAppNotifications } from 'src/views/HotList/service/HotListServices';
 
-import './AppHeader.css'
+import Swal from 'sweetalert2'
+import './AppHeader.css';
+import SupportSidebar from 'src/views/Support/SupportSidebar';
 import axios from 'axios';
 
 const AppHeader = () => {
@@ -109,6 +111,9 @@ const AppHeader = () => {
 
   const [hotListSide, setHotListSide] = useState(false)
   const [hotList, setHotList] = useState([])
+  const [supportRequestCount,setSupportRequestCount]  =useState(0);
+  const [supportReqests,setSupportReqests] = useState([]);
+  const [supportSidebarVisible, setSupportSidebarVisible] = useState(false);
 
 
   const getHotList = () => {
@@ -118,7 +123,45 @@ const AppHeader = () => {
     })
   }
 
+  
+  const getHelpCount = () => {
+    axios.get("/helpcount").then((res) => {
+      setSupportRequestCount(res.data.data);
+    })
+    .catch((err) => {
+      throw new Error(err)
+    })
+  }
+  
+useState(()=>{
+  const interval = setInterval(() => {
+    getHelpCount();
+    fetchSupportReq();
+  }, 60000);
 
+  return () => clearInterval(interval);
+},[]);
+
+
+  const fetchSupportReq =()=>{
+    axios.get("/help").then((res) => {
+      setSupportReqests(res.data);
+    })
+    .catch((err) => {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error fetching data!"
+      });
+      throw new Error(err)
+    })
+  }
+  
+
+  const handleSupportReqClick = () => {
+    setSupportSidebarVisible(true);
+
+  }
 
 
 
@@ -185,6 +228,21 @@ const AppHeader = () => {
                 <CurrencyController />
               </CCol>
 
+                       {/* <CCol className="d-flex align-items-center justify-content-center currency-col">
+              <div className="supportCenter" style={{color:'black'}}><CIcon icon={cilHeadphones} /></div>
+              </CCol> */}
+              <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleSupportReqClick()}>
+              {supportRequestCount === 0 ?
+                  null
+                  :
+                <CBadge color="danger" shape="rounded-pill" style={{ position: 'absolute', top: 10, marginLeft: 20 }}>
+                  {supportRequestCount}
+                </CBadge>
+              }
+              <CIcon style={{color:'black',marginTop:'5px'}} icon={cilHeadphones} size="lg" />
+            </CCol>
+
+
               <CCol className="d-flex align-items-center justify-content-center">
                 <CFormSwitch
                   size="xl"
@@ -224,6 +282,15 @@ const AppHeader = () => {
           <AppBreadcrumb />
         </CContainer>
       </CHeader>
+          {/* <SupportSidebar 
+      visible={supportSidebarVisible}
+      onClose={() => setSupportSidebarVisible(false)}
+    /> */}
+    <SupportSidebar 
+      show={supportSidebarVisible}
+      onHide={() => setSupportSidebarVisible(false)}
+      getHelpCount = {getHelpCount}
+    />
     </>
 
   );

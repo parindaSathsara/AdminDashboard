@@ -375,7 +375,7 @@ export default function SupplierExperience(props) {
 
   return (
     <>
-      <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl">
+      <Modal show={supplierVoucherView} onHide={() => setSupplierVoucherView(false)} size="xl" style={{ zIndex: 999999999 }}>
         <Modal.Header closeButton>
           <Modal.Title>Supplier Voucher</Modal.Title>
           {(["resend supplier voucher"].some(permission => userData?.permissions?.includes(permission))) &&

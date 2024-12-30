@@ -110,7 +110,7 @@ export default function EssentialsOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
@@ -174,7 +174,7 @@ export default function EssentialsOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );

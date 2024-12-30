@@ -13,17 +13,12 @@ const SuggestionModal = ({ show, onHide, messageList, chatDetails, onMessageSele
         };
 
         try {
-            const response = await fetch("https://staging-gateway.aahaas.com/api/generate_auto_message", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataSetAutoPopulate)
-            });
+            console.log("message")
+            const response = await axios.post(`/generate_auto_message`,dataSetAutoPopulate);
 
-            const result = await response.json();
+            const result = response.data;
 
-            if (response.ok) {
+            if (response.status === 200) {
                 setNextMessage(result.message);
             } else {
                 setChatError(true);

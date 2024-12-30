@@ -171,7 +171,7 @@ const OrderAllocate = ({ normalUser = false }) => {
     const customStyles = {
         menuPortal: (base) => ({
             ...base,
-            zIndex: 9999,
+            zIndex: 99999999999,
         }),
     };
 
@@ -212,7 +212,10 @@ const OrderAllocate = ({ normalUser = false }) => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
+            cancelButtonText: 'No',
+            // didOpen: (popup) => {
+            //     popup.style.zIndex = '99999999999'; 
+            // }
         });
 
         if (confirmation.isConfirmed) {
@@ -336,7 +339,10 @@ const OrderAllocate = ({ normalUser = false }) => {
         muiTableBodyRowProps: ({ row }) => ({
             sx: rowStyle(row.original), // Apply row style based on the data
         }),
+
+        
         muiTableContainerProps: { sx: { maxHeight: '500px' } },
+
     enableStickyHeader: true,
     
     });
@@ -494,6 +500,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
+                style={{ zIndex: 1305 }}
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
