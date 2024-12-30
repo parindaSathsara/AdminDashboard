@@ -85,7 +85,7 @@ export default function MoreOrderView(props) {
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
             className='modal-open'
-            // style={{zIndex:1301}}  
+            style={{zIndex:1300}}  
                  >
 
             <Modal.Header closeButton>
