@@ -493,7 +493,7 @@ const EmailGeneration = () => {
                     <CRow className="mb-3">
                     <Editor 
                         editorState={editorState}
-                        onEditorStateChange={handleEditorChange}  />;
+                        onEditorStateChange={handleEditorChange}  />
                     </CRow>
                    
                         <CRow className="mb-3">

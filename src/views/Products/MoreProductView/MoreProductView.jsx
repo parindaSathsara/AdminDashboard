@@ -56,12 +56,12 @@ export default function MoreProductView(props) {
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            style={{ zIndex: 1400 }}
+            style={{ zIndex: 1300 }}
         >
 
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Product Detailsssss
+                    Product Details
                 </Modal.Title>
             </Modal.Header>
 

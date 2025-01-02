@@ -319,7 +319,7 @@ function AccountsDetails(props) {
                                     marginLeft: 20,
                                     alignContent: 'center',
                                   }}
-                                  onClick={() => handlePNLReport(dataset.checkout_id)}
+                                  onClick={() => handlePNLReport(dataset?.order_id)}
                                   // onClick={() => console.log(dataset)}
                                 >
                                   Show PNL report
@@ -343,7 +343,7 @@ function AccountsDetails(props) {
                             marginLeft: 20,
                             alignContent: 'center',
                           }}
-                          onClick={() => handlePNLReport(dataset.id)}
+                          onClick={() => handlePNLReport(dataset.checkout_id)}
                           // onClick={() => console.log(dataset)}
                         >
                           Show PNL report

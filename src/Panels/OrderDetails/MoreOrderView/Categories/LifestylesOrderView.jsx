@@ -256,7 +256,11 @@ export default function LifestylesOrderView(props) {
 
 
 
-
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -294,7 +298,7 @@ export default function LifestylesOrderView(props) {
 
                     <h4 className='mb-2'>{basicDetails?.['lifestyle_name']}</h4>
 
-                    <CCardText className='mb-4'>{basicDetails?.["lifestyle_description"]}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["lifestyle_description"])}</CCardText>
 
                     <CRow>
                         <CCol xs="12" lg="4">
