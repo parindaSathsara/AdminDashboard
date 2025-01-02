@@ -212,6 +212,12 @@ export default function EducationOrderView(props) {
         );
     };
 
+    
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -274,7 +280,7 @@ export default function EducationOrderView(props) {
                     <h4 className='mb-2'>{basicDetails?.['course_name']}</h4>
 
                     <CCardText className='mb-4' style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-                        {basicDetails?.["course_description"]}
+                        {stripHtmlTags(basicDetails?.["course_description"])}
                     </CCardText>
 
                     <CRow>

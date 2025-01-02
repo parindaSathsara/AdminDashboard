@@ -232,11 +232,13 @@ useState(()=>{
               <div className="supportCenter" style={{color:'black'}}><CIcon icon={cilHeadphones} /></div>
               </CCol> */}
               <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleSupportReqClick()}>
-                
+              {supportRequestCount === 0 ?
+                  null
+                  :
                 <CBadge color="danger" shape="rounded-pill" style={{ position: 'absolute', top: 10, marginLeft: 20 }}>
                   {supportRequestCount}
                 </CBadge>
-            
+              }
               <CIcon style={{color:'black',marginTop:'5px'}} icon={cilHeadphones} size="lg" />
             </CCol>
 

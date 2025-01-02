@@ -185,7 +185,11 @@ export default function EssentialsOrderView(props) {
 
 
 
-
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -220,7 +224,7 @@ export default function EssentialsOrderView(props) {
 
                     <h4 className='mb-2'>{basicDetails?.['listing_title']}</h4>
 
-                    <CCardText className='mb-4'>{basicDetails?.["listing_description"]}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["listing_description"])}</CCardText>
 
                     <CRow>
                         <CCol xs="12" lg="4">
