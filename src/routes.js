@@ -84,6 +84,7 @@ const EmailGeneration = React.lazy(() => import('./views/EmailDashboard/EmailGen
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 import AccessManagement from './views/ManageAccess/AccessManagement';
+import UserInvitation from './views/Invitation/UserInvitation'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -102,6 +103,8 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: MainDashboard, exact: true },
 
   { path: '/orders', name: 'Orders', element: Dashboard, exact: true },
+  //user invitataion url
+  { path: '/user-invitation', name: 'Invitation', element: UserInvitation, exact: true },
 
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
   { path: '/accounts/customerorders', name: 'Sales', element: AccountsDepartment },
