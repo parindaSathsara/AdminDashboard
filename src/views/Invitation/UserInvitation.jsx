@@ -104,59 +104,39 @@ const UserInvitation = () => {
     })
 
     try {
-      // Update the URL to match your Laravel backend endpoint
-      const response = await axios({
-        method: 'POST',
-        url: '/api/user-invitations',
-        data: formPayload,
+      const response = await axios.post('/api/user-invitation', formPayload, {
         headers: {
+          'Content-Type': 'multipart/form-data',
           'Accept': 'application/json'
         }
       });
 
-      const data = await response.data
-
-      if (!response.ok) {
-        // Handle validation errors from Laravel
-        if (response.status === 422) {
-          setErrors(data.errors || {})
-          throw new Error('Please correct the validation errors')
-        }
-        throw new Error(data.message || 'Submission failed')
+      if (response.data.success) {
+        setSubmissionResult({
+          ...response.data.user,
+          qrCodeUrl: response.data.qrCodeUrl // Add this line to handle QR code URL
+        });
+      } else {
+        throw new Error(response.data.error || 'Submission failed');
       }
-
-      // Handle success
-      setSubmissionResult({
-        ...data,
-        name: formData.name,
-        designation: formData.designation,
-        contact: formData.contact,
-        email: formData.email,
-        whatsapp: formData.whatsapp,
-        office_address: formData.office_address,
-      })
     } catch (error) {
       console.error('Submission error:', error)
       
       if (error.response) {
-        // Handle validation errors from Laravel (422 status)
         if (error.response.status === 422) {
           setErrors(error.response.data.errors || {})
         } else {
-          // Handle other server errors
           setErrors((prev) => ({
             ...prev,
             submit: error.response.data.message || 'Server error occurred',
           }))
         }
       } else if (error.request) {
-        // Handle network errors
         setErrors((prev) => ({
           ...prev,
           submit: 'Network error. Please check your connection.',
         }))
       } else {
-        // Handle other errors
         setErrors((prev) => ({
           ...prev,
           submit: error.message || 'An unexpected error occurred',
@@ -166,7 +146,6 @@ const UserInvitation = () => {
       setLoading(false)
     }
   }
-
   return (
     <div className="container-lg">
       {!submissionResult ? (
@@ -324,47 +303,60 @@ const UserInvitation = () => {
         </CCard>
       ) : (
         <CCard>
-          <CCardHeader>
-            <h4 className="mb-0">Invitation Created Successfully!</h4>
-          </CCardHeader>
-          <CCardBody>
-            <CRow>
-              <CCol md={6}>
-                <h5 className="mb-3">User Details</h5>
-                <div className="mb-2">
-                  <strong>Name:</strong> {submissionResult.name}
-                </div>
-                <div className="mb-2">
-                  <strong>Designation:</strong> {submissionResult.designation}
-                </div>
-                <div className="mb-2">
-                  <strong>Contact:</strong> {submissionResult.contact}
-                </div>
-                <div className="mb-2">
-                  <strong>Email:</strong> {submissionResult.email}
-                </div>
-                <div className="mb-2">
-                  <strong>WhatsApp:</strong> {submissionResult.whatsapp}
-                </div>
-                <div className="mb-2">
-                  <strong>Office Address:</strong> {submissionResult.office_address}
-                </div>
-              </CCol>
-              <CCol md={6} className="text-center">
-                <h5 className="mb-3">QR Code</h5>
-                <CImage
-                  src={submissionResult.qr_code_path}
-                  alt="QR Code"
-                  className="mw-100 h-auto"
-                />
-                <p className="text-muted small mt-2">Scan to view details</p>
-              </CCol>
-            </CRow>
-          </CCardBody>
-        </CCard>
-      )}
-    </div>
-  )
+        <CCardHeader>
+          <h4 className="mb-0">Invitation Created Successfully!</h4>
+        </CCardHeader>
+        <CCardBody>
+          <CRow>
+            <CCol md={6}>
+              <h5 className="mb-3">User Details</h5>
+              <div className="mb-2">
+                <strong>Name:</strong> {submissionResult.name}
+              </div>
+              <div className="mb-2">
+                <strong>Designation:</strong> {submissionResult.designation}
+              </div>
+              <div className="mb-2">
+                <strong>Contact:</strong> {submissionResult.contact}
+              </div>
+              <div className="mb-2">
+                <strong>Email:</strong> {submissionResult.email}
+              </div>
+              <div className="mb-2">
+                <strong>WhatsApp:</strong> {submissionResult.whatsapp}
+              </div>
+              <div className="mb-2">
+                <strong>Office Address:</strong> {submissionResult.office_address}
+              </div>
+            </CCol>
+            <CCol md={6} className="text-center">
+              <h5 className="mb-3">QR Code</h5>
+              {submissionResult.qrCodeUrl && (
+                <>
+                  <CImage
+                    src={submissionResult.qrCodeUrl}
+                    alt="QR Code"
+                    className="mw-100 h-auto mb-3"
+                  />
+                  <div>
+                    <CButton 
+                      color="primary"
+                      href={submissionResult.qrCodeUrl}
+                      download="qr-code.svg"
+                    >
+                      Download QR Code
+                    </CButton>
+                  </div>
+                  <p className="text-muted small mt-2">Scan to view details</p>
+                </>
+              )}
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
+    )}
+  </div>
+)
 }
 
 export default UserInvitation
