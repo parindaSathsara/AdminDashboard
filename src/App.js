@@ -34,8 +34,8 @@ axios.defaults.url = 'https://staging-gateway.aahaas.com/api'
 
 
 
-axios.defaults.baseURL = 'http://172.16.26.146:8000/api'
-axios.defaults.data = 'http://172.16.26.146:8000'
+axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
+axios.defaults.data = 'http://172.16.26.67:8000'
 
 // axios.defaults.baseURL = 'http://192.168.137.171:8000/api'
 // axios.defaults.data = 'http://192.168.137.171:8000'
@@ -172,7 +172,7 @@ function App() {
 
 }, []);
 
-  
+
 
 
   useEffect(() => {
@@ -181,8 +181,8 @@ function App() {
         console.log("User logged as guest");
         window.location.href = '/#/login';
       }
-    }, 1000); 
-  
+    }, 1000);
+
     return () => clearTimeout(timeout);
   }, [userLogin]);
 
@@ -195,7 +195,7 @@ function App() {
               {
                 !userLogin ?
                   <>
-                 
+
 
                     <Route exact path="/" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                     <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
@@ -207,7 +207,7 @@ function App() {
                     {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
                 <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
                     <Route exact path="*" element={<DefaultLayout />} errorElement={<Page404></Page404>} />
-                      
+
                   </>
               }
             </Routes>
