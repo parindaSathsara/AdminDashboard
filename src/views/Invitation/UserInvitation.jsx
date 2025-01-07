@@ -35,6 +35,8 @@ import {
 import axios from 'axios'
 import cardImage from '../../assets/images/card_template.jpg'
 import QRCodeDisplay from './QRCodeDisplay '
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 const UserInvitation = () => {
   // Add this function to clear form data
@@ -264,6 +266,19 @@ const UserInvitation = () => {
       ...prev,
       [name]: value,
     }))
+  }
+
+  // In your component, add this handler
+  const handlePhoneChange = (value) => {
+    console.log(value);
+
+    setFormData((prev) => ({
+      ...prev,
+      contact: value || '',
+    }))
+    console.log(formData.contact);
+
+
   }
 
   const handlePhotoChange = (e) => {
@@ -649,6 +664,99 @@ const UserInvitation = () => {
                         />
                       </div>
                     </CCol>
+
+                    {/* <CCol md={6}>
+                      <div>
+                        <CFormLabel>Contact</CFormLabel>
+                        <div
+                          className={`phone-input-wrapper ${errors.contact ? 'is-invalid' : ''}`}
+                        >
+                          <PhoneInput
+                            international
+                            countryCallingCodeEditable={false}
+                            defaultCountry="LK"
+                            value={formData.contact}
+                            onChange={handlePhoneChange}
+                            className={errors.contact ? 'is-invalid' : ''}
+                          />
+                          {errors.contact && (
+                            <div className="invalid-feedback">{errors.contact}</div>
+                          )}
+                        </div>
+                      </div>
+                    </CCol> */}
+                    <style jsx>{`
+                      .phone-input-wrapper {
+                        position: relative;
+                      }
+
+                      .phone-input-wrapper .PhoneInput {
+                        display: flex;
+                        align-items: center;
+                        border: 1px solid #b1b7c1;
+                        border-radius: 4px;
+                        padding: 0.375rem 0.75rem;
+                        background-color: #fff;
+                      }
+
+                      .phone-input-wrapper.is-invalid .PhoneInput {
+                        border-color: #dc3545;
+                        padding-right: calc(1.5em + 0.75rem);
+                        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+                        background-repeat: no-repeat;
+                        background-position: right calc(0.375em + 0.1875rem) center;
+                        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+                      }
+
+                      .phone-input-wrapper .PhoneInputInput {
+                        border: none;
+                        padding: 0;
+                        margin-left: 0.5rem;
+                        flex: 1;
+                        min-width: 0;
+                        background: none;
+                        font-size: 1rem;
+                        line-height: 1.5;
+                        color: #212529;
+                      }
+
+                      .phone-input-wrapper .PhoneInputInput:focus {
+                        outline: none;
+                        box-shadow: none;
+                      }
+
+                      /* Add these new styles for the flag and country select */
+                      .phone-input-wrapper .PhoneInputCountry {
+                        display: flex;
+                        align-items: center;
+                        position: relative;
+                        margin-right: 0.5rem;
+                      }
+
+                      .phone-input-wrapper .PhoneInputCountryIcon {
+                        margin-right: 0.5rem;
+                      }
+
+                      .phone-input-wrapper .PhoneInputCountrySelect {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        height: 100%;
+                        width: 100%;
+                        z-index: 1;
+                        border: 0;
+                        opacity: 0;
+                        cursor: pointer;
+                      }
+
+                      .phone-input-wrapper .invalid-feedback {
+                        display: block;
+                        width: 100%;
+                        margin-top: 0.25rem;
+                        font-size: 0.875em;
+                        color: #dc3545;
+                      }
+                    `}</style>
 
                     <CCol md={6}>
                       <div>
