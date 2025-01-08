@@ -270,15 +270,13 @@ const UserInvitation = () => {
 
   // In your component, add this handler
   const handlePhoneChange = (value) => {
-    console.log(value);
+    console.log(value)
 
     setFormData((prev) => ({
       ...prev,
       contact: value || '',
     }))
-    console.log(formData.contact);
-
-
+    console.log(formData.contact)
   }
 
   const handlePhotoChange = (e) => {
@@ -370,10 +368,167 @@ const UserInvitation = () => {
     }
   }, [qrCodeDisplayUrl])
 
+  // const handleDownload = async () => {
+  //   if (!submissionResult?.qrCodeUrl) return
+
+  //   setIsDownloading(true)
+  //   setIsDownloading(true)
+  //   try {
+  //     // Create canvas with business card dimensions (standard size 3.5 x 2 inches at 300 DPI)
+  //     const canvas = document.createElement('canvas')
+  //     canvas.width = 1086.9 // 3.5 inches * 300 DPI
+  //     canvas.height = 638.1 // 2 inches * 300 DPI
+  //     const ctx = canvas.getContext('2d')
+
+  //     // Calculate padding (9.3mm = ~110.55 pixels at 300 DPI)
+  //     const padding = 110.55
+
+  //     // Create background image
+  //     const backgroundImage = new Image()
+  //     backgroundImage.src = cardImage
+
+  //     return new Promise((resolve, reject) => {
+  //       backgroundImage.onload = () => {
+  //         // Draw background image
+  //         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
+
+  //         // Load and draw QR code
+  //         const decodedSvg = decodeURIComponent(submissionResult.qrCodeUrl.split('<?xml')[1])
+  //         const svgContent = `<?xml${decodedSvg}`
+  //         const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' })
+  //         const svgUrl = URL.createObjectURL(svgBlob)
+
+  //         const qrImage = new Image()
+  //         qrImage.onload = () => {
+  //           // Draw QR code with padding
+  //           ctx.drawImage(qrImage, padding, 200, 250, 250)
+
+  //           // Name - using red color and larger font with padding
+  //           ctx.fillStyle = '#FF0000'
+  //           ctx.font = 'bold 48px "Rubik Regular"'
+  //           ctx.fillText(submissionResult.name, padding, 100)
+
+  //           // Designation with padding
+  //           ctx.fillStyle = '#003366'
+  //           ctx.font = '32px "Rubik Regular"'
+  //           ctx.fillText(`${submissionResult.designation} | Marketing`, padding, 150)
+
+  //           // Contact details with adjusted positioning
+  //           ctx.fillStyle = '#003366'
+  //           ctx.font = '24px Arial'
+  //           const contactY = 200
+  //           const contentX = padding + 270 // Adjusted for padding + QR code width
+  //           ctx.fillText(
+  //             `${submissionResult.contact} | ${submissionResult.email}`,
+  //             contentX,
+  //             contactY,
+  //           )
+
+  //           // Address
+  //           // ctx.fillText('One Galle Face Tower, 2208, 1A Centre Road,', contentX, contactY + 40)
+  //           ctx.fillText(`${submissionResult.address}`, contentX, contactY + 40)
+  //           ctx.fillText('Colombo 002, Sri Lanka', contentX, contactY + 80)
+
+  //           // Head Office
+  //           ctx.font = 'bold 24px Arial'
+  //           ctx.fillText('Head Office', contentX, contactY + 140)
+  //           ctx.font = '24px Arial'
+  //           ctx.fillText('+94 11 235 2400', contentX, contactY + 180)
+  //           ctx.fillText('80, Genting Lane, Ruby Industrial Complex,', contentX, contactY + 220)
+  //           ctx.fillText('Genting Block, 349565, Singapore', contentX, contactY + 260)
+
+  //           // Countries text at bottom with bold country codes
+  //           ctx.fillStyle = '#FF0000'
+  //           ctx.font = '24px Arial'
+  //           const countriesY = contactY + 320
+  //           ctx.fillText('Countries Of Operation : ', padding, countriesY)
+
+  //           // Calculate starting position after the prefix text
+  //           const prefixText = 'Countries Of Operation : '
+  //           const prefixWidth = ctx.measureText(prefixText).width
+
+  //           // Draw bold country codes
+  //           ctx.font = 'bold 24px Arial'
+  //           const countryCodesX = padding + prefixWidth
+  //           ctx.fillText('SG | MY | VN | LK | MV', countryCodesX, countriesY)
+
+  //           // Convert to PNG and download
+  //           canvas.toBlob((blob) => {
+  //             if (blob) {
+  //               const link = document.createElement('a')
+  //               const downloadUrl = URL.createObjectURL(blob)
+  //               link.href = downloadUrl
+  //               link.download = `${submissionResult.name
+  //                 .toLowerCase()
+  //                 .replace(/\s+/g, '-')}-business-card.png`
+  //               document.body.appendChild(link)
+  //               link.click()
+  //               document.body.removeChild(link)
+
+  //               URL.revokeObjectURL(downloadUrl)
+  //               URL.revokeObjectURL(svgUrl)
+  //               setIsDownloading(false)
+  //               resolve()
+  //             } else {
+  //               reject(new Error('Canvas to Blob conversion failed'))
+  //             }
+  //           }, 'image/png')
+  //         }
+
+  //         qrImage.onerror = () => {
+  //           reject(new Error('QR code image loading failed'))
+  //           setIsDownloading(false)
+  //         }
+
+  //         qrImage.src = svgUrl
+  //       }
+
+  //       backgroundImage.onerror = () => {
+  //         reject(new Error('Background image loading failed'))
+  //         setIsDownloading(false)
+  //       }
+  //     })
+  //   } catch (error) {
+  //     console.error('Download failed:', error)
+  //     setErrors((prev) => ({
+  //       ...prev,
+  //       download: 'Failed to download business card. Please try again.',
+  //     }))
+  //     setIsDownloading(false)
+  //   }
+  //   // try {
+  //   //   // Import html2canvas dynamically
+  //   //   const html2canvas = (await import('html2canvas')).default
+
+  //   //   // Get the div element
+  //   //   const element = document.getElementById('download-content')
+  //   //   if (!element) return
+
+  //   //   // Create canvas
+  //   //   const canvas = await html2canvas(element)
+
+  //   //   // Convert to JPEG
+  //   //   const dataUrl = canvas.toDataURL('image/jpeg', 0.8)
+
+  //   //   // Create download link
+  //   //   const link = document.createElement('a')
+  //   //   link.download = 'downloaded-content.jpg'
+  //   //   link.href = dataUrl
+
+  //   //   // Trigger download
+  //   //   document.body.appendChild(link)
+  //   //   link.click()
+  //   //   document.body.removeChild(link)
+  //   // } catch (error) {
+  //   //   console.error('Error downloading image:', error)
+  //   // }
+  // }
+
+
+
   const handleDownload = async () => {
     if (!submissionResult?.qrCodeUrl) return
 
-    setIsDownloading(true)
     setIsDownloading(true)
     try {
       // Create canvas with business card dimensions (standard size 3.5 x 2 inches at 300 DPI)
@@ -402,8 +557,209 @@ const UserInvitation = () => {
 
           const qrImage = new Image()
           qrImage.onload = () => {
-            // Draw QR code with padding
-            ctx.drawImage(qrImage, padding, 200, 250, 250)
+            // Create temporary canvas for QR code color manipulation
+            const tempCanvas = document.createElement('canvas')
+            const tempCtx = tempCanvas.getContext('2d')
+            tempCanvas.width = qrImage.width
+            tempCanvas.height = qrImage.height
+
+            // Fill temporary canvas with light blue background
+            tempCtx.fillStyle = '#e2f5fb'
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+
+            // Draw original QR code to temporary canvas
+            tempCtx.drawImage(qrImage, 0, 0)
+
+            // Get image data for color manipulation
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
+            const data = imageData.data
+
+            // Replace colors:
+            // - Black pixels become #003366
+            // - White pixels become #e2f5fb
+            for (let i = 0; i < data.length; i += 4) {
+              if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+                // Black to Navy Blue (#003366)
+                data[i] = 0x00 // R: 0
+                data[i + 1] = 0x33 // G: 51
+                data[i + 2] = 0x66 // B: 102
+              } else if (data[i] === 255 && data[i + 1] === 255 && data[i + 2] === 255) {
+                // White to Light Blue (#e2f5fb)
+                data[i] = 0xe2 // R: 226
+                data[i + 1] = 0xf5 // G: 245
+                data[i + 2] = 0xfb // B: 251
+              }
+            }
+
+            // Put modified image data back to temporary canvas
+            tempCtx.putImageData(imageData, 0, 0)
+
+            // Draw the color-modified QR code
+            ctx.drawImage(tempCanvas, padding, 200, 250, 250)
+
+            // Name - using red color and larger font with padding
+            ctx.fillStyle = '#FF0000'
+            ctx.font = 'bold 48px "Rubik Regular"'
+            ctx.fillText(submissionResult.name, padding, 100)
+
+            // Designation with padding
+            ctx.fillStyle = '#003366'
+            ctx.font = '32px "Rubik Regular"'
+            ctx.fillText(`${submissionResult.designation} | Marketing`, padding, 150)
+
+            // Contact details with adjusted positioning
+            ctx.fillStyle = '#003366'
+            ctx.font = '23px Arial'
+            const contactY = 220
+            const contentX = padding + 290 // Adjusted for padding + QR code width
+            ctx.fillText(
+              `${submissionResult.contact} | ${submissionResult.email}`,
+              contentX,
+              contactY,
+            )
+
+            ctx.fillText('One Galle Face Tower, 2208, 1A Centre Road,', contentX, contactY + 30)
+            // ctx.fillText(`${submissionResult.address}`, contentX, contactY + 40)
+            ctx.fillText('Colombo 002, Sri Lanka', contentX, contactY + 60)
+
+            // Head Office
+            ctx.font = 'bold 23px Arial'
+            ctx.fillText('Head Office', contentX, contactY + 130)
+            ctx.font = '23px Arial'
+            ctx.fillText('+94 11 235 2400', contentX , contactY + 170)
+            ctx.fillText('80, Genting Lane, Ruby Industrial Complex,', contentX, contactY + 200)
+            ctx.fillText('Genting Block, 349565, Singapore', contentX, contactY + 230)
+
+            // Countries text at bottom with bold country codes
+            ctx.fillStyle = '#FF0000'
+            ctx.font = '24px Arial'
+            const countriesY = contactY + 320
+            ctx.fillText('Countries Of Operation : ', padding, countriesY)
+
+            // Calculate starting position after the prefix text
+            const prefixText = 'Countries Of Operation : '
+            const prefixWidth = ctx.measureText(prefixText).width
+
+            // Draw bold country codes
+            ctx.font = 'bold 24px Arial'
+            const countryCodesX = padding + prefixWidth
+            ctx.fillText('SG | MY | VN | LK | MV', countryCodesX, countriesY)
+
+            // Convert to PNG and download
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const link = document.createElement('a')
+                const downloadUrl = URL.createObjectURL(blob)
+                link.href = downloadUrl
+                link.download = `${submissionResult.name
+                  .toLowerCase()
+                  .replace(/\s+/g, '-')}-business-card.png`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+
+                URL.revokeObjectURL(downloadUrl)
+                URL.revokeObjectURL(svgUrl)
+                setIsDownloading(false)
+                resolve()
+              } else {
+                reject(new Error('Canvas to Blob conversion failed'))
+              }
+            }, 'image/png')
+          }
+
+          qrImage.onerror = () => {
+            reject(new Error('QR code image loading failed'))
+            setIsDownloading(false)
+          }
+
+          qrImage.src = svgUrl
+        }
+
+        backgroundImage.onerror = () => {
+          reject(new Error('Background image loading failed'))
+          setIsDownloading(false)
+        }
+      })
+    } catch (error) {
+      console.error('Download failed:', error)
+      setErrors((prev) => ({
+        ...prev,
+        download: 'Failed to download business card. Please try again.',
+      }))
+      setIsDownloading(false)
+    }
+  }
+  const handleDownload_old = async () => {
+    if (!submissionResult?.qrCodeUrl) return
+
+    setIsDownloading(true)
+    try {
+      // Create canvas with business card dimensions (standard size 3.5 x 2 inches at 300 DPI)
+      const canvas = document.createElement('canvas')
+      canvas.width = 1086.9 // 3.5 inches * 300 DPI
+      canvas.height = 638.1 // 2 inches * 300 DPI
+      const ctx = canvas.getContext('2d')
+
+      // Calculate padding (9.3mm = ~110.55 pixels at 300 DPI)
+      const padding = 110.55
+
+      // Create background image
+      const backgroundImage = new Image()
+      backgroundImage.src = cardImage
+
+      return new Promise((resolve, reject) => {
+        backgroundImage.onload = () => {
+          // Draw background image
+          ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
+
+          // Load and draw QR code
+          const decodedSvg = decodeURIComponent(submissionResult.qrCodeUrl.split('<?xml')[1])
+          const svgContent = `<?xml${decodedSvg}`
+          const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' })
+          const svgUrl = URL.createObjectURL(svgBlob)
+
+          const qrImage = new Image()
+          qrImage.onload = () => {
+            // Create temporary canvas for QR code color manipulation
+            const tempCanvas = document.createElement('canvas')
+            const tempCtx = tempCanvas.getContext('2d')
+            tempCanvas.width = qrImage.width
+            tempCanvas.height = qrImage.height
+
+            // Fill temporary canvas with light blue background
+            tempCtx.fillStyle = '#e2f5fb'
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+
+            // Draw original QR code to temporary canvas
+            tempCtx.drawImage(qrImage, 0, 0)
+
+            // Get image data for color manipulation
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
+            const data = imageData.data
+
+            // Replace colors:
+            // - Black pixels become #003366
+            // - White pixels become #e2f5fb
+            for (let i = 0; i < data.length; i += 4) {
+              if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+                // Black to Navy Blue (#003366)
+                data[i] = 0x00 // R: 0
+                data[i + 1] = 0x33 // G: 51
+                data[i + 2] = 0x66 // B: 102
+              } else if (data[i] === 255 && data[i + 1] === 255 && data[i + 2] === 255) {
+                // White to Light Blue (#e2f5fb)
+                data[i] = 0xe2 // R: 226
+                data[i + 1] = 0xf5 // G: 245
+                data[i + 2] = 0xfb // B: 251
+              }
+            }
+
+            // Put modified image data back to temporary canvas
+            tempCtx.putImageData(imageData, 0, 0)
+
+            // Draw the color-modified QR code
+            ctx.drawImage(tempCanvas, padding, 200, 250, 250)
 
             // Name - using red color and larger font with padding
             ctx.fillStyle = '#FF0000'
@@ -426,8 +782,8 @@ const UserInvitation = () => {
               contactY,
             )
 
-            // Address
             ctx.fillText('One Galle Face Tower, 2208, 1A Centre Road,', contentX, contactY + 40)
+            // ctx.fillText(`${submissionResult.address}`, contentX, contactY + 40)
             ctx.fillText('Colombo 002, Sri Lanka', contentX, contactY + 80)
 
             // Head Office
@@ -497,35 +853,339 @@ const UserInvitation = () => {
       }))
       setIsDownloading(false)
     }
-    // try {
-    //   // Import html2canvas dynamically
-    //   const html2canvas = (await import('html2canvas')).default
-
-    //   // Get the div element
-    //   const element = document.getElementById('download-content')
-    //   if (!element) return
-
-    //   // Create canvas
-    //   const canvas = await html2canvas(element)
-
-    //   // Convert to JPEG
-    //   const dataUrl = canvas.toDataURL('image/jpeg', 0.8)
-
-    //   // Create download link
-    //   const link = document.createElement('a')
-    //   link.download = 'downloaded-content.jpg'
-    //   link.href = dataUrl
-
-    //   // Trigger download
-    //   document.body.appendChild(link)
-    //   link.click()
-    //   document.body.removeChild(link)
-    // } catch (error) {
-    //   console.error('Error downloading image:', error)
-    // }
   }
 
-  // Add new state for sorting
+
+  const handleDownload1 = async () => {
+    if (!submissionResult?.qrCodeUrl) return;
+
+    setIsDownloading(true);
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1086.9; // 3.5 inches * 300 DPI
+      canvas.height = 638.1; // 2 inches * 300 DPI
+      const ctx = canvas.getContext('2d');
+      const padding = 110.55;
+
+      const backgroundImage = new Image();
+      backgroundImage.src = cardImage;
+
+      return new Promise((resolve, reject) => {
+        backgroundImage.onload = () => {
+          ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+          const decodedSvg = decodeURIComponent(submissionResult.qrCodeUrl.split('<?xml')[1]);
+          const svgContent = `<?xml${decodedSvg}`;
+          const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' });
+          const svgUrl = URL.createObjectURL(svgBlob);
+
+          const qrImage = new Image();
+          qrImage.onload = () => {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = qrImage.width;
+            tempCanvas.height = qrImage.height;
+
+            tempCtx.fillStyle = '#e2f5fb';
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            tempCtx.drawImage(qrImage, 0, 0);
+
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+              if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+                data[i] = 0x00;
+                data[i + 1] = 0x33;
+                data[i + 2] = 0x66;
+              } else if (data[i] === 255 && data[i + 1] === 255 && data[i + 2] === 255) {
+                data[i] = 0xe2;
+                data[i + 1] = 0xf5;
+                data[i + 2] = 0xfb;
+              }
+            }
+
+            tempCtx.putImageData(imageData, 0, 0);
+            ctx.drawImage(tempCanvas, padding, 250, 300, 300); // Adjusted height to 300
+
+            ctx.fillStyle = '#FF0000';
+            ctx.font = 'bold 48px "Rubik Regular"';
+            ctx.fillText(submissionResult.name, padding, 130); // Increased padding for the name
+
+            ctx.fillStyle = '#003366';
+            ctx.font = 'bold 32px "Rubik Regular"';
+            ctx.fillText(`${submissionResult.designation} | Marketing`, padding, 190); // "Marketing" is now bold
+
+            const contactY = 260;
+            const contentX = padding + 310;
+
+            ctx.fillStyle = '#003366';
+            ctx.font = '24px Arial';
+            ctx.fillText(`${submissionResult.contact} | ${submissionResult.email}`, contentX, contactY);
+            ctx.fillText('One Galle Face Tower, 2208, 1A Centre Road,', contentX, contactY + 40);
+            ctx.fillText('Colombo 002, Sri Lanka', contentX, contactY + 80);
+
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('Head Office', contentX, contactY + 160); // Added more gap for "Head Office"
+            ctx.font = '24px Arial';
+            ctx.fillText('+94 11 235 2400', contentX, contactY + 200);
+            ctx.fillText('80, Genting Lane, Ruby Industrial Complex,', contentX, contactY + 240);
+            ctx.fillText('Genting Block, 349565, Singapore', contentX, contactY + 280);
+
+            ctx.fillStyle = '#FF0000';
+            ctx.font = '24px Arial';
+            const countriesY = contactY + 340;
+            ctx.fillText('Countries Of Operation : ', padding, countriesY);
+
+            const prefixText = 'Countries Of Operation : ';
+            const prefixWidth = ctx.measureText(prefixText).width;
+
+            ctx.font = 'bold 24px Arial';
+            const countryCodesX = padding + prefixWidth;
+            ctx.fillText('SG | MY | VN | LK | MV', countryCodesX, countriesY);
+
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const link = document.createElement('a');
+                const downloadUrl = URL.createObjectURL(blob);
+                link.href = downloadUrl;
+                link.download = `${submissionResult.name
+                  .toLowerCase()
+                  .replace(/\s+/g, '-')}-business-card.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                URL.revokeObjectURL(downloadUrl);
+                URL.revokeObjectURL(svgUrl);
+                setIsDownloading(false);
+                resolve();
+              } else {
+                reject(new Error('Canvas to Blob conversion failed'));
+              }
+            }, 'image/png');
+          };
+
+          qrImage.onerror = () => {
+            reject(new Error('QR code image loading failed'));
+            setIsDownloading(false);
+          };
+
+          qrImage.src = svgUrl;
+        };
+
+        backgroundImage.onerror = () => {
+          reject(new Error('Background image loading failed'));
+          setIsDownloading(false);
+        };
+      });
+    } catch (error) {
+      console.error('Download failed:', error);
+      setErrors((prev) => ({
+        ...prev,
+        download: 'Failed to download business card. Please try again.',
+      }));
+      setIsDownloading(false);
+    }
+  };
+
+
+
+
+  // const handleDownload = async () => {
+  //   if (!submissionResult?.qrCodeUrl) return
+
+  //   setIsDownloading(true)
+  //   try {
+  //     // Create canvas with business card dimensions (standard size 3.5 x 2 inches at 300 DPI)
+  //     const canvas = document.createElement('canvas')
+  //     canvas.width = 1086.9 // 3.5 inches * 300 DPI
+  //     canvas.height = 638.1 // 2 inches * 300 DPI
+  //     const ctx = canvas.getContext('2d')
+
+  //     // Load Rubik font
+  //     const loadFont = async () => {
+  //       try {
+  //         const fontFace = new FontFace(
+  //           'Rubik',
+  //           'url(https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap)'
+  //         )
+
+  //         const fontLoadPromise = Promise.race([
+  //           fontFace.load(),
+  //           new Promise((_, reject) =>
+  //             setTimeout(() => reject(new Error('Font loading timeout')), 3000)
+  //           )
+  //         ])
+
+  //         await fontLoadPromise
+  //         document.fonts.add(fontFace)
+  //         return 'Rubik'
+  //       } catch (error) {
+  //         console.warn('Rubik font loading failed, falling back to system fonts:', error)
+  //         return '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  //       }
+  //     }
+
+  //     // Layout constants
+  //     const CARD_PADDING = 110.55 // 9.3mm at 300 DPI
+  //     const QR_SIZE = 200
+  //     const QR_Y = 180
+  //     const NAME_Y = 100
+  //     const DESIGNATION_Y = 150
+  //     const LINE_HEIGHT = 35
+  //     const SECTION_GAP = LINE_HEIGHT * 1.5
+
+  //     // Content positioning
+  //     const CONTENT_X = CARD_PADDING + QR_SIZE + 50 // Start of text content after QR code
+
+  //     // Create background image
+  //     const backgroundImage = new Image()
+  //     backgroundImage.src = cardImage
+
+  //     return new Promise(async (resolve, reject) => {
+  //       // Wait for font to load
+  //       const fontFamily = await loadFont()
+
+  //       backgroundImage.onload = () => {
+  //         // Draw background
+  //         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
+
+  //         // Process QR code
+  //         const decodedSvg = decodeURIComponent(submissionResult.qrCodeUrl.split('<?xml')[1])
+  //         const svgContent = `<?xml${decodedSvg}`
+  //         const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' })
+  //         const svgUrl = URL.createObjectURL(svgBlob)
+
+  //         const qrImage = new Image()
+  //         qrImage.onload = () => {
+  //           // QR code color manipulation
+  //           const tempCanvas = document.createElement('canvas')
+  //           const tempCtx = tempCanvas.getContext('2d')
+  //           tempCanvas.width = qrImage.width
+  //           tempCanvas.height = qrImage.height
+
+  //           tempCtx.drawImage(qrImage, 0, 0)
+  //           const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
+  //           const data = imageData.data
+
+  //           // Convert black to navy blue (#003366)
+  //           for (let i = 0; i < data.length; i += 4) {
+  //             if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+  //               data[i] = 0x00     // R
+  //               data[i + 1] = 0x33 // G
+  //               data[i + 2] = 0x66 // B
+  //             }
+  //           }
+
+  //           tempCtx.putImageData(imageData, 0, 0)
+
+  //           // Draw the colored QR code
+  //           ctx.drawImage(tempCanvas, CARD_PADDING, QR_Y, QR_SIZE, QR_SIZE)
+
+  //           // Draw name
+  //           ctx.fillStyle = '#FF0000'
+  //           ctx.font = `bold 48px ${fontFamily}`
+  //           ctx.textBaseline = 'middle'
+  //           ctx.fillText(submissionResult.name, CARD_PADDING, NAME_Y)
+
+  //           // Draw designation
+  //           ctx.fillStyle = '#003366'
+  //           ctx.font = `32px ${fontFamily}`
+  //           ctx.fillText(`${submissionResult.designation} | Marketing`, CARD_PADDING, DESIGNATION_Y)
+
+  //           // Contact details section
+  //           ctx.fillStyle = '#003366'
+  //           ctx.font = '24px Arial'
+  //           let currentY = QR_Y
+
+  //           // Contact and email (aligned with QR code top)
+  //           ctx.fillText(
+  //             `${submissionResult.contact} | ${submissionResult.email}`,
+  //             CONTENT_X,
+  //             currentY
+  //           )
+  //           currentY += LINE_HEIGHT
+
+  //           // Office address
+  //           ctx.fillText(`${submissionResult.office_address}`, CONTENT_X, currentY)
+  //           currentY += LINE_HEIGHT
+  //           ctx.fillText('Colombo 002, Sri Lanka', CONTENT_X, currentY)
+  //           currentY += SECTION_GAP
+
+  //           // Head Office section
+  //           ctx.font = 'bold 24px Arial'
+  //           ctx.fillText('Head Office', CONTENT_X, currentY)
+  //           currentY += LINE_HEIGHT
+
+  //           ctx.font = '24px Arial'
+  //           ctx.fillText('+94 11 235 2400', CONTENT_X, currentY)
+  //           currentY += LINE_HEIGHT
+  //           ctx.fillText('80, Genting Lane, Ruby Industrial Complex,', CONTENT_X, currentY)
+  //           currentY += LINE_HEIGHT
+  //           ctx.fillText('Genting Block, 349565, Singapore', CONTENT_X, currentY)
+  //           currentY += SECTION_GAP
+
+  //           // Countries section at bottom
+  //           ctx.fillStyle = '#FF0000'
+  //           ctx.font = '24px Arial'
+  //           const prefixText = 'Countries Of Operation : '
+  //           const prefixWidth = ctx.measureText(prefixText).width
+
+  //           // Calculate vertical position for countries section
+  //           const countriesY = QR_Y + QR_SIZE + LINE_HEIGHT
+  //           ctx.fillText(prefixText, CARD_PADDING, countriesY)
+
+  //           // Draw country codes in bold
+  //           ctx.font = 'bold 24px Arial'
+  //           ctx.fillText('SG | MY | VN | LK | MV', CARD_PADDING + prefixWidth, countriesY)
+
+  //           // Convert to PNG and trigger download
+  //           canvas.toBlob((blob) => {
+  //             if (blob) {
+  //               const link = document.createElement('a')
+  //               const downloadUrl = URL.createObjectURL(blob)
+  //               link.href = downloadUrl
+  //               link.download = `${submissionResult.name
+  //                 .toLowerCase()
+  //                 .replace(/\s+/g, '-')}-business-card.png`
+  //               document.body.appendChild(link)
+  //               link.click()
+  //               document.body.removeChild(link)
+
+  //               URL.revokeObjectURL(downloadUrl)
+  //               URL.revokeObjectURL(svgUrl)
+  //               setIsDownloading(false)
+  //               resolve()
+  //             } else {
+  //               reject(new Error('Canvas to Blob conversion failed'))
+  //             }
+  //           }, 'image/png')
+  //         }
+
+  //         qrImage.onerror = () => {
+  //           reject(new Error('QR code image loading failed'))
+  //           setIsDownloading(false)
+  //         }
+
+  //         qrImage.src = svgUrl
+  //       }
+
+  //       backgroundImage.onerror = () => {
+  //         reject(new Error('Background image loading failed'))
+  //         setIsDownloading(false)
+  //       }
+  //     })
+  //   } catch (error) {
+  //     console.error('Download failed:', error)
+  //     setErrors((prev) => ({
+  //       ...prev,
+  //       download: 'Failed to download business card. Please try again.',
+  //     }))
+  //     setIsDownloading(false)
+  //   }
+  // }
+
   const [sortConfig, setSortConfig] = useState({
     key: 'updated_at',
     direction: 'desc',
@@ -913,7 +1573,7 @@ const UserInvitation = () => {
                                     Converting...
                                   </>
                                 ) : (
-                                  'Download QR Code (PNG)'
+                                  'Download Business Card (PNG)'
                                 )}
                               </CButton>
                             </div>
