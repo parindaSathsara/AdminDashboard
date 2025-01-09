@@ -135,7 +135,7 @@ export default function ConditionForm({ show, handleCloseModal, onSubmit, modalD
                 setDataDiscount(response.data.data)
             }
         })
-    }, [])
+    }, [show])
 
     useEffect(() => {
         loadDiscountsTypes().then(response => {

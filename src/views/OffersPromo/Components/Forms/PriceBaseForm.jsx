@@ -29,7 +29,7 @@ export default function PriceBaseForm({ show, handleCloseModal, onSubmit, modalD
                         setDataDiscount(response.data.data)
                     }
                 })
-            }, [])
+            }, [show])
 
     useEffect(() => {
         loadDiscountsTypes().then(response => {
