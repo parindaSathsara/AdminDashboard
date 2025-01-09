@@ -85,7 +85,7 @@ const MainDashboard = () => {
                                 );
                             }
                         })
-                        Swal.fire('Discount Deleted!', 'Discount Deleted Successfully', 'success');
+                        // Swal.fire('Discount Deleted!', 'Discount Deleted Successfully', 'success');
                     }
                 });
             }
