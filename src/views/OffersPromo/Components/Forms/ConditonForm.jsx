@@ -96,7 +96,7 @@ export default function ConditionForm({ show, handleCloseModal, onSubmit, modalD
 
 function renderFormInput(column, register, errors, discountTypes, formData, handleChange,dataDiscount) {
 
-    const conditionType =[{name:"Condition 1"},{name:"Condition 2"},{name:"Condition 3"}]
+    const conditionType =[{value:"price_condition",name:"Price Condition"}]
 
     switch (column.accessorKey) {
         case 'discount_id':
@@ -138,7 +138,7 @@ function renderFormInput(column, register, errors, discountTypes, formData, hand
                             <option value="">Select Condition Type</option>
                             {
                              conditionType.map((type) => (
-                                <option key={type.name} value={type.name}>
+                                <option key={type.value} value={type.value}>
                                     {type.name}
                                 </option>
                             ))
