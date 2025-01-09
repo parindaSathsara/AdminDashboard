@@ -711,7 +711,9 @@ export default function TravellerExperience(props) {
                 <h6>There are no drivers available at this time</h6>
               </div>
             ) : (
-              driverDetails.map((driver, index) => (
+              driverDetails
+              .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
+              .map((driver, index) => (
                 <div
                   key={index}
                   className="driver-vehicle-card"

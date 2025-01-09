@@ -169,6 +169,17 @@ const AccessManagement = () => {
     ]
   } 
 
+  const OffersManagePermissions = {
+    "name": "Offers Management",
+    "permissions": [
+     "Manage Offers",
+     "View Offers",
+    ],
+    "values": [
+      "manage offers",
+    ]
+  } 
+
   
 
   // State for selected user, role, and permissions
@@ -495,6 +506,24 @@ const AccessManagement = () => {
                           value={blogPermissions.values[index]}
                           checked={selectedPermissions.includes(blogPermissions.values[index])}
                           onChange={() => handlePermissionChange(blogPermissions.values[index])}
+                        />
+                      ))}
+                    </div>
+                  </CCol>
+                </CRow>
+
+                <CRow className="mb-4">
+                  <CCol>
+                    <CFormLabel style={{ fontWeight: 'bold' }}>{OffersManagePermissions.name}</CFormLabel>
+                    <div className="d-flex flex-wrap gap-3">
+                      {OffersManagePermissions.permissions.map((permission, index) => (
+                        <CFormCheck
+                          key={permission}
+                          id={permission}
+                          label={permission}
+                          value={OffersManagePermissions.values[index]}
+                          checked={selectedPermissions.includes(OffersManagePermissions.values[index])}
+                          onChange={() => handlePermissionChange(OffersManagePermissions.values[index])}
                         />
                       ))}
                     </div>

@@ -286,8 +286,8 @@ function AccountsDetails(props) {
                       <table className="table table-bordered table__PayentProf">
                         <thead>
                           <tr>
-                            <th scope="col">Payment Status</th>
-                            <th scope="col">Payment Result</th>
+                          <th scope="col">Transaction No</th>
+                          <th scope="col">Reference No</th>
                             <th scope="col">Gateway</th>
 
                             <th scope="col">Checkout Date</th>
@@ -298,9 +298,9 @@ function AccountsDetails(props) {
                             {dataset['result'] == 'SUCCESS' ? (
                               <td className="status_success">{dataset['result']}</td>
                             ) : (
-                              <td>{dataset['result']}</td>
+                              <td>{dataset['payment_transaction_id'].split('|')[1]}</td>
                             )}
-                            <td>{dataset['trans_token']}</td>
+                            <td>{dataset['payment_transaction_id'].split('|')[0]}</td>
                             <td>{dataset['gateway_type']}</td>
                             <td>{dataset['created_at']}</td>
                             <td>
