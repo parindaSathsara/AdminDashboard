@@ -96,7 +96,7 @@ const routes = [
   { path: '/blogs/listBlogs', name: 'List Blogs', element: ListBlogs, exact: true },
   { path: '/blogs/viewBlog/:id', name: 'View Blog', element: VIewBlog, exact: true },
 
-  { path: '/offers_promo', name: 'Promotions & Offers', element: OffersPromoDashboard, exact: true },
+  { path: '/offers_promo', name: 'Discounts', element: OffersPromoDashboard, exact: true },
 
   { path: '/vendors', name: 'Vendors', element: VendorList, exact: true },
   { path: '/vendors/analytics', name: 'Vendor Analytics', element: VendorAnalytic },

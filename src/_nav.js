@@ -65,7 +65,7 @@ function getNavigationHook(permissions){
   
     {
       component: CNavItem,
-      name: 'Promotions & Offers',
+      name: 'Discounts',
       to: '/offers_promo',
       icon: <CIcon icon={cilVolumeLow} customClassName="nav-icon" />,
       hidden: !permissions.some(permission => promotionPermissions.includes(permission)),
