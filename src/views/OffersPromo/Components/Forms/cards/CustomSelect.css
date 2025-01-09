@@ -1,0 +1,129 @@
+.custom-select-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    /* font-weight: bold; */
+  }
+  
+  .custom-select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #fff;
+  }
+  
+  .custom-select.is-invalid {
+    border-color: red;
+  }
+  
+  .custom-select-value {
+    flex: 1;
+    color: #333;
+  }
+  
+  .custom-select-arrow {
+    margin-left: 7px;
+    font-size: 12px;
+  }
+  
+  .custom-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  
+  .custom-select-option {
+    padding: 0px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .custom-select-option:hover {
+    background: #f0f0f0;
+  }
+  
+  .custom-select-option.selected {
+    background: #dee3e6;
+    color: #fff;
+  }
+  
+
+
+  .custom-select-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .custom-select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+  }
+  
+  .custom-select.is-invalid {
+    border-color: red;
+  }
+  
+  .custom-select-value {
+    flex: 1;
+  }
+  
+  .custom-select-arrow {
+    margin-left: 10px;
+  }
+  
+  .custom-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  .custom-select-search {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .custom-select-option {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .custom-select-option:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .custom-select-option.selected {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
