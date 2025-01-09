@@ -526,7 +526,7 @@ const UserInvitation = () => {
 
 
 
-  const handleDownload = async () => {
+  const handleDownload_correct = async () => {
     if (!submissionResult?.qrCodeUrl) return
 
     setIsDownloading(true)
@@ -686,6 +686,102 @@ const UserInvitation = () => {
       setErrors((prev) => ({
         ...prev,
         download: 'Failed to download business card. Please try again.',
+      }))
+      setIsDownloading(false)
+    }
+  }
+
+  const handleDownload = async () => {
+    if (!submissionResult?.qrCodeUrl) return
+
+    setIsDownloading(true)
+    try {
+      // Create canvas for QR code
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+
+      // Set canvas size for QR code (250x250 as in original)
+      canvas.width = 250
+      canvas.height = 250
+
+      // Decode and prepare SVG
+      const decodedSvg = decodeURIComponent(submissionResult.qrCodeUrl.split('<?xml')[1])
+      const svgContent = `<?xml${decodedSvg}`
+      const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' })
+      const svgUrl = URL.createObjectURL(svgBlob)
+
+      return new Promise((resolve, reject) => {
+        const qrImage = new Image()
+        qrImage.onload = () => {
+          // Create temporary canvas for color manipulation
+          const tempCanvas = document.createElement('canvas')
+          const tempCtx = tempCanvas.getContext('2d')
+          tempCanvas.width = qrImage.width
+          tempCanvas.height = qrImage.height
+
+          // Fill with light blue background
+          tempCtx.fillStyle = '#e2f5fb'
+          tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+
+          // Draw QR code
+          tempCtx.drawImage(qrImage, 0, 0)
+
+          // Modify colors
+          const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
+          const data = imageData.data
+
+          for (let i = 0; i < data.length; i += 4) {
+            if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) {
+              // Black to Navy Blue (#003366)
+              data[i] = 0x00
+              data[i + 1] = 0x33
+              data[i + 2] = 0x66
+            } else if (data[i] === 255 && data[i + 1] === 255 && data[i + 2] === 255) {
+              // White to Light Blue (#e2f5fb)
+              data[i] = 0xe2
+              data[i + 1] = 0xf5
+              data[i + 2] = 0xfb
+            }
+          }
+
+          tempCtx.putImageData(imageData, 0, 0)
+
+          // Draw final QR code to main canvas
+          ctx.drawImage(tempCanvas, 0, 0, 250, 250)
+
+          // Convert to PNG and download
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const link = document.createElement('a')
+              const downloadUrl = URL.createObjectURL(blob)
+              link.href = downloadUrl
+              link.download = `${submissionResult.name.toLowerCase().replace(/\s+/g, '-')}-qr-code.png`
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+
+              URL.revokeObjectURL(downloadUrl)
+              URL.revokeObjectURL(svgUrl)
+              setIsDownloading(false)
+              resolve()
+            } else {
+              reject(new Error('Canvas to Blob conversion failed'))
+            }
+          }, 'image/png')
+        }
+
+        qrImage.onerror = () => {
+          reject(new Error('QR code image loading failed'))
+          setIsDownloading(false)
+        }
+
+        qrImage.src = svgUrl
+      })
+    } catch (error) {
+      console.error('QR download failed:', error)
+      setErrors((prev) => ({
+        ...prev,
+        download: 'Failed to download QR code. Please try again.',
       }))
       setIsDownloading(false)
     }
