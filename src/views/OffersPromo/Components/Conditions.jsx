@@ -83,7 +83,7 @@ const MainConditions = () => {
                                 );
                             }
                         })
-                        Swal.fire('Condition Deleted!', 'Condition Deleted Successfully', 'success');
+                        // Swal.fire('Condition Deleted!', 'Condition Deleted Successfully', 'success');
                     }
                 });
             }

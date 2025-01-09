@@ -97,7 +97,7 @@ const ProductBasePromotion = () => {
                                 );
                             }
                         })
-                        Swal.fire('promotion product Deleted!', 'promotion product Deleted Successfully', 'success');
+                        // Swal.fire('promotion product Deleted!', 'promotion product Deleted Successfully', 'success');
                     }
                 });
             }

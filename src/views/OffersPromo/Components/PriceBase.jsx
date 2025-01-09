@@ -82,7 +82,7 @@ const PriceBase = () => {
                                 );
                             }
                         })
-                        Swal.fire('PriceBase Discount Deleted!', 'PriceBase Discount Deleted Successfully', 'success');
+                        // Swal.fire('PriceBase Discount Deleted!', 'PriceBase Discount Deleted Successfully', 'success');
                     }
                 });
             }
