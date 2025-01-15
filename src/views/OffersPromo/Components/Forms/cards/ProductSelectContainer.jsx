@@ -86,7 +86,7 @@ const ProductSelectContainer = ({
       setProductDataList(filteredProducts)
     }
 
-  }, [products, category]);
+  }, [products, category,searchTerm]);
 
   return (
     <div className="custom-select-container" ref={dropdownRef}>

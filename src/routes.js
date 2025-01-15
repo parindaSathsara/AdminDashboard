@@ -20,6 +20,10 @@ import OrderCalenderhomepage from './views/Order-calender/OrderCalender-homepage
 import UserAnalytics from './Panels/UserAnalytics/UserAnalytics'
 import BlogMainPage from './Panels/BlogWriting/BlogMainPage'
 import SupplierSupport from './views/SupplierSupport/SupplierSupport'
+import KpiDashboard from './views/KPIDashboard/KpiDashboard'
+import GlobalTarget from './views/KPIDashboard/GlobleTarget'
+import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
+
 
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
@@ -143,6 +147,10 @@ const routes = [
 
   { path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
   {path:'/analytics',name:'Analytics',element:UserAnalytics,exact:true},
+  {path:'/kpidashboard',name:'KPI Dashboard',element:KpiDashboard,exact:true},
+  {path:'/kpidashboard/team',name:'Team KPI',element:KpiDashboard},
+  {path:'/kpidashboard/globaltarget',name:'Global Target',element:GlobalTarget},
+  {path:'/kpidashboard/chat',name:'Chat Analytics',element:ChatAnalytics},
 
 ]
 
