@@ -160,15 +160,15 @@ const ProductBasePromotion = () => {
 
         // console.log(requiredFields, "Form Data kkkkk")
         for (let field of requiredFields) {
-
             if (!data[field]) {
-                Swal.fire(
-                    'Error!',
-                    `The field ${field} is required.`,
-                    'error'
-                );
-                setRefreshTrigger(false)
-                return;
+            const fieldName = field.replace(/_/g, ' ').replace('id', '').trim();
+            Swal.fire(
+                'Error!',
+                `The field ${fieldName} is required.`,
+                'error'
+            );
+            setRefreshTrigger(false)
+            return;
             }
         }
         console.log(data, "Form Data issssss")

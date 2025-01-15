@@ -84,7 +84,7 @@ const DiscountProductSelectContainer = ({
       setSelectedProduct(null)
     }
 
-  }, [products,category]);
+  }, [products,category, searchTerm]);
 
 
 

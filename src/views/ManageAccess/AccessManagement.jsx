@@ -173,7 +173,6 @@ const AccessManagement = () => {
     "name": "Offers Management",
     "permissions": [
      "Manage Offers",
-     "View Offers",
     ],
     "values": [
       "manage offers",

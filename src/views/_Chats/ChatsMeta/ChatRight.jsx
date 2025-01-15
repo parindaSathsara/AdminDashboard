@@ -5,7 +5,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, increment, onSnapshot, orderBy, query, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
 // import { assignEmployeeToChat,getAllEmployees} from 'src/service/order_allocation_services';
-import { assignEmployeeToChat,getAllEmployees} from './services/chatServices';
+import { assignEmployeeToChat, getAllEmployees } from './services/chatServices';
 import Select from 'react-select';
 
 import { db } from "src/firebase";
@@ -13,7 +13,7 @@ import aahaaslogo from '../../../assets/brand/aahaslogo.png';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles, faMagnifyingGlassLocation, faMagnet, faCog, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faFilter, faPaperPlane, faClipboard, faLink, faMagnifyingGlass, faCircleInfo, faComment, faThumbtack, faMagic, faMagicWandSparkles, faMagnifyingGlassLocation, faMagnet, faCog, faUser, faBoxArchive, faEye } from '@fortawesome/free-solid-svg-icons';
 
 import { Tooltip } from "@material-ui/core";
 import { UserLoginContext } from 'src/Context/UserLoginContext';
@@ -26,10 +26,12 @@ import Swal from 'sweetalert2';
 import { CCardImage, CBadge, CAlert, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
+import MoreProductView from 'src/views/Products/MoreProductView/MoreProductView';
+import moment from 'moment';
 
 export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
-   
+    console.log(chatOpenedData, "Chat Opened Data is")
     const handleSearchBar = ({ status }) => {
         setSearchBarStatus({
             ...searchBarStatus,
@@ -63,9 +65,20 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     }
 
 
-    const getDateAndtime = (data) => {
+    // const getDateAndtime = (data) => {
+    //     console.log("Input",data); 
+    //     const formattedDate = moment(data.seconds).format('HH:mm:ss');
+    //     console.log("Output",formattedDate); // Output: 2025-01-11 16:08:09
+    //     return formattedDate;
+    // }
 
-    }
+
+    const getDateAndtime = (timestamp) => {
+        if (timestamp && timestamp.seconds) {
+            return new Date(timestamp.seconds * 1000 + (timestamp.nanoseconds / 1000000));
+        }
+        return null;
+    };
 
 
     const handleScrollToMessage = () => {
@@ -78,7 +91,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     const { userData } = useContext(UserLoginContext);
 
     const handleSendMessage = async (value) => {
-        if(value === '' || !value.trim()){
+        if (value === '' || !value.trim()) {
             console.log('Empty message');
             return;
         }
@@ -165,7 +178,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
             const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt);
             setMessages(sortedMessages);
-
+            console.log('Messages:', sortedMessages);
             const docRef = doc(db, "customer-chat-lists", chatId.id);
             await updateDoc(docRef, { admin_unreads: 0 });
         });
@@ -262,7 +275,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         // console.log('handleOpenChat function called');
         setChatOpened(true);
         setChatOpenDetails(chatData);
-
+        console.log('chatData', chatData);
 
         setLoader(true)
         await getChatContent({ chatId: chatData, updateState: false });
@@ -282,9 +295,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                 setChatAssignedEmployee(chatOpenedData?.assign_employee);
                 console.log('chatAssignedEmployee', chatOpenedData?.assign_employee);
 
-                if(chatOpenedData?.assign_employee !== ''){
+                if (chatOpenedData?.assign_employee !== '') {
                     const user = availableEmployees.find(employee => employee.id === chatOpenedData?.assign_employee);
-                    if(user)setAssignedEmployee({ id: user.id, name: user.name, allotStatus: 'Allocated', chatId: chatOpenedData?.id });
+                    if (user) setAssignedEmployee({ id: user.id, name: user.name, allotStatus: 'Allocated', chatId: chatOpenedData?.id });
                     console.log("Assigned Employee: ", user);
                 }
             } else {
@@ -428,7 +441,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         // handleCloseModal();
 
         console.log(data)
-        
+
         // setSelectedRow(rowData?.info);
         setShowModal(true);
 
@@ -436,7 +449,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     const handleCloseModal = () => {
         setShowModal(false);
         setSelectedEmployee(null);
-    
+
         // setSelectedRow([]);
         // setSelectedEmployee(null);
     };
@@ -455,28 +468,28 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     });
 
     const monitorAvailability = () => {
-        try{
+        try {
 
             getAllEmployees().then(response => {
                 setAvailableEmployees(response);
-                
-               
+
+
 
 
                 // console.log("Available Employees: ", response);
             }).catch(error => {
                 console.error("Error fetching available employees: ", error);
             });
-        
 
-        }catch(error){
+
+        } catch (error) {
             console.error("Error available employee: ", error);
         }
     };
 
-    useEffect (()=>{
+    useEffect(() => {
         monitorAvailability();
-    },[])
+    }, [])
 
     const handleAllocateEmployee = async () => {
         // console.log(selectedEmployee, "Selected Employee Name iss");
@@ -493,8 +506,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
         if (confirmation.isConfirmed) {
 
-            console.log("Confirmed", selectedEmployee)  
-            console.log("chat Id", chatOpenDetails.id)  
+            console.log("Confirmed", selectedEmployee)
+            console.log("chat Id", chatOpenDetails.id)
 
 
             assignEmployeeToChat(chatOpenDetails.id, selectedEmployee).then(res => {
@@ -514,22 +527,23 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
                     const docRef = doc(db, 'customer-chat-lists', chatOpenDetails?.id);
 
-                     updateDoc(docRef, { assign_employee: selectedEmployee?.value, assign_employee_name: selectedEmployee?.label })
-                    .then(() => {
-                         console.log("Employee assigned to chat successfully");
-                         setAssignedEmployee({ name: selectedEmployee?.label, allotStatus: 'Allocated', chatId: chatOpenedData?.id })
-                         setSelectedEmployee(null);
-                         Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: res[1]
+                    updateDoc(docRef, { assign_employee: selectedEmployee?.value, assign_employee_name: selectedEmployee?.label })
+                        .then(() => {
+                            console.log("Employee assigned to chat successfully");
+                            setAssignedEmployee({ name: selectedEmployee?.label, allotStatus: 'Allocated', chatId: chatOpenedData?.id })
+                            setSelectedEmployee(null);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: res[1]
+                            });
+                        })
+                        .catch((error) => {
+                            console.log("chat Id update function", chatOpenDetails.id)
+                            console.error(" Employee assigned to chat failed : ", error)
                         });
-                     })
-                    .catch((error) => {
-                        console.log("chat Id update function", chatOpenDetails.id)  
-                        console.error(" Employee assigned to chat failed : ", error)});
 
-                   
+
                 }
 
             }).catch(error => {
@@ -553,7 +567,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
             zIndex: 9999,
         }),
     };
-    
+
 
     const handleDeleteEmployee = async (value) => {
         Swal.fire({
@@ -568,38 +582,76 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
             if (result.isConfirmed) {
 
 
-              
-                    // var newDataSet = selectedRow?.allocatedUser?.filter(resFilter => resFilter.allotId !== value);
 
-                    // handleDeleteData(selectedRow?.checkoutID, userData?.id)
+                // var newDataSet = selectedRow?.allocatedUser?.filter(resFilter => resFilter.allotId !== value);
 
-                    // setSelectedRow({
-                    //     ...selectedRow,
-                    //     allocatedUser: newDataSet
-                    // });
+                // handleDeleteData(selectedRow?.checkoutID, userData?.id)
 
-                    // getRows();
+                // setSelectedRow({
+                //     ...selectedRow,
+                //     allocatedUser: newDataSet
+                // });
 
-                    const docRef = doc(db, 'customer-chat-lists', value);
+                // getRows();
 
-                    updateDoc(docRef, { assign_employee: null, assign_employee_name: null })
-                   .then(() => {
-                    setAssignedEmployee({ id: '', name: '', allotStatus: '', chatId: '' });
-                    setSelectedEmployee(null);
-                    
-                    Swal.fire(
-                        'Deleted!',
-                        'The employee has been deleted.',
-                        'success'
-                    );
+                const docRef = doc(db, 'customer-chat-lists', value);
+
+                updateDoc(docRef, { assign_employee: null, assign_employee_name: null })
+                    .then(() => {
+                        setAssignedEmployee({ id: '', name: '', allotStatus: '', chatId: '' });
+                        setSelectedEmployee(null);
+
+                        Swal.fire(
+                            'Deleted!',
+                            'The employee has been deleted.',
+                            'success'
+                        );
                     })
-                   .catch((error) => {
-                       console.log("chat Id update function", chatOpenDetails.id)  
-                       console.error(" Employee assigned to chat failed : ", error)});
-                 }
+                    .catch((error) => {
+                        console.log("chat Id update function", chatOpenDetails.id)
+                        console.error(" Employee assigned to chat failed : ", error)
+                    });
+            }
         });
     };
 
+    const [moreData, setMoreData] = useState([])
+    const [moreProductsModal, setMoreProductModal] = useState(false)
+
+
+    const handleOnClick = (data) => {
+        // console.log(data, "chamod")
+
+        const categories = [
+            { value: "1", name: "Essentials" },
+            { value: "2", name: "NonEssentials" },
+            { value: "3", name: "Lifestyles" },
+            { value: "4", name: "Hotels" },
+            { value: "5", name: "Educations" }
+        ];
+
+        if (data.category) {
+            const category = categories.find(cat => cat.value === data.category.toString());
+            if (category) {
+                data.category = category.name;
+            }
+        }
+        console.log(data, "chamod")
+        setMoreProductModal(true)
+        // // setMoreData({
+        // //     "product_title": "Hompton by the Beach Penang",
+        // //     "product_description": "Hompton by the Beach Penang is a 4-star hotel along the strategic Tanjung Tokong seafront that embodies both business and pleasure, offering travellers a home away from home. At Hompton, we set ourselves apart by offering guests an unforgettable experience that reminisce the irreplaceable comfort of home, upped with attentive service and a panoramic vista of the calm turquoise sea.",
+        // //     "product_image": "https://lh3.googleusercontent.com/p/AF1QipOzbXb60DfxgJ27Deryvflw4LmYItI4sq2PSL6j=s680-w680-h510",
+        // //     "category": "Hotels",
+        // //     "created_date": "2025-12-19",
+        // //     "product_id": 757,
+        // //     "tableData": {
+        // //         "id": 0
+        // //     }
+        // // }) 
+
+        setMoreData(data)
+    }
     return (
 
         <>
@@ -643,9 +695,13 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                 <div className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}>
                                     {/* <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} /> */}
                                     <FontAwesomeIcon icon={faThumbtack} onClick={() => handlePinChats(chatOpenDetails)} style={{ color: chatPinned ? '#ffd00f' : 'white' }} />
+                                    {/* <FontAwesomeIcon icon={faEye} onClick={() => handleOnClick(chatOpenDetails)} style={{ color: '#2bfd3c' }} /> */}
+                                    {chatOpenedData?.comments?.product_id && (
+                                        <FontAwesomeIcon icon={faEye} onClick={() => handleOnClick(chatOpenedData?.comments)} style={{ color: '#2bfd3c' }} />
+                                    )}
 
-                                    {(["assign employer to chat","remove employer from chat", "view assign employer chat"].some(permission => userData?.permissions?.includes(permission))) &&
-                                    <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => {handleAssignEmployee('Employee Asaign')}} style={{ color:"red" }} />
+                                    {(["assign employer to chat", "remove employer from chat", "view assign employer chat"].some(permission => userData?.permissions?.includes(permission))) &&
+                                        <FontAwesomeIcon icon={faUser} className='icon-style' onClick={() => { handleAssignEmployee('Employee Asaign') }} style={{ color: "red" }} />
                                     }
                                     {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
                                 </div>
@@ -675,8 +731,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                                                         <pre className="chat-content-text">{value.text}</pre>
                                                                         : <p className="chat-content-text">{value.text}</p>
                                                                 }
-                                                                <p className="chat-content-personname">{getDateAndtime(value.createdAt)}</p>
-                                                                <p className="chat-content-time">by {value.name.slice(0, 7)}</p>
+                                                                <p className="chat-content-personname">at {moment(getDateAndtime(value.createdAt)).format('MMMM D, YYYY h:mm A')}</p>
+                                                                <p className="chat-content-time">by {value.name.slice(0, 7)}    </p>
                                                             </div>
                                                         </div>
                                                     ))
@@ -755,7 +811,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                   <Select
+                    <Select
                         isSearchable={true}
                         options={employeeOptions}
                         value={selectedEmployee}
@@ -763,7 +819,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                         menuPortalTarget={document.body}
                         styles={customStyles}
                     />
- 
+
                     <br></br>
 
                     {assignedEmployee?.id !== '' ? (
@@ -782,17 +838,17 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                 </CTableHead>
                                 <CTableBody>
                                     {/* {selectedRow?.allocatedUser?.map((response, index) => ( */}
-                                        <CTableRow key={1}>
-                                            <CTableDataCell>{assignedEmployee.name}</CTableDataCell>
-                                            <CTableDataCell>{assignedEmployee.allotStatus}</CTableDataCell>
-                                            <CTableDataCell>
+                                    <CTableRow key={1}>
+                                        <CTableDataCell>{assignedEmployee.name}</CTableDataCell>
+                                        <CTableDataCell>{assignedEmployee.allotStatus}</CTableDataCell>
+                                        <CTableDataCell>
                                             {(["delete assign employee order"].some(permission => userData?.permissions?.includes(permission))) &&
-                                                <CButton color="danger" onClick={() => {handleDeleteEmployee(assignedEmployee.chatId)}} style={{ color: 'white', fontSize: 14 }}>
+                                                <CButton color="danger" onClick={() => { handleDeleteEmployee(assignedEmployee.chatId) }} style={{ color: 'white', fontSize: 14 }}>
                                                     Delete   <CIcon icon={cilTrash} />
                                                 </CButton>
                                             }
-                                            </CTableDataCell>
-                                        </CTableRow>
+                                        </CTableDataCell>
+                                    </CTableRow>
                                     {/* ))} */}
                                 </CTableBody>
                             </CTable>
@@ -805,12 +861,21 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
                 </Modal.Body>
                 <Modal.Footer>
-                {   (["assign employer to chat"].some(permission => userData?.permissions?.includes(permission))) &&
-                    assignedEmployee?.allotStatus === 'Allocated' ? ( null):(<CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>)
-                }
-                   
+                    {(["assign employer to chat"].some(permission => userData?.permissions?.includes(permission))) &&
+                        assignedEmployee?.allotStatus === 'Allocated' ? (null) : (<CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>)
+                    }
+
                 </Modal.Footer>
             </Modal>
+
+            <MoreProductView
+                show={moreProductsModal}
+                onHide={() => setMoreProductModal(false)}
+
+                productData={moreData}
+            >
+
+            </MoreProductView>
         </>
     )
 }

@@ -34,6 +34,29 @@ function getNavigationHook(permissions){
       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
      
     },
+    // {
+    //   component: CNavGroup,
+    //   name: 'KPI Dashboard',
+    //   to: '/kpidashboard',
+    //   icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+    //   items: [
+    //     {
+    //       component: CNavItem,
+    //       name: 'Team KPI',
+    //       to: '/kpidashboard/team',
+    //     },
+    //      {
+    //        component: CNavItem,
+    //       name: 'Global Target',
+    //        to: '/kpidashboard/globaltarget',
+    //      },
+    //     //  {
+    //     //   component: CNavItem,
+    //     //   name: 'Chat Analytics',
+    //     //   to: '/kpidashboard/chat',
+    //     // }
+    //   ],
+    // },
     {
       component: CNavItem,
       name: 'Orders',
