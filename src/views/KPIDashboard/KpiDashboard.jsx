@@ -8,8 +8,10 @@ import Select from "react-select"
 import { createTheme, ThemeProvider } from '@mui/material'
 import MaterialTable from 'material-table'
 import { zIndex } from '@mui/material/styles/zIndex';
-import { getOrderWiseBookingDetails, getOrderIDs, getAllEmployees, getAllOrdersBooking, getUserWiseOrdersBooking, getOrderWiseOrdersBooking } from './KpiService'
+import { getOrderWiseBookingDetails, getOrderIDs, getAllEmployees, getAllOrdersBooking, getUserWiseOrdersBooking, getOrderWiseOrdersBooking, getAllProducts, getAllCountry, getSupplierByCountryWise } from './KpiService'
 import Swal from 'sweetalert2';
+import { countryList } from 'react-select-country-list';
+import { toast } from 'react-hot-toast';
 
 const KpiDashboard = () => {
     const defaultMaterialTheme = createTheme();
@@ -54,8 +56,6 @@ const KpiDashboard = () => {
         const [selectedOrderID, setSelectedOrderID] = useState(null)
         const [selectedEmployeeId, setSelectedEmployeeId] = useState(null)
         const [availableEmployees, setAvailableEmployees] = useState([]);
-        const [selectedDatesUser, setSelectedDatesUser] = useState([])
-        const [selectedDatesAllOrders, setSelectedDatesAllOrders] = useState([])
         const [selectedDatesAllOrdersDate, setSelectedDatesAllOrdersDate] = useState([])
         const [selectedDatesUserOrdersDate, setSelectedDatesUserOrdersDate] = useState([])
         const [averageAllOrderData, setAverageAllOrderData] = useState([])
@@ -63,16 +63,22 @@ const KpiDashboard = () => {
         const [averageOrderData, setAverageOrderData] = useState([])
         const [inDetailsOrders, setInDetailsOrders] = useState([])
 
+        // useEffect(() => {
+        //     const currentDate = new Date();
+        //     const startDate = new Date(currentDate.getFullYear(), 0, 1);
+        //     const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+        //     const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
+        //     setSelectedDatesAllOrdersDate([formattedStartDate, formattedEndDate])
+        //     // setSelectedDatesUserOrdersDate([formattedStartDate, formattedEndDate])
+        // }, []);
+
         useEffect(() => {
             const currentDate = new Date();
             const startDate = new Date(currentDate.getFullYear(), 0, 1);
             const formattedStartDate = format(startDate, 'yyyy-MM-dd');
             const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
             setSelectedDatesAllOrdersDate([formattedStartDate, formattedEndDate])
-            // setSelectedDatesUserOrdersDate([formattedStartDate, formattedEndDate])
-        }, []);
 
-        useEffect(() => {
             getOrderIDs().then(response => {
                 var dataSet = response.map(res => ({
                     value: res?.id,
@@ -309,8 +315,8 @@ const KpiDashboard = () => {
                                      <CCol sm={3} xl={3} xxl={3}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
                                             <>
-                                            <div><h5 className='fw-normal d-inline'>Order Duration: </h5>{averageOrderData?.order_duration}</div>
-                                            <div><h5 className='fw-normal d-inline'>Order Status: </h5> {averageOrderData?.order_status}</div>
+                                            <div><h5 className='fw-normal d-inline'>Order Duration: </h5><h4>{averageOrderData?.order_duration}</h4></div>
+                                            <div><h5 className='fw-normal d-inline'>Order Status: </h5> <h4>{averageOrderData?.order_status}</h4></div>
                                             {/* <div><h5 className='fw-normal d-inline'>Product Count: </h5> {averageOrderData?.product_count}</div> */}
                                         </>
                                         </h2>
@@ -691,49 +697,100 @@ const KpiDashboard = () => {
 
     const Supplier = () => {
 
-        const categories = [{ value: "0", name: "All Categories" }, { value: "1", name: "Essential" }, { value: "2", name: "NonEssential" }, { value: "3", name: "Lifestyle" }, { value: "4", name: "Hotel" }, , { value: "5", name: "Education" }]
-        const supplierDestination = [{ value: "0", name: "All Country" }, { value: "1", name: "Sri Lanka" }, { value: "2", name: "India" }, { value: "3", name: "Vietnam" }]
+        const categories = [{ value: "all", name: "All Categories" }, { value: "1", name: "Essential" }, { value: "2", name: "NonEssential" }, { value: "3", name: "Lifestyle" }, { value: "4", name: "Hotel" }, , { value: "5", name: "Education" }]
+        const [selectDefaultDate, setSelectedDate] = useState([])
+        const [category, setCategory] = useState('all')
+        const [productsDate, setProductsDate] = useState([])
+        const [countryList, setCountryList] = useState([])
+        const [selectProductCountry, setSelectProductCountry] = useState('all')
+        const [selectSupplierCountry, setSelectSupplierCountry] = useState('all')
+        const [supplierData, setSupplierData] = useState([])
 
+        useEffect(() => {
+            const currentDate = new Date();
+            const startDate = new Date(currentDate.getFullYear(), 0, 1);
+            const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+            const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
+            setSelectedDate([formattedStartDate, formattedEndDate])
 
+            getAllCountry().then((response) => {
+                var dataSet = [{ value: "all", label: "All Country" }, ...response.map(res => ({
+                    value: res?.code,
+                    label: res?.name
+                }))];
+                setCountryList(dataSet)
+            }).catch((err) => {})
+            // setSelectedDatesUserOrdersDate([formattedStartDate, formattedEndDate])
+        }, []);
+
+        useEffect(() => {
+
+            if(category && selectDefaultDate.length > 0 && selectProductCountry){
+                getAllProducts(selectDefaultDate, category, selectProductCountry).then((res) => {
+                    console.log("All product", res)
+                    setProductsDate(res)
+                }).catch((err) => {})
+            }
+
+            if(selectSupplierCountry){
+                console.log("All supplierr count" )
+                getSupplierByCountryWise(selectSupplierCountry).then((res) => {
+                    console.log("All supplierr count", res)
+                    setSupplierData(res)
+                }).catch((err) => {})
+            }
+
+        }, [selectDefaultDate, category, selectSupplierCountry])
+
+        const handleDateRangeChangeSupplier = (value, type) => {
+            if (value) {
+                const formattedStartDate = format(value[0], 'yyyy-MM-dd')
+                const formattedEndDate = format(value[1], 'yyyy-MM-dd')
+                setSelectedDate([formattedStartDate, formattedEndDate])
+            } else {
+                setSelectedDate([])
+            }
+        }
 
         return (
             <>
                 <br></br>
                 <CRow>
-                    <CCol >
-                        <CCard sm={6} xl={7} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
+                    <CCol sm={6} xl={6} xxl={6} >
+                        <CCard sm={6} xl={6} xxl={6} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
                             <CHeader>
                                 Products
                                 <Select
-                                    // id={id}
                                     options={categories.map((option) => ({
                                         value: option.value,
                                         label: option.name,
                                     }))}
-                                    defaultValue={{ value: "0", label: "All Categories" }}
-                                    // value={options.find((option) => option.origin_rate_id === `${value}`)}
-                                    // onChange={(selectedOption) =>
-                                    //     onChange({
-                                    //         name,
-                                    //         value: selectedOption ? selectedOption.value : "",
-                                    //     })
-                                    // }
+                                    defaultValue={{ value: "all", label: "All Categories" }}
+                                    onChange={(selectedOption) => setCategory(selectedOption?.value)}
                                     placeholder="Select an Category"
                                     isClearable
                                 />
                                 <DateRangePicker
                                     style={{ marginLeft: 0 }}
                                     format="yyyy/MM/dd"
-                                    onChange={handleDateRangeChangeTravel}
-                                    value={selectedDatesTraveler.length > 0 ? [new Date(selectedDatesTraveler[0]), new Date(selectedDatesTraveler[1])] : null}
+                                    onChange={handleDateRangeChangeSupplier}
+                                    value={selectDefaultDate.length > 0 ? [new Date(selectDefaultDate[0]), new Date(selectDefaultDate[1])] : null}
 
                                 />
+                                <Select
+                                    options={countryList}
+                                    defaultValue={{ value: "all", label: "All Country" }}
+                                    onChange={(selectedOption) => setSelectProductCountry(selectedOption?.value)}
+                                    placeholder="Select an Country"
+                                    isClearable
+                                />
+
                             </CHeader>
                             <CCardBody>
                                 <CRow>
-                                    <CCol sm={6} xl={12} xxl={12}>
+                                    <CCol sm={6} xl={6} xxl={6}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            3500
+                                            {productsDate?.product_count}
                                         </h2>
                                         </>}
                                             title={<>
@@ -742,37 +799,38 @@ const KpiDashboard = () => {
                                                 </h5>
                                             </>} />
                                     </CCol>
+                                    <CCol sm={6} xl={6} xxl={6}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {productsDate?.supplier_count}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Total Supplier Count Related to Products
+                                                </h5>
+                                            </>} />
+                                    </CCol>
                                 </CRow>
                             </CCardBody>
                         </CCard>
                     </CCol>
-                    <CCol >
-                        <CCard sm={6} xl={4} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
+                    <CCol sm={6} xl={6} xxl={6} >
+                        <CCard sm={6} xl={6} xxl={6} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
                             <CHeader>Supplier
 
-                                <Select
-                                    // id={id}
-                                    options={supplierDestination.map((option) => ({
-                                        value: option.value,
-                                        label: option.name,
-                                    }))}
-                                    defaultValue={{ value: "0", label: "All Counties" }}
-                                    // value={options.find((option) => option.origin_rate_id === `${value}`)}
-                                    // onChange={(selectedOption) =>
-                                    //     onChange({
-                                    //         name,
-                                    //         value: selectedOption ? selectedOption.value : "",
-                                    //     })
-                                    // }
+                            <Select
+                                    options={countryList}
+                                    defaultValue={{ value: "all", label: "All Country" }}
+                                    onChange={(selectedOption) => setSelectSupplierCountry(selectedOption?.value)}
                                     placeholder="Select an Country"
                                     isClearable
                                 />
                             </CHeader>
                             <CCardBody>
                                 <CRow>
-                                    <CCol >
+                                    <CCol sm={6} xl={6} xxl={6}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            465
+                                            {supplierData?.supplier_count}
                                         </h2>
                                         </>}
                                             title={<>
@@ -781,7 +839,17 @@ const KpiDashboard = () => {
                                                 </h5>
                                             </>} />
                                     </CCol>
-
+                                    <CCol sm={6} xl={6} xxl={6}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {supplierData?.product_count}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Products Related to Suppliers
+                                                </h5>
+                                            </>} />
+                                    </CCol>
                                 </CRow>
                             </CCardBody>
                         </CCard>
