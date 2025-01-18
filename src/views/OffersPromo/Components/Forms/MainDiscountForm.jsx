@@ -5,22 +5,28 @@ import { useForm } from 'react-hook-form';
 import { loadDiscountsTypes } from '../../offersServices';
 
 const columns = [
-    { accessorKey: 'discount_title', header: 'Discount Title' },
-    { accessorKey: 'type', header: 'Type' },
-    { accessorKey: 'start_date', header: 'Start Date' },
-    { accessorKey: 'expiry_date', header: 'Expiry Date' },
+    { accessorKey: 'discount_tag_line', header: 'Discount Title' },
+    { accessorKey: 'discount_total_limit', header: 'Total Limit' },
+    { accessorKey: 'discount_start_date', header: 'Start Date' },
+    { accessorKey: 'discount_end_date', header: 'End Date' },
+    { accessorKey: 'discount_travel_start_date', header: 'Travel Start Date' },
+    { accessorKey: 'discount_travel_end_date', header: 'Travel End Date' },
 ];
 
 export default function MainDiscountForm({ show, handleCloseModal, onSubmit, modalData, edit }) {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 
+    // console.log(modalData, "Modal Data");
+
     const [discountTypes, setDiscountTypes] = useState([]);
     const [formData, setFormData] = useState({
         id: '',
-        discount_title: '',
-        type: '',
-        start_date: '',
-        expiry_date: ''
+        discount_tag_line: '',
+        discount_total_limit: '',
+        discount_start_date: '',
+        discount_end_date: '',
+        discount_travel_start_date: '',
+        discount_travel_end_date: '',
     })
 
     useEffect(() => {
@@ -32,10 +38,12 @@ export default function MainDiscountForm({ show, handleCloseModal, onSubmit, mod
 
         if (modalData) {
             setFormData({
-                discount_title: modalData.discount_title || '',
-                type: modalData.type_id || '',
-                start_date: modalData.start_date || '',
-                expiry_date: modalData.expiry_date || '',
+                discount_total_limit: modalData.discount_total_limit || '',
+                discount_tag_line: modalData.discount_tag_line || '',
+                discount_start_date: modalData.discount_start_date || '',
+                discount_end_date: modalData.discount_end_date || '',
+                discount_travel_start_date: modalData.discount_travel_start_date || '',
+                discount_travel_end_date: modalData.discount_travel_end_date || '',
                 id: modalData.id || ""
             });
 
@@ -87,30 +95,26 @@ function renderFormInput(column, register, errors, discountTypes, formData, hand
 
 
     switch (column.accessorKey) {
-        case 'type':
+        case 'discount_total_limit':
             return (
-                <CCol md={12}>
-                    <CFormSelect
-                        id="type"
-                        label="Discount Type"
-                        name="type"
-                        value={formData.type}
-                        invalid={errors.type ? true : false}
-                        {...register("type", { required: true })}
+                <>
+                    <CFormInput
+                        type="number"
+                        id={column.accessorKey}
+                        label={column.header}
+                        name={column.accessorKey}
+                        value={formData[column.accessorKey]}
+                        invalid={errors[column.accessorKey] ? true : false}
+                        {...register(column.accessorKey, { required: true })}
                         onChange={handleChange}
-                    >
-                        <option value="">Select Discount Type</option>
-                        {discountTypes.map((type) => (
-                            <option key={type.discount_type_id} value={type.discount_type_id}>
-                                {type.discount_type}
-                            </option>
-                        ))}
-                    </CFormSelect>
-                    {errors.type && <CFormFeedback invalid>This field is required.</CFormFeedback>}
-                </CCol>
+                    />
+                    {errors[column.accessorKey] && <CFormFeedback invalid>This field is required.</CFormFeedback>}
+                </>
             );
-        case 'start_date':
-        case 'expiry_date':
+            case 'discount_start_date':
+        case 'discount_end_date':
+        case 'discount_travel_start_date':
+        case 'discount_travel_end_date':
             return (
                 <>
                     <CFormInput

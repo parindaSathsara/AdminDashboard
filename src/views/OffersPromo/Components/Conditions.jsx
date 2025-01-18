@@ -3,22 +3,21 @@ import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { Container, Typography } from '@mui/material';
 import { CButton } from '@coreui/react';
 import MainDiscountForm from './Forms/MainDiscountForm';
-import { createDiscount, deleteDiscountByID, editDiscount, loadAllDiscounts, createPromotionDiscount } from '../offersServices';
+import { createDiscount, deleteDiscountByID, editDiscount, loadAllDiscounts, loadAllConditions, createCondition,editCondition, deleteConditionById } from '../offersServices';
 import Swal from 'sweetalert2';
+import ConditionForm from './Forms/ConditonForm';
 
-const MainDashboard = () => {
+const MainConditions = () => {
     const [data, setData] = useState([
 
     ]);
 
     const columns = [
         { accessorKey: 'id', header: 'ID', size: 30, },
-        { accessorKey: 'discount_tag_line', header: 'Tag line' },
-        { accessorKey: 'discount_start_date', header: 'Start Date' },
-        { accessorKey: 'discount_end_date', header: 'End Date' },
-        { accessorKey: 'discount_total_limit', header: 'Total Limit' },
-        { accessorKey: 'discount_travel_start_date', header: 'Travel Start Date' },
-        { accessorKey: 'discount_travel_end_date', header: 'Travel End Date' },
+        { accessorKey: 'discount_id', header: 'Discount Id' },
+        { accessorKey: 'discount_condition_type', header: 'Condition Type' },
+        { accessorKey: 'condition_start_value', header: 'Start Value' },
+        { accessorKey: 'condition_end_value', header: 'End Value' },
         // {
         //     accessorKey: 'edit',
         //     header: 'Edit',
@@ -62,7 +61,7 @@ const MainDashboard = () => {
 
         Swal.fire({
             title: 'Are you sure?',
-            text: 'You are about to delete this discount',
+            text: 'You are about to delete this Condition',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -72,20 +71,19 @@ const MainDashboard = () => {
             if (result.isConfirmed) {
                 // console.log(dataSet.original, "Data Set original Value is");
 
-                deleteDiscountByID(dataSet?.original?.id).then(response => {
-                    // console.log(response, "Response is")
+                deleteConditionById(dataSet?.original?.id).then(response => {
                     if (response.status == 200) {
-                        loadAllDiscounts().then(response => {
+                        loadAllConditions().then(response => {
                             if (response.status == 200) {
                                 setData(response.data.data);
                                 Swal.fire(
                                     'Deleted!',
-                                    'Discount Deleted Successfully',
+                                    'Condition Deleted Successfully',
                                     'success'
                                 );
                             }
                         })
-                        // Swal.fire('Discount Deleted!', 'Discount Deleted Successfully', 'success');
+                        // Swal.fire('Condition Deleted!', 'Condition Deleted Successfully', 'success');
                     }
                 });
             }
@@ -95,51 +93,48 @@ const MainDashboard = () => {
 
 
 
-    const handleCreateDiscount = () => {
+    const handleCreateCondition = () => {
         setShowModal(true);
         setModalData([])
     };
 
 
-    const handleFormSubmit = (newDiscount) => {
-        // console.log(newDiscount, "New Discount values are")
+    const handleFormSubmit = (newCondition) => {
         setEditTrigger(false)
+        // console.log(newCondition, "New Condition is")
 
         if (editTrigger == true) {
 
-            editDiscount(newDiscount).then(reponse => {
-                loadAllDiscounts().then(response => {
+            editCondition(newCondition).then(reponse => {
+                loadAllConditions().then(response => {
                     if (response.status == 200) {
                         setData(response.data.data)
                     }
                 })
+
+
                 Swal.fire(
                     'Updated!',
-                    'Discount Updated Successfully',
+                    'Condition Updated Successfully',
                     'success'
                 );
             })
         }
 
         else {
-            createPromotionDiscount(newDiscount).then(response => {
-                // console.log(response.data.status, "Response is")
+            createCondition(newCondition).then(response => {
+                    // console.log(response, "Response is222")
                 if (response.status == 200) {
-                    // console.log("Discount Created Successfully")
+                    // console.log("condition Created Successfully")
                     Swal.fire(
-                        'Discount Created!',
-                        'Discount Created Successfully',
+                        'Condition Created!',
+                        'Condition Created Successfully',
                         'success'
                     );
 
-                    loadAllDiscounts().then(response => {
+                    loadAllConditions().then(response => {
                         if (response.status == 200) {
                             setData(response.data.data)
-                            Swal.fire(
-                                'Discount Created!',
-                                'Discount Created Successfully',
-                                'success'
-                            );
                         }
                     })
                 } else if (response.status == 422) {
@@ -150,18 +145,13 @@ const MainDashboard = () => {
                         'error'
                     );
                 } else {
-                    console.log("Something went wrong")
+                    // console.log("Something went wrong")
                     Swal.fire(
                         'Error!',
                         'Something went wrong',
                         'error'
                     );
                 }
-
-
-
-
-
 
             }).catch(error => {
                 // console.log(error, "Error is")
@@ -179,26 +169,27 @@ const MainDashboard = () => {
 
 
     useEffect(() => {
-        loadAllDiscounts().then(response => {
+        loadAllConditions().then(response => {
             if (response.status == 200) {
-                // console.log(response.data, "Data is")
                 setData(response.data.data)
             }
         })
     }, [])
 
 
+
+
     return (
         <>
-            <MainDiscountForm show={showModal} handleCloseModal={() => {
+            <ConditionForm show={showModal} handleCloseModal={() => {
                 setShowModal(false)
                 setEditTrigger(false)
             }} onSubmit={handleFormSubmit} modalData={modalData} edit={editTrigger} />
 
-            <CButton color='dark' onClick={handleCreateDiscount}>Create Discount</CButton>
+            <CButton color='dark' onClick={handleCreateCondition}>Create Condition</CButton>
             <MaterialReactTable table={table} />
         </>
     );
 };
 
-export default MainDashboard;
+export default MainConditions;

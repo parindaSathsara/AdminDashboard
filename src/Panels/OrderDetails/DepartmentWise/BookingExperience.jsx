@@ -16,6 +16,7 @@ import CurrencyConverter from 'src/Context/CurrencyConverter';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { render } from '@testing-library/react';
 import axios from 'axios';
+import DiscountView from '../DiscountView.jsx';
 
 export default function BookingExperience(props) {
     const { userData } = useContext(UserLoginContext);
@@ -377,6 +378,13 @@ const isPDF = (url) => /\.pdf$/i.test(url);
         setDocumentViewModal(true);
     };
 
+    const [selectedDiscountModal, setSelectedDiscountModal] = useState(false);
+    const [selectDiscount, setSelectDiscount] = useState([]);
+    const handleDiscount = (data) => {
+        console.log(data.data, "Discount Data issss");
+        setSelectDiscount(data.data);
+        setSelectedDiscountModal(true);
+    }
         
 
     const columns = [
@@ -446,6 +454,16 @@ const isPDF = (url) => /\.pdf$/i.test(url);
                     <CButton color="info" style={{ fontSize: 12, color: 'white' }} onClick={() => handleDocment(rowData)}>View</CButton>
                 )
             }
+        },
+        {
+            title: 'View Discount', 
+            field: 'discountData', 
+            render: (rowData) => {
+                return rowData.data.discountData ? (
+                    <CButton color="warning" style={{ fontSize: 12, color: 'white' }} onClick={() => handleDiscount(rowData)}>View</CButton>
+                ) : (
+                    <CBadge color="secondary" style={{ padding: 8, fontSize: 12 }}>No Discount</CBadge>
+                )   }
         },
 
 
@@ -741,6 +759,15 @@ const isPDF = (url) => /\.pdf$/i.test(url);
 </Modal>
 
 
+
+<Modal show={selectedDiscountModal} style={{zIndex: 999999999}}onHide={() => setSelectedDiscountModal(false)} size="xl">
+    <Modal.Header closeButton>
+        <Modal.Title>Discount Product View</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+    <DiscountView data={selectDiscount} />
+    </Modal.Body>
+</Modal>
 
 
 

@@ -34,7 +34,7 @@ function AccountsDetails(props) {
       props.dataset?.pay_category,
     ).then((res) => {
       setDataSet(res.data[0])
-      // console.log("resssss",res.data[0])
+      console.log("resssss payment",res.data[0])
 
       const fileUrls = res.data[0]?.reference_Image
         ? res.data[0]?.reference_Image.split(',').map((url) => url.trim())
@@ -286,8 +286,8 @@ function AccountsDetails(props) {
                       <table className="table table-bordered table__PayentProf">
                         <thead>
                           <tr>
-                            <th scope="col">Payment Status</th>
-                            <th scope="col">Payment Result</th>
+                          <th scope="col">Transaction No</th>
+                          <th scope="col">Reference No</th>
                             <th scope="col">Gateway</th>
 
                             <th scope="col">Checkout Date</th>
@@ -298,9 +298,9 @@ function AccountsDetails(props) {
                             {dataset['result'] == 'SUCCESS' ? (
                               <td className="status_success">{dataset['result']}</td>
                             ) : (
-                              <td>{dataset['result']}</td>
+                              <td>{dataset['payment_transaction_id'].split('|')[1]}</td>
                             )}
-                            <td>{dataset['trans_token']}</td>
+                            <td>{dataset['payment_transaction_id'].split('|')[0]}</td>
                             <td>{dataset['gateway_type']}</td>
                             <td>{dataset['created_at']}</td>
                             <td>
@@ -319,7 +319,7 @@ function AccountsDetails(props) {
                                     marginLeft: 20,
                                     alignContent: 'center',
                                   }}
-                                  onClick={() => handlePNLReport(dataset.checkout_id)}
+                                  onClick={() => handlePNLReport(dataset?.order_id)}
                                   // onClick={() => console.log(dataset)}
                                 >
                                   Show PNL report
@@ -343,7 +343,7 @@ function AccountsDetails(props) {
                             marginLeft: 20,
                             alignContent: 'center',
                           }}
-                          onClick={() => handlePNLReport(dataset.id)}
+                          onClick={() => handlePNLReport(dataset.checkout_id)}
                           // onClick={() => console.log(dataset)}
                         >
                           Show PNL report

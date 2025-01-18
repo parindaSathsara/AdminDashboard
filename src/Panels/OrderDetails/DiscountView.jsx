@@ -28,66 +28,48 @@ import {
 } from '@coreui/react'
 
 
-import '../MoreOrderView.css'
+import './MoreOrderView/MoreOrderView.css'
 import MaterialTable from 'material-table';
 
 
-export default function LifestylesOrderView(props) {
+export default function LifestylesOrderView(discount) {
 
-    console.log(props.productData, "Lifestyle Data")
+    console.log(discount, "Lifestyle Data")
 
-    const basicDetails = props.productData?.lifestyleBasic
-    const inventory = props.productData?.lifestyleInventory
-    const rate = props.productData?.lifestyleRateData
-    const packageData = props.productData?.lifestylePackageData
-    const bookData = props.productData?.lifestyleBookingData
+    const basicDetails = discount.data.discountData?.productData
+    const inventory = discount.data.discountData?.discountMainData
+    
+    console.log(basicDetails, "Basic Data", inventory, "Inventory Data")
 
-    console.log( basicDetails?.["image"],"Image Data")
+    console.log(basicDetails?.["image"], "Image Data")
 
 
-    const InventoryDetails = () => {
+    const DiscountDetails = () => {
         const columns = [
-            { title: 'Inventory ID', field: 'inventoryId' },
-            { title: 'Rate ID', field: 'rateId' },
-            { title: 'Pickup Location', field: 'pickupLocation' },
-            { title: 'Inventory Date', field: 'inventoryDate' },
-            { title: 'Pickup Time', field: 'pickupTime' },
-            { title: 'Max Adult Occupancy', field: 'maxAdultOccupancy' },
-            { title: 'Max Children Occupancy', field: 'maxChildrenOccupancy' },
-            { title: 'Max Total Occupancy', field: 'maxTotalOccupancy' },
-            { title: 'Total Inventory', field: 'totalInventory' },
-            { title: 'Allotment', field: 'allotment' },
-            { title: 'Used', field: 'used' },
-            { title: 'Balance', field: 'balance' },
-            { title: 'Vehicle Type', field: 'vehicleType' },
-            { title: 'Inclusions', field: 'inclusions' },
-            { title: 'Exclusions', field: 'exclusions' },
+            { title: 'Id', field: 'id' },
+            { title: 'Title', field: 'title' },
+            { title: 'Discount Type', field: 'discount_type' },
+            { title: 'Tag Line', field: 'discount_tag_line' },
+            { title: 'Eligible Label', field: 'elegibleLabel' },
+     
+          
         ];
 
         const data = [
             {
-                inventoryId: inventory?.lifestyle_inventory_id,
-                rateId: inventory?.rate_id,
-                pickupLocation: inventory?.pickup_location,
-                inventoryDate: inventory?.inventory_date,
-                pickupTime: inventory?.pickup_time,
-                maxAdultOccupancy: inventory?.max_adult_occupancy,
-                maxChildrenOccupancy: inventory?.max_children_occupancy,
-                maxTotalOccupancy: inventory?.max_total_occupancy,
-                totalInventory: inventory?.total_inventory,
-                allotment: inventory?.allotment,
-                used: inventory?.used,
-                balance: inventory?.balance,
-                vehicleType: inventory?.vehicle_type,
-                inclusions: inventory?.inclusions,
-                exclusions: inventory?.exclusions,
+            id: inventory?.id || 'No data',
+            title: inventory?.title || 'No data',
+            discount_type: inventory?.discount_type || 'No data',
+            discount_tag_line: inventory?.discount_tag_line || 'No data',
+            elegibleLabel: inventory?.pickup_location || 'No data',
+         
             },
             // Add other data rows similarly
         ];
 
         return (
             <MaterialTable
-                title="Inventory Details"
+                title="Details"
                 columns={columns}
                 data={data}
                 options={{
@@ -100,7 +82,7 @@ export default function LifestylesOrderView(props) {
                     },
                     paging: false,
                     search: false,
-                    columnsButton: true,
+                    // columnsButton: true,
                     // exportButton: true,
                 }}
             />
@@ -108,150 +90,150 @@ export default function LifestylesOrderView(props) {
     };
 
 
-    const RateDetails = () => {
-        const columns = [
-            { title: 'Lifestyle ID', field: 'lifestyleId' },
-            { title: 'Booking Start Date', field: 'bookingStartDate' },
-            { title: 'Booking End Date', field: 'bookingEndDate' },
-            { title: 'Travel Start Date', field: 'travelStartDate' },
-            { title: 'Travel End Date', field: 'travelEndDate' },
-            { title: 'Attraction Category', field: 'attractionCategory' },
-            { title: 'Meal Plan', field: 'mealPlan' },
-            { title: 'Market', field: 'market' },
-            { title: 'Currency', field: 'currency' },
-            { title: 'Adult Rate', field: 'adultRate' },
-            { title: 'Child Rate', field: 'childRate' },
-            { title: 'Student Rate', field: 'studentRate' },
-            { title: 'Senior Rate', field: 'seniorRate' },
-            { title: 'Military Rate', field: 'militaryRate' },
-            { title: 'Other Rate', field: 'otherRate' },
-            { title: 'Child FOC Age', field: 'childFOCAge' },
-            { title: 'Child Age', field: 'childAge' },
-            { title: 'Adult Age', field: 'adultAge' },
-            { title: 'CWB Age', field: 'cwbAge' },
-            { title: 'CNB Age', field: 'cnbAge' },
-            { title: 'Payment Policy', field: 'paymentPolicy' },
-            { title: 'Book By Days', field: 'bookByDays' },
-            { title: 'Cancellation Days', field: 'cancellationDays' },
-            { title: 'Cancellation Policy', field: 'cancellationPolicy' },
-            { title: 'Stop Sales Dates', field: 'stopSalesDates' },
-            { title: 'Blackout Days', field: 'blackoutDays' },
-            { title: 'Blackout Dates', field: 'blackoutDates' },
-        ];
+    // const RateDetails = () => {
+    //     const columns = [
+    //         { title: 'Lifestyle ID', field: 'lifestyleId' },
+    //         { title: 'Booking Start Date', field: 'bookingStartDate' },
+    //         { title: 'Booking End Date', field: 'bookingEndDate' },
+    //         { title: 'Travel Start Date', field: 'travelStartDate' },
+    //         { title: 'Travel End Date', field: 'travelEndDate' },
+    //         { title: 'Attraction Category', field: 'attractionCategory' },
+    //         { title: 'Meal Plan', field: 'mealPlan' },
+    //         { title: 'Market', field: 'market' },
+    //         { title: 'Currency', field: 'currency' },
+    //         { title: 'Adult Rate', field: 'adultRate' },
+    //         { title: 'Child Rate', field: 'childRate' },
+    //         { title: 'Student Rate', field: 'studentRate' },
+    //         { title: 'Senior Rate', field: 'seniorRate' },
+    //         { title: 'Military Rate', field: 'militaryRate' },
+    //         { title: 'Other Rate', field: 'otherRate' },
+    //         { title: 'Child FOC Age', field: 'childFOCAge' },
+    //         { title: 'Child Age', field: 'childAge' },
+    //         { title: 'Adult Age', field: 'adultAge' },
+    //         { title: 'CWB Age', field: 'cwbAge' },
+    //         { title: 'CNB Age', field: 'cnbAge' },
+    //         { title: 'Payment Policy', field: 'paymentPolicy' },
+    //         { title: 'Book By Days', field: 'bookByDays' },
+    //         { title: 'Cancellation Days', field: 'cancellationDays' },
+    //         { title: 'Cancellation Policy', field: 'cancellationPolicy' },
+    //         { title: 'Stop Sales Dates', field: 'stopSalesDates' },
+    //         { title: 'Blackout Days', field: 'blackoutDays' },
+    //         { title: 'Blackout Dates', field: 'blackoutDates' },
+    //     ];
 
-        const data = [
-            {
-                lifestyleId: 1,
-                bookingStartDate: '2024-04-09',
-                bookingEndDate: '2024-04-15',
-                travelStartDate: '2024-05-01',
-                travelEndDate: '2024-05-07',
-                attractionCategory: 'Adventure',
-                mealPlan: 'All Inclusive',
-                market: 'Domestic',
-                currency: 'USD',
-                adultRate: 100,
-                childRate: 50,
-                studentRate: 80,
-                seniorRate: 90,
-                militaryRate: 85,
-                otherRate: 70,
-                childFOCAge: 5,
-                childAge: '6-12',
-                adultAge: '13+',
-                cwbAge: '3-5',
-                cnbAge: '0-2',
-                paymentPolicy: 'Prepaid',
-                bookByDays: 7,
-                cancellationDays: 3,
-                cancellationPolicy: 'Full Refund',
-                stopSalesDates: '2024-04-20',
-                blackoutDays: 3,
-                blackoutDates: ['2024-06-15', '2024-07-20']
-            },
-            // Add other data rows similarly
-        ];
+    //     const data = [
+    //         {
+    //             lifestyleId: 1,
+    //             bookingStartDate: '2024-04-09',
+    //             bookingEndDate: '2024-04-15',
+    //             travelStartDate: '2024-05-01',
+    //             travelEndDate: '2024-05-07',
+    //             attractionCategory: 'Adventure',
+    //             mealPlan: 'All Inclusive',
+    //             market: 'Domestic',
+    //             currency: 'USD',
+    //             adultRate: 100,
+    //             childRate: 50,
+    //             studentRate: 80,
+    //             seniorRate: 90,
+    //             militaryRate: 85,
+    //             otherRate: 70,
+    //             childFOCAge: 5,
+    //             childAge: '6-12',
+    //             adultAge: '13+',
+    //             cwbAge: '3-5',
+    //             cnbAge: '0-2',
+    //             paymentPolicy: 'Prepaid',
+    //             bookByDays: 7,
+    //             cancellationDays: 3,
+    //             cancellationPolicy: 'Full Refund',
+    //             stopSalesDates: '2024-04-20',
+    //             blackoutDays: 3,
+    //             blackoutDates: ['2024-06-15', '2024-07-20']
+    //         },
+    //         // Add other data rows similarly
+    //     ];
 
-        return (
-            <MaterialTable
-                title="Rate Details"
-                columns={columns}
-                data={data}
-                options={{
-                    headerStyle: {
-                        fontSize: '14px', // Adjust the header font size here
-                    },
-                    cellStyle: {
-                        fontSize: '14px', // Adjust the column font size here
-                    },
-                    paging: false,
-                    search: false,
-                    columnsButton: true,
-                    // exportButton: true,
-                }}
-            />
-        );
-    };
+    //     return (
+    //         <MaterialTable
+    //             title="Rate Details"
+    //             columns={columns}
+    //             data={data}
+    //             options={{
+    //                 headerStyle: {
+    //                     fontSize: '14px', // Adjust the header font size here
+    //                 },
+    //                 cellStyle: {
+    //                     fontSize: '14px', // Adjust the column font size here
+    //                 },
+    //                 paging: false,
+    //                 search: false,
+    //                 columnsButton: true,
+    //                 // exportButton: true,
+    //             }}
+    //         />
+    //     );
+    // };
 
 
 
-    const PackageDetails = () => {
+    // const PackageDetails = () => {
 
-        const columns = [
-            { title: 'Rate ID', field: 'rateId' },
-            { title: 'Min Adult Occupancy', field: 'minAdultOccupancy' },
-            { title: 'Max Adult Occupancy', field: 'maxAdultOccupancy' },
-            { title: 'Min Child Occupancy', field: 'minChildOccupancy' },
-            { title: 'Max Child Occupancy', field: 'maxChildOccupancy' },
-            { title: 'Total Occupancy', field: 'totalOccupancy' },
-            { title: 'Rate type', field: 'rateType' },
-            { title: 'Package Rate', field: 'packageRate' },
-            { title: 'Adult Rate', field: 'adultRate' },
-            { title: 'Child Rate', field: 'childRate' },
-            { title: 'Package Name', field: 'packageName' },
-            { title: 'Package Type', field: 'packageType' },
-        ];
+    //     const columns = [
+    //         { title: 'Rate ID', field: 'rateId' },
+    //         { title: 'Min Adult Occupancy', field: 'minAdultOccupancy' },
+    //         { title: 'Max Adult Occupancy', field: 'maxAdultOccupancy' },
+    //         { title: 'Min Child Occupancy', field: 'minChildOccupancy' },
+    //         { title: 'Max Child Occupancy', field: 'maxChildOccupancy' },
+    //         { title: 'Total Occupancy', field: 'totalOccupancy' },
+    //         { title: 'Rate type', field: 'rateType' },
+    //         { title: 'Package Rate', field: 'packageRate' },
+    //         { title: 'Adult Rate', field: 'adultRate' },
+    //         { title: 'Child Rate', field: 'childRate' },
+    //         { title: 'Package Name', field: 'packageName' },
+    //         { title: 'Package Type', field: 'packageType' },
+    //     ];
 
-        const data = [
-            {
-                rateId: packageData?.['rate_id'],
-                minAdultOccupancy: packageData?.['min_adult_occupancy'],
-                maxAdultOccupancy: packageData?.['max_adult_occupancy'],
-                minChildOccupancy: packageData?.['min_child_occupancy'],
-                maxChildOccupancy: packageData?.['max_child_occupancy'],
-                totalOccupancy: packageData?.['total_occupancy'],
-                rateType: packageData?.['rate_type'],
-                packageRate: packageData?.['package_rate'],
-                adultRate: packageData?.['adult_rate'],
-                childRate: packageData?.['child_rate'],
-                packageName: packageData?.['package_name'],
-                packageType: packageData?.['package_type'],
+    //     const data = [
+    //         {
+    //             rateId: packageData?.['rate_id'],
+    //             minAdultOccupancy: packageData?.['min_adult_occupancy'],
+    //             maxAdultOccupancy: packageData?.['max_adult_occupancy'],
+    //             minChildOccupancy: packageData?.['min_child_occupancy'],
+    //             maxChildOccupancy: packageData?.['max_child_occupancy'],
+    //             totalOccupancy: packageData?.['total_occupancy'],
+    //             rateType: packageData?.['rate_type'],
+    //             packageRate: packageData?.['package_rate'],
+    //             adultRate: packageData?.['adult_rate'],
+    //             childRate: packageData?.['child_rate'],
+    //             packageName: packageData?.['package_name'],
+    //             packageType: packageData?.['package_type'],
 
-            },
-            // Add other data rows similarly
-        ];
+    //         },
+    //         // Add other data rows similarly
+    //     ];
 
-        return (
-            <MaterialTable
-                title="Package Details"
-                columns={columns}
-                data={data}
-                options={{
-                    headerStyle: {
-                        fontSize: '14px', // Adjust the header font size here
-                    },
-                    cellStyle: {
-                        fontSize: '14px', // Adjust the column font size here
-                    },
-                    paging: false,
-                    search: false,
-                    columnsButton: true,
-                    // exportButton: true,
-                }}
+    //     return (
+    //         <MaterialTable
+    //             title="Package Details"
+    //             columns={columns}
+    //             data={data}
+    //             options={{
+    //                 headerStyle: {
+    //                     fontSize: '14px', // Adjust the header font size here
+    //                 },
+    //                 cellStyle: {
+    //                     fontSize: '14px', // Adjust the column font size here
+    //                 },
+    //                 paging: false,
+    //                 search: false,
+    //                 columnsButton: true,
+    //                 // exportButton: true,
+    //             }}
 
-            />
-        );
-    };
+    //         />
+    //     );
+    // };
 
 
 
@@ -276,9 +258,11 @@ export default function LifestylesOrderView(props) {
                         <CImage
                             // src={basicDetails?.["image"]}
                             src={
-                                basicDetails?.["image"]?.includes(',')
-                                    ? basicDetails["image"].split(',')[0].trim() // Use the first image from the list
-                                    : basicDetails?.["image"] // Use the single image
+                                basicDetails?.["product_images"]
+                                    ? (basicDetails["product_images"].includes(',')
+                                        ? basicDetails["product_images"].split(',')[0].trim() // Use the first image from the list
+                                        : basicDetails["product_images"]) // Use the single image
+                                    : basicDetails?.["first_image"] // Use the first_image if product_images is not available
                             }
                             fluid
                             style={{
@@ -296,11 +280,11 @@ export default function LifestylesOrderView(props) {
 
                 <CCol className='py-4'>
 
-                    <h4 className='mb-2'>{basicDetails?.['lifestyle_name']}</h4>
+                    <h4 className='mb-2'>{basicDetails?.['product_name']}</h4>
 
-                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["lifestyle_description"])}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["description"])}</CCardText>
 
-                    <CRow>
+                    {/* <CRow>
                         <CCol xs="12" lg="4">
                             <div style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '10px', backgroundColor: '#f8f9fa', marginBottom: '20px' }}>
                                 <CCardBody>
@@ -357,14 +341,19 @@ export default function LifestylesOrderView(props) {
                                 </CCardBody>
                             </div>
                         </CCol>
-                    </CRow>
+                    </CRow> */}
 
                 </CCol>
 
             </CRow>
 
-
             <CCol className='my-4'>
+
+                <DiscountDetails />
+
+
+            </CCol>
+            {/* <CCol className='my-4'>
 
                 <h5 className='mb-2'>Traveler Details</h5>
 
@@ -420,20 +409,15 @@ export default function LifestylesOrderView(props) {
                     </CCol>
 
                 </CRow>
-            </CCol>
+            </CCol> */}
 
 
 
 
 
-            <CCol className='my-4'>
-
-                <InventoryDetails />
 
 
-            </CCol>
-
-
+            {/* 
 
             <CCol className='my-4'>
                 <RateDetails />
@@ -442,7 +426,7 @@ export default function LifestylesOrderView(props) {
 
             <CCol className='my-4'>
                 <PackageDetails />
-            </CCol>
+            </CCol> */}
 
 
 

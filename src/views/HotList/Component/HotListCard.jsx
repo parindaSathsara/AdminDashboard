@@ -9,7 +9,7 @@ import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 export default function NotificationCard({ data }) {
     const imageUrl = data?.notification_image && data.notification_image.startsWith("http")
         ? { uri: data.notification_image.split(",")[0] }
-        : require("../../../assets/brand/logo.png");
+        : require("../../../assets/brand/aahaslogo.png");
 
     const formattedDate = data?.push_at ? moment(data.push_at).fromNow() : '';
 
@@ -57,7 +57,7 @@ export default function NotificationCard({ data }) {
                     <CCol md={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <CCardImage
                             src={imageUrl}
-                            style={{ borderRadius: '8px', width: '100%', height: '100%', objectFit: 'cover' }}
+                            style={{ borderRadius: '5px', width: '60%', height: '60%', objectFit: 'cover' }}
                             height={50}
                             width={50}
                         />
