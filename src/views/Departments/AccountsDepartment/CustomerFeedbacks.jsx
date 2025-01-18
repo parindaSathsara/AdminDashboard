@@ -141,11 +141,11 @@ function CustomerFeedbacks(props) {
           axios.post(`/approveRefund/${props.orderId}`, dataSet).then(res => {
             if (res.data.status === 200) {
               props.onFeedback()
-              Swal.fire({
+                Swal.fire({
                 title: "Refund request accepted!",
-
+                text: `${dataSet.refund_type} has been accepted successfully`,
                 icon: "success"
-              });
+                });
               props.closeModel()
             } else {
               alert('something got mistake')

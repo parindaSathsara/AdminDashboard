@@ -47,8 +47,7 @@ import MaterialTable from 'material-table'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 
 import { Modal, Tab, Tabs } from 'react-bootstrap'
-
-
+import { CsvBuilder } from "filefy";
 import Swal from 'sweetalert2'
 
 
@@ -483,12 +482,40 @@ const VendorList = () => {
 
 
                                 options={{
-
                                     sorting: true, search: true,
                                     searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
                                     filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                                    exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                                    paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: {
+                                        csv: true,
+                                        pdf: false,
+                                      },
+                                      exportCsv: (columns, data) => {
+                                        const selectedFields = [
+                                          "first_name",
+                                          "last_name",
+                                          "email",
+                                          "address",
+                                          "company_name",
+                                          "phone",
+                                        ];
+                              
+                                        const filteredColumns = columns.filter((column) =>
+                                          selectedFields.includes(column.field)
+                                        );
+                              
+                                        const columnTitles = filteredColumns.map((columnDef) => columnDef.title);
+                              
+                                        const csvData = data.map((rowData) =>
+                                          filteredColumns.map((columnDef) => rowData[columnDef.field])
+                                        );
+                              
+                                        new CsvBuilder("Vendors Details.csv")
+                                          .setColumns(columnTitles)
+                                          .addRows(csvData)
+                                          .exportFile();
+                                      },  
+                                    exportAllData: false,
+                                    exportFileName: "Vendors Details", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                     showSelectAllCheckbox: false, showTextRowsSelected: false,
                                     grouping: true, columnsButton: true,
                                     headerStyle: { background: '	#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
