@@ -34,7 +34,7 @@ function AccountsDetails(props) {
       props.dataset?.pay_category,
     ).then((res) => {
       setDataSet(res.data[0])
-      // console.log("resssss",res.data[0])
+      console.log("resssss payment",res.data[0])
 
       const fileUrls = res.data[0]?.reference_Image
         ? res.data[0]?.reference_Image.split(',').map((url) => url.trim())

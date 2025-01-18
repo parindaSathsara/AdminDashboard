@@ -318,13 +318,13 @@ async function updateDeliveryStatus(id, value, type) {
 
 
     await axios.post('/update_delivery_status_by_product', data).then((res) => {
-      console.log("iddddddddddddddddddddddddddddddddddddddddddddddd", res)
+      // console.log("iddddddddddddddddddddddddddddddddddddddddddddddd", res)
       console.log(res, "Update Delivery Status")
 
       if (res.data.status === 200) {
 
         Swal.fire({
-          title: "Order " + id + " (Checkout id)Confirmed",
+          title: "Order Confirmation",
           text: "Order - " + id + " (Checkout id) Order Confirmed",
           icon: "success"
         })
@@ -360,7 +360,7 @@ async function updateDeliveryStatus(id, value, type) {
 
 
     }).catch((err) => {
-      console.log(err, "Checkout err isssss")
+      // console.log(err, "Checkout err isssss")
       if (err.response.data.status === 422) {
         Swal.fire({
           title: "Order Change status",
