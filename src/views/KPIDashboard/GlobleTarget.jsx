@@ -4,14 +4,17 @@ import { Tab, Tabs } from 'react-bootstrap'
 import { DateRangePicker } from 'rsuite'
 import 'rsuite/dist/rsuite.css'
 import { format } from 'date-fns';
-
+import { getGlobalTargetDetails } from './KpiService'
+import Select from "react-select";
 
 const GlobalTarget = () => {
     const [selectedDates, setSelectedDates] = useState([])
-
+    const [globalTargetData, setGlobalTargetData] = useState([])
+    const [selectedCurrency, setSelectedCurrency] = useState('USD')
+    const currencies = [{ value: 'USD', label: 'USD' }, { value: 'INR', label: 'INR' }, { value: 'LKR', label: 'LKR' }, { value: 'SGD', label: 'SGD' }]
 
     useEffect(() => {
-        
+
         const currentDate = new Date();
         const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30);
         const formattedStartDate = format(startDate, 'yyyy-MM-dd');
@@ -19,6 +22,12 @@ const GlobalTarget = () => {
         setSelectedDates([formattedStartDate, formattedEndDate])
         // loadData([formattedStartDate, formattedEndDate]);
     }, []);
+
+    useEffect(() => {
+        getGlobalTargetDetails(selectedCurrency).then((res) => {
+            setGlobalTargetData(res)
+        }).catch((err) => { })
+    }, [selectedCurrency]);
 
     const handleDateRangeChangeBooking = (value) => {
         if (value) {
@@ -40,41 +49,93 @@ const GlobalTarget = () => {
                         <CCard >
                             <CHeader>
                                 All
-                                <DateRangePicker
+                                {/* <DateRangePicker
                                     style={{ marginLeft: 0 }}
                                     format="yyyy/MM/dd"
                                     onChange={handleDateRangeChangeBooking}
                                     value={selectedDates.length > 0 ? [new Date(selectedDates[0]), new Date(selectedDates[1])] : null}
+                                /> */}
+
+                                <Select
+                                    options={currencies}
+                                    defaultValue={{ value: "USD", label: "USD" }}
+                                    value={currencies?.label}
+                                    onChange={(selectedOption) => setSelectedCurrency(selectedOption?.value)}
+                                    placeholder="Select Currency"
+                                    isClearable
                                 />
 
                             </CHeader>
                             <CCardBody>
                                 <CRow>
-                                    <CCol sm={6} xl={6} xxl={6}>
+                                    <CCol sm={3} xl={3} xxl={3}>
                                         <div style={{}}>
-                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                                900
-                                            </h2>
+                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                                {globalTargetData?.total_orders}
+                                            </h4>
                                             </>}
                                                 title={<>
                                                     <h5 className=" fw-normal">
-                                                        Passenger Arrival Count
+                                                       Total Orders
                                                     </h5>
                                                 </>} />
                                         </div>
 
                                     </CCol>
-                                    <CCol sm={6} xl={6} xxl={6}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            36 <span class="fs-5">$</span>
-                                        </h2>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                            {globalTargetData?.total_selling_products}
+                                        </h4>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
-                                                    Revenue Value
+                                                    Total Selling Products
                                                 </h5>
                                             </>} />
                                     </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <div style={{}}>
+                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                                {globalTargetData?.total_revenue_amount}
+                                            </h4>
+                                            </>}
+                                                title={<>
+                                                    <h5 className=" fw-normal">
+                                                        Total Revenue Amount ({selectedCurrency})
+                                                    </h5>
+                                                </>} />
+                                        </div>
+
+                                    </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                            {globalTargetData?.total_paid_amount}
+                                        </h4>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Total Paid Amount ({selectedCurrency})
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                </CRow>
+                                <br></br>
+                                <CRow>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <div style={{}}>
+                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                                {globalTargetData?.total_pending_amount}
+                                            </h4>
+                                            </>}
+                                                title={<>
+                                                    <h5 className=" fw-normal">
+                                                        Total Pending Amount ({selectedCurrency})
+                                                    </h5>
+                                                </>} />
+                                        </div>
+
+                                    </CCol>
+                                 
                                 </CRow>
                             </CCardBody>
                         </CCard>
