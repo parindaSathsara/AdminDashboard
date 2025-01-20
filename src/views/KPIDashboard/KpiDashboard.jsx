@@ -8,7 +8,7 @@ import Select from "react-select"
 import { createTheme, ThemeProvider } from '@mui/material'
 import MaterialTable from 'material-table'
 import { zIndex } from '@mui/material/styles/zIndex';
-import { getOrderWiseBookingDetails, getOrderIDs, getAllEmployees, getAllOrdersBooking, getUserWiseOrdersBooking, getOrderWiseOrdersBooking, getAllProducts, getAllCountry, getSupplierByCountryWise } from './KpiService'
+import { getOrderWiseBookingDetails, getOrderIDs, getAllEmployees, getAllOrdersBooking, getUserWiseOrdersBooking, getOrderWiseOrdersBooking, getAllProducts, getAllCountry, getSupplierByCountryWise, getAllAccountDetails, getOrderWiseFeedbacks,getAllTravelerDetails } from './KpiService'
 import Swal from 'sweetalert2';
 import { countryList } from 'react-select-country-list';
 import { toast } from 'react-hot-toast';
@@ -40,16 +40,7 @@ const KpiDashboard = () => {
     }, []);
 
 
-    const handleDateRangeChangeTravel = (value) => {
-        if (value) {
-            const formattedStartDate = format(value[0], 'yyyy-MM-dd')
-            const formattedEndDate = format(value[1], 'yyyy-MM-dd')
-            setSelectedDatesTraveler([formattedStartDate, formattedEndDate])
-            console.log(formattedStartDate, formattedEndDate)
-        } else {
-            setSelectedDatesTraveler([])
-        }
-    }
+    
 
     const Booking = () => {
         const [orderIds, setOrderIds] = useState([])
@@ -189,7 +180,7 @@ const KpiDashboard = () => {
                                     <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
                                             {/* 6 <span class="fs-5">min</span> */}
-                                            {averageAllOrderData?.avg_response_time}
+                                            <h3>{averageAllOrderData?.avg_response_time}</h3>
                                         </h2>
                                         </>}
                                             title={<>
@@ -201,7 +192,7 @@ const KpiDashboard = () => {
                                     <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
                                             {/* 6 <span class="fs-5">min</span> */}
-                                            {averageAllOrderData?.avg_confirm_time}
+                                            <h3>{averageAllOrderData?.avg_confirm_time}</h3>
                                         </h2>
                                         </>}
                                             title={<>
@@ -212,7 +203,7 @@ const KpiDashboard = () => {
                                     </CCol>
                                     <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {averageAllOrderData?.avg_cancel_time}
+                                            <h3>{averageAllOrderData?.avg_cancel_time}</h3>
                                         </h2>
                                         </>}
                                             title={<>
@@ -366,15 +357,57 @@ const KpiDashboard = () => {
     }
 
     const Traveler = () => {
+        const [selectedDatesTravelerDate, setSelectedDatesTravelerDate] = useState([])
         const [feedbacks, setFeedbacks] = useState([])
         const defaultMaterialTheme = createTheme();
+        const [orderId, setOrderId] = useState('all')
+        const [orderIds, setOrderIds] = useState([])
+        const [orderIds2, setOrderIds2] = useState([])
+        const [travelerData, setTravelerData] = useState([])
+
+         useEffect(() => {
+            const currentDate = new Date();
+            const startDate = new Date(currentDate.getFullYear(), 0, 1);
+            const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+            const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
+            setSelectedDatesTravelerDate([formattedStartDate, formattedEndDate])
+
+            getOrderIDs().then(response => {
+                var dataSet = response.map(res => ({
+                    value: res?.id,
+                    label: `AHS_ORD${res.id}`
+                }));
+                setOrderIds([{ value: "all", label: "All Orders" }, ...dataSet])
+                setOrderIds2([{ value: "all", label: "All Orders" }, ...dataSet])
+            })
+        }, []);
+
+        useEffect(() => {
+            getOrderWiseFeedbacks(orderId).then((res) => {
+                setFeedbacks(res)
+            }).catch((err) => { })
+
+            getAllTravelerDetails(selectedDatesTravelerDate, orderId).then((res) => {
+                console.log("chamod", res)
+                setTravelerData(res.data)
+            }).catch((err) => { })
+
+        }, [orderId, selectedDatesTravelerDate, orderIds2])
+
+        const handleDateRangeChangeTravel = (value) => {
+            if (value) {
+                const formattedStartDate = format(value[0], 'yyyy-MM-dd')
+                const formattedEndDate = format(value[1], 'yyyy-MM-dd')
+                setSelectedDatesTravelerDate([formattedStartDate, formattedEndDate])
+            } else {
+                setSelectedDatesTravelerDate([])
+            }
+        }
+
         const data = {
             columns: [
                 {
-                    title: 'ID', field: 'id', align: 'left', editable: 'never'
-                },
-                {
-                    title: 'Checkout Id', field: 'checkout_id', align: 'left', editable: 'never',
+                    title: 'Order Id', field: 'order_id', align: 'left', editable: 'never'
                 },
                 {
                     title: 'Product', field: 'product_id', align: 'left', editable: 'never',
@@ -394,8 +427,11 @@ const KpiDashboard = () => {
                 {
                     title: 'Review Remarks', field: 'review_remarks', align: 'left', editable: 'never',
                 },
+                {
+                    title: 'Created At', field: 'created_at', align: 'left', editable: 'never',
+                }
             ],
-            rows: feedbacks?.map((value, idx) => {
+            rows: feedbacks.feedbacks?.map((value, idx) => {
                 let $category = '';
                 if (value.category_id === 1) {
                     $category = 'Essential';
@@ -412,129 +448,76 @@ const KpiDashboard = () => {
                 }
 
                 return {
-                    id: value.id,
-                    checkout_id: value.checkout_id,
+                    order_id: value?.order_id,
                     product_id: value?.product_id,
                     category_id: $category,
                     rating_on_aahaas: value?.rating_on_aahaas,
                     rating_on_supplier: value?.rating_on_supplier,
                     rating_on_product: value?.rating_on_product,
                     review_remarks: value?.review_remarks,
+                    created_at: value?.created_at,
                 }
             })
         }
 
-        const categories = [{ value: "0", name: "All Categories" }, { value: "1", name: "Essential" }, { value: "2", name: "NonEssential" }, { value: "3", name: "Lifestyle" }, { value: "4", name: "Hotel" }, , { value: "5", name: "Education" }]
+        const categories = [{ value: "all", name: "All Categories" }, { value: "1", name: "Essential" }, { value: "2", name: "NonEssential" }, { value: "3", name: "Lifestyle" }, { value: "4", name: "Hotel" }, , { value: "5", name: "Education" }]
 
         return (
             <>
                 <br></br>
                 <CRow>
                     <CCol >
-                        <CCard sm={6} xl={4} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
+                        <CCard sm={12} xl={12} xxl={12} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
                             <CHeader>All
                                 <DateRangePicker
                                     style={{ marginLeft: 0 }}
                                     format="yyyy/MM/dd"
                                     onChange={handleDateRangeChangeTravel}
-                                    value={selectedDatesTraveler.length > 0 ? [new Date(selectedDatesTraveler[0]), new Date(selectedDatesTraveler[1])] : null}
+                                    value={selectedDatesTravelerDate.length > 0 ? [new Date(selectedDatesTravelerDate[0]), new Date(selectedDatesTravelerDate[1])] : null}
 
                                 />
-
-                            </CHeader>
-                            <CCardBody>
-                                <CRow>
-                                    <CCol sm={6} xl={4} xxl={4}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {/* 6 <span class="fs-5">min</span> */}
-                                        </h2>
-                                        </>}
-                                            title={<>
-                                                <h5 className=" fw-normal">
-                                                    Driver Allocation Time
-                                                </h5>
-                                            </>} />
-                                    </CCol>
-                                    <CCol sm={6} xl={4} xxl={4}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {/* 5 <span class="fs-5">min</span> */}
-                                        </h2>
-                                        </>}
-                                            title={<>
-                                                <h5 className=" fw-normal">
-                                                    Reconfirmation Time
-                                                </h5>
-                                            </>} />
-                                    </CCol>
-                                    <CCol sm={6} xl={4} xxl={4}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {/* 5 <span class="fs-5">min</span> */}
-                                        </h2>
-                                        </>}
-                                            title={<>
-                                                <h5 className=" fw-normal">
-                                                    Order Completion Time
-                                                </h5>
-                                            </>} />
-                                    </CCol>
-                                </CRow>
-                            </CCardBody>
-                        </CCard>
-                    </CCol>
-                    <CCol >
-                        <CCard sm={6} xl={4} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
-                            <CHeader>By Order
-                                <Select
-                                    // id={id}
-
-                                    options={categories.map((option) => ({
-                                        value: option.value,
-                                        label: option.name,
-                                    }))}
-                                    defaultValue={{ value: "0", label: "All Orders" }}
-                                    // value={options.find((option) => option.origin_rate_id === `${value}`)}
-                                    // onChange={(selectedOption) =>
-                                    //     onChange({
-                                    //         name,
-                                    //         value: selectedOption ? selectedOption.value : "",
-                                    //     })
-                                    // }
+                                  <Select
+                                    options={orderIds2}
+                                    defaultValue={{ value: "all", label: "All Orders" }}
+                                    value={categories?.name}
+                                    onChange={(selectedOption) => setOrderId2(selectedOption?.value)}
                                     placeholder="Select an Order"
                                     isClearable
                                 />
+
                             </CHeader>
                             <CCardBody>
                                 <CRow>
-                                    <CCol >
+                                    <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {/* 6 <span class="fs-5">min</span> */}
+                                            <h3>{travelerData?.avg_driver_allocation_time}</h3>
                                         </h2>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
-                                                    Driver Allocation Time
+                                                    Average Driver Allocation Time
                                                 </h5>
                                             </>} />
                                     </CCol>
-                                    <CCol >
+                                    <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {/* 5 <span class="fs-5">min</span> */}
+                                            <h3>{travelerData?.avg_reconformation_time}</h3>
                                         </h2>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
-                                                    Reconfirmation Time
+                                                    Average Reconfirmation Time
                                                 </h5>
                                             </>} />
                                     </CCol>
-                                    <CCol >
+                                    <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            {/* 5 <span class="fs-5">min</span> */}
+                                            <h3>{travelerData?.avg_order_completion_time}</h3>
                                         </h2>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
-                                                    Order Completion Time
+                                                   Average Order Completing Time
                                                 </h5>
                                             </>} />
                                     </CCol>
@@ -542,6 +525,7 @@ const KpiDashboard = () => {
                             </CCardBody>
                         </CCard>
                     </CCol>
+                    
                 </CRow>
                 <br></br>
                 <CRow>
@@ -550,20 +534,10 @@ const KpiDashboard = () => {
                             <CHeader>Feedbacks
 
                                 <Select
-                                    // id={id}
-                                    // styles={{zIndex: 111}}
-                                    options={categories.map((option) => ({
-                                        value: option.value,
-                                        label: option.name,
-                                    }))}
-                                    defaultValue={{ value: "0", label: "All Orders" }}
-                                    // value={options.find((option) => option.origin_rate_id === `${value}`)}
-                                    // onChange={(selectedOption) =>
-                                    //     onChange({
-                                    //         name,
-                                    //         value: selectedOption ? selectedOption.value : "",
-                                    //     })
-                                    // }
+                                    options={orderIds}
+                                    defaultValue={{ value: "all", label: "All Orders" }}
+                                    value={categories?.name}
+                                    onChange={(selectedOption) => setOrderId(selectedOption?.value)}
                                     placeholder="Select an Order"
                                     isClearable
                                 />
@@ -603,36 +577,134 @@ const KpiDashboard = () => {
 
 
     const Account = () => {
+        const [selectDefaultDate, setSelectedDate] = useState([])
+        const [accountData, setAccountData] = useState([])
+
+        useEffect(() => {
+            const currentDate = new Date();
+            const startDate = new Date(currentDate.getFullYear(), 0, 1);
+            const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+            const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
+            setSelectedDate([formattedStartDate, formattedEndDate])
+        }, []);
+
+        useEffect(() => {
+            getAllAccountDetails(selectDefaultDate).then((res) => {
+                console.log("All Accounts", res)
+                setAccountData(res)
+            }).catch((err) => {})
+        }, [selectDefaultDate])
+
+        const handleDateRangeChangeAccounts = (value) => {
+            if (value) {
+                const formattedStartDate = format(value[0], 'yyyy-MM-dd')
+                const formattedEndDate = format(value[1], 'yyyy-MM-dd')
+                setSelectedDate([formattedStartDate, formattedEndDate])
+            } else {
+                setSelectedDate([])
+            }
+        }
+
         return (
             <>
                 <br></br>
                 <CRow>
-                    <CCol sm={6} xl={6} xxl={6}>
-                        <CCard sm={6} xl={4} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
+                    <CCol sm={12} xl={12} xxl={12}>
+                        <CCard sm={12} xl={12} xxl={12} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
                             <CHeader>Payments
-                                <DateRangePicker
+                            <DateRangePicker
                                     style={{ marginLeft: 0 }}
                                     format="yyyy/MM/dd"
-                                    onChange={handleDateRangeChangeBooking}
-                                    value={selectedDatesAllOrders.length > 0 ? [new Date(selectedDatesAllOrders[0]), new Date(selectedDatesAllOrders[1])] : null}
+                                    onChange={handleDateRangeChangeAccounts}
+                                    value={selectDefaultDate.length > 0 ? [new Date(selectDefaultDate[0]), new Date(selectDefaultDate[1])] : null}
+
                                 />
                             </CHeader>
                             <CCardBody>
                                 <CRow>
-                                    <CCol sm={6} xl={6} xxl={6}>
+                                    <CCol sm={3} xl={3} xxl={3}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            69
+                                            {accountData?.avg_payment_response_time}
                                         </h2>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
-                                                    Received Payments
+                                                Average payment response time
                                                 </h5>
                                             </>} />
                                     </CCol>
-                                    <CCol sm={6} xl={6} xxl={6}>
+                                    <CCol sm={3} xl={3} xxl={3}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            5 <span class="fs-5">%</span>
+                                            {accountData?.avg_payment_approved_time}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                Average payment approval time
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {accountData?.avg_payment_rejected_time}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Average payment rejection time
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {accountData?.approved_payments}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Approved Payment
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                </CRow>
+                                <br></br>
+                                <CRow>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {accountData?.rejected_payments}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Rejected Payments
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {accountData?.pending_payments}
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Pending Payment
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {accountData?.approved_precentage} <span class="fs-5">%</span>
+                                        </h2>
+                                        </>}
+                                            title={<>
+                                                <h5 className=" fw-normal">
+                                                    Payment Approval
+                                                </h5>
+                                            </>} />
+                                    </CCol>
+                                    <CCol sm={3} xl={3} xxl={3}>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
+                                            {accountData?.rejected_precentage} <span class="fs-5">%</span>
                                         </h2>
                                         </>}
                                             title={<>
@@ -742,7 +814,7 @@ const KpiDashboard = () => {
 
         }, [selectDefaultDate, category, selectSupplierCountry])
 
-        const handleDateRangeChangeSupplier = (value, type) => {
+        const handleDateRangeChangeSupplier = (value) => {
             if (value) {
                 const formattedStartDate = format(value[0], 'yyyy-MM-dd')
                 const formattedEndDate = format(value[1], 'yyyy-MM-dd')
