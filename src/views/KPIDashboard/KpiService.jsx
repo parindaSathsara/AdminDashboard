@@ -53,7 +53,7 @@ const getUserWiseOrdersBooking = async (data,userId) => {
   }
   console.log("All Orders date user",data, userId)
   await axios.get(`kpi/get-order-turnaround-time/${userId}/user`, {params: data}).then(res => {
-    console.log("All Orders", res);
+    console.log("All Orders users", res);
     if (res.status === 200) {
       dataSet = res.data.data;
       console.log("All Orders date user", res.data.data);
