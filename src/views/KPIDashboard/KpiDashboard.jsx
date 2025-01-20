@@ -69,6 +69,7 @@ const KpiDashboard = () => {
             const formattedStartDate = format(startDate, 'yyyy-MM-dd');
             const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
             setSelectedDatesAllOrdersDate([formattedStartDate, formattedEndDate])
+            setSelectedDatesUserOrdersDate([formattedStartDate, formattedEndDate])
 
             getOrderIDs().then(response => {
                 var dataSet = response.map(res => ({
@@ -81,28 +82,23 @@ const KpiDashboard = () => {
         }, [])
 
         useEffect(() => {
-            if (selectedOrderID) {
-                getOrderWiseBookingDetails().then((res) => {
+            // if (selectedOrderID) {
+            //     getOrderWiseBookingDetails().then((res) => {
 
-                }).catch((err) => {
+            //     }).catch((err) => {
 
-                })
-            }
+            //     })
+            // }
 
             getAllOrdersBooking(selectedDatesAllOrdersDate).then((res) => {
                 setAverageAllOrderData(res)
-                console.log("All Orders", res)
+                // console.log("All Orders", res)
             }).catch((err) => {
-                //  Swal.fire({
-                //       icon: 'error',
-                //       title: 'Oops...',
-                //       text: 'something went wrong!',
-                //     });
             })
 
             getUserWiseOrdersBooking(selectedDatesUserOrdersDate, selectedEmployeeId).then((res) => {
                 setAverageUserOrderData(res)
-                console.log("All Orders", res)
+                // console.log("All Orders", res)
             }).catch((err) => {
                 //  Swal.fire({
                 //       icon: 'error',
@@ -114,7 +110,7 @@ const KpiDashboard = () => {
             getOrderWiseOrdersBooking(selectedOrderID).then((res) => {
                 setAverageOrderData(res)
                 setInDetailsOrders(res?.order_data)
-                console.log("order", res)
+                // console.log("order", res)
             }).catch((err) => {
                 //  Swal.fire({
                 //       icon: 'error',
@@ -140,23 +136,21 @@ const KpiDashboard = () => {
             }
         };
 
-        const handleDateRangeChangeBooking = (value, type) => {
+        const handleDateRangeChangeBooking = (value) => {
             if (value) {
                 const formattedStartDate = format(value[0], 'yyyy-MM-dd')
                 const formattedEndDate = format(value[1], 'yyyy-MM-dd')
                 setSelectedDatesAllOrdersDate([formattedStartDate, formattedEndDate])
-                console.log(formattedStartDate, formattedEndDate)
             } else {
                 setSelectedDatesAllOrdersDate([])
             }
         }
 
-        const handleDateRangeChangeBookingByUser = (value, type) => {
+        const handleDateRangeChangeBookingByUser = (value) => {
             if (value) {
                 const formattedStartDate = format(value[0], 'yyyy-MM-dd')
                 const formattedEndDate = format(value[1], 'yyyy-MM-dd')
                 setSelectedDatesUserOrdersDate([formattedStartDate, formattedEndDate])
-                console.log(formattedStartDate, formattedEndDate)
             } else {
                 setSelectedDatesUserOrdersDate([])
             }
@@ -197,7 +191,7 @@ const KpiDashboard = () => {
                                         </>}
                                             title={<>
                                                 <h6 className=" fw-normal">
-                                                    Average Order Confirmation
+                                                    Average Order Confirmation Time
                                                 </h6>
                                             </>} />
                                     </CCol>
@@ -208,7 +202,7 @@ const KpiDashboard = () => {
                                         </>}
                                             title={<>
                                                 <h6 className=" fw-normal">
-                                                    Average Order Cancellation
+                                                    Average Order Cancellation Time
                                                 </h6>
                                             </>} />
                                     </CCol>
@@ -574,7 +568,6 @@ const KpiDashboard = () => {
                 <br></br></>
         )
     }
-
 
     const Account = () => {
         const [selectDefaultDate, setSelectedDate] = useState([])

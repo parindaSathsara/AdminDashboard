@@ -59,7 +59,7 @@ const GlobalTarget = () => {
                                 <Select
                                     options={currencies}
                                     defaultValue={{ value: "USD", label: "USD" }}
-                                    value={currencies?.label}
+                                    value={selectedCurrency}
                                     onChange={(selectedOption) => setSelectedCurrency(selectedOption?.value)}
                                     placeholder="Select Currency"
                                     isClearable
@@ -70,9 +70,9 @@ const GlobalTarget = () => {
                                 <CRow>
                                     <CCol sm={3} xl={3} xxl={3}>
                                         <div style={{}}>
-                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h3>
                                                 {globalTargetData?.total_orders}
-                                            </h4>
+                                            </h3>
                                             </>}
                                                 title={<>
                                                     <h5 className=" fw-normal">
@@ -83,9 +83,9 @@ const GlobalTarget = () => {
 
                                     </CCol>
                                     <CCol sm={3} xl={3} xxl={3}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h3>
                                             {globalTargetData?.total_selling_products}
-                                        </h4>
+                                        </h3>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
@@ -95,9 +95,9 @@ const GlobalTarget = () => {
                                     </CCol>
                                     <CCol sm={3} xl={3} xxl={3}>
                                         <div style={{}}>
-                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h3>
                                                 {globalTargetData?.total_revenue_amount}
-                                            </h4>
+                                            </h3>
                                             </>}
                                                 title={<>
                                                     <h5 className=" fw-normal">
@@ -108,9 +108,9 @@ const GlobalTarget = () => {
 
                                     </CCol>
                                     <CCol sm={3} xl={3} xxl={3}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h3>
                                             {globalTargetData?.total_paid_amount}
-                                        </h4>
+                                        </h3>
                                         </>}
                                             title={<>
                                                 <h5 className=" fw-normal">
@@ -123,9 +123,9 @@ const GlobalTarget = () => {
                                 <CRow>
                                     <CCol sm={3} xl={3} xxl={3}>
                                         <div style={{}}>
-                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h4>
+                                            <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h3>
                                                 {globalTargetData?.total_pending_amount}
-                                            </h4>
+                                            </h3>
                                             </>}
                                                 title={<>
                                                     <h5 className=" fw-normal">
