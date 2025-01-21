@@ -357,6 +357,7 @@ const KpiDashboard = () => {
         const [orderId, setOrderId] = useState('all')
         const [orderIds, setOrderIds] = useState([])
         const [orderIds2, setOrderIds2] = useState([])
+        const [orderId2, setOrderId2] = useState([])
         const [travelerData, setTravelerData] = useState([])
 
          useEffect(() => {
@@ -381,12 +382,20 @@ const KpiDashboard = () => {
                 setFeedbacks(res)
             }).catch((err) => { })
 
-            getAllTravelerDetails(selectedDatesTravelerDate, orderId).then((res) => {
+            // getAllTravelerDetails(selectedDatesTravelerDate, orderId).then((res) => {
+            //     console.log("chamod", res)
+            //     setTravelerData(res.data)
+            // }).catch((err) => { })
+
+        }, [orderId, selectedDatesTravelerDate])
+
+        useEffect(() => {
+            getAllTravelerDetails(selectedDatesTravelerDate, orderId2).then((res) => {
                 console.log("chamod", res)
                 setTravelerData(res.data)
             }).catch((err) => { })
 
-        }, [orderId, selectedDatesTravelerDate, orderIds2])
+        }, [orderId2])
 
         const handleDateRangeChangeTravel = (value) => {
             if (value) {
@@ -605,13 +614,15 @@ const KpiDashboard = () => {
                     <CCol sm={12} xl={12} xxl={12}>
                         <CCard sm={12} xl={12} xxl={12} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
                             <CHeader>Payments
-                            <DateRangePicker
-                                    style={{ marginLeft: 0 }}
+                                <div style={{  width:"100%", marginTop: "1%" }}>
+                                    <DateRangePicker
+                                    style={{ marginRight: "0%" }}
                                     format="yyyy/MM/dd"
                                     onChange={handleDateRangeChangeAccounts}
                                     value={selectDefaultDate.length > 0 ? [new Date(selectDefaultDate[0]), new Date(selectDefaultDate[1])] : null}
-
                                 />
+                                </div>
+                            
                             </CHeader>
                             <CCardBody>
                                 <CRow>
