@@ -8,39 +8,39 @@ import { getGlobalTargetDetails } from './KpiService'
 import Select from "react-select";
 
 const GlobalTarget = () => {
-    const [selectedDates, setSelectedDates] = useState([])
-    const [globalTargetData, setGlobalTargetData] = useState([])
-    const [selectedCurrency, setSelectedCurrency] = useState('USD')
-    const currencies = [{ value: 'USD', label: 'USD' }, { value: 'INR', label: 'INR' }, { value: 'LKR', label: 'LKR' }, { value: 'SGD', label: 'SGD' }]
-
-    useEffect(() => {
-
-        const currentDate = new Date();
-        const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30);
-        const formattedStartDate = format(startDate, 'yyyy-MM-dd');
-        const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
-        setSelectedDates([formattedStartDate, formattedEndDate])
-        // loadData([formattedStartDate, formattedEndDate]);
-    }, []);
-
-    useEffect(() => {
-        getGlobalTargetDetails(selectedCurrency).then((res) => {
-            setGlobalTargetData(res)
-        }).catch((err) => { })
-    }, [selectedCurrency]);
-
-    const handleDateRangeChangeBooking = (value) => {
-        if (value) {
-            const formattedStartDate = format(value[0], 'yyyy-MM-dd')
-            const formattedEndDate = format(value[1], 'yyyy-MM-dd')
-            setSelectedDates([formattedStartDate, formattedEndDate])
-            console.log(formattedStartDate, formattedEndDate)
-        } else {
-            setSelectedDates([])
-        }
-    }
+   
 
     const GlobalTarget = () => {
+
+        const [selectedDates, setSelectedDates] = useState([])
+        const [globalTargetData, setGlobalTargetData] = useState([])
+        const [selectedCurrency, setSelectedCurrency] = useState('USD')
+        const currencies = [{ value: 'USD', label: 'USD' }, { value: 'INR', label: 'INR' }, { value: 'LKR', label: 'LKR' }, { value: 'SGD', label: 'SGD' }]
+    
+        useEffect(() => {
+            const currentDate = new Date();
+            const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30);
+            const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+            const formattedEndDate = format(currentDate, 'yyyy-MM-dd');
+            setSelectedDates([formattedStartDate, formattedEndDate])
+        }, []);
+    
+        useEffect(() => {
+            getGlobalTargetDetails(selectedCurrency).then((res) => {
+                setGlobalTargetData(res)
+            }).catch((err) => { })
+        }, [selectedCurrency]);
+    
+        const handleDateRangeChangeBooking = (value) => {
+            if (value) {
+                const formattedStartDate = format(value[0], 'yyyy-MM-dd')
+                const formattedEndDate = format(value[1], 'yyyy-MM-dd')
+                setSelectedDates([formattedStartDate, formattedEndDate])
+                console.log(formattedStartDate, formattedEndDate)
+            } else {
+                setSelectedDates([])
+            }
+        }
         return (
             <>
                 <br></br>
@@ -59,10 +59,10 @@ const GlobalTarget = () => {
                                 <Select
                                     options={currencies}
                                     defaultValue={{ value: "USD", label: "USD" }}
-                                    value={selectedCurrency}
+                                    value={currencies?.label}
                                     onChange={(selectedOption) => setSelectedCurrency(selectedOption?.value)}
                                     placeholder="Select Currency"
-                                    isClearable
+                                    // isClearable
                                 />
 
                             </CHeader>
