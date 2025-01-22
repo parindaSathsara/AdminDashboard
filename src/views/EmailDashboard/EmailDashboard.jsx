@@ -121,14 +121,18 @@ const EmailDashboard = () => {
         if (!emailType?.value) missingFields.push("Email Type");
         if (!selectedOrderID?.value) missingFields.push("Order ID");
 
+        if (emailType.value !== "customer_invoice" && !selectedOrderIndexId?.value) {
+            missingFields.push("Order Index ID");
+        }
+
         if (missingFields.length > 0) {
+
             Swal.fire({
                 icon: 'warning',
                 title: 'Missing Fields',
                 text: `Please select the following fields: ${missingFields.join(', ')}`,
             });
             return;
-
         }
 
 
@@ -141,7 +145,6 @@ const EmailDashboard = () => {
     };
 
     const handleDownloadReceipt = () => {
-
         const missingFields = [];
         if (!emailType?.value) missingFields.push("Email Type");
         if (!selectedOrderID?.value) missingFields.push("Order ID");
