@@ -155,7 +155,7 @@ const resendAllSupplierVouchers = (id, indexId, goid) => {
     .catch(error => {
       Swal.fire(
         'Error!',
-        'There was an issue resending the order email.',
+        'There was an issue resending the order email (TBO and Flights can not send the Supplier voucher).',
         'error'
       );
     });
