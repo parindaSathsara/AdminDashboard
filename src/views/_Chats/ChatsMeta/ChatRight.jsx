@@ -23,6 +23,7 @@ import {
 // import { assignEmployeeToChat,getAllEmployees} from 'src/service/order_allocation_services';
 import {
   assignEmployeeToChat,
+  checkUpdateDoc,
   dialogUtils,
   firebaseOperations,
   getAllEmployees,
@@ -658,127 +659,138 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
   // stop chat status
 
-    const handleChatControl = (data) => {
-      console.log('Attempting to control chat with data:', data);
+  const handleChatControl = (data) => {
+    console.log('Attempting to control chat with data:', data)
 
-      return new Promise((resolve) => {
-        const isStopAction = data.status === 'Active' || data.status === 'Pending';
-        const actionText = isStopAction ? 'stop' : 'pause';
-        const newStatus = isStopAction ? 'End' : 'Pending';
+    return new Promise((resolve) => {
+      const isStopAction = data.status === 'Active' || data.status === 'Pending'
+      const actionText = isStopAction ? 'stop' : 'pause'
+      const newStatus = isStopAction ? 'End' : 'Pending'
 
-        Swal.fire({
-          title: 'Are you sure?',
-          text: `Do you really want to ${actionText} this chat?`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: `Yes, ${actionText} it!`,
-        }).then(async (result) => {
-          if (!result.isConfirmed) {
-            console.log('User cancelled the operation.');
-            return resolve([400, 'User cancelled the operation']);
+      Swal.fire({
+        title: 'Are you sure?',
+        text: `Do you really want to ${actionText} this chat?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: `Yes, ${actionText} it!`,
+      }).then(async (result) => {
+        if (!result.isConfirmed) {
+          console.log('User cancelled the operation.')
+          return resolve([400, 'User cancelled the operation'])
+        }
+
+        if (!data.id) {
+          console.error('Missing required parameters: chat_id.')
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Required data is missing. Unable to control the chat.',
+          })
+          return resolve([400, 'Missing required parameters'])
+        }
+
+        try {
+          // const docRef = doc(db, 'customer-chat-lists', data.id)
+
+          // await updateDoc(docRef, {
+          //   status: newStatus,
+          //   updatedAt: serverTimestamp(),
+          // })
+
+          // // Fetch updated status after successful update
+          // const updatedDoc = await getDoc(docRef)
+          // check the updatedoc 
+          const updatedDoc = await checkUpdateDoc(db,data,newStatus)
+          console.log(updatedDoc);
+          
+          if (updatedDoc) {
+            setChatStatus(updatedDoc.status)
+            
+            if (typeof onStatusUpdate === 'function') {
+              onStatusUpdate(updatedDoc)
+            }
           }
+          // if (updatedDoc.exists()) {
+          //   const updatedData = updatedDoc.data()
+          //   setChatStatus(updatedData.status)
 
-          if (!data.id) {
-            console.error('Missing required parameters: chat_id.');
-            await Swal.fire({
-              icon: 'error',
-              title: 'Error!',
-              text: 'Required data is missing. Unable to control the chat.',
-            });
-            return resolve([400, 'Missing required parameters']);
-          }
+          //   if (typeof onStatusUpdate === 'function') {
+          //     onStatusUpdate(updatedData)
+          //   }
+          // }
 
-          try {
-            const docRef = doc(db, 'customer-chat-lists', data.id);
+          console.log(`Chat ${actionText}ed successfully.`)
+          await Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: `The chat has been ${actionText}ed.`,
+            showConfirmButton: true,
+            timer: 1500,
+          })
 
-            await updateDoc(docRef, {
-              status: newStatus,
-              updatedAt: serverTimestamp(),
-            });
+          return resolve([200, `Chat ${actionText}ed successfully`])
+        } catch (error) {
+          console.error(`Error occurred while ${actionText}ing chat:`, error)
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: `An error occurred while ${actionText}ing chat.`,
+          })
+          return resolve([400, `Error occurred while ${actionText}ing chat`])
+        }
+      })
+    })
+  }
 
-    // Fetch updated status after successful update
-    const updatedDoc = await getDoc(docRef);
-    if (updatedDoc.exists()) {
-      const updatedData = updatedDoc.data();
-      setChatStatus(updatedData.status);
+  //   const handleChatControl = (data) => {
+  //     return handleOperation({
+  //       operation: async () => {
+  //         const isStopAction = data.status === 'Active' || data.status === 'Pending'
+  //         const actionText = isStopAction ? 'stop' : 'pause'
+  //         const newStatus = isStopAction ? 'End' : 'Pending'
 
-      if (typeof onStatusUpdate === 'function') {
-        onStatusUpdate(updatedData);
-      }
-    }
+  //         // Show confirmation dialog
+  //         const confirmed = await dialogUtils.showConfirmation({
+  //           title: 'Are you sure?',
+  //           text: `Do you really want to ${actionText} this chat?`,
+  //         })
 
-            console.log(`Chat ${actionText}ed successfully.`);
-            await Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: `The chat has been ${actionText}ed.`,
-              showConfirmButton: true,
-              timer: 1500,
-            });
+  //         if (!confirmed) {
+  //           return [400, 'User cancelled the operation']
+  //         }
 
-            return resolve([200, `Chat ${actionText}ed successfully`]);
-          } catch (error) {
-            console.error(`Error occurred while ${actionText}ing chat:`, error);
-            await Swal.fire({
-              icon: 'error',
-              title: 'Error!',
-              text: `An error occurred while ${actionText}ing chat.`,
-            });
-            return resolve([400, `Error occurred while ${actionText}ing chat`]);
-          }
-        });
-      });
-    };
+  //         // Update chat status
+  //         const docRef = await firebaseOperations.updateDocument('customer-chat-lists', data.id, {
+  //           status: newStatus,
+  //         })
 
-//   const handleChatControl = (data) => {
-//     return handleOperation({
-//       operation: async () => {
-//         const isStopAction = data.status === 'Active' || data.status === 'Pending'
-//         const actionText = isStopAction ? 'stop' : 'pause'
-//         const newStatus = isStopAction ? 'End' : 'Pending'
+  //         // Fetch updated data
+  //         const updatedDoc = await firebaseOperations.fetchDocument(docRef)
+  //         // Fetch updated status after successful update
+  //         // const updatedDoc = await getDoc(docRef)
+  //         if (updatedDoc.exists()) {
+  //           const updatedData = updatedDoc.data()
+  //           setChatStatus(updatedData.status)
 
-//         // Show confirmation dialog
-//         const confirmed = await dialogUtils.showConfirmation({
-//           title: 'Are you sure?',
-//           text: `Do you really want to ${actionText} this chat?`,
-//         })
+  //           if (typeof onStatusUpdate === 'function') {
+  //             onStatusUpdate(updatedData)
+  //           }
+  //         }
 
-//         if (!confirmed) {
-//           return [400, 'User cancelled the operation']
-//         }
-
-//         // Update chat status
-//         const docRef = await firebaseOperations.updateDocument('customer-chat-lists', data.id, {
-//           status: newStatus,
-//         })
-
-//         // Fetch updated data
-//         const updatedDoc = await firebaseOperations.fetchDocument(docRef)
-//         // Fetch updated status after successful update
-//         // const updatedDoc = await getDoc(docRef)
-//         if (updatedDoc.exists()) {
-//           const updatedData = updatedDoc.data()
-//           setChatStatus(updatedData.status)
-
-//           if (typeof onStatusUpdate === 'function') {
-//             onStatusUpdate(updatedData)
-//           }
-//         }
-
-//         return [200, `Chat ${actionText}ed successfully`]
-//       },
-//       validationFn: () => !!data.id,
-//       successMessage: 'Operation completed successfully',
-//       errorMessage: 'Failed to control chat',
-//       onSuccess: async (result) => {
-//         if (typeof onStatusUpdate === 'function') {
-//           onStatusUpdate(result)
-//         }
-//       },
-//     })
-//   }
+  //         return [200, `Chat ${actionText}ed successfully`]
+  //       },
+  //       validationFn: () => !!data.id,
+  //       successMessage: 'Operation completed successfully',
+  //       errorMessage: 'Failed to control chat',
+  //       onSuccess: async (result) => {
+  //         if (typeof onStatusUpdate === 'function') {
+  //           onStatusUpdate(result)
+  //         }
+  //       },
+  //     })
+  //   }
 
   const handleOnClick = (data) => {
     // console.log(data, "chamod")
