@@ -1,5 +1,5 @@
 import React from 'react'
-
+import axios from 'axios'
 import { CButton, CCol, CRow } from '@coreui/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 
@@ -66,15 +66,26 @@ import {
   CTableHeaderCell,
   CTableBody,
   CTableDataCell,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilTrash } from '@coreui/icons'
 import MoreProductView from 'src/views/Products/MoreProductView/MoreProductView'
 import moment from 'moment'
+// import { get } from 'jquery'
+// import { set } from 'core-js/core/dict'
+// // import { set } from 'core-js/core/dict'
 
 export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   const [lastMessages, setLastMessages] = useState([])
   const [lastMessageContent, setLastMessageContent] = useState([])
+  const [recommenderModalOpen, setRecommenderModalOpen] = useState(false) // Recommender Modal Open State
+  const [recommendations, setRecommendations] = useState([]) // Recommendations according to the chat State
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false) // Loading State for Recommendations
   //console.log(chatOpenedData, 'Chat Opened Data is')
   const handleSearchBar = ({ status }) => {
     setSearchBarStatus({
@@ -197,6 +208,13 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       })
       setLastMessages(fetchedMessages.slice(0, 10).reverse())
 
+      // Update lastMessageContent with new messages
+      const messageContent = fetchedMessages.map((message) => ({
+        role: message.role,
+        text: message.text,
+      }))
+      setLastMessageContent(messageContent)
+
       await batch.commit()
 
       const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt)
@@ -311,13 +329,14 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
   useEffect(() => {
     if (chatOpenedData?.id) {
-      // console.log('useEffect function called', chatOpenedData)
+      // Reset lastMessageContent before populating with new chat messages
+      setLastMessageContent([])
+
       handleOpenChat(chatOpenedData)
       setAssignedEmployee({ id: '', name: '', allotStatus: '' })
 
       if (chatOpenedData?.assign_employee) {
         setChatAssignedEmployee(chatOpenedData?.assign_employee)
-        // console.log('chatAssignedEmployee', chatOpenedData?.assign_employee)
 
         if (chatOpenedData?.assign_employee !== '') {
           const user = availableEmployees.find(
@@ -330,10 +349,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
               allotStatus: 'Allocated',
               chatId: chatOpenedData?.id,
             })
-          // console.log('Assigned Employee: ', user)
+        } else {
+          setChatAssignedEmployee(null)
         }
-      } else {
-        setChatAssignedEmployee(null)
       }
     }
 
@@ -577,6 +595,24 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       zIndex: 9999,
     }),
   }
+  async function getRecommendations() {
+    setLoadingRecommendations(true)
+    try {
+      const response = await axios.post('http://172.16.26.244:8000/api/getRecommendations', {
+        chats: lastMessageContent,
+      })
+      setRecommendations(response.data)
+    } catch (error) {
+      console.error('Error fetching recommendations:', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Aiyooo...',
+        text: 'Failed to fetch recommendations. Please try again later.',
+      })
+    } finally {
+      setLoadingRecommendations(false)
+    }
+  }
 
   const handleProductRecommendation = () => {
     try {
@@ -588,8 +624,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     } catch (error) {
       console.error(error)
     }
-
-    console.log('Last Message Content:', lastMessageContent)
+    setRecommenderModalOpen(true)
+    getRecommendations()
   }
 
   const handleDeleteEmployee = async (value) => {
@@ -824,7 +860,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                     <FontAwesomeIcon
                       icon={faStore}
                       className="chat-message-input-icon auto-suggestion-box"
-                      style={{ color: 'black' }}
+                      style={{ color: 'black', cursor: 'pointer' }}
                       onClick={() => handleProductRecommendation()}
                     />
                     <FontAwesomeIcon
@@ -963,6 +999,32 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         onHide={() => setMoreProductModal(false)}
         productData={moreData}
       ></MoreProductView>
+
+      <CModal
+        alignment="center"
+        scrollable
+        backdrop="static"
+        visible={recommenderModalOpen}
+        onClose={() => setRecommenderModalOpen(false)}
+        aria-labelledby="VerticallyCenteredScrollableExample2"
+      >
+        <CModalHeader>
+          <CModalTitle id="VerticallyCenteredScrollableExample2">Modal title</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {lastMessageContent.map((message, index) => (
+            <div key={index}>
+              <p>{message.text}</p>
+            </div>
+          ))}
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setRecommenderModalOpen(false)}>
+            Close
+          </CButton>
+          <CButton color="primary">Save changes</CButton>
+        </CModalFooter>
+      </CModal>
     </>
   )
 }
