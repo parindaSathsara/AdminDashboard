@@ -67,13 +67,11 @@ const EmailDashboard = () => {
 
     const handleONCheckoutIDClick = (selectedOption) => {
         setSelectedOrderID(selectedOption);
-
         setSelectedOrderIndexId({});
 
         setCheckoutIndexLoading(true);
         getOrderIndexIds(selectedOption?.value).then(response => {
 
-            // console.log(response);
 
             setOrderIndexIdVals(response)
 
