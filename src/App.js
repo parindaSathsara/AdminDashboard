@@ -42,10 +42,10 @@ axios.defaults.imageUrl = 'https://staging-gateway.aahaas.com/';
 // axios.defaults.data = 'http://172.16.26.146:8000'
 //------------------------------------------------
 //-----------------------------------------------------------
-axios.defaults.url = 'http://172.16.26.244:8000/api'
+axios.defaults.url = 'http://127.0.0.1:8000/api'
 
-axios.defaults.baseURL = 'http://172.16.26.244:8000/api'
-axios.defaults.data = 'http://172.16.26.244:8000'
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
+axios.defaults.data = 'http://127.0.0.1:8000'
 //------------------------------------------------
 
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api'

@@ -54,7 +54,7 @@ import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons'
 import SuggestionModal from './Components/SuggestionsModal'
 import sendPushNotificationsOnChats from './functions/sendPushNotificationsOnChats'
 import ProductSuggestionModal from './Components/ProductSuggestionModal'
-import { Modal } from 'react-bootstrap'
+import { Modal, Tab, Tabs } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import {
   CCardImage,
@@ -76,6 +76,8 @@ import CIcon from '@coreui/icons-react'
 import { cilTrash } from '@coreui/icons'
 import MoreProductView from 'src/views/Products/MoreProductView/MoreProductView'
 import moment from 'moment'
+import { Recommend } from '@mui/icons-material'
+import AiSuggestionModal from './AiSuggestionModal'
 // import { get } from 'jquery'
 // import { set } from 'core-js/core/dict'
 // // import { set } from 'core-js/core/dict'
@@ -86,6 +88,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   const [recommenderModalOpen, setRecommenderModalOpen] = useState(false) // Recommender Modal Open State
   const [recommendations, setRecommendations] = useState([]) // Recommendations according to the chat State
   const [loadingRecommendations, setLoadingRecommendations] = useState(false) // Loading State for Recommendations
+  const [selectedTab, setSelectedTab] = useState('home')
   //console.log(chatOpenedData, 'Chat Opened Data is')
   const handleSearchBar = ({ status }) => {
     setSearchBarStatus({
@@ -598,7 +601,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   async function getRecommendations() {
     setLoadingRecommendations(true)
     try {
-      const response = await axios.post('http://172.16.26.244:8000/api/getRecommendations', {
+      const response = await axios.post('/getRecommendations', {
         chats: lastMessageContent,
       })
       setRecommendations(response.data)
@@ -999,32 +1002,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         onHide={() => setMoreProductModal(false)}
         productData={moreData}
       ></MoreProductView>
-
-      <CModal
-        alignment="center"
-        scrollable
-        backdrop="static"
-        visible={recommenderModalOpen}
-        onClose={() => setRecommenderModalOpen(false)}
-        aria-labelledby="VerticallyCenteredScrollableExample2"
-      >
-        <CModalHeader>
-          <CModalTitle id="VerticallyCenteredScrollableExample2">Modal title</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          {lastMessageContent.map((message, index) => (
-            <div key={index}>
-              <p>{message.text}</p>
-            </div>
-          ))}
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setRecommenderModalOpen(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
+      <AiSuggestionModal show={recommenderModalOpen} recommendations = {recommendations} onHide={() => setRecommenderModalOpen(false)} />
     </>
   )
 }
