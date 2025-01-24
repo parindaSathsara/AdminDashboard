@@ -406,12 +406,12 @@ export default function TravellerExperience(props) {
         // Get today's date in 'YYYY-MM-DD' format
         const today = new Date()
         const todayString = today.toISOString().split('T')[0]
-        console.log(rowData?.reconfirmationDate, 'reconfirmationDate')
+        // console.log(rowData?.reconfirmationDate, 'reconfirmationDate')
         // Get yesterday's date in 'YYYY-MM-DD' format
         const yesterday = new Date()
         yesterday.setDate(today.getDate() - 1)
         const yesterdayString = yesterday.toISOString().split('T')[0]
-        console.log(rowData, 'Row DAta value issssss')
+        // console.log(rowData, 'Row DAta value issssss')
         return (
           <CFormInput
             disabled={getDisableStatus(rowData)}
