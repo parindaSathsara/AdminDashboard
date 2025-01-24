@@ -29,6 +29,7 @@ export default function SupplierExperience(props) {
   }
 
   const productData = props.dataset
+  const selectedProductId =productData?.[0]?.PID
   console.log("Supplier Experience", productData)
 
 
@@ -379,7 +380,7 @@ export default function SupplierExperience(props) {
         <Modal.Header closeButton>
           <Modal.Title>Supplier Voucher</Modal.Title>
           {(["resend supplier voucher"].some(permission => userData?.permissions?.includes(permission))) &&
-          <CButton color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher()}>
+          <CButton disabled={selectedProductId === 'Flights'? true : false }  color="info" style={{ fontSize: 16, color: 'white', marginLeft: 20, alignContent: 'center' }} onClick={() => resendVoucher()}>
             Resend Voucher
             {voucherSending === false ?
               null
