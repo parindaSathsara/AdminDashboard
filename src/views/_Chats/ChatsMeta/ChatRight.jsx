@@ -133,13 +133,17 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   const handleScrollToMessage = () => {}
 
   const { userData } = useContext(UserLoginContext)
-
+ 
   const handleSendMessage = async (value) => {
     if (value === '' || !value.trim()) {
       console.log('Empty message')
       return
     } else {
       setAdminMessage('')
+
+      const adminMsg =  messages?.filter(data=>data?.role == "Admin")
+      
+  
       await addDoc(collection(db, 'chat-updated/chats/' + chatOpenDetails.id), {
         text: value,
         name: userData.name,
@@ -158,6 +162,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
           status: 'Unread',
           readAt: '',
         },
+        adminJoined:adminMsg?.length == 0 ? true : false
       })
 
       const docRef = doc(db, 'customer-chat-lists', chatOpenDetails.id)
