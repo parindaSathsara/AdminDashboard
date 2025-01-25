@@ -27,6 +27,7 @@ const AppSidebar = () => {
 
   return (
     <CSidebar
+      style={{}}
       position="fixed"
       unfoldable={unfoldable}
       visible={sidebarShow}
@@ -54,7 +55,7 @@ const AppSidebar = () => {
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       /> */}
-      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.41</CCardText>
+      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.42</CCardText>
     </CSidebar>
   )
 }
