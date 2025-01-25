@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CButton, CCol, CRow } from '@coreui/react'
+import { CButton, CCol, CRow, CTooltip  } from '@coreui/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 
 import {
@@ -892,6 +892,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   )}
                   {/* the end chat icon */}
                   {
+                    
+                    <CTooltip  
+                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Chick to Stop Chat'}
+                    placement="auto">
+                  
                     <FontAwesomeIcon
                       icon={chatStatus === 'End' ? faStop : faPause}
                       onClick={() => {
@@ -904,10 +909,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       }}
                       style={{
                         color: chatStatus === 'End' ? '#ff0000' : '#ffe400',
-                        cursor: chatStatus === 'End' ? 'not-allowed' : 'pointer',
-                        pointerEvents: chatStatus === 'End' ? 'none' : 'auto',
+                        cursor: chatStatus === 'End' ? 'pointer' : 'pointer',
+                        pointerEvents: chatStatus === 'End' ? 'auto' : 'auto',
                       }}
                     />
+                    </CTooltip>
 
                     // <FontAwesomeIcon icon={faStop} onClick={() => handleStopChat(chatOpenDetails)} style={{ color: '#2bfd3c' }} />
                   }
