@@ -115,7 +115,7 @@ const ProductBasePromotion = () => {
  
 
     const customFromSubmit = (data) => {
-        // console.log(data, "Form Data issssss")
+        console.log(data, "Form Data issssss")
         var requiredFields = [];
         setRefreshTrigger(true)
 
