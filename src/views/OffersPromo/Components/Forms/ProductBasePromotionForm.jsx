@@ -325,7 +325,7 @@ export default function ConditionForm({ show, handleCloseModal, onSubmit, modalD
         <Modal style={{ maxHeight: '95vh', overflowY: 'auto' }} show={show} onHide={handleCloseModal} centered size="xl">
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {edit ? "Edit" : "Create"} Promotion Productttttt
+                    {edit ? "Edit" : "Create"} Promotion Product
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
