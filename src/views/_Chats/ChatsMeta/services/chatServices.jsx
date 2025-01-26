@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, getDocs,getDoc,doc, updateDoc, limit, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { db } from 'src/firebase';
 
 const fetchConversations = async () => {
@@ -90,4 +90,17 @@ const assignEmployeeToChat = async (chat_id, employeeId) => {
     }
 };
 
-export { fetchConversations, fetchMessages,getAllEmployees, assignEmployeeToChat };
+const checkUpdateDoc = async (db, data, newStatus) => {
+    const docRef = doc(db, 'customer-chat-lists', data.id)
+    
+    await updateDoc(docRef, {
+      status: newStatus,
+      updatedAt: serverTimestamp(),
+    })
+    
+    const updatedDoc = await getDoc(docRef)
+    return updatedDoc.exists() ? updatedDoc.data() : null
+  }
+  
+
+export { fetchConversations, fetchMessages,getAllEmployees, assignEmployeeToChat, checkUpdateDoc };

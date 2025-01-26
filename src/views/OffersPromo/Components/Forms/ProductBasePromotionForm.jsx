@@ -231,24 +231,23 @@ export default function ConditionForm({ show, handleCloseModal, onSubmit, modalD
 
         // console.log(name, value, "Dataaaaaaaaaaaaaaaa");
 
-        if (typeof value === "string" && value.includes("-") && name === "origin_rate_id") {
-            const [firstValue, lastValue] = value.split("-")
-            // .map((v) => v.trim());
+        if (typeof value === "string" && (value.includes(",") || value.includes("-")) && name === "origin_rate_id") {
+            const [firstValue, lastValue] = value.split(/,|-/);
             setFormData((prevData) => ({
-                ...prevData,
-                origin_rate_id: value,
-                origin_inventory_id: value,
+            ...prevData,
+            origin_rate_id: value,
+            origin_inventory_id: value,
             }));
             setFormData2((prevData) => ({
-                ...prevData,
-                origin_rate_id: firstValue,
-                origin_inventory_id: lastValue,
+            ...prevData,
+            origin_rate_id: firstValue,
+            origin_inventory_id: lastValue,
             }));
             return;
         }
 
-        if (typeof value === "string" && value.includes("-") && name === "discounted_rate_id") {
-            const [firstValue, lastValue] = value.split("-")
+        if (typeof value === "string" && (value.includes(",") || value.includes("-")) && name === "discounted_rate_id") {
+            const [firstValue, lastValue] =  value.split(/,|-/);
             setFormData((prevData) => ({
                 ...prevData,
                 discounted_rate_id: value,

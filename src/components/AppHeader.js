@@ -147,14 +147,15 @@ useState(()=>{
     axios.get("/help").then((res) => {
       setSupportReqests(res.data);
     })
-    .catch((err) => {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Error fetching data!"
-      });
-      throw new Error(err)
-    })
+    // .
+    // catch((err) => {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Oops...",
+    //     text: "Error fetching data!"
+    //   });
+    //   throw new Error(err)
+    // })
   }
   
 

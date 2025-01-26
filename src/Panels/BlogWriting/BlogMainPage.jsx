@@ -103,9 +103,39 @@ const BlogMainPage = () => {
   const handleSubmit = async (values, { setSubmitting: formikSetSubmitting, resetForm }) => {
     setSubmitting(true)
 
+    const errors = [];
+
+    if (!values.title) {
+      errors.push('Title is required');
+    }
+
+    // const contentHtml2 = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    // if (!contentHtml2 || contentHtml2 === '<p></p>') {
+    //   errors.push('Content is required');
+    // }
+
+    if (!values.summary) {
+      errors.push('Summary is required');
+    }
+
+    if (imageFiles.length === 0) {
+      errors.push('At least one image is required');
+    }
+
+    if (errors.length > 0) {
+      Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      html: errors.join('<br/>')
+      });
+      setSubmitting(false);
+      formikSetSubmitting(false);
+      return;
+    }
+
     const contentHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const formData = new FormData()
-
+    console.log("formData", formData)
     formData.append('title', values.title)
     formData.append('description', contentHtml)
     formData.append('summary', values.summary)

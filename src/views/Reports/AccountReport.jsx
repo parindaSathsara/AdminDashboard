@@ -540,7 +540,7 @@ const ReportGenerationPage = () => {
                   )}
                 </CCol>
                 <CCol xs={12} sm={6} lg={3}>
-                  <CFormLabel htmlFor="end-date">End Date</CFormLabel>
+                  <CFormLabel htmlFor="end-date" style={{marginTop:"4%"}}>End Date</CFormLabel>
                   <br />
                   <DatePicker
                     disabled={statusDate}

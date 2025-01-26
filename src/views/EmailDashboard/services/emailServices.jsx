@@ -68,6 +68,7 @@ const resendOrderEmailToCustomer = (id) => {
     title: 'Sending...',
     text: 'Resending the order email, please wait.',
     allowOutsideClick: false,
+    showConfirmButton: false,
     onBeforeOpen: () => {
       Swal.showLoading();
     }
@@ -129,6 +130,7 @@ const resendAllSupplierVouchers = (id, indexId, goid) => {
     title: 'Sending...',
     text: 'Resending the order email, please wait.',
     allowOutsideClick: false,
+    showConfirmButton: false,
     onBeforeOpen: () => {
       Swal.showLoading();
     }
@@ -153,7 +155,7 @@ const resendAllSupplierVouchers = (id, indexId, goid) => {
     .catch(error => {
       Swal.fire(
         'Error!',
-        'There was an issue resending the order email.',
+        'There was an issue resending the order email (TBO and Flights can not send the Supplier voucher).',
         'error'
       );
     });
