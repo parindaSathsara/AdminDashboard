@@ -600,6 +600,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   }
   async function getRecommendations() {
     setLoadingRecommendations(true)
+    setRecommendations([]);
     try {
       const response = await axios.post('/getRecommendations', {
         chats: lastMessageContent,
@@ -1002,7 +1003,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         onHide={() => setMoreProductModal(false)}
         productData={moreData}
       ></MoreProductView>
-      <AiSuggestionModal show={recommenderModalOpen} recommendations = {recommendations} onHide={() => setRecommenderModalOpen(false)} />
+      <AiSuggestionModal show={recommenderModalOpen} loadingRecommendations = {loadingRecommendations} getRecommendations = {getRecommendations} setRecommendations={setRecommendations} recommendations = {recommendations} onHide={() => setRecommenderModalOpen(false)} />
     </>
   )
 }

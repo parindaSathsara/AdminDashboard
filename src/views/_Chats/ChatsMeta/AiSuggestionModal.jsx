@@ -1,66 +1,180 @@
-import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
-import { useState } from 'react'
+import { CButton, CSpinner } from '@coreui/react'
+import { useState, useEffect } from 'react'
 import { Tab, Tabs } from 'react-bootstrap'
+import { ThemeProvider, createTheme } from '@mui/material'
 import Modal from 'react-bootstrap/Modal'
+import MaterialTable from 'material-table'
+import { cilFullscreen, cilFullscreenExit } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function AiSuggestionModal(props) {
-  const [key, setKey] = useState('home')
+  const { setRecommendations, getRecommendations } = props
+  const [key, setKey] = useState('LifeStyle')
+  const [data, setData] = useState([])
+  const [otherData, setOtherData] = useState([])
+  const [isFullscreen, setIsFullscreen] = useState(false) // State for fullscreen mode
+
+  //while onhide the modal, the data should be cleared
+  useEffect(() => {
+    if (!props.show) {
+      setData([])
+      setRecommendations({}) // Clear recommendations
+    }
+  }, [props.show])
+
+  const defaultMaterialTheme = createTheme()
+
+  // Use useEffect to handle props updates
+  useEffect(() => {
+    if (props.recommendations && props.recommendations.life_style_products) {
+      setData(props.recommendations.life_style_products) // Set data directly to life_style_products
+    }
+  }, [props.recommendations])
+
+  useEffect(() => {
+    if (props.recommendations && props.recommendations.other_products) {
+      setOtherData(props.recommendations.other_products)
+    }
+  }, [props.recommendations])
+
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      fullscreen={isFullscreen}
+    >
       <Modal.Header closeButton>
+        <CButton
+          color="secondary"
+          style={{ backgroundColor: '#ffffff', color: '#666666', marginRight: '10px' }}
+          onClick={() => setIsFullscreen(!isFullscreen)}
+        >
+          <div>
+            {isFullscreen ? (
+             <i class="fa fa-window-minimize" aria-hidden="true"></i>
+            ) : (
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            )}
+          </div>
+        </CButton>
         <Modal.Title id="contained-modal-title-vcenter">Recommended Offerings</Modal.Title>
+        <CButton
+          style={{ marginLeft: '10px', backgroundColor: '#041d24' }}
+          onClick={() => getRecommendations()}
+        >
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </CButton>
       </Modal.Header>
       <Modal.Body>
-        <b>Key Words:</b> {props.recommendations.keywords?.map((keyword) => keyword + ', ')}
-        <hr />
-        <Tabs
-          id="controlled-tab-example"
-          activeKey={key}
-          onSelect={(k) => setKey(k)}
-          className="mb-3"
-        >
-          <Tab eventKey="home" title="Home">
-            <CTable>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell>Mark</CTableDataCell>
-                  <CTableDataCell>Otto</CTableDataCell>
-                  <CTableDataCell>@mdo</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell>Jacob</CTableDataCell>
-                  <CTableDataCell>Thornton</CTableDataCell>
-                  <CTableDataCell>@fat</CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                  <CTableDataCell colSpan={2}>Larry the Bird</CTableDataCell>
-                  <CTableDataCell>@twitter</CTableDataCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
-          </Tab>
-          <Tab eventKey="hame" title="Hame">
-            Tab content for Home
-          </Tab>
-        </Tabs>
-        {/* Stringify result */}
-        <b>Result:</b> {JSON.stringify(props.recommendations)}
+        {props.loadingRecommendations ? (
+          <div style={{ textAlign: 'center', minHeight: '5rem' }}>
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-blue"></i>
+            <br />
+            <h3>Loading...</h3>
+          </div>
+        ) : (
+          <>
+            {/* Display keywords */}
+            <b>Key Words:</b> {props.recommendations.keywords?.join(', ')}
+            <hr />
+            {/* Tabs for displaying different content */}
+            <Tabs
+              id="controlled-tab-example"
+              activeKey={key}
+              onSelect={(k) => setKey(k)}
+              className="mb-3"
+            >
+              <Tab eventKey="LifeStyle" title="LifeStyle">
+                {/* Material Table for life_style_products */}
+                <ThemeProvider theme={defaultMaterialTheme}>
+                  <MaterialTable
+                    style={{ fontSize: '8px' }}
+                    title="LifeStyle Products"
+                    data={data}
+                    columns={[
+                      {
+                        title: ' ',
+                        field: 'image',
+                        render: (rowData) => (
+                          <img
+                            src={rowData.image}
+                            alt={rowData.lifestyle_name}
+                            style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8 }}
+                          />
+                        ),
+                      },
+                      { title: 'Product Name', field: 'lifestyle_name' },
+                      { title: 'Address', field: 'address' },
+                      { 
+                        title: 'Description', 
+                        field: 'sub_description', 
+                        render: rowData => rowData.sub_description.substring(0, 100)+'...'
+                      },
+                      { title: 'Key Words', field: 'selling_points' },
+                    ]}
+                    options={{
+                      headerStyle: {
+                        backgroundColor: '#01579b',
+                        color: '#FFF',
+                      },
+                      cellStyle: { fontSize: '13px' },
+                      sorting: true,
+                      search: true,
+                    }}
+                  />
+                </ThemeProvider>
+              </Tab>
+              <Tab eventKey="Everyday" title="Everyday">
+                <ThemeProvider theme={defaultMaterialTheme}>
+                  <MaterialTable
+                    style={{ fontSize: '8px' }}
+                    title="Essential / Non-Essential Products"
+                    data={otherData}
+                    columns={[
+                      {
+                        title: ' ',
+                        field: 'image',
+                        render: (rowData) => (
+                          <img
+                            src={rowData.product_images.split(',')[0]}
+                            alt={rowData.lifestyle_name}
+                            style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8 }}
+                          />
+                        ),
+                      },
+                      { title: 'Product Name', field: 'listing_title' },
+                      { title: 'Brand', field: 'brand_id' },
+                      { 
+                        title: 'Description', 
+                        field: 'sub_description', 
+                        render: rowData => rowData.sub_description.substring(0, 100)+'...'
+                      },
+                      { title: 'Key Words', field: 'seo_tags' },
+                      { title: 'Country', field: 'country' },
+                    ]}
+                    options={{
+                      headerStyle: {
+                        backgroundColor: '#01579b',
+                        color: '#FFF',
+                      },
+                      cellStyle: { fontSize: '13px' },
+                      sorting: true,
+                      search: true,
+                    }}
+                  />
+                </ThemeProvider>
+              </Tab>
+            </Tabs>
+          </>
+        )}
       </Modal.Body>
       <Modal.Footer>
-        <CButton color="primary" onClick={props.onHide}>
+        {/* <CButton style={{backgroundColor:"#041d24"}} onClick={props.onHide}>
           Close
-        </CButton>
+        </CButton> */}
       </Modal.Footer>
     </Modal>
   )
