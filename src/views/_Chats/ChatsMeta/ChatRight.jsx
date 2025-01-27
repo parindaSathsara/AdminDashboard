@@ -894,7 +894,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   {
                     
                     <CTooltip  
-                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Chick to Stop Chat'}
+                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
                     placement="auto">
                   
                     <FontAwesomeIcon
