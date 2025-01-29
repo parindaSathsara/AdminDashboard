@@ -161,7 +161,7 @@ const EmailGeneration = () => {
     
             getAllInternalEmails().then(response => {
             // setAllPositions(response);
-            console.log(response, "Internal Emails")
+            console.log(response, "Email Generation")
             const emailData = response.map(email => ({
                 value: email.email,
                 label: email.email

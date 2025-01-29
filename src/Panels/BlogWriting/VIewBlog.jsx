@@ -3,7 +3,7 @@ import BlogCarousel from './BlogCarousel'
 import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { CButton, CCard, CSpinner } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader, CSpinner } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 function ViewBlog() {
@@ -83,7 +83,11 @@ function ViewBlog() {
           <BlogCarousel images={data.images} />
           <br />
           <CCard style={{ padding: '1rem' }}>
+            <CCardHeader class="fs-4">Description</CCardHeader>
+            <CCardBody>
           <div dangerouslySetInnerHTML={{ __html: data.text }} />
+
+            </CCardBody>
 
           </CCard>
         </>
