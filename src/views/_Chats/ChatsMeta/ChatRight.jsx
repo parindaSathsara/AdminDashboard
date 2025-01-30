@@ -854,11 +854,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
   const handleOnClick = (data) => {
     // console.log(data, "chamod")
-    console.log(data)
+    // console.log(data)
 
     const categories = [
       { value: '1', name: 'Essentials' },
-      { value: '2', name: 'NonEssentials' },
+      { value: '2', name: 'Essentials' },
       { value: '3', name: 'Lifestyles' },
       { value: '4', name: 'Hotels' },
       { value: '5', name: 'Educations' },
@@ -867,10 +867,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     if (data.category) {
       const category = categories.find((cat) => cat.value === data.category.toString())
       if (category) {
-        data.category = category.name
+      data.category = category.name
       }
     }
-    console.log(data, 'chamod')
+    // console.log(data, 'chamod')
     setMoreProductModal(true)
     // // setMoreData({
     // //     "product_title": "Hompton by the Beach Penang",
