@@ -494,9 +494,7 @@ export default function LifestylesProductView(props) {
             </CCol>
 
             <CCol className='my-4'>
-
                 <InventoryDetails />
-
 
             </CCol>
 

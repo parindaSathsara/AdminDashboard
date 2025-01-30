@@ -39,7 +39,7 @@ const EmailGeneration = () => {
     const [orderIndexIds, setOrderIndexIDs] = useState([{ value: "All", label: "All Checkouts" }]);
     const [orderIndexIdVals, setOrderIndexIdVals] = useState([])
     const [checkoutIndexLoading, setCheckoutIndexLoading] = useState(false)
-    
+
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     const handleEditorChange = (state) => {
@@ -116,40 +116,40 @@ const EmailGeneration = () => {
     }, [])
 
     const getCustomers = () => {
-        try{
-    
+        try {
+
             getAllCustomer().then(response => {
-            // setAllPositions(response);
-            const customerData = response.map(customer => ({
-                value: customer.id,
-                label: customer.username
-            }));
-            setCustomers(customerData);
+                // setAllPositions(response);
+                const customerData = response.map(customer => ({
+                    value: customer.id,
+                    label: customer.username
+                }));
+                setCustomers(customerData);
             }).catch(error => {
                 console.error("Error fetching available employees: ", error);
             });
-        
-    
-        }catch(error){
+
+
+        } catch (error) {
             console.error("Error available employee: ", error);
         }
     };
 
     const getSuppliers = () => {
-        try{
-    
+        try {
+
             getAllSuppliers().then(response => {
-             const suppliersData = response.map(supplier => ({
-                value: supplier.id,
-                label: supplier.first_name
+                const suppliersData = response.map(supplier => ({
+                    value: supplier.id,
+                    label: supplier.first_name
                 }));
                 setSuppliers(suppliersData);
             }).catch(error => {
                 console.error("Error fetching available employees: ", error);
             });
-        
-    
-        }catch(error){
+
+
+        } catch (error) {
             console.error("Error available employee: ", error);
         }
     };
@@ -157,31 +157,31 @@ const EmailGeneration = () => {
     const [internalEmails, setInternalEmails] = useState([])
 
     const allInternalEmails = () => {
-        try{
-    
+        try {
+
             getAllInternalEmails().then(response => {
-            // setAllPositions(response);
-            console.log(response, "Email Generation")
-            const emailData = response.map(email => ({
-                value: email.email,
-                label: email.email
-            }));
-            setInternalEmails(emailData);
+                // setAllPositions(response);
+                console.log(response, "Email Generation")
+                const emailData = response.map(email => ({
+                    value: email.email,
+                    label: email.email
+                }));
+                setInternalEmails(emailData);
             }).catch(error => {
                 console.error("Error fetching available emails: ", error);
             });
-        
-    
-        }catch(error){
+
+
+        } catch (error) {
             console.error("Error available emails: ", error);
         }
     };
-    
-      useEffect (()=>{
+
+    useEffect(() => {
         getCustomers();
         getSuppliers();
         allInternalEmails();
-      },[])
+    }, [])
 
 
     const handleEmailResend = () => {
@@ -190,10 +190,10 @@ const EmailGeneration = () => {
         if (!emailType?.value) missingFields.push("Email Type");
         if (!internalEmail?.value) missingFields.push("Internal Email");
 
-        if(emailType?.value === 'order'){
+        if (emailType?.value === 'order') {
             if (!selectedOrderID?.value) missingFields.push("Order ID");
 
-        }else if(emailType?.value === 'product_wise' || emailType?.value === 'general_chat'){
+        } else if (emailType?.value === 'product_wise' || emailType?.value === 'general_chat') {
             if (!sendPersonType?.value) missingFields.push("User Type");
             if (sendPersonType?.value === 'customer' && !selectCustomer) missingFields.push("Customer");
             if (sendPersonType?.value === 'supplier' && !selectSupplier) missingFields.push("Supplier");
@@ -222,7 +222,7 @@ const EmailGeneration = () => {
             return;
         }
         console.log(editorState)
-        
+
 
         // const rawContentState = convertToRaw(editorState.getCurrentContent());
         // const serializedEditorState = JSON.stringify(rawContentState);
@@ -230,7 +230,7 @@ const EmailGeneration = () => {
 
         const contentState = convertToRaw(editorState.getCurrentContent())
         const htmlContent = draftToHtml(contentState);
-        console.log('htmlContent',htmlContent)
+        console.log('htmlContent', htmlContent)
         // const body = JSON.stringify(htmlContent); 
         // console.log('Body',body)
 
@@ -244,20 +244,20 @@ const EmailGeneration = () => {
         formData.append("supplier", selectSupplier?.value || "");
         formData.append("customer", selectCustomer?.value || "");
         formData.append("message", htmlContent);
-        files.forEach((file,idx) => {
+        files.forEach((file, idx) => {
             formData.append(`attachments${idx}`, file);
         });
 
-        formData.append("imageLength",files.length)
+        formData.append("imageLength", files.length)
 
-        console.log('Send',...formData)
+        console.log('Send', ...formData)
 
-        if(formData){
-            try{
+        if (formData) {
+            try {
                 setLoading(true)
                 sendGenerateEmail(formData).then(response => {
-                    
-                    if(response[0] === 200){
+
+                    if (response[0] === 200) {
 
                         setLoading(false)
                         Swal.fire({
@@ -276,28 +276,28 @@ const EmailGeneration = () => {
                         setEditorState(EditorState.createEmpty());
                         setFiles([]);
 
-                    }else{
+                    } else {
                         setLoading(false)
                         Swal.fire({
                             icon: 'error',
                             title: 'Email Generation Error',
                             text: 'Error occurred while sending email',
                         });
-                    }   
+                    }
 
-                  }).catch(error => {
+                }).catch(error => {
                     setLoading(false)
                     console.error("Email Generation Error: ", error);
-                  });
-              
-          
-              }catch(error){
+                });
+
+
+            } catch (error) {
                 setLoading(false)
-                  console.error("Email Generation Error: ", error);
-              }
+                console.error("Email Generation Error: ", error);
+            }
         }
 
-       
+
     };
 
     const handleDownloadReceipt = () => {
@@ -333,7 +333,7 @@ const EmailGeneration = () => {
 
     const [files, setFiles] = useState([]);
     const handleChange = (e) => {
-        const newFiles = Array.from(e.target.files); 
+        const newFiles = Array.from(e.target.files);
         const validFiles = newFiles.filter((file) =>
             file.type.startsWith('image/') || file.type === 'application/pdf'
         );
@@ -346,7 +346,7 @@ const EmailGeneration = () => {
             });
         }
 
-        setFiles((prevFiles) => [...prevFiles, ...validFiles]);  
+        setFiles((prevFiles) => [...prevFiles, ...validFiles]);
     };
 
     const removeFile = (index) => {
@@ -357,202 +357,213 @@ const EmailGeneration = () => {
         setFiles([]);
     };
 
-     return (
+    return (
         <CContainer fluid>
-             { loading ?  <div className="d-flex justify-content-center"><CSpinner style={{marginTop:"15%"}}/></div> :
-            <> <CCol xs={12}>
-                <CCard className="mb-4">
-                    <CCardHeader>
-                        <strong>Email Generation</strong>
-                    </CCardHeader>
-                    <CCardBody>
-                        <CRow className="align-items-end">
-                        <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">Subject</CFormLabel>
-                                <br></br>
-                                <CFormInput type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                            </CCol>
-                            <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">Internal Email</CFormLabel>
-                                <br></br>
-                                <Select
-                                    options={internalEmails}
-                                    value={internalEmail}
-                                    onChange={(selectedOption) => {
-                                        setInternalEmail(selectedOption)
-                                    }}
-                                    placeholder="Select a Internal Email"
-                                />
-                            </CCol>
-                            <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">Email Type</CFormLabel>
-                                <br></br>
-                                <Select
-                                    options={emailTypes}
-                                    value={emailType}
-                                    onChange={(selectedOption) => {
-                                        setEmailType(selectedOption)
-                                        setSelectedSupplier('')
-                                        setSelectedCustomer('')
-                                    }}
-                                    placeholder="Select a Email Type"
-                                />
-                            </CCol>
-                            {
-                                emailType?.value == "order" ? 
+            {loading ? <div className="d-flex justify-content-center"><CSpinner style={{ marginTop: "15%" }} /></div> :
+                <> <CCol xs={12}>
+                    <CCard className="mb-4">
+                        <CCardHeader>
+                            <strong>Email Generation</strong>
+                        </CCardHeader>
+                        <CCardBody>
+                            <CRow className="align-items-end">
                                 <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">Order ID</CFormLabel>
-
-                                <br></br>
-
-                                <Select
-                                    options={orderIds}
-                                    value={selectedOrderID}
-                                    onChange={(selectedOption) => handleONCheckoutIDClick(selectedOption)}
-                                    placeholder="Select a Order ID"
-                                    isSearchable
-                                />
-                            </CCol> : null
-                            }
-                            {
-                                emailType?.value == "product_wise" || emailType?.value == "general_chat" ? 
-                               
-                                <>
-                                 <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">User Type</CFormLabel>
-
-                                <br></br>
-
-                                <Select
-                                    options={sendPersonTypes}
-                                    value={sendPersonType}
-                                    onChange={(selectedOption) => seSendPersonType(selectedOption)}
-                                    placeholder="Select user type"
-                                    isSearchable
-                                />
-                                
-                            </CCol>
+                                    <CFormLabel htmlFor="category">Subject</CFormLabel>
+                                    <br></br>
+                                    <CFormInput type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                                </CCol>
+                                <CCol xs={12} sm={6} lg={3}>
+                                    <CFormLabel htmlFor="category">Internal Email</CFormLabel>
+                                    <br></br>
+                                    <Select
+                                        options={internalEmails}
+                                        value={internalEmail}
+                                        onChange={(selectedOption) => {
+                                            setInternalEmail(selectedOption)
+                                        }}
+                                        placeholder="Select a Internal Email"
+                                    />
+                                </CCol>
+                                <CCol xs={12} sm={6} lg={3}>
+                                    <CFormLabel htmlFor="category">Email Type</CFormLabel>
+                                    <br></br>
+                                    <Select
+                                        options={emailTypes}
+                                        value={emailType}
+                                        onChange={(selectedOption) => {
+                                            setEmailType(selectedOption)
+                                            setSelectedSupplier('')
+                                            setSelectedCustomer('')
+                                        }}
+                                        placeholder="Select a Email Type"
+                                    />
+                                </CCol>
                                 {
-                                     sendPersonType?.value == "customer"? 
-                                     <CCol xs={12} sm={6} lg={3}>
-                                     <CFormLabel htmlFor="category">Customer Name</CFormLabel>
-       
-                                     <br></br>
-       
-                                     <Select
-                                         options={customers}
-                                         value={selectCustomer}
-                                         onChange={(selectedOption) => (setSelectedCustomer(selectedOption))}
-                                         placeholder="Select user type"
-                                         isSearchable
-                                     />
-                                 </CCol> : null
+                                    emailType?.value == "order" ?
+                                        <CCol xs={12} sm={6} lg={3}>
+                                            <CFormLabel htmlFor="category">Order ID</CFormLabel>
+
+                                            <br></br>
+
+                                            <Select
+                                                options={orderIds}
+                                                value={selectedOrderID}
+                                                onChange={(selectedOption) => handleONCheckoutIDClick(selectedOption)}
+                                                placeholder="Select a Order ID"
+                                                isSearchable
+                                                menuShouldScrollIntoView
+                                                menuShouldBlockScroll
+                                                maxMenuHeight={150}
+                                            />
+
+                                        </CCol> : null
+                                }
+                                {
+                                    emailType?.value == "product_wise" || emailType?.value == "general_chat" ?
+
+                                        <>
+                                            <CCol xs={12} sm={6} lg={3}>
+                                                <CFormLabel htmlFor="category">User Type</CFormLabel>
+
+                                                <br></br>
+
+                                                <Select
+                                                    options={sendPersonTypes}
+                                                    value={sendPersonType}
+                                                    onChange={(selectedOption) => seSendPersonType(selectedOption)}
+                                                    placeholder="Select user type"
+                                                    isSearchable
+                                                />
+
+                                            </CCol>
+                                            <br></br>
+                                            {
+                                                sendPersonType?.value == "customer" ?
+                                                    <CCol xs={12} sm={6} lg={3}>
+                                                        <CFormLabel htmlFor="category">Customer Name</CFormLabel>
+
+                                                        <br></br>
+
+                                                        <Select
+                                                            options={customers}
+                                                            value={selectCustomer}
+                                                            onChange={(selectedOption) => (setSelectedCustomer(selectedOption))}
+                                                            placeholder="Select user type"
+                                                            isSearchable
+                                                            menuShouldScrollIntoView
+                                                            menuShouldBlockScroll
+                                                            maxMenuHeight={150}
+                                                        />
+                                                    </CCol> : null
+                                            }
+
+                                            {
+                                                sendPersonType?.value == "supplier" && emailType !== 'order' ?
+                                                    <CCol xs={12} sm={6} lg={3}>
+                                                        <CFormLabel htmlFor="category">Supplier Name</CFormLabel>
+
+                                                        <br></br>
+
+                                                        <Select
+                                                            options={suppliers}
+                                                            value={selectSupplier}
+                                                            onChange={(selectedOption) => setSelectedSupplier(selectedOption)}
+                                                            placeholder="Select Supplier"
+                                                            isSearchable
+                                                            menuShouldScrollIntoView
+                                                            menuShouldBlockScroll
+                                                            maxMenuHeight={150}
+                                                        />
+                                                    </CCol> : null
+                                            }
+
+                                        </>
+                                        : null
                                 }
 
-                                {
-                                sendPersonType?.value == "supplier" && emailType !== 'order' ? 
-                                <CCol xs={12} sm={6} lg={3}>
-                                <CFormLabel htmlFor="category">Supplier Name</CFormLabel>
-
-                                <br></br>
-
-                                <Select
-                                    options={suppliers}
-                                    value={selectSupplier}
-                                    onChange={(selectedOption) => setSelectedSupplier(selectedOption)}
-                                    placeholder="Select Supplier"
-                                    isSearchable
-                                />
-                            </CCol> : null
-                            }
-                             
-                                </>
-                            : null
-                             }
 
 
-                           
-                        </CRow>
-                            <br></br> <br></br>
-                        
-
-                    </CCardBody>
-                </CCard>
-            </CCol>
-
-            
+                            </CRow>
+                            <br></br> <br></br><br></br>
 
 
-            <CCol xs={12}>
-                <CCard className="mb-4">
-                    <CCardHeader className="d-flex justify-content-between align-items-center">
-                        <strong>Additional Attachments</strong>
-                      
-                    </CCardHeader>
-                    <CCardBody>
-                    <CRow className="mb-3">
-                    <Editor 
-                        editorState={editorState}
-                        onEditorStateChange={handleEditorChange}  />
-                    </CRow>
-                   
-                        <CRow className="mb-3">
-                            <CFormLabel>Add Images or PDFs</CFormLabel>
-                          <CCol xs={12} sm={6} lg={8}>
-                          <CFormInput
-                                type="file"
-                                multiple
-                                onChange={handleChange}
-                                accept="image/*,application/pdf"
-                            />
-                            </CCol>
-                            <CCol xs={12} sm={4} lg={2}>
-                            <CButton  color="info" style={{color:"white"}} onClick={clearFiles}>
-                            Clear All Files
-                        </CButton>
-                        
-                        </CCol>
-                        <CCol xs={12} sm={2} lg={2} className="">
-                        {(["generate email"].some(permission => userData?.permissions?.includes(permission))) &&
-                         <CButton color="dark" className='full-width' onClick={handleEmailResend}>
-                                   Send Email 
-                            </CButton>
-        }
-                        </CCol>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
 
 
-                        </CRow>
-                        <CRow>
-                            {files.map((file, index) => (
-                                <CCol key={index} xs={12} sm={6} lg={3} className="mb-3">
-                                    {file.type.startsWith('image/') ? (
-                                        <CImage
-                                            src={URL.createObjectURL(file)}
-                                            alt={file.name}
-                                            thumbnail
-                                            width={100}
-                                            height={100}
+
+
+                    <CCol xs={12}>
+                        <CCard className="mb-4">
+                            <CCardHeader className="d-flex justify-content-between align-items-center">
+                                <strong>Additional Attachments</strong>
+
+                            </CCardHeader>
+                            <CCardBody>
+                                <CRow className="mb-3">
+                                    <Editor
+                                        editorState={editorState}
+                                        onEditorStateChange={handleEditorChange} />
+                                </CRow>
+
+                                <CRow className="mb-3">
+                                    <CFormLabel>Add Images or PDFs</CFormLabel>
+                                    <CCol xs={12} sm={6} lg={8}>
+                                        <CFormInput
+                                            type="file"
+                                            multiple
+                                            onChange={handleChange}
+                                            accept="image/*,application/pdf"
                                         />
-                                    ) : (
-                                        <p>{file.name}</p> // Show file name for PDFs
-                                    )}
-                                    <CButton
-                                        color="danger"
-                                        size="sm"
-                                        className="mt-2"
-                                        style={{color:"white"}}
-                                        onClick={() => removeFile(index)}
-                                    >
-                                        Remove
-                                    </CButton>
-                                </CCol>
-                            ))}
-                        </CRow>
-                    </CCardBody>
-                </CCard>
-            </CCol>
+                                    </CCol>
+                                    <CCol xs={12} sm={4} lg={2}>
+                                        <CButton color="info" style={{ color: "white" }} onClick={clearFiles}>
+                                            Clear All Files
+                                        </CButton>
 
-  </>}
+                                    </CCol>
+                                    <CCol xs={12} sm={2} lg={2} className="">
+                                        {(["generate email"].some(permission => userData?.permissions?.includes(permission))) &&
+                                            <CButton color="dark" className='full-width' onClick={handleEmailResend}>
+                                                Send Email
+                                            </CButton>
+                                        }
+                                    </CCol>
+
+
+                                </CRow>
+                                <CRow>
+                                    {files.map((file, index) => (
+                                        <CCol key={index} xs={12} sm={6} lg={3} className="mb-3">
+                                            {file.type.startsWith('image/') ? (
+                                                <CImage
+                                                    src={URL.createObjectURL(file)}
+                                                    alt={file.name}
+                                                    thumbnail
+                                                    width={100}
+                                                    height={100}
+                                                />
+                                            ) : (
+                                                <p>{file.name}</p> // Show file name for PDFs
+                                            )}
+                                            <CButton
+                                                color="danger"
+                                                size="sm"
+                                                className="mt-2"
+                                                style={{ color: "white" }}
+                                                onClick={() => removeFile(index)}
+                                            >
+                                                Remove
+                                            </CButton>
+                                        </CCol>
+                                    ))}
+                                </CRow>
+                            </CCardBody>
+                        </CCard>
+                    </CCol>
+
+                </>}
         </CContainer>
     );
 };

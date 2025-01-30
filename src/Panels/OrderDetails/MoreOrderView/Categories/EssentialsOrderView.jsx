@@ -102,6 +102,7 @@ export default function EssentialsOrderView(props) {
                 data={data}
                 options={{
                     headerStyle: {
+                          backgroundColor: '#E5D3FA',
                         fontSize: '14px', // Adjust the header font size here
                     },
                     cellStyle: {
@@ -164,9 +165,11 @@ export default function EssentialsOrderView(props) {
                 title="Rate Details"
                 columns={columns}
                 data={data}
+                style={{ backgroundColor: '#FBFAF4' }}
                 options={{
                     headerStyle: {
-                        fontSize: '14px', // Adjust the header font size here
+                        fontSize: '14px', // Adjust the header font size here4
+                        backgroundColor: '#FEF5D1',
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -268,16 +271,18 @@ export default function EssentialsOrderView(props) {
 
 
             <CCol className='my-4'>
-
+            <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
                 <InventoryDetails />
-
+                            </div>
 
             </CCol>
 
 
 
             <CCol className='my-4'>
+            <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
                 <RateDetails />
+                </div>
             </CCol>
 
 

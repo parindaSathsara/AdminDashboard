@@ -56,8 +56,8 @@ const AppSidebar = () => {
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       /> */}
 
-      <div style={{backgroundColor:'#212120'}}>
-      <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.43</CCardText>
+      <div style={{borderTop: '1px solid rgb(223, 159, 31)'}}>
+      <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.44</CCardText>
       </div>
      
 
