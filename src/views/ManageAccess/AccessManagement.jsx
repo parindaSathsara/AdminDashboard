@@ -326,7 +326,7 @@ const AccessManagement = () => {
       <CRow className="justify-content-center">
         <CCol xl={12} lg={12}>
           <CCard className="shadow-sm">
-            <CCardHeader className="bg-secondary text-white">
+            <CCardHeader className=" text-white" style={{backgroundColor:"#626f75"}}>
               <h4 className="mb-0">Access Management</h4>
             </CCardHeader>
             <CCardBody>

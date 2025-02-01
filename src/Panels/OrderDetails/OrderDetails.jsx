@@ -681,8 +681,8 @@ function OrderDetails(props) {
                 <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
 
                 {!props?.productViewData ? (
-                  <CDropdown variant="btn-group">
-                    <CDropdownToggle color="success">Download Itinerary</CDropdownToggle>
+                  <CDropdown style={{color:'#fff'}} variant="btn-group">
+                    <CDropdownToggle color="success" >Download Itinerary</CDropdownToggle>
                     <CDropdownMenu>
                       {[
                         'download order long itinerary',

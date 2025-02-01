@@ -71,8 +71,9 @@ const SupplierSupport = () => {
             sorting: true,
             search: true,
             headerStyle: {
-              fontSize: '14px', // Adjust the header font size here
-                 backgroundColor: '#E5D3FA'
+              fontSize: '15px', // Adjust the header font size here
+                 backgroundColor: '#626f75',
+                 color: '#FFF'
           },
           cellStyle: {
               fontSize: '14px', // Adjust the column font size here

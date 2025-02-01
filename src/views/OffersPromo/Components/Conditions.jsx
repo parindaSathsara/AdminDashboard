@@ -42,6 +42,12 @@ const MainConditions = () => {
         // enableEditing: true,
         muiTableContainerProps: { sx: { maxHeight: '500px' } },
         enableStickyHeader: true,
+        muiTableHeadCellProps: {
+            sx: {
+                backgroundColor: '#626f75',
+                color: 'white',
+            },
+        },
     });
 
 

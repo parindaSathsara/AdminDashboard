@@ -111,7 +111,7 @@ const ReportGenerationPage = () => {
     { value: 'USD', label: 'USD' },
     { value: 'LKR', label: 'LKR' },
     { value: 'INR', label: 'INR' },
-    { value: 'SDG', label: 'SDG' },
+    { value: 'SGD', label: 'SGD' },
     { value: 'MYR', label: 'MYR' },
   ])
 
