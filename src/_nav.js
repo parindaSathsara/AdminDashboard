@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import CIcon from '@coreui/icons-react'
 
-import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings,cilBarChart, cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper, cilVolumeLow, cilPuzzle, cilChart } from '@coreui/icons'
+import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings,cilBarChart, cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper, cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact, cilBellExclamation } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
@@ -38,7 +38,7 @@ function getNavigationHook(permissions){
       component: CNavGroup,
       name: 'KPI Dashboard',
       to: '/kpidashboard',
-      icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+      icon: <CIcon icon={cibBuzzfeed} customClassName="nav-icon" />,
       items: [
         {
           component: CNavItem,
@@ -90,7 +90,7 @@ function getNavigationHook(permissions){
       component: CNavItem,
       name: 'Discounts',
       to: '/offers_promo',
-      icon: <CIcon icon={cilVolumeLow} customClassName="nav-icon" />,
+      icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
       hidden: !permissions.some(permission => promotionPermissions.includes(permission)),
     },
   
@@ -99,7 +99,7 @@ function getNavigationHook(permissions){
       name: 'Vendors',
       to: '/vendors',
       hidden:false,
-      icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
+      icon: <CIcon icon={cilContact} customClassName="nav-icon" />,
       // items: [
       //   {
       //     component: CNavItem,
@@ -144,7 +144,7 @@ function getNavigationHook(permissions){
       component: CNavItem,
       name: 'Sales Analytics',
       to: '/sales',
-      icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+      icon: <CIcon icon={cilChartLine} customClassName="nav-icon" />,
     },
     {
       component: CNavItem,
@@ -249,7 +249,7 @@ function getNavigationHook(permissions){
       component: CNavGroup,
       name: 'Emails',
       to: '/emails',
-      icon: <CIcon icon={cilCloudDownload} customClassName="nav-icon" />,
+      icon: <CIcon icon={cilEnvelopeOpen} customClassName="nav-icon" />,
       items: [
         {
           component: CNavItem,

@@ -43,6 +43,12 @@ const MainDashboard = () => {
         // enableEditing: true,
         muiTableContainerProps: { sx: { maxHeight: '500px' } },
         enableStickyHeader: true,
+        muiTableHeadCellProps: {
+            sx: {
+                backgroundColor: '#626f75',
+                color: 'white',
+            },
+        },
     });
 
 
@@ -135,11 +141,11 @@ const MainDashboard = () => {
                     loadAllDiscounts().then(response => {
                         if (response.status == 200) {
                             setData(response.data.data)
-                            Swal.fire(
-                                'Discount Created!',
-                                'Discount Created Successfully',
-                                'success'
-                            );
+                            // Swal.fire(
+                            //     'Discount Created!',
+                            //     'Discount Created Successfully',
+                            //     'success'
+                            // );
                         }
                     })
                 } else if (response.status == 422) {
@@ -196,7 +202,8 @@ const MainDashboard = () => {
             }} onSubmit={handleFormSubmit} modalData={modalData} edit={editTrigger} />
 
             <CButton color='dark' onClick={handleCreateDiscount}>Create Discount</CButton>
-            <MaterialReactTable table={table} />
+            <MaterialReactTable 
+            table={table} />
         </>
     );
 };
