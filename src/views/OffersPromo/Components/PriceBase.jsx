@@ -41,6 +41,12 @@ const PriceBase = () => {
         // enableEditing: true,
         muiTableContainerProps: { sx: { maxHeight: '500px' } },
         enableStickyHeader: true,
+        muiTableHeadCellProps: {
+            sx: {
+                backgroundColor: '#626f75',
+                color: 'white',
+            },
+        },
     });
 
 
@@ -186,7 +192,7 @@ const PriceBase = () => {
                 setEditTrigger(false)
             }} onSubmit={handleFormSubmit} modalData={modalData} edit={editTrigger} />
 
-            <CButton color='dark' onClick={handleCreateCondition}>Create PriceBase Discount</CButton>
+            <CButton color='dark' onClick={handleCreateCondition}>Create Price Base Discount</CButton>
             <MaterialReactTable table={table} />
         </>
     );

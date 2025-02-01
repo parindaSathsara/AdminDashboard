@@ -31,6 +31,7 @@ import {
   handleOperation,
 } from './services/chatServices'
 import Select from 'react-select'
+import axios from 'axios'
 
 import { db } from 'src/firebase'
 import aahaaslogo from '../../../assets/brand/aahaslogo.png'
@@ -57,7 +58,10 @@ import {
   faEye,
   faStop,
   faPause,
+  faStore,
   faPlay,
+  faInfo,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { Tooltip } from '@material-ui/core'
@@ -83,9 +87,17 @@ import CIcon from '@coreui/icons-react'
 import { cilTrash } from '@coreui/icons'
 import MoreProductView from 'src/views/Products/MoreProductView/MoreProductView'
 import moment from 'moment'
+import AiSuggestionModal from './AiSuggestionModal'
+import ChatAnalyticsModal from './ChatAnalyticsModal'
 
 export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   console.log('Chat Opened Data is', chatOpenedData)
+  const [lastMessages, setLastMessages] = useState([])
+  const [lastMessageContent, setLastMessageContent] = useState([])
+  const [recommenderModalOpen, setRecommenderModalOpen] = useState(false) // Recommender Modal Open State
+  const [recommendations, setRecommendations] = useState([]) // Recommendations according to the chat State
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false) // Loading State for Recommendations
+  const [selectedTab, setSelectedTab] = useState('home')
   const handleSearchBar = ({ status }) => {
     setSearchBarStatus({
       ...searchBarStatus,
@@ -193,6 +205,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
     const q = query(collection(db, 'chat-updated/chats/' + chatId.id), orderBy('createdAt', 'desc'))
 
+    // bimindu code
+
     const getmessages = onSnapshot(q, async (QuerySnapshot) => {
       const fetchedMessages = []
       const batch = writeBatch(db)
@@ -209,17 +223,58 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
             },
           })
         }
-        // console.log(doc.id, "Doc ID is");
       })
+      setLastMessages(fetchedMessages.slice(0, 10).reverse())
+
+      // Update lastMessageContent with new messages
+      const messageContent = fetchedMessages.map((message) => ({
+        role: message.role,
+        text: message.text,
+      }))
+
+      
+
+      setLastMessageContent(messageContent)
 
       await batch.commit()
 
       const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt)
       setMessages(sortedMessages)
-      console.log('Messages:', sortedMessages)
+      // console.log('Messages:', sortedMessages)
       const docRef = doc(db, 'customer-chat-lists', chatId.id)
       await updateDoc(docRef, { admin_unreads: 0 })
     })
+
+
+    // Working new code
+
+    // const getmessages = onSnapshot(q, async (QuerySnapshot) => {
+    //   const fetchedMessages = []
+    //   const batch = writeBatch(db)
+
+    //   QuerySnapshot.forEach((doc) => {
+    //     const docData = doc.data()
+    //     fetchedMessages.push({ ...docData, id: doc.id })
+
+    //     if (docData.adminReadStatus?.status === 'Unread') {
+    //       batch.update(doc.ref, {
+    //         adminReadStatus: {
+    //           status: 'Read',
+    //           readAt: serverTimestamp(),
+    //         },
+    //       })
+    //     }
+    //     // console.log(doc.id, "Doc ID is");
+    //   })
+
+    //   await batch.commit()
+
+    //   const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt)
+    //   setMessages(sortedMessages)
+    //   console.log('Messages:', sortedMessages)
+    //   const docRef = doc(db, 'customer-chat-lists', chatId.id)
+    //   await updateDoc(docRef, { admin_unreads: 0 })
+    // })
 
     // Save the unsubscribe function to `getChatContent` itself
     getChatContent.unsubscribe = getmessages
@@ -799,11 +854,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
   const handleOnClick = (data) => {
     // console.log(data, "chamod")
-    console.log(data)
+    // console.log(data)
 
     const categories = [
       { value: '1', name: 'Essentials' },
-      { value: '2', name: 'NonEssentials' },
+      { value: '2', name: 'Essentials' },
       { value: '3', name: 'Lifestyles' },
       { value: '4', name: 'Hotels' },
       { value: '5', name: 'Educations' },
@@ -812,10 +867,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     if (data.category) {
       const category = categories.find((cat) => cat.value === data.category.toString())
       if (category) {
-        data.category = category.name
+      data.category = category.name
       }
     }
-    console.log(data, 'chamod')
+    // console.log(data, 'chamod')
     setMoreProductModal(true)
     // // setMoreData({
     // //     "product_title": "Hompton by the Beach Penang",
@@ -831,6 +886,50 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
     setMoreData(data)
   }
+
+
+  async function getRecommendations() {
+    setLoadingRecommendations(true)
+    setRecommendations([]);
+    try {
+      const response = await axios.post('/getRecommendations', {
+        chats: lastMessageContent,
+      })
+      setRecommendations(response.data)
+      console.log('Recommendations:--------------------------------------------------', response.data)
+    } catch (error) {
+      console.error('Error fetching recommendations:--------------------------------------------------------', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Aiyooo...',
+        text: 'Failed to fetch recommendations. Please try again later.',
+      })
+    } finally {
+      setLoadingRecommendations(false)
+    }
+  }
+
+  const handleProductRecommendation = () => {
+    try {
+      if (lastMessages.length > 0) {
+        lastMessages.map((message) => {
+          lastMessageContent.push({ role: message.role, text: message.text })
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    setRecommenderModalOpen(true)
+    getRecommendations()
+  }
+
+
+  const [viewChatAnalytics, setViewChatAnalytics] = useState(false)
+
+  const handleChatAnalytics = () => {
+    setViewChatAnalytics(true)
+  }
+
   return (
     <>
       {autoSuggestionBox ? (
@@ -894,7 +993,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   {
                     
                     <CTooltip  
-                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Chick to Stop Chat'}
+                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
                     placement="auto">
                   
                     <FontAwesomeIcon
@@ -932,6 +1031,20 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       style={{ color: '#03e5fd' }}
                     />
                   )}
+                   <CTooltip  
+                    content={'Chat Analytics'}
+                    placement="auto">
+                  
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      onClick={() => {
+                          handleChatAnalytics()
+                      }}
+                      style={{
+                        color: '#ffff',
+                      }}
+                    />
+                    </CTooltip>
                   {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
                 </div>
               </div>
@@ -1012,6 +1125,12 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   <div className="chat-message-input">
                     {clipBoardStatus && <p className="clipBoard-status">clip borad was on</p>}
                     <FontAwesomeIcon
+                      icon={faStore}
+                      className="chat-message-input-icon auto-suggestion-box"
+                      style={{ color: 'black', cursor: 'pointer' }}
+                      onClick={() => handleProductRecommendation()}
+                    />
+                    <FontAwesomeIcon
                       icon={faClipboard}
                       className="chat-message-input-icon"
                       style={{ color: clipBoardStatus ? 'black' : 'inherit' }}
@@ -1023,6 +1142,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       style={{ color: 'black' }}
                       onClick={() => handleAutoSuggestionModal()}
                     />
+                    
 
                     {/* <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} /> */}
 
@@ -1147,6 +1267,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         onHide={() => setMoreProductModal(false)}
         productData={moreData}
       ></MoreProductView>
+
+<ChatAnalyticsModal show={viewChatAnalytics} message={messages} onHide={() => setViewChatAnalytics(false)} />
+<AiSuggestionModal show={recommenderModalOpen} loadingRecommendations = {loadingRecommendations} getRecommendations = {getRecommendations} setRecommendations={setRecommendations} recommendations = {recommendations} onHide={() => setRecommenderModalOpen(false)} />
     </>
   )
 }

@@ -161,7 +161,7 @@ const KpiDashboard = () => {
                 <CRow>
                     <CCol sm={6} xl={6} xxl={6}>
                            <CCard sm={6} xl={4} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
-                            <CHeader>All Orders
+                            <CHeader><h6>All Orders</h6>
                                 <DateRangePicker
                                     style={{ marginLeft: 0 }}
                                     format="yyyy/MM/dd"
@@ -212,7 +212,7 @@ const KpiDashboard = () => {
                     </CCol>
                     <CCol sm={6} xl={6} xxl={6}>
                         <CCard sm={6} xl={4} xxl={3} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
-                            <CHeader>By User
+                            <CHeader><h6>By User</h6>
 
                             <DateRangePicker
                                     style={{ marginLeft: 0 }}
@@ -263,7 +263,7 @@ const KpiDashboard = () => {
                 <CRow>
                     <CCol sm={12} xl={12} xxl={12}>
                      <CCard sm={6} xl={4} xxl={3} style={{  }}>
-                            <CHeader>By Order
+                            <CHeader><h6>By Order</h6>
 
                                 <Select
                                     options={orderIds}
@@ -341,6 +341,11 @@ const KpiDashboard = () => {
                                   options={{
                                     sorting: true,
                                     search: false,
+                                    headerStyle: {
+                                        fontSize: '15px', // Adjust the header font size here
+                                          backgroundColor: '#ff8484',
+                                          color: '#FFF'
+                                    },
                                   }}
                                 />
                         </ThemeProvider>
@@ -471,8 +476,9 @@ const KpiDashboard = () => {
                 <CRow>
                     <CCol >
                         <CCard sm={12} xl={12} xxl={12} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
-                            <CHeader>All
-                                <DateRangePicker
+                            <CHeader><h6>All</h6>
+                            <div style={{width:'43%' , display: 'flex', justifyContent: 'space-between'}}>
+                                 <DateRangePicker
                                     style={{ marginLeft: 0 }}
                                     format="yyyy/MM/dd"
                                     onChange={handleDateRangeChangeTravel}
@@ -480,6 +486,7 @@ const KpiDashboard = () => {
 
                                 />
                                   <Select
+                                    styles={{marginRight: '10%'}}
                                     options={orderIds2}
                                     defaultValue={{ value: "all", label: "All Orders" }}
                                     value={categories?.name}
@@ -487,6 +494,8 @@ const KpiDashboard = () => {
                                     placeholder="Select an Order"
                                     isClearable
                                 />
+                            </div>
+                        
 
                             </CHeader>
                             <CCardBody>
@@ -534,7 +543,7 @@ const KpiDashboard = () => {
                 <CRow>
                     <CCol sm={12} xl={12} xxl={12} >
                         <CCard>
-                            <CHeader>Feedbacks
+                            <CHeader><h6>Feedbacks</h6>
 
                                 <Select
                                     options={orderIds}
@@ -562,7 +571,7 @@ const KpiDashboard = () => {
                                             // exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                                             showSelectAllCheckbox: false, showTextRowsSelected: false,
                                             // grouping: true, columnsButton: true,
-                                            headerStyle: { background: '	#9f9393', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                                            headerStyle: { background: '	#ff8484', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                                             rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
                                         }}
                                     />
@@ -613,7 +622,7 @@ const KpiDashboard = () => {
                 <CRow>
                     <CCol sm={12} xl={12} xxl={12}>
                         <CCard sm={12} xl={12} xxl={12} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
-                            <CHeader>Payments
+                            <CHeader><h6>Payments</h6>
                                 <div style={{  width:"100%", marginTop: "1%" }}>
                                     <DateRangePicker
                                     style={{ marginRight: "0%" }}
@@ -835,7 +844,7 @@ const KpiDashboard = () => {
                     <CCol sm={6} xl={6} xxl={6} >
                         <CCard sm={6} xl={6} xxl={6} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
                             <CHeader>
-                                Products
+                                <h6>Products</h6>
                                 <Select
                                     options={categories.map((option) => ({
                                         value: option.value,
@@ -892,7 +901,7 @@ const KpiDashboard = () => {
                     </CCol>
                     <CCol sm={6} xl={6} xxl={6} >
                         <CCard sm={6} xl={6} xxl={6} style={{ borderColor: '#d4cec1', borderWidth: 3 }}>
-                            <CHeader>Supplier
+                            <CHeader><h6>Supplier</h6>
 
                             <Select
                                     options={countryList}

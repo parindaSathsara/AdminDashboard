@@ -60,8 +60,17 @@ const Typography = () => {
           ]}
 
           options={{
+            headerStyle: {
+              fontSize: '15px', // Adjust the header font size here
+                backgroundColor: '#626f75',
+                color: '#FFF'
+          },
+          cellStyle: {
+            fontSize: '14px', // Adjust the column font size here
+        },
             sorting: true,
             search: true,
+
           }}
         />
       </ThemeProvider>
@@ -87,6 +96,14 @@ const Typography = () => {
           options={{
             sorting: true,
             search: true,
+            headerStyle: {
+              fontSize: '15px', // Adjust the header font size here
+                backgroundColor: '#626f75',
+                color: '#FFF'
+          },
+          cellStyle: {
+            fontSize: '14px', // Adjust the column font size here
+        },
           }}
         />
       </ThemeProvider>

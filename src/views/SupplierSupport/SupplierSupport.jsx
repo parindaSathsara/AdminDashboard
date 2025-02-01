@@ -70,6 +70,15 @@ const SupplierSupport = () => {
           options={{
             sorting: true,
             search: true,
+            headerStyle: {
+              fontSize: '15px', // Adjust the header font size here
+                 backgroundColor: '#626f75',
+                 color: '#FFF'
+          },
+          cellStyle: {
+              fontSize: '14px', // Adjust the column font size here
+
+          },
           }}
         />
       </ThemeProvider>
