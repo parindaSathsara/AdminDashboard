@@ -172,7 +172,6 @@ function OrderDetails(props) {
         setProductData(res.productData)
         setCustomerData(res.customerData)
         setDates(res.dates)
-
         // console.log(res.customerData, "CustomerData value is data ")
       })
 
@@ -231,7 +230,7 @@ function OrderDetails(props) {
   const [hotelDataSet, setHotelDataSet] = useState([])
 
   const handleMoreInfoModal = (e, category) => {
-    // console.log("More Info Modal", e, category)
+    
 
     setMoreOrderModalCategory(category)
     if (category == 3) {
@@ -244,7 +243,8 @@ function OrderDetails(props) {
       setMoreOrderDetails(e.booking_id)
       setMoreOrderModal(true)
     } else if (category == 4) {
-      setHotelDataSet(e?.hotelData)
+      console.log("More Info Modal", e, category)
+      setHotelDataSet(e?.hotelData ? e.hotelData : e)
       setMoreOrderDetails(e.booking_id)
       setMoreOrderModal(true)
     }
