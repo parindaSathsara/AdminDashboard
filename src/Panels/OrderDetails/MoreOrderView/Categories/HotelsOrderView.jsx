@@ -36,7 +36,8 @@ import moment from 'moment';
 export default function HotelsOrderView(props) {
 
 
-    console.log(props.productData, "Product Data value issss")
+    // console.log(props.dataset, "Product Data value issss")
+    // console.log(props, "Product Data value issss")
 
     const basicDetails = props.productData
     console.log(basicDetails?.decoded_data?.hotelMainRequest?.hotelData?.images, "Basic Details value is")
