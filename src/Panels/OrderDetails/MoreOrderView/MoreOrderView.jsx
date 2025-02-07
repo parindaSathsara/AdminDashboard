@@ -32,7 +32,7 @@ export default function MoreOrderView(props) {
         if (props?.notificationView) {
 
             setProductDataSet(props?.notificationViewData)
-            // console.log(props?.notificationViewData, "Notification View Data set isi")
+            // console.log(props, "Notification View Data set isi")
 
         }
         else {
@@ -45,7 +45,7 @@ export default function MoreOrderView(props) {
             else {
 
 
-                console.log(props?.preID,"Props value data issss")
+                // console.log(props?.preID,"Props value data issss")
                 setLoading(true)
                 getMoreDataSet(category, props.preID).then(response => {
                     setProductDataSet(response)
