@@ -174,35 +174,35 @@ const KpiDashboard = () => {
                                     <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
                                             {/* 6 <span class="fs-5">min</span> */}
-                                            <h3>{averageAllOrderData?.avg_response_time}</h3>
+                                            <h5>{averageAllOrderData?.avg_response_time}</h5>
                                         </h2>
                                         </>}
                                             title={<>
                                                 <h6 className=" fw-normal">
-                                                    Average Response Time
+                                                    Average Response
                                                 </h6>
                                             </>} />
                                     </CCol>
                                     <CCol sm={4} xl={4} xxl={4}>
                                         <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
                                             {/* 6 <span class="fs-5">min</span> */}
-                                            <h3>{averageAllOrderData?.avg_confirm_time}</h3>
+                                            <h5>{averageAllOrderData?.avg_confirm_time}</h5>
                                         </h2>
                                         </>}
                                             title={<>
                                                 <h6 className=" fw-normal">
-                                                    Average Order Confirmation Time
+                                                    Average Order Confirmation
                                                 </h6>
                                             </>} />
                                     </CCol>
                                     <CCol sm={4} xl={4} xxl={4}>
-                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h2>
-                                            <h3>{averageAllOrderData?.avg_cancel_time}</h3>
-                                        </h2>
+                                        <CWidgetStatsA style={{ height: 160, backgroundColor: '#ff4d4d', color: 'white' }} value={<><h5>
+                                            <h5>{averageAllOrderData?.avg_cancel_time}</h5>
+                                        </h5>
                                         </>}
                                             title={<>
                                                 <h6 className=" fw-normal">
-                                                    Average Order Cancellation Time
+                                                    Average Order Cancellation
                                                 </h6>
                                             </>} />
                                     </CCol>
