@@ -339,7 +339,7 @@ export default function BookingExperience(props) {
 
 
     const handleMoreCancellationDetails = (data) => {
-        // console.log(data, "handle more cancellation details")
+        // console.log(data, "cancellation")
 
         setSelectedCancellationModal(data?.data)
         setCancellationModalState(true)
@@ -661,19 +661,19 @@ const isPDF = (url) => /\.pdf$/i.test(url);
 
                     <br></br>
 
-                    {selectedCancellationModal?.cancel_ref_image == "" ?
+                    {selectedCancellationModal?.cancel_ref_image != "" ?
                         <CCol>
                             <CCardTitle>Cancellation Reference Image</CCardTitle>
 
 
-                            <CImage
-                                src={"https://gateway.aahaas.com/" + selectedCancellationModal?.cancel_ref_image}
+                            <img
+                                src={axios.defaults.imageUrl+ selectedCancellationModal?.cancel_ref_image}
                                 fluid
                                 style={{
 
 
                                     width: '100%',
-                                    height: '100%',
+                                    height: '50%',
                                     objectFit: 'cover',
                                     marginTop: 10
                                 }}
