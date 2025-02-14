@@ -2,7 +2,7 @@ import { CCard, CCardBody, CCardImage, CCardText, CCardTitle, CCol, CRow } from 
 import moment from 'moment';
 import React, { useState } from 'react';
 import './NotificationCard.css'; // Import the CSS file
-import { getHotListCardOrderDetails } from '../service/HotListServices';
+import { getHotListCardOrderDetails, readSingleOrderNotification } from '../service/HotListServices';
 import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 
@@ -15,9 +15,11 @@ export default function NotificationCard({ data }) {
 
     const cardStyle = {
         maxWidth: '540px',
-        backgroundColor: data?.admin_read_status === "Read" ? '#eef6f7' : '#c8f5dc',
+        // backgroundColor: data?.admin_read_status === "Read" ? '#eef6f7' : '#c8f5dc',
+        backgroundColor: data?.pivot?.read_at != null? '#eef6f7' : '#c8f5dc',
         borderRadius: '8px',
-        animation: data?.admin_read_status === "Unread" ? 'pulse 1s infinite' : 'none',
+        // animation: data?.admin_read_status === "Unread" ? 'pulse 1s infinite' : 'none',
+        animation: data?.pivot?.read_at === null ? 'pulse 1s infinite' : 'none',
     };
 
 
@@ -29,7 +31,15 @@ export default function NotificationCard({ data }) {
     const [orderExpand, setOrderExpand] = useState(false)
 
     const handleCardOnClick = () => {
-        getHotListCardOrderDetails(data?.product_id).then(response => {
+
+        readSingleOrderNotification(data?.id).then(response => {
+            console.log(response, "Read Notificatio")
+            return;
+        })
+
+        const orderId = parseInt(data?.data?.order_id.replace('ORD', ''), 10);
+        console.log(orderId, "Order ID")
+        getHotListCardOrderDetails(orderId).then(response => {
             setOrderDetails(response)
         })
 
@@ -65,10 +75,11 @@ export default function NotificationCard({ data }) {
                     <CCol md={8}>
                         <CCardBody style={{ padding: '12px 16px' }}>
                             <CCardTitle style={{ fontSize: '16px', marginBottom: '8px', fontWeight: 'bold' }}>
-                                {`You got a new order #${data?.product_id}`}
+                                {`You got a new order #${data?.data?.order_id}`}
                             </CCardTitle>
                             <CCardText style={{ fontSize: '12px', marginBottom: '12px', color: '#495057' }}>
-                                You have received a new order notification. Please view more details and proceed to confirmation process.
+                                {/* You have received a new order notification. Please view more details and proceed to confirmation process. */}
+                                {data?.content}
                             </CCardText>
                             <CRow>
                                 <CCol md={8}>
@@ -76,7 +87,7 @@ export default function NotificationCard({ data }) {
                                         <small className="text-muted">{formattedDate}</small>
                                     </CCardText>
                                 </CCol>
-                                {data?.admin_read_status === "Read" ? (
+                                {data?.pivot?.read_at != null ? (
                                     <CCol md={4}>
                                         <CCardText style={{ fontSize: '12px', textAlign: 'right', fontSize: 16, fontWeight: "600" }}>
                                             <small style={{ color: '#2eb43f' }}>✓✓</small>
