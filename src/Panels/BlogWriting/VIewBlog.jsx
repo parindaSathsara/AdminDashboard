@@ -44,20 +44,26 @@ function ViewBlog() {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(`/deleteBlog/${id}`)
-          .then((res) => {
-            navigate('/blogs/listBlogs')
-          })
-          .catch((err) => {
-            setLoading(false)
-            console.log(err)
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Error deleting blog!',
-            })
-          })
+      axios
+        .delete(`/deleteBlog/${id}`)
+        .then((res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your blog has been deleted.',
+        })
+        navigate('/blogs/listBlogs')
+        })
+        .catch((err) => {
+          
+        setLoading(false)
+        console.log(err)
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error deleting blog!',
+        })
+        })
       }
     })
     setLoading(false);
