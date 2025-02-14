@@ -1,7 +1,7 @@
 
 
 
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import MaterialTable from 'material-table';
 import { CBadge, CButton, CCard, CCardBody, CCardSubtitle, CCardText, CCardTitle, CCloseButton, CCol, CContainer, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CImage, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CPopover, CRow } from '@coreui/react';
 import Swal from 'sweetalert2';
@@ -24,9 +24,14 @@ const mapContainerStyle = {
     height: '40vh',
 };
 
+const libraries = ['places'];
+
+
+
 
 export default function BookingExperience(props) {
     const { userData } = useContext(UserLoginContext);
+   
     const customPopoverStyle = {
         '--cui-popover-max-width': '400px',
         '--cui-popover-border-color': '#0F1A36',
@@ -37,9 +42,21 @@ export default function BookingExperience(props) {
     }
 
     const productData = props.dataset
-    console.log(productData, "Product Data issss")
+    console.log(props.dataset, "Product Data issss")
 
+    const [location, setLocation] = useState({ latitude: null, longitude: null });
 
+    useEffect(() => {
+        if (props.dataset.more_info_lat_lon) {
+            const [latitude, longitude] = props.dataset.more_info_lat_lon.split(',').map(coord => parseFloat(coord.trim()));
+            setLocation({ latitude, longitude });
+        }
+    }, [props.dataset.more_info_lat_lon]);
+
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: 'AIzaSyA39AkmLbtriHvMJ-uqOV4I_6hpVz-4Pbk',
+        libraries,
+    });
 
     const QuantityContainer = ({ data }) => {
 
@@ -769,21 +786,22 @@ export default function BookingExperience(props) {
                     )}
 
                     <div>
-                        <GoogleMap
-                            mapContainerClassName="map-container"
-                            mapContainerStyle={mapContainerStyle}
-                            center={{ lat: parseFloat(selectedDocumentLocation?.latitude), lng: parseFloat(selectedDocumentLocation?.longitude) }}
-                            zoom={10}
-                        >
-                            <Marker
-                                position={{ lat: parseFloat(selectedDocumentLocation?.latitude), lng: parseFloat(selectedDocumentLocation?.longitude) }}   // onClick={() => {
-                            //     handleMarkerClick(ind, lat, lng, address);
-                            // }}
-                            >
-                            </Marker>
-
-                        </GoogleMap>
-                    </div>
+                    {location?.latitude && location?.longitude ? (
+                    <GoogleMap
+                    mapContainerClassName="map-container"
+                    mapContainerStyle={mapContainerStyle}
+                    center={{ lat: parseFloat(location?.latitude), lng: parseFloat(location?.longitude) }}
+                    zoom={10}
+                    >
+                    <Marker
+                        position={{ lat: parseFloat(location?.latitude), lng: parseFloat(location?.longitude) }}
+                    >
+                    </Marker>
+                    </GoogleMap>
+                ) : (
+                    <p>No shared location available.</p>
+                )}
+                </div>
                 </Modal.Body>
             </Modal>
 
