@@ -9,7 +9,7 @@ import { updateDeliveryStatus, candelOrder } from 'src/service/api_calls';
 import rowStyle from '../Components/rowStyle';
 import { cilCloudDownload, cilEyedropper, cilInfo } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { Modal, Carousel  } from 'react-bootstrap';
+import { Modal, Carousel } from 'react-bootstrap';
 import CancellationModal from '../CancelationModal/CancellationModal';
 import StarRating from '../Components/StarRating';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
@@ -17,6 +17,13 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { render } from '@testing-library/react';
 import axios from 'axios';
 import DiscountView from '../DiscountView.jsx';
+import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+
+const mapContainerStyle = {
+    width: '40vw',
+    height: '40vh',
+};
+
 
 export default function BookingExperience(props) {
     const { userData } = useContext(UserLoginContext);
@@ -231,7 +238,7 @@ export default function BookingExperience(props) {
 
                         // console.log("Show Loading")
                         updateDeliveryStatus(e.checkoutID, targetvalue, "").then(result => {
-                            console.log("resulttt",result)
+                            console.log("resulttt", result)
 
                             props.reload();
 
@@ -339,7 +346,7 @@ export default function BookingExperience(props) {
 
 
     const handleMoreCancellationDetails = (data) => {
-        // console.log(data, "handle more cancellation details")
+        // console.log(data, "cancellation")
 
         setSelectedCancellationModal(data?.data)
         setCancellationModalState(true)
@@ -353,11 +360,11 @@ export default function BookingExperience(props) {
 
     // const handleDocment = (data) => {
     //         console.log(data.data.orderMoreInfo, "Document Data issss");
-        
+
     //         const fileUrls = data.data.orderMoreInfo?.[0]?.file_urls
     //             ? data.data.orderMoreInfo[0].file_urls.split(',').map(url => url.trim())
     //             : [];
-        
+
     //         console.log(fileUrls, "Extracted File URLs");
     //         setSelectedDocument(fileUrls)
     //         setDocumentViewModal(true);
@@ -365,15 +372,18 @@ export default function BookingExperience(props) {
 
     const [documentViewModal, setDocumentViewModal] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState([]);
+    const [selectedDocumentLocation, setSelectedDocumentLocation] = useState([]);
     const isImage = (url) => /\.(jpg|jpeg|png|gif|webp|heic)$/i.test(url); // Check for image formats
-const isPDF = (url) => /\.pdf$/i.test(url);
+    const isPDF = (url) => /\.pdf$/i.test(url);
 
     const handleDocment = (data) => {
-        console.log(data.data.orderMoreInfo, "Document Data issss");
+        console.log(data.data.longitude, "Document Data issss");
+        // console.log(data.data.orderMoreInfo, "Document Data issss");
         const fileUrls = data.data.orderMoreInfo?.[0]?.file_urls
             ? data.data.orderMoreInfo[0].file_urls.split(',').map(url => url.trim())
             : [];
         console.log(fileUrls, "Extracted File URLs");
+        setSelectedDocumentLocation(data.data)
         setSelectedDocument(fileUrls);
         setDocumentViewModal(true);
     };
@@ -385,7 +395,7 @@ const isPDF = (url) => /\.pdf$/i.test(url);
         setSelectDiscount(data.data);
         setSelectedDiscountModal(true);
     }
-        
+
 
     const columns = [
         { title: 'Product ID', field: 'pid' },
@@ -403,7 +413,7 @@ const isPDF = (url) => /\.pdf$/i.test(url);
                     // >
                     //     <CButton color="info" style={{ fontSize: 14, color: 'white' }}>View</CButton>
                     // </CPopover>
-                    <span>{rowData?.data?.Quantity !== null ? rowData?.data?.Quantity : 'Not mention' }</span>
+                    <span>{rowData?.data?.Quantity !== null ? rowData?.data?.Quantity : 'Not mention'}</span>
                 ) : (
                     <span>{rowData?.qty}</span>
                 );
@@ -447,8 +457,8 @@ const isPDF = (url) => /\.pdf$/i.test(url);
                 <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Pending</CBadge> : rowData?.supplier_status == "Cancel" ? <CBadge color="danger" style={{ padding: 8, fontSize: 12 }}>Cancelled</CBadge> : <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Confirmed</CBadge>
         },
         {
-            title: 'View Documents', 
-            field: 'orderMoreInfo', 
+            title: 'View Documents',
+            field: 'orderMoreInfo',
             render: (rowData) => {
                 return (
                     <CButton color="info" style={{ fontSize: 12, color: 'white' }} onClick={() => handleDocment(rowData)}>View</CButton>
@@ -456,14 +466,15 @@ const isPDF = (url) => /\.pdf$/i.test(url);
             }
         },
         {
-            title: 'View Discount', 
-            field: 'discountData', 
+            title: 'View Discount',
+            field: 'discountData',
             render: (rowData) => {
                 return rowData.data.discountData ? (
                     <CButton color="warning" style={{ fontSize: 12, color: 'white' }} onClick={() => handleDiscount(rowData)}>View</CButton>
                 ) : (
                     <CBadge color="secondary" style={{ padding: 8, fontSize: 12 }}>No Discount</CBadge>
-                )   }
+                )
+            }
         },
 
 
@@ -555,7 +566,7 @@ const isPDF = (url) => /\.pdf$/i.test(url);
                         return (
                             <>
 
-                          
+
 
                                 {e?.data?.checkoutID == clickedStatus && status == "CustomerOrdered" ?
                                     <select
@@ -575,14 +586,14 @@ const isPDF = (url) => /\.pdf$/i.test(url);
                                     <>
 
                                         {status == "Approved" ?
-                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>:
-                                            status == "Completed"?
-<CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
+                                            <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge> :
+                                            status == "Completed" ?
+                                                <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
 
-                                            :
-                                            (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&
-                                            <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
-                                            
+                                                :
+                                                (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&
+                                                <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
+
                                         }
 
 
@@ -661,19 +672,19 @@ const isPDF = (url) => /\.pdf$/i.test(url);
 
                     <br></br>
 
-                    {selectedCancellationModal?.cancel_ref_image == "" ?
+                    {selectedCancellationModal?.cancel_ref_image != "" ?
                         <CCol>
                             <CCardTitle>Cancellation Reference Image</CCardTitle>
 
 
-                            <CImage
-                                src={"https://gateway.aahaas.com/" + selectedCancellationModal?.cancel_ref_image}
+                            <img
+                                src={axios.defaults.imageUrl + selectedCancellationModal?.cancel_ref_image}
                                 fluid
                                 style={{
 
 
                                     width: '100%',
-                                    height: '100%',
+                                    height: '50%',
                                     objectFit: 'cover',
                                     marginTop: 10
                                 }}
@@ -712,62 +723,80 @@ const isPDF = (url) => /\.pdf$/i.test(url);
 
 
 
-<Modal show={documentViewModal} style={{marginTop:'10%',zIndex: 999999999}}onHide={() => setDocumentViewModal(false)} size="sm">
-    <Modal.Header closeButton>
-        <Modal.Title>Document View</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        {selectedDocument && selectedDocument.length > 0 ? (
-            <ul style={{ padding: 0, listStyleType: 'none' }}>
-                {selectedDocument.map((url, index) => {
-                    const fileName = url.split('/').pop(); // Extract the file name from the URL
-                    return (
-                        <li
-                            key={index}
-                            style={{
-                                marginBottom: '10px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between', // Align file name and icon
-                                borderBottom: '1px solid #ddd', // Add a divider between items
-                                paddingBottom: '5px',
-                            }}
+            <Modal show={documentViewModal} style={{ marginTop: '10%', zIndex: 999999999 }} onHide={() => setDocumentViewModal(false)} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Document View</Modal.Title>
+                    {/* <CButton color="primary" size='sm' style={{ fontSize: 12, color: 'white', marginLeft: "10%" }} onClick={() => console.log('View Map Clicked')}>View Map</CButton> */}
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedDocument && selectedDocument.length > 0 ? (
+                        <ul style={{ padding: 0, listStyleType: 'none' }}>
+                            {selectedDocument.map((url, index) => {
+                                const fileName = url.split('/').pop(); // Extract the file name from the URL
+                                return (
+                                    <li
+                                        key={index}
+                                        style={{
+                                            marginBottom: '10px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between', // Align file name and icon
+                                            borderBottom: '1px solid #ddd', // Add a divider between items
+                                            paddingBottom: '5px',
+                                        }}
+                                    >
+                                        <span style={{ fontWeight: '500' }}>{fileName}</span>
+                                        <a
+                                            href={axios.defaults.imageUrl + url}
+                                            download={fileName} // This attribute will prompt a download
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                color: '#007bff',
+                                                textDecoration: 'none',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <CIcon icon={cilInfo} size="lg" />
+                                        </a>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p>No documents available to display.</p>
+                    )}
+
+                    <div>
+                        <GoogleMap
+                            mapContainerClassName="map-container"
+                            mapContainerStyle={mapContainerStyle}
+                            center={{ lat: parseFloat(selectedDocumentLocation?.latitude), lng: parseFloat(selectedDocumentLocation?.longitude) }}
+                            zoom={10}
                         >
-                            <span style={{ fontWeight: '500' }}>{fileName}</span>
-                            <a
-                                href={axios.defaults.imageUrl + url}
-                                download={fileName} // This attribute will prompt a download
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    color: '#007bff',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
+                            <Marker
+                                position={{ lat: parseFloat(selectedDocumentLocation?.latitude), lng: parseFloat(selectedDocumentLocation?.longitude) }}   // onClick={() => {
+                            //     handleMarkerClick(ind, lat, lng, address);
+                            // }}
                             >
-                                <CIcon icon={cilInfo} size="lg" />
-                            </a>
-                        </li>
-                    );
-                })}
-            </ul>
-        ) : (
-            <p>No documents available to display.</p>
-        )}
-    </Modal.Body>
-</Modal>
+                            </Marker>
+
+                        </GoogleMap>
+                    </div>
+                </Modal.Body>
+            </Modal>
 
 
 
-<Modal show={selectedDiscountModal} style={{zIndex: 999999999}}onHide={() => setSelectedDiscountModal(false)} size="xl">
-    <Modal.Header closeButton>
-        <Modal.Title>Discount Product View</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-    <DiscountView data={selectDiscount} />
-    </Modal.Body>
-</Modal>
+            <Modal show={selectedDiscountModal} style={{ zIndex: 999999999 }} onHide={() => setSelectedDiscountModal(false)} size="xl">
+                <Modal.Header closeButton>
+                    <Modal.Title>Discount Product View</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <DiscountView data={selectDiscount} />
+                </Modal.Body>
+            </Modal>
 
 
 

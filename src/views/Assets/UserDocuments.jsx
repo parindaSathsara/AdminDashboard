@@ -30,7 +30,7 @@ const UserDocuments = () => {
       .get(url)
       .then((response) => {
         if (Array.isArray(response.data.data)) {
-          console.log(response.data.data,"document data");
+          console.log(response,"document data");
           setData(response.data.data);
         } else {
           setError('Data format is incorrect or missing "data" array');

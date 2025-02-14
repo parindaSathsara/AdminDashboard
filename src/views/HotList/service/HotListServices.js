@@ -68,5 +68,13 @@ const readInAppNotifications = async (id) => {
     })
 }
 
+const readInAppNotificationsOrderWise = async (orderId) => {
+
+    console.log(`read_in_app_notifications_by_user/${orderId}`)
+    await axios.get(`read_in_app_notifications_by_user/${orderId}`).then(res => {
+        console.log(res, "Read Notification")
+    })
+}
+
 
 export { fetchInAppNotifications, readInAppNotifications, fetchInAppNotificationsCount, getHotListCardOrderDetails }

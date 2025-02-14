@@ -174,7 +174,7 @@ useState(()=>{
   const handleNotificationOnClick = () => {
     setHotListSide(!hotListSide)
     getHotList()
-    readInAppNotifications(userData?.id)
+    // readInAppNotifications(userData?.id)
 
     fetchInAppNotificationsCount(userData?.id).then(response => {
 
