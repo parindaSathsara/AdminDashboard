@@ -47,11 +47,12 @@ export default function BookingExperience(props) {
     const [location, setLocation] = useState({ latitude: null, longitude: null });
 
     useEffect(() => {
-        if (props?.dataset?.more_info_lat_lon) {
-            const [latitude, longitude] = props?.dataset?.more_info_lat_lon.split(',').map(coord => parseFloat(coord.trim()));
+        console.log(props?.dataset[0]?.more_info_lat_lon, "More Info Lat Lon");
+        if (props?.dataset[0]?.more_info_lat_lon) {
+            const [latitude, longitude] = props?.dataset[0]?.more_info_lat_lon.split(',').map(coord => parseFloat(coord.trim()));
             setLocation({ latitude, longitude });
         }
-    }, [props?.dataset?.more_info_lat_lon]);
+    }, [props?.dataset]);
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: 'AIzaSyA39AkmLbtriHvMJ-uqOV4I_6hpVz-4Pbk',

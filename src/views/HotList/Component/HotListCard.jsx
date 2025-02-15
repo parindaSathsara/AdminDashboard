@@ -12,7 +12,7 @@ export default function NotificationCard({ data }) {
         : require("../../../assets/brand/aahaslogo.png");
 
     const formattedDate = data?.push_at ? moment(data.push_at).fromNow() : '';
-
+    // const formattedDate = data?.pivot?.created_at ? moment(data?.pivot?.created_at).fromNow() : '';
     const cardStyle = {
         maxWidth: '540px',
         // backgroundColor: data?.admin_read_status === "Read" ? '#eef6f7' : '#c8f5dc',

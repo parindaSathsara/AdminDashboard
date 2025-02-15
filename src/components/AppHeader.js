@@ -98,7 +98,7 @@ const AppHeader = () => {
 
       });
       readInAppNotificationsOrderWise().then(response => {
-        console.log(response?.data?.data?.notifications, "Read Notification")
+        // console.log(response?.data?.data?.notifications, "Read Notification")
         setUnReadCount(response?.data?.data?.unread_count);
         setNewHotList(response?.data?.data?.notifications);
       });
