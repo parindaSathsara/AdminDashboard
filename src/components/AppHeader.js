@@ -28,7 +28,7 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { adminToggleStatus } from 'src/service/api_calls';
 import CurrencyController from './CurrencyController';
 import HotList from 'src/views/HotList/HotList';
-import { fetchInAppNotifications, fetchInAppNotificationsCount, readInAppNotifications } from 'src/views/HotList/service/HotListServices';
+import { fetchInAppNotifications, fetchInAppNotificationsCount, readInAppNotifications,readInAppNotificationsOrderWise } from 'src/views/HotList/service/HotListServices';
 
 import Swal from 'sweetalert2'
 import './AppHeader.css';
@@ -88,14 +88,19 @@ const AppHeader = () => {
 
 
   const [unReadCount, setUnReadCount] = useState(0)
-
+  const [newHotList, setNewHotList] = useState([])
 
   useEffect(() => {
     const fetchNotifications = () => {
       fetchInAppNotificationsCount(userData?.id).then(response => {
-
+        console.log(response, "Read Notification")
         setUnReadCount(response);
 
+      });
+      readInAppNotificationsOrderWise().then(response => {
+        // console.log(response?.data?.data?.notifications, "Read Notification")
+        setUnReadCount(response?.data?.data?.unread_count);
+        setNewHotList(response?.data?.data?.notifications);
       });
     };
 
@@ -118,6 +123,7 @@ const AppHeader = () => {
 
   const getHotList = () => {
     fetchInAppNotifications(userData?.id).then(res => {
+      console.log(res, "Hotlist")
       setHotList(res)
 
     })
@@ -202,7 +208,7 @@ useState(()=>{
           <CCloseButton className="text-reset" onClick={() => handleNotificationOnClick()} />
         </COffcanvasHeader>
         <COffcanvasBody>
-          <HotList increaseNotification={handleIncreaseNotification} display={hotListSide} data={hotList}></HotList>
+          <HotList increaseNotification={handleIncreaseNotification} display={hotListSide} data={newHotList}></HotList>
         </COffcanvasBody>
       </COffcanvas>
 

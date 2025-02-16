@@ -64,9 +64,29 @@ const readInAppNotifications = async (id) => {
 
     console.log(`read_in_app_notifications_by_user/${id}`)
     await axios.get(`read_in_app_notifications_by_user/${id}`).then(res => {
-        console.log(res, "Read Notification")
+        // console.log(res, "Read Notification")
     })
 }
 
+const readInAppNotificationsOrderWise = async () => {
 
-export { fetchInAppNotifications, readInAppNotifications, fetchInAppNotificationsCount, getHotListCardOrderDetails }
+    let dataset;
+    await axios.get(`get-notification-data`).then(res => {
+        // console.log(res, "Read Notification")
+        dataset =  res;
+    })
+    return dataset;
+}
+
+const readSingleOrderNotification = async (id) => {
+
+    let dataset;
+    await axios.get(`read-notification/${id}`).then(res => {
+        // console.log(res, "Read Notification")
+        dataset =  res;
+    })
+    return dataset;
+}
+
+
+export { fetchInAppNotifications, readInAppNotifications, fetchInAppNotificationsCount, getHotListCardOrderDetails, readInAppNotificationsOrderWise,readSingleOrderNotification }

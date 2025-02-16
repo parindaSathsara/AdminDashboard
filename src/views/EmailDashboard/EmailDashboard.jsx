@@ -60,7 +60,7 @@ const EmailDashboard = () => {
 
     const [orderIds, setOrderIds] = useState([])
 
-    const [orderIndexIds, setOrderIndexIDs] = useState([{ value: "All", label: "All Checkouts" }]);
+    const [orderIndexIds, setOrderIndexIDs] = useState([]);
 
 
     const [orderIndexIdVals, setOrderIndexIdVals] = useState([])
@@ -81,7 +81,7 @@ const EmailDashboard = () => {
             }));
 
 
-            dataSet.unshift({ value: "All", label: "All Checkouts" });
+            // dataSet.unshift({ value: "All", label: "All Checkouts" });
 
             setCheckoutIndexLoading(false);
             setOrderIndexIDs(dataSet);

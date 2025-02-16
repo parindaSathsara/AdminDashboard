@@ -577,6 +577,7 @@ function OrderDetails(props) {
       NoOfNights: value.NoOfNights,
       NoOfAdults: value.NoOfAdults,
       checkInDate: moment(value.checkInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+      checkOutDate: moment(value.checkOutDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       balance_amount: CurrencyConverter(value.currency, value.balance_amount),
       paid_amount: CurrencyConverter(value.currency, value.paid_amount),
       total_amount: CurrencyConverter(value.currency, value.total_amount),

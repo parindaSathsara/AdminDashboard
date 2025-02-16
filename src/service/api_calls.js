@@ -206,7 +206,7 @@ async function getDashboardOrdersIdWise(id) {
 
     await axios.get(`/fetch_order_details/${id}`).then((res) => {
 
-      // console.log(res)
+      console.log('dataaaaaaaaaaaaaaaaaaaaaaaa',res)
       if (res.data.status === 200) {
         dataArray = res.data
       }

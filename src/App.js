@@ -49,8 +49,8 @@ axios.defaults.data = 'https://admin-api.aahaas.com'
 //   console.error('CSRF token meta tag not found');
 // }
 
-// axios.defaults.baseURL = 'http://172.16.26.238:8000/api/'
-// axios.defaults.data = 'http://172.16.26.238:8000'
+// axios.defaults.baseURL = 'http://192.16.26.70:8000/api/'
+// axios.defaults.data = 'http://192.16.26.70:8000'
 // axios.defaults.baseURL = 'http://192.168.1.4:8000/api/';
 
 axios.interceptors.request.use((config) => {

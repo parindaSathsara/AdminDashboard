@@ -1,4 +1,4 @@
-import { CCol, CRow } from '@coreui/react'
+import { CButton, CCol, CRow } from '@coreui/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 
 import {
@@ -64,6 +64,8 @@ function ChatsMeta() {
 
   const [filterCheckBoxes, setFilterCheckBoxes] = useState([])
   const [chatOpenDetails, setChatOpenDetails] = useState([])
+
+  console.log(filterCheckBoxes,"Filter Check Boxessssss")
 
   const [messages, setMessages] = useState([])
   const [chatList, setchatList] = useState([])
@@ -214,6 +216,7 @@ function ChatsMeta() {
 
   const handleFilterBoxes = (name, value) => {
     const newItem = { name, value }
+    console.log('Filter boxes', name, value)
     setFilterCheckBoxes((prev) => {
       const exists = prev.some((item) => item.name === name && item.value === value)
       if (exists) {
@@ -299,20 +302,41 @@ function ChatsMeta() {
     updatePinnedChats()
   }, [chatList])
 
+  // useEffect(() => {
+  //   if (chatList.length > 0 && filterCheckBoxes.length > 0) {
+  //     const filteredChatList = chatList.filter((chat) =>
+  //       filterCheckBoxes.some((filter) => chat[filter.name] === filter.value),
+  //     )
+  //     if (searchChat === '') {
+  //       setchatListFiltered(filteredChatList)
+  //     } else {
+  //       handleFilterchat(searchChat, filteredChatList)
+  //     }
+  //   } else {
+  //     handleFilterchat(searchChat, chatList)
+  //   }
+  // }, [filterCheckBoxes, chatList])
+
+
   useEffect(() => {
-    if (chatList.length > 0 && filterCheckBoxes.length > 0) {
-      const filteredChatList = chatList.filter((chat) =>
-        filterCheckBoxes.some((filter) => chat[filter.name] === filter.value),
-      )
+    if (chatList.length > 0) {
+      let filteredChatList = chatList;
+  
+      if (filterCheckBoxes.length > 0) {
+        filteredChatList = chatList.filter((chat) =>
+          filterCheckBoxes.some((filter) => chat[filter.name] === filter.value)
+        );
+      }
+  
       if (searchChat === '') {
-        setchatListFiltered(filteredChatList)
+        setchatListFiltered(filteredChatList);
       } else {
-        handleFilterchat(searchChat, filteredChatList)
+        handleFilterchat(searchChat, filteredChatList);
       }
     } else {
-      handleFilterchat(searchChat, chatList)
+      handleFilterchat(searchChat, chatList);
     }
-  }, [filterCheckBoxes, chatList])
+  }, [filterCheckBoxes, chatList, searchChat]);
 
   useEffect(() => {
     const handleBeforeUnload = async (event) => {
@@ -344,7 +368,7 @@ function ChatsMeta() {
               .toLowerCase()
               .includes(searchChat.toLowerCase()),
         );
-    } 
+    }
     // Handle assigned chats
     else if (filterType === 'assigned') {
       return chatListFiltered
@@ -398,46 +422,51 @@ function ChatsMeta() {
     }
   };
 
-//   const getFilteredChats = (pinState) => {
-//     if (pinState == 'pinned') {
-//       return chatListFiltered
-//         .filter((value) => pinnedChats.includes(value.id))
-//         .filter(
-//           (value) =>
-//             !searchChat ||
-//             `${value.chat_name} by ${value.customer_name}`
-//               .toLowerCase()
-//               .includes(searchChat.toLowerCase()),
-//         )
-//     } else if (pinState == 'assigned') {
-//       const data = chatListFiltered
-//         .filter((value) => !pinnedChats.includes(value.id))
-//         .filter(
-//           (value) =>
-//             !searchChat ||
-//             `${value.chat_name} by ${value.customer_name}`
-//               .toLowerCase()
-//               .includes(searchChat.toLowerCase()),
-//         )
-//         .filter((value) => value?.assign_employee === userData.id)
+  //   const getFilteredChats = (pinState) => {
+  //     if (pinState == 'pinned') {
+  //       return chatListFiltered
+  //         .filter((value) => pinnedChats.includes(value.id))
+  //         .filter(
+  //           (value) =>
+  //             !searchChat ||
+  //             `${value.chat_name} by ${value.customer_name}`
+  //               .toLowerCase()
+  //               .includes(searchChat.toLowerCase()),
+  //         )
+  //     } else if (pinState == 'assigned') {
+  //       const data = chatListFiltered
+  //         .filter((value) => !pinnedChats.includes(value.id))
+  //         .filter(
+  //           (value) =>
+  //             !searchChat ||
+  //             `${value.chat_name} by ${value.customer_name}`
+  //               .toLowerCase()
+  //               .includes(searchChat.toLowerCase()),
+  //         )
+  //         .filter((value) => value?.assign_employee === userData.id)
 
-//       return data
-//     } else {
-//       return chatListFiltered
-//         .filter((value) => !pinnedChats.includes(value.id))
-//         .filter(
-//           (value) =>
-//             !searchChat ||
-//             `${value.chat_name} by ${value.customer_name}`
-//               .toLowerCase()
-//               .includes(searchChat.toLowerCase()),
-//         )
-//     }
-//   }
+  //       return data
+  //     } else {
+  //       return chatListFiltered
+  //         .filter((value) => !pinnedChats.includes(value.id))
+  //         .filter(
+  //           (value) =>
+  //             !searchChat ||
+  //             `${value.chat_name} by ${value.customer_name}`
+  //               .toLowerCase()
+  //               .includes(searchChat.toLowerCase()),
+  //         )
+  //     }
+  //   }
 
   const [currentFilters, setCurrentFilters] = useState('All')
   const handleSelect = (key) => {
     setCurrentFilters(key)
+  }
+
+  const clearAllFilters = () => {
+    console.log('Clear all filters')
+    getChatlists()
   }
 
   return (
@@ -465,7 +494,11 @@ function ChatsMeta() {
             />
           </div>
           <div className={openFilter ? 'filter-open' : 'filter-close'}>
-            <p>Filter by groups</p>
+            <div className="d-flex justify-content-between align-items-center">
+              <p className="mb-0">Filter by groups</p>
+              {/* <CButton size="sm" onClick={()=>{clearAllFilters()}}>Clear all</CButton> */}
+            </div>
+
             <div className="d-flex flex-wrap">
               {filterTypes.map((value, key) => (
                 <>
@@ -496,8 +529,8 @@ function ChatsMeta() {
                     value.id === chatOpenDetails.id
                       ? '#f2f2f2'
                       : value?.admin_unreads
-                      ? '#b9e4ff'
-                      : '',
+                        ? '#b9e4ff'
+                        : '',
                 }}
                 onClick={() => handleOpenChat(value)}
               >
@@ -570,8 +603,8 @@ function ChatsMeta() {
                           value.id === chatOpenDetails.id
                             ? '#f2f2f2'
                             : value?.admin_unreads
-                            ? '#b9e4ff'
-                            : '',
+                              ? '#b9e4ff'
+                              : '',
                       }}
                       onClick={() => handleOpenChat(value)}
                     >
@@ -597,7 +630,7 @@ function ChatsMeta() {
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
-                        value?.admin_included?.length == 0 ? (
+                          value?.admin_included?.length == 0 ? (
                           <span className="chat-admin">Yet to be replied</span>
                         ) : (
                           <span className="chat-admin">
@@ -606,7 +639,7 @@ function ChatsMeta() {
                         )}
                         <span>-</span>
                         {value?.admin_reading === undefined ||
-                        value?.admin_reading?.length === 0 ? (
+                          value?.admin_reading?.length === 0 ? (
                           <span className="read-admin">No one is reading</span>
                         ) : (
                           <span className="read-admin">
@@ -637,8 +670,8 @@ function ChatsMeta() {
                 )}
               </Tab>
               {userData.roles.includes('SuperAdmin') ? null : userData.roles.includes(
-                  'Admin',
-                ) ? null : (
+                'Admin',
+              ) ? null : (
                 <Tab
                   eventKey="CustomerOrdered"
                   title={<span className="custom-tab-pending">Assigned Chats</span>}
@@ -662,8 +695,8 @@ function ChatsMeta() {
                             value.id === chatOpenDetails.id
                               ? '#f2f2f2'
                               : value?.admin_unreads
-                              ? '#b9e4ff'
-                              : '',
+                                ? '#b9e4ff'
+                                : '',
                         }}
                         onClick={() => handleOpenChat(value)}
                       >
@@ -689,7 +722,7 @@ function ChatsMeta() {
 
                         <div className="reading-admins">
                           {value?.admin_included === undefined ||
-                          value?.admin_included?.length == 0 ? (
+                            value?.admin_included?.length == 0 ? (
                             <span className="chat-admin">Yet to be replied</span>
                           ) : (
                             <span className="chat-admin">
@@ -698,7 +731,7 @@ function ChatsMeta() {
                           )}
                           <span>-</span>
                           {value?.admin_reading === undefined ||
-                          value?.admin_reading?.length === 0 ? (
+                            value?.admin_reading?.length === 0 ? (
                             <span className="read-admin">No one is reading</span>
                           ) : (
                             <span className="read-admin">
@@ -748,8 +781,8 @@ function ChatsMeta() {
                           value.id === chatOpenDetails.id
                             ? '#f2f2f2'
                             : value?.admin_unreads
-                            ? '#b9e4ff'
-                            : '',
+                              ? '#b9e4ff'
+                              : '',
                       }}
                       onClick={() => handleOpenChat(value)}
                     >
@@ -775,7 +808,7 @@ function ChatsMeta() {
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
-                        value?.admin_included?.length == 0 ? (
+                          value?.admin_included?.length == 0 ? (
                           <span className="chat-admin">Yet to be replied</span>
                         ) : (
                           <span className="chat-admin">
@@ -784,7 +817,7 @@ function ChatsMeta() {
                         )}
                         <span>-</span>
                         {value?.admin_reading === undefined ||
-                        value?.admin_reading?.length === 0 ? (
+                          value?.admin_reading?.length === 0 ? (
                           <span className="read-admin">No one is reading</span>
                         ) : (
                           <span className="read-admin">
@@ -832,8 +865,8 @@ function ChatsMeta() {
                           value.id === chatOpenDetails.id
                             ? '#f2f2f2'
                             : value?.admin_unreads
-                            ? '#b9e4ff'
-                            : '',
+                              ? '#b9e4ff'
+                              : '',
                       }}
                       onClick={() => handleOpenChat(value)}
                     >
@@ -859,7 +892,7 @@ function ChatsMeta() {
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
-                        value?.admin_included?.length == 0 ? (
+                          value?.admin_included?.length == 0 ? (
                           <span className="chat-admin">Yet to be replied</span>
                         ) : (
                           <span className="chat-admin">
@@ -868,7 +901,7 @@ function ChatsMeta() {
                         )}
                         <span>-</span>
                         {value?.admin_reading === undefined ||
-                        value?.admin_reading?.length === 0 ? (
+                          value?.admin_reading?.length === 0 ? (
                           <span className="read-admin">No one is reading</span>
                         ) : (
                           <span className="read-admin">
