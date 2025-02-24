@@ -244,7 +244,7 @@ function CustomerFeedbacks(props) {
                     defaultValue={orderData.total_amount}
                     name="refundAmount"
                     id="validationCustom06"
-                    label="Refund Request Amount"
+                    label={`Refund Request Amount (${orderData.currency})`}
                     disabled={true}
                     onChange={handleFormData}
                   // value={balanceAmount.balanceAmountToPay}
@@ -260,7 +260,7 @@ function CustomerFeedbacks(props) {
 
                     name="refunding_amount"
                     id="validationCustom05"
-                    label="Refunding Amount"
+                    label={`Refunding Amount (${orderData.currency})`}
                     feedbackInvalid="Please fill refunding amount"
                     onChange={handleFormData}
                     // onChange={handleBalancePayment}
