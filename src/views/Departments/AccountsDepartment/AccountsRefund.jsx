@@ -132,6 +132,9 @@ const AccountsRefunds = () => {
         title: 'Payment Type', field: 'pay_type', align: 'left', editable: 'never',
       },
       {
+        title: 'Currency', field: 'currency', align: 'left', editable: 'never',
+      },
+      {
         title: 'Requested Amount', field: 'refund_amount', align: 'left', editable: 'never',
       },
       {
@@ -155,14 +158,15 @@ const AccountsRefunds = () => {
         reason_refund: value.reason_for_refund,
         refund_amount: value.total_amount,
         pay_type: value.pay_category,
+        currency: value.currency,
         status: value.refund_type,
         actions:
           value.refund_type == "" || value.refund_type == null ?
             <div className='actions_box'>
-               {(["all accounts access","view refund customer request","confirm refund customer request"].some(permission => userData?.permissions?.includes(permission))) &&
-              <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
-              }  
-              </div>
+              {(["all accounts access", "view refund customer request", "confirm refund customer request"].some(permission => userData?.permissions?.includes(permission))) &&
+                <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.checkout_id, value) }}>View Refund</button>
+              }
+            </div>
             :
 
             <div className='actions_box'>
