@@ -34,7 +34,7 @@ function AccountsDetails(props) {
       props.dataset?.pay_category,
     ).then((res) => {
       setDataSet(res.data[0])
-      console.log("resssss payment",res.data[0])
+      console.log("resssss payment", res.data[0])
 
       const fileUrls = res.data[0]?.reference_Image
         ? res.data[0]?.reference_Image.split(',').map((url) => url.trim())
@@ -137,16 +137,23 @@ function AccountsDetails(props) {
   const [productPNLReport, setProductPNLReport] = useState([])
 
   const handlePNLReport = async (id) => {
+    let url = '';
+    if (props?.pnlType == "orders") {
+      url = "/pnl/order";
+      id = props.orderid;
+    } else {
+      url = "/pnl/order-product";
+    }
     setpnlReportLoading(true)
     await axios
-      .get(`/pnl/order/${id}`)
+      .get(`${url}/${id}`)
       .then((response) => {
         setPNLVoucherView(true)
         setCurrenctOrderId(id)
         setProductPNLReport(response.data)
         setpnlReportLoading(false)
 
-        console.log(response.data, 'Handle PNL Report')
+        // console.log(response.data, 'Handle PNL Report')
       })
       .catch((error) => {
         console.log(error, 'Handle PNL Report')
@@ -262,20 +269,20 @@ function AccountsDetails(props) {
                               ].some((permission) =>
                                 userData?.permissions?.includes(permission),
                               ) && (
-                                <CButton
-                                  color="info"
-                                  style={{
-                                    fontSize: 16,
-                                    color: 'white',
-                                    marginLeft: 20,
-                                    alignContent: 'center',
-                                  }}
-                                  onClick={() => handlePNLReport(dataset.checkout_id)}
+                                  <CButton
+                                    color="info"
+                                    style={{
+                                      fontSize: 16,
+                                      color: 'white',
+                                      marginLeft: 20,
+                                      alignContent: 'center',
+                                    }}
+                                    onClick={() => handlePNLReport(dataset.checkout_id)}
                                   // onClick={() => console.log(dataset)}
-                                >
-                                  Show PNL report
-                                </CButton>
-                              )}
+                                  >
+                                    Show PNL report
+                                  </CButton>
+                                )}
                             </td>
                           </tr>
                         </tbody>
@@ -286,8 +293,8 @@ function AccountsDetails(props) {
                       <table className="table table-bordered table__PayentProf">
                         <thead>
                           <tr>
-                          <th scope="col">Transaction No</th>
-                          <th scope="col">Reference No</th>
+                            <th scope="col">Transaction No</th>
+                            <th scope="col">Reference No</th>
                             <th scope="col">Gateway</th>
 
                             <th scope="col">Checkout Date</th>
@@ -311,20 +318,20 @@ function AccountsDetails(props) {
                               ].some((permission) =>
                                 userData?.permissions?.includes(permission),
                               ) && (
-                                <CButton
-                                  color="info"
-                                  style={{
-                                    fontSize: 16,
-                                    color: 'white',
-                                    marginLeft: 20,
-                                    alignContent: 'center',
-                                  }}
-                                  onClick={() => handlePNLReport(dataset?.order_id)}
+                                  <CButton
+                                    color="info"
+                                    style={{
+                                      fontSize: 16,
+                                      color: 'white',
+                                      marginLeft: 20,
+                                      alignContent: 'center',
+                                    }}
+                                    onClick={() => handlePNLReport(dataset?.order_id)}
                                   // onClick={() => console.log(dataset)}
-                                >
-                                  Show PNL report
-                                </CButton>
-                              )}
+                                  >
+                                    Show PNL report
+                                  </CButton>
+                                )}
                             </td>
                           </tr>
                         </tbody>
@@ -335,20 +342,20 @@ function AccountsDetails(props) {
                       {['all accounts access', 'view customer order pnl', 'view account pnl'].some(
                         (permission) => userData?.permissions?.includes(permission),
                       ) && (
-                        <CButton
-                          color="info"
-                          style={{
-                            fontSize: 16,
-                            color: 'white',
-                            marginLeft: 20,
-                            alignContent: 'center',
-                          }}
-                          onClick={() => handlePNLReport(dataset.checkout_id)}
+                          <CButton
+                            color="info"
+                            style={{
+                              fontSize: 16,
+                              color: 'white',
+                              marginLeft: 20,
+                              alignContent: 'center',
+                            }}
+                            onClick={() => handlePNLReport(props?.dataset[0]?.checkoutID)}
                           // onClick={() => console.log(dataset)}
-                        >
-                          Show PNL report
-                        </CButton>
-                      )}
+                          >
+                            Show PNL report
+                          </CButton>
+                        )}
                       {console.log(dataset, 'Data set key iss dataa')}
                     </>
                   )}
@@ -383,7 +390,7 @@ function AccountsDetails(props) {
         </Modal.Header>
         <Modal.Body>
           {productPNLReport.status === 'fail' &&
-          productPNLReport.message === 'No data to display' ? (
+            productPNLReport.message === 'No data to display' ? (
             <div className="d-flex flex-column align-items-center my-5">
               <h6>Oops! Sorry</h6>
               <p>The product has been yet to be approved !</p>
