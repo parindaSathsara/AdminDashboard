@@ -230,7 +230,7 @@ function OrderDetails(props) {
   const [hotelDataSet, setHotelDataSet] = useState([])
 
   const handleMoreInfoModal = (e, category) => {
-    
+
 
     setMoreOrderModalCategory(category)
     if (category == 3) {
@@ -561,7 +561,7 @@ function OrderDetails(props) {
       },
       { field: 'hotelName', title: 'Hotel Name' },
       { field: 'Provider', title: 'Provider', align: 'left' },
-      { field: 'NoOfNights', title: 'No of Nights', align: 'left' }, 
+      { field: 'NoOfNights', title: 'No of Nights', align: 'left' },
       { field: 'NoOfAdults', title: 'No of Adults', align: 'left' },
       { field: 'checkInDate', title: 'Check In Date', align: 'left' },
       { field: 'checkOutDate', title: 'Check Out Date', align: 'left' },
@@ -683,31 +683,31 @@ function OrderDetails(props) {
                 <h4 style={{ position: 'relative', top: 0 }}>Order Summary</h4>
 
                 {!props?.productViewData ? (
-                  <CDropdown style={{color:'#fff'}} variant="btn-group">
+                  <CDropdown style={{ color: '#fff' }} variant="btn-group">
                     <CDropdownToggle color="success" >Download Itinerary</CDropdownToggle>
                     <CDropdownMenu>
                       {[
                         'download order long itinerary',
                         'download account order long itinerary',
                       ].some((permission) => userData?.permissions?.includes(permission)) && (
-                        <CDropdownItem
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => handleDownload('long')}
-                        >
-                          Long Itinerary
-                        </CDropdownItem>
-                      )}
+                          <CDropdownItem
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleDownload('long')}
+                          >
+                            Long Itinerary
+                          </CDropdownItem>
+                        )}
                       {[
                         'download order short itinerary',
                         'download account order short itinerary',
                       ].some((permission) => userData?.permissions?.includes(permission)) && (
-                        <CDropdownItem
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => handleDownload('short')}
-                        >
-                          Short Itinerary
-                        </CDropdownItem>
-                      )}
+                          <CDropdownItem
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleDownload('short')}
+                          >
+                            Short Itinerary
+                          </CDropdownItem>
+                        )}
                     </CDropdownMenu>
                   </CDropdown>
                 ) : (
@@ -741,12 +741,12 @@ function OrderDetails(props) {
       </div>
 
       <MoreOrderView
-            show={moreOrderModal}
-            onHide={() => setMoreOrderModal(false)}
-            preID={moreOrderDetails}
-            category={moreOrderModalCategory}
-            hotelsOrderView={hotelDataSet}
-          ></MoreOrderView>
+        show={moreOrderModal}
+        onHide={() => setMoreOrderModal(false)}
+        preID={moreOrderDetails}
+        category={moreOrderModalCategory}
+        hotelsOrderView={hotelDataSet}
+      ></MoreOrderView>
 
       {props?.accounts ? null : (
         <>
@@ -793,17 +793,17 @@ function OrderDetails(props) {
                   reload={() => reload()}
                 />
               </Tab>
-
-              {props?.productViewData ? null : (
-                <Tab eventKey="acc" title="Accounts Details">
-                  <AccountsDetails
-                    dataset={orderMainDetails}
-                    orderid={props.orderid}
-                    relord={() => reload()}
-                    paymentproof={(val) => handlePaymentProof(val)}
-                  />
-                </Tab>
-              )}
+              {/* {props?.productViewData ? null : ( */}
+              <Tab eventKey="acc" title="Accounts Detailss">
+                <AccountsDetails
+                  dataset={productData}
+                  orderid={props.orderid}
+                  relord={() => reload()}
+                  pnlType={props.pageType}
+                  paymentproof={(val) => handlePaymentProof(val)}
+                />
+              </Tab>
+              {/* )} */}
             </Tabs>
           </CCol>
 
@@ -815,7 +815,7 @@ function OrderDetails(props) {
             />
           ) : null}
 
-       
+
 
           <DetailExpander
             show={detailExpander}

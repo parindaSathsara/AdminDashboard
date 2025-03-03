@@ -346,7 +346,7 @@ const Orders = () => {
     enableColumnResizing: true,
     muiTableContainerProps: { sx: { maxHeight: '500px' } },
     enableStickyHeader: true,
-    
+
     // initialState: { pagination: { pageSize: 10 } },
     paginationType: 'stepped',
 
@@ -372,7 +372,7 @@ const Orders = () => {
 
       cellStyle: {},
     },
-    
+
     enableRowActions: true,
 
     renderRowActions: ({ row }) => [
@@ -412,7 +412,7 @@ const Orders = () => {
       row?.original?.oid ?
         (
 
-          <OrderDetails orderid={row.original.oid} orderData={row?.original} hideStatus={false} updatedData={() => console.log("Updated")} />
+          <OrderDetails pageType={"orders"} orderid={row.original.oid} orderData={row?.original} hideStatus={false} updatedData={() => console.log("Updated")} />
 
         ) : null
   });
@@ -499,10 +499,10 @@ const Orders = () => {
 
             <Tabs defaultActiveKey="group" id="uncontrolled-tab-example" className="mt-4" style={{ fontSize: 16 }} >
               <Tab eventKey="group" title="Group Wise">
-              {/* <Scrollbar style={{ width: '100%', height: '40vh' }}> */}
-              <MaterialReactTable table={table}/>
-              {/* </Scrollbar> */}
-     
+                {/* <Scrollbar style={{ width: '100%', height: '40vh' }}> */}
+                <MaterialReactTable table={table} />
+                {/* </Scrollbar> */}
+
               </Tab>
               <Tab eventKey="product" title="Product Wise">
                 <ProductWiseOrders />
@@ -516,7 +516,7 @@ const Orders = () => {
           onHide={() => setDetailExpander(false)}
           orderid={selectedOrderDetails.oid}
           component={
-            <OrderDetails dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
+            <OrderDetails  pageType={"orders"} dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
           }
         />
 
