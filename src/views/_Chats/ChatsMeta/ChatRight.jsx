@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CButton, CCol, CRow, CTooltip  } from '@coreui/react'
+import { CButton, CCol, CRow, CTooltip } from '@coreui/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 
 import {
@@ -126,7 +126,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     }
   }
 
-  const handleCloseChat = () => {}
+  const handleCloseChat = () => { }
 
   // const getDateAndtime = (data) => {
   //     console.log("Input",data);
@@ -142,10 +142,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     return null
   }
 
-  const handleScrollToMessage = () => {}
+  const handleScrollToMessage = () => { }
 
   const { userData } = useContext(UserLoginContext)
- 
+
   const handleSendMessage = async (value) => {
     if (value === '' || !value.trim()) {
       console.log('Empty message')
@@ -153,9 +153,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     } else {
       setAdminMessage('')
 
-      const adminMsg =  messages?.filter(data=>data?.role == "Admin")
-      
-  
+      const adminMsg = messages?.filter(data => data?.role == "Admin")
+
+
       await addDoc(collection(db, 'chat-updated/chats/' + chatOpenDetails.id), {
         text: value,
         name: userData.name,
@@ -174,7 +174,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
           status: 'Unread',
           readAt: '',
         },
-        adminJoined:adminMsg?.length == 0 ? true : false
+        adminJoined: adminMsg?.length == 0 ? true : false
       })
 
       const docRef = doc(db, 'customer-chat-lists', chatOpenDetails.id)
@@ -232,7 +232,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         text: message.text,
       }))
 
-      
+
 
       setLastMessageContent(messageContent)
 
@@ -761,13 +761,13 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
 
           // // Fetch updated status after successful update
           // const updatedDoc = await getDoc(docRef)
-          // check the updatedoc 
-          const updatedDoc = await checkUpdateDoc(db,data,newStatus)
+          // check the updatedoc
+          const updatedDoc = await checkUpdateDoc(db, data, newStatus)
           console.log(updatedDoc);
-          
+
           if (updatedDoc) {
             setChatStatus(updatedDoc.status)
-            
+
             if (typeof onStatusUpdate === 'function') {
               onStatusUpdate(updatedDoc)
             }
@@ -867,7 +867,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     if (data.category) {
       const category = categories.find((cat) => cat.value === data.category.toString())
       if (category) {
-      data.category = category.name
+        data.category = category.name
       }
     }
     // console.log(data, 'chamod')
@@ -991,27 +991,27 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   )}
                   {/* the end chat icon */}
                   {
-                    
-                    <CTooltip  
-                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
-                    placement="auto">
-                  
-                    <FontAwesomeIcon
-                      icon={chatStatus === 'End' ? faStop : faPause}
-                      onClick={() => {
-                        if (chatStatus !== 'End') {
-                          handleChatControl({
-                            ...chatOpenDetails,
-                            status: chatStatus,
-                          })
-                        }
-                      }}
-                      style={{
-                        color: chatStatus === 'End' ? '#ff0000' : '#ffe400',
-                        cursor: chatStatus === 'End' ? 'pointer' : 'pointer',
-                        pointerEvents: chatStatus === 'End' ? 'auto' : 'auto',
-                      }}
-                    />
+
+                    <CTooltip
+                      content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
+                      placement="auto">
+
+                      <FontAwesomeIcon
+                        icon={chatStatus === 'End' ? faStop : faPause}
+                        onClick={() => {
+                          if (chatStatus !== 'End') {
+                            handleChatControl({
+                              ...chatOpenDetails,
+                              status: chatStatus,
+                            })
+                          }
+                        }}
+                        style={{
+                          color: chatStatus === 'End' ? '#ff0000' : '#ffe400',
+                          cursor: chatStatus === 'End' ? 'pointer' : 'pointer',
+                          pointerEvents: chatStatus === 'End' ? 'auto' : 'auto',
+                        }}
+                      />
                     </CTooltip>
 
                     // <FontAwesomeIcon icon={faStop} onClick={() => handleStopChat(chatOpenDetails)} style={{ color: '#2bfd3c' }} />
@@ -1022,29 +1022,29 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                     'remove employer from chat',
                     'view assign employer chat',
                   ].some((permission) => userData?.permissions?.includes(permission)) && (
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      className="icon-style"
-                      onClick={() => {
-                        handleAssignEmployee('Employee Asaign')
-                      }}
-                      style={{ color: '#03e5fd' }}
-                    />
-                  )}
-                   <CTooltip  
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="icon-style"
+                        onClick={() => {
+                          handleAssignEmployee('Employee Asaign')
+                        }}
+                        style={{ color: '#03e5fd' }}
+                      />
+                    )}
+                  <CTooltip
                     content={'Chat Analytics'}
                     placement="auto">
-                  
+
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       onClick={() => {
-                          handleChatAnalytics()
+                        handleChatAnalytics()
                       }}
                       style={{
                         color: '#ffff',
                       }}
                     />
-                    </CTooltip>
+                  </CTooltip>
                   {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
                 </div>
               </div>
@@ -1080,11 +1080,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                             <div
                               ref={(el) => (chatRefs.current[index] = el)}
                               key={index}
-                              className={` ${
-                                value.role === 'Admin'
-                                  ? 'chat-content-admin'
-                                  : 'chat-content-customer'
-                              } `}
+                              className={` ${value.role === 'Admin'
+                                ? 'chat-content-admin'
+                                : 'chat-content-customer'
+                                } `}
                               style={{
                                 backgroundColor: clickedMssage === value.id ? 'lightgray' : '',
                               }}
@@ -1105,7 +1104,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                   'MMMM D, YYYY h:mm A',
                                 )}
                               </p>
-                              <p className="chat-content-time">by {value.name.slice(0, 7)} </p>
+                              {console.log(value)}
+                              <p className="chat-content-time">by {value?.name != "" ? value.name.slice(0, 7) : value?.role.toLowerCase()} </p>
                             </div>
                           </div>
                         ))
@@ -1142,7 +1142,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       style={{ color: 'black' }}
                       onClick={() => handleAutoSuggestionModal()}
                     />
-                    
+
 
                     {/* <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} /> */}
 
@@ -1233,16 +1233,16 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       {['delete assign employee order'].some((permission) =>
                         userData?.permissions?.includes(permission),
                       ) && (
-                        <CButton
-                          color="danger"
-                          onClick={() => {
-                            handleDeleteEmployee(assignedEmployee.chatId)
-                          }}
-                          style={{ color: 'white', fontSize: 14 }}
-                        >
-                          Delete <CIcon icon={cilTrash} />
-                        </CButton>
-                      )}
+                          <CButton
+                            color="danger"
+                            onClick={() => {
+                              handleDeleteEmployee(assignedEmployee.chatId)
+                            }}
+                            style={{ color: 'white', fontSize: 14 }}
+                          >
+                            Delete <CIcon icon={cilTrash} />
+                          </CButton>
+                        )}
                     </CTableDataCell>
                   </CTableRow>
                   {/* ))} */}
@@ -1268,8 +1268,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         productData={moreData}
       ></MoreProductView>
 
-<ChatAnalyticsModal show={viewChatAnalytics} message={messages} onHide={() => setViewChatAnalytics(false)} />
-<AiSuggestionModal show={recommenderModalOpen} loadingRecommendations = {loadingRecommendations} getRecommendations = {getRecommendations} setRecommendations={setRecommendations} recommendations = {recommendations} onHide={() => setRecommenderModalOpen(false)} />
+      <ChatAnalyticsModal show={viewChatAnalytics} message={messages} onHide={() => setViewChatAnalytics(false)} />
+      <AiSuggestionModal show={recommenderModalOpen} loadingRecommendations={loadingRecommendations} getRecommendations={getRecommendations} setRecommendations={setRecommendations} recommendations={recommendations} onHide={() => setRecommenderModalOpen(false)} />
     </>
   )
 }
