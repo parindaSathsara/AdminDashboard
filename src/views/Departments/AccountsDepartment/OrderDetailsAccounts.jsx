@@ -84,7 +84,7 @@ function OrderDetailsAccounts(props) {
             <div className='mainContainerTables'>
 
 
-                <AccountsDetails dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
+                <AccountsDetails pnlType={"orders"} dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
 
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
                     <OrderDetails dataset={props?.paymentDataSet} orderid={props.orderid} orderData={props?.paymentDataSet} hideStatus={false} accounts />
