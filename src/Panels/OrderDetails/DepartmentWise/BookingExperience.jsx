@@ -423,8 +423,10 @@ export default function BookingExperience(props) {
   const showBookingDataModal = async (data) => {
     try {
       setBookingDataModel(true);
+      console.log("--------------*************************------------------------------",data.checkoutID);
       const response = await axios.get(`/tbov2/booking/booking-info/${data.checkoutID}`);
-      setBookingData(response.data.data)
+      response.data.data? setBookingData(response.data.data): setBookingData(null);
+      //  setBookingData(response.data.data)
       console.log(bookingData);
     } catch (error) {
       console.log(error);

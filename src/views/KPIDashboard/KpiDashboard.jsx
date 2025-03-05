@@ -219,6 +219,7 @@ const KpiDashboard = () => {
                                     format="yyyy/MM/dd"
                                     onChange={handleDateRangeChangeBookingByUser}
                                     value={selectedDatesUserOrdersDate.length > 0 ? [new Date(selectedDatesUserOrdersDate[0]), new Date(selectedDatesUserOrdersDate[1])] : null}
+                                    placement='bottomEnd'
                                 />
                                 <Select
                                     options={availableEmployees}
