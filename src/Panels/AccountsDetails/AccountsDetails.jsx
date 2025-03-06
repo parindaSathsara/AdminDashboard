@@ -163,7 +163,13 @@ function AccountsDetails(props) {
   const [loading, setLoading] = useState(false)
 
   const downloadPdf = async () => {
-    const url = `${axios.defaults.baseURL}/pnl/order/${currenctOrdeId}/pdf`
+    let url = '';
+
+    if (props?.pnlType == "orders") {
+      url = `${axios.defaults.baseURL}/pnl/order/${currenctOrdeId}/pdf`;
+    } else {
+      url = `${axios.defaults.baseURL}/pnl/order-product/${currenctOrdeId}/pdf`;
+    }
     console.log('Opening URL:', url)
     window.open(url, '_blank')
 

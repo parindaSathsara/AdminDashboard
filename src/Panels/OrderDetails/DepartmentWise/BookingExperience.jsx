@@ -419,17 +419,28 @@ export default function BookingExperience(props) {
 
   const [bookingDataModel, setBookingDataModel] = useState(false);
   const [bookingData, setBookingData] = useState(null);
+  const [modelDefaultMessage, setModelDefaultMessage] = useState("Loading booking data...");
 
   const showBookingDataModal = async (data) => {
     try {
-      setBookingDataModel(true);
+        setBookingDataModel(true);
       const response = await axios.get(`/tbov2/booking/booking-info/${data.checkoutID}`);
-      setBookingData(response.data.data)
+      if(response.data?.data?.bookingData){
+        setBookingData(response.data.data.bookingData)
+      }
+      else{
+        setModelDefaultMessage("No booking data found for this order.")
+      }
+      // setBookingData(response.data.data)
       console.log(bookingData);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    setModelDefaultMessage("Loading booking data...");
+  }, [bookingDataModel]);
 
   const columns = [
     { title: 'Product ID', field: 'pid' },
@@ -843,7 +854,7 @@ export default function BookingExperience(props) {
         <Modal.Body className="max-h-[80vh] overflow-y-auto">
           {bookingData == null ? (
             <div className="p-8 flex flex-col items-center justify-center">
-              <p className="text-gray-500">Loading booking details...</p>
+              <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
             <div className="p-4">
