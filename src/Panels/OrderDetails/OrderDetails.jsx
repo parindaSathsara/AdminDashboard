@@ -794,7 +794,7 @@ function OrderDetails(props) {
                 />
               </Tab>
               {/* {props?.productViewData ? null : ( */}
-              <Tab eventKey="acc" title="Accounts Detailss">
+              <Tab eventKey="acc" title="Accounts Details">
                 <AccountsDetails
                   dataset={productData}
                   orderid={props.orderid}
