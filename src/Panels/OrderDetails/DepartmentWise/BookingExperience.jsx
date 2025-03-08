@@ -423,12 +423,16 @@ export default function BookingExperience(props) {
 
   const showBookingDataModal = async (data) => {
     try {
-        setBookingDataModel(true);
+
+      console.log(`/tbov2/booking/booking-info/${data.checkoutID}`, "Checkout ID value dat aisssssssssssss")
+      setBookingDataModel(true);
       const response = await axios.get(`/tbov2/booking/booking-info/${data.checkoutID}`);
-      if(response.data?.data?.bookingData){
-        setBookingData(response.data.data.bookingData)
+
+      console.log(response, "TBO Response value isssss")
+      if (response.data?.data?.bookingData) {
+        setBookingData(response.data.data)
       }
-      else{
+      else {
         setModelDefaultMessage("No booking data found for this order.")
       }
       // setBookingData(response.data.data)
@@ -863,29 +867,29 @@ export default function BookingExperience(props) {
                 <div className="flex justify-between items-start">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-800">
-                      {bookingData.bookingData.HotelName}
+                      {bookingData?.bookingData?.HotelName}
                     </h2>
                     <div className="flex items-center gap-2 mt-2">
                       {/* <MapPin className="w-4 h-4 text-gray-500" /> */}
                       <span className="text-gray-600">
-                        {bookingData.bookingData.City}, {bookingData.bookingData.CountryCode}
+                        {bookingData?.bookingData?.City}, {bookingData?.bookingData?.CountryCode}
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="font-semibold">{bookingData.bookingData.StarRating}</span>
+                    <span className="font-semibold">{bookingData?.bookingData?.StarRating}</span>
                     {/* <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" /> */}
                   </div>
                 </div>
               </div>
 
               {/* Booking Status Banner */}
-              <div className={`mb-6 p-3 rounded-lg text-center ${bookingData.bookingData.HotelBookingStatus === 'Confirmed'
+              <div className={`mb-6 p-3 rounded-lg text-center ${bookingData?.bookingData?.HotelBookingStatus === 'Confirmed'
                 ? 'bg-green-100 text-green-800'
                 : 'bg-yellow-100 text-yellow-800'
                 }`}>
                 <span className="font-semibold">
-                  Status: {bookingData.bookingData.HotelBookingStatus}
+                  Status: {bookingData?.bookingData?.HotelBookingStatus}
                 </span>
               </div>
 
@@ -901,18 +905,18 @@ export default function BookingExperience(props) {
                     <div className="flex justify-between">
                       <span className="text-gray-600">Check-in:</span>
                       <span className="font-medium">
-                        {new Date(bookingData.bookingData.CheckInDate).toLocaleDateString()}
+                        {new Date(bookingData?.bookingData?.CheckInDate).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Check-out:</span>
                       <span className="font-medium">
-                        {new Date(bookingData.bookingData.CheckOutDate).toLocaleDateString()}
+                        {new Date(bookingData?.bookingData?.CheckOutDate).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Rooms:</span>
-                      <span className="font-medium">{bookingData.bookingData.NoOfRooms}</span>
+                      <span className="font-medium">{bookingData?.bookingData?.NoOfRooms}</span>
                     </div>
                   </div>
                 </div>
@@ -926,15 +930,15 @@ export default function BookingExperience(props) {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Invoice Amount:</span>
-                      <span className="font-medium">₹{bookingData.bookingData.InvoiceAmount}</span>
+                      <span className="font-medium">₹{bookingData?.bookingData?.InvoiceAmount}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Invoice No:</span>
-                      <span className="font-medium">{bookingData.bookingData.InvoiceNo}</span>
+                      <span className="font-medium">{bookingData?.bookingData?.InvoiceNo}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Booking Source:</span>
-                      <span className="font-medium">{bookingData.bookingData.BookingSource}</span>
+                      <span className="font-medium">{bookingData?.bookingData?.BookingSource}</span>
                     </div>
                   </div>
                 </div>
@@ -948,15 +952,15 @@ export default function BookingExperience(props) {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Nationality:</span>
-                      <span className="font-medium">{bookingData.bookingData.GuestNationality}</span>
+                      <span className="font-medium">{bookingData?.bookingData?.GuestNationality}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Confirmation No:</span>
-                      <span className="font-medium">{bookingData.bookingData.ConfirmationNo}</span>
+                      <span className="font-medium">{bookingData?.bookingData?.ConfirmationNo}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Booking Ref:</span>
-                      <span className="font-medium">{bookingData.bookingData.BookingRefNo}</span>
+                      <span className="font-medium">{bookingData?.bookingData?.BookingRefNo}</span>
                     </div>
                   </div>
                 </div>
@@ -968,7 +972,7 @@ export default function BookingExperience(props) {
                     Hotel Policy
                   </h3>
                   <p className="text-gray-600">
-                    {bookingData.bookingData.HotelPolicyDetail || 'No policy information available'}
+                    {bookingData?.bookingData?.HotelPolicyDetail || 'No policy information available'}
                   </p>
                 </div>
               </div>

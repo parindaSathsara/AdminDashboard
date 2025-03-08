@@ -42,6 +42,9 @@ export default function EducationOrderView(props) {
     const sessionData = props.productData?.sessionData
 
 
+    console.log(props.productData, "Rate Values aree the valuessssssssssssssssss")
+
+
     // console.log(sessionData)
 
     function renderVariations(value) {
@@ -119,7 +122,7 @@ export default function EducationOrderView(props) {
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
-                          backgroundColor: '#E5D3FA'
+                        backgroundColor: '#E5D3FA'
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -127,7 +130,7 @@ export default function EducationOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    
+
                     // exportButton: true,
                 }}
             />
@@ -215,7 +218,7 @@ export default function EducationOrderView(props) {
         );
     };
 
-    
+
     function stripHtmlTags(html) {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = html;
@@ -378,18 +381,18 @@ export default function EducationOrderView(props) {
 
 
             <CCol className='my-4'>
-                        <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
-            
-                <InventoryDetails />
-                        </div>
+                <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
+
+                    <InventoryDetails />
+                </div>
 
             </CCol>
 
 
 
             <CCol className='my-4'>
-            <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
-                <RateDetails />
+                <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
+                    <RateDetails />
                 </div>
             </CCol>
 

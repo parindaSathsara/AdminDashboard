@@ -37,6 +37,9 @@ export default function EducationProductView(props) {
     const basicDetails = props.productData?.productBasicData
     const inventory = props.productData?.productInventory
     const rate = props.productData?.productRates
+
+
+    console.log(props?.productData, "Product Data value isssssss")
     // console.log(inventory)
     // const packageData = props.productData?.lifestylePackageData
     const bookData = props.productData?.educationBookData
@@ -97,14 +100,14 @@ export default function EducationProductView(props) {
 
         return (
             <MaterialTable
-            
+
                 title="Inventory Details"
                 columns={columns}
                 data={data}
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
-                           backgroundColor: '#E5D3FA'
+                        backgroundColor: '#E5D3FA'
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -187,7 +190,7 @@ export default function EducationProductView(props) {
                 style={{ backgroundColor: '#FBFAF4' }}
                 options={{
                     headerStyle: {
-                          backgroundColor: '#FEF5D1',
+                        backgroundColor: '#FEF5D1',
                         fontSize: '14px', // Adjust the header font size here
                     },
                     cellStyle: {
@@ -281,17 +284,17 @@ export default function EducationProductView(props) {
 
 
             <CCol className='my-4'>
-            <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
-                <InventoryDetails />
-                                </div>
+                <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
+                    <InventoryDetails />
+                </div>
 
             </CCol>
 
 
 
             <CCol className='my-4'>
-            <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
-                <RateDetails />
+                <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
+                    <RateDetails />
                 </div>
             </CCol>
 

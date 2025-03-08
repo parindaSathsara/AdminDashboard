@@ -1,38 +1,38 @@
 import React, { useContext } from 'react'
 import CIcon from '@coreui/icons-react'
 
-import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings,cilBarChart, cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper, cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact, cilBellExclamation } from '@coreui/icons'
+import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings, cilBarChart, cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper, cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact, cilBellExclamation } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
 
 
-function getNavigationHook(permissions){
+function getNavigationHook(permissions) {
 
-  const accountsPermissions =  [
-      "all accounts access",
-      "view customer orders",
-      "approve customer orders",
-      "reject customer orders",
-      "view customer order pnl",
-      "download account order long itinerary",
-      "download account order short itinerary",
-      "view refund customer request",
-      "confirm refund customer request",
-     
-    ];
+  const accountsPermissions = [
+    "all accounts access",
+    "view customer orders",
+    "approve customer orders",
+    "reject customer orders",
+    "view customer order pnl",
+    "download account order long itinerary",
+    "download account order short itinerary",
+    "view refund customer request",
+    "confirm refund customer request",
 
-    const promotionPermissions =  [
-      "manage offers",
-    ];
-  
+  ];
+
+  const promotionPermissions = [
+    "manage offers",
+  ];
+
   const _nav = [
     {
       component: CNavItem,
       name: 'Dashboard',
       to: '/dashboard',
       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-     
+
     },
     {
       component: CNavGroup,
@@ -45,11 +45,11 @@ function getNavigationHook(permissions){
           name: 'Team KPI',
           to: '/kpidashboard/team',
         },
-         {
-           component: CNavItem,
+        {
+          component: CNavItem,
           name: 'Global Target',
-           to: '/kpidashboard/globaltarget',
-         },
+          to: '/kpidashboard/globaltarget',
+        },
         //  {
         //   component: CNavItem,
         //   name: 'Chat Analytics',
@@ -85,20 +85,20 @@ function getNavigationHook(permissions){
     //   to: '/sales',
     //   icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
     // },
-  
-    {
-      component: CNavItem,
-      name: 'Discounts',
-      to: '/offers_promo',
-      icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
-      hidden: !permissions.some(permission => promotionPermissions.includes(permission)),
-    },
-  
+
+    // {
+    //   component: CNavItem,
+    //   name: 'Discounts',
+    //   to: '/offers_promo',
+    //   icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+    //   hidden: !permissions.some(permission => promotionPermissions.includes(permission)),
+    // },
+
     {
       component: CNavItem,
       name: 'Vendors',
       to: '/vendors',
-      hidden:false,
+      hidden: false,
       icon: <CIcon icon={cilContact} customClassName="nav-icon" />,
       // items: [
       //   {
@@ -111,11 +111,11 @@ function getNavigationHook(permissions){
       //     name: 'Vendor Analytics',
       //     to: 'vendors/analytics',
       //   },
-  
+
       // ],
     },
-  
-  
+
+
     // {
     //   component: CNavItem,
     //   name: 'Customers',
@@ -133,11 +133,11 @@ function getNavigationHook(permissions){
           name: 'Customers',
           to: '/customers',
         },
-         {
-           component: CNavItem,
+        {
+          component: CNavItem,
           name: 'Customer Analytics',
-           to: '/analytics',
-         }
+          to: '/analytics',
+        }
       ],
     },
     {
@@ -162,10 +162,10 @@ function getNavigationHook(permissions){
       //   //   name: 'Product Analytics',
       //   //   to: 'products/analytics',
       //   // },
-  
+
       // ],
     },
-   {
+    {
       component: CNavGroup,
       name: 'Accounts',
       to: '/accounts',
@@ -238,7 +238,7 @@ function getNavigationHook(permissions){
         }
       ],
     },
-  
+
     // {
     //   component: CNavItem,
     //   name: 'Emails',
@@ -263,18 +263,18 @@ function getNavigationHook(permissions){
         }
       ],
     },
-  //  {
-  //   component:CNavItem,
-  //   name:'Customer Analytics',
-  //   to:'/analytics',
-  //   icon: <CIcon icon={cilBarChart}  customClassName="nav-icon"/>
-  // },
-  // {
-  //   component:CNavItem,
-  //   name:'Push Notifications',
-  //   to:'/pushNotifications',
-  //   icon: <CIcon icon={cilCommentSquare}  customClassName="nav-icon"/>
-  // },
+    //  {
+    //   component:CNavItem,
+    //   name:'Customer Analytics',
+    //   to:'/analytics',
+    //   icon: <CIcon icon={cilBarChart}  customClassName="nav-icon"/>
+    // },
+    // {
+    //   component:CNavItem,
+    //   name:'Push Notifications',
+    //   to:'/pushNotifications',
+    //   icon: <CIcon icon={cilCommentSquare}  customClassName="nav-icon"/>
+    // },
     {
       component: CNavItem,
       name: 'Supplier Support',
