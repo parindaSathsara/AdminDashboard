@@ -142,8 +142,6 @@ function AccountsDetails(props) {
   const [productPNLReport, setProductPNLReport] = useState([])
 
   const handlePNLReport = async (data) => {
-    console.log("Umayanga Vidu", data);
-
     let id;
     let url = '';
     if (props?.pnlType == "orders") {
@@ -151,7 +149,7 @@ function AccountsDetails(props) {
       id = data?.checkout_id;
     } else {
       url = "/pnl/order-product";
-      id = "";
+      id = props?.productData[0]?.checkoutID;
     }
     setpnlReportLoading(true)
     await axios
@@ -230,7 +228,7 @@ function AccountsDetails(props) {
             <CCol xs={12} sm={12} lg={12}>
               <div className="mainContainerTables">
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
-                  <h6 className="cardHeader">Payment Type - {dataset?.['pay_category']}</h6>
+                  <h6 className="cardHeader">{dataset?.['pay_category'] ? "Payment Type -" : ""} {dataset?.['pay_category']}</h6>
                   {dataset?.['pay_category'] == 'Online Transfer' ? (
                     <>
                       <table class="table">
