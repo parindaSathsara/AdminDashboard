@@ -27,7 +27,6 @@ function AccountsDetails(props) {
   const [selectedDocument, setSelectedDocument] = useState([])
 
   useEffect(() => {
-    console.log("Umayanga Diss Hii", props.dataset);
     if (props.pnlType == "orders") {
       getPaymentStatusById(
         props.dataset?.oid,
