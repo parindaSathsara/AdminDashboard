@@ -44,7 +44,6 @@ function AccountsDetails(props) {
         setSelectedDocument(fileUrls)
       })
     } else {
-      console.log("Umayanga Diss Hii", props.dataset);
       setDataSet(props.dataset)
     }
 
