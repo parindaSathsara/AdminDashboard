@@ -285,6 +285,8 @@ export default function TravellerExperience(props) {
 
   const [mapViewData, setMapViewData] = useState([])
 
+  const [allocateProductData, setAllocateProductData] = useState({});
+
   const getMapView = async (data) => {
     setMapView(true)
     setMapViewData(data)
@@ -293,6 +295,7 @@ export default function TravellerExperience(props) {
   const [driverId, setDriverId] = useState('')
   const handleClickDriverAllocation = (dataset) => {
     // console.log(dataset, "Dataset Value is")
+    setAllocateProductData(dataset?.data);
     if (dataset.data.category === 'Lifestyles') {
       setDriverId(dataset.data.vehicle_driver_id)
       setDriverAllocationStatus({ status: true, data: dataset })
@@ -714,68 +717,77 @@ export default function TravellerExperience(props) {
             ) : (
               driverDetails
                 .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
-                .map((driver, index) => (
-                  <div
-                    key={index}
-                    className="driver-vehicle-card"
-                    style={{ backgroundColor: driverId === driver.id ? '#f0e68c ' : null }}
-                  >
-                    <div className="vehicle-primary-info">
-                      <div className="vehicle-identification">
-                        <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
-                        <span className="vehicle-province">{driver.vehicle_province}</span>
+                .map((driver, index) => {
+                  const isAllocated = driver.allocation.find((item) => {
+                    return (
+                      item.service_date == allocateProductData.service_date &&
+                      item.time_slot == allocateProductData.pickupTime
+                    );
+                  });
+                  return (
+                    <div
+                      key={index}
+                      className="driver-vehicle-card"
+                      style={{ backgroundColor: driverId === driver.id ? '#f0e68c ' : null }}
+                    >
+                      <div className="vehicle-primary-info">
+                        <div className="vehicle-identification">
+                          {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)}
+                          <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
+                          <span className="vehicle-province">{driver.vehicle_province}</span>
+                        </div>
+                        <div className="driver-name">
+                          <span>Driver: {driver.driver_name}</span>
+                        </div>
                       </div>
-                      <div className="driver-name">
-                        <span>Driver: {driver.driver_name}</span>
-                      </div>
-                    </div>
 
-                    <div className="vehicle-details">
-                      <div className="vehicle-characteristics">
-                        <span>Type: {driver.vehicle_type}</span>
-                        <span>Model: {driver.vehicle_model}</span>
-                        <span>Color: {driver.vehicle_color}</span>
-                        <span>Make: {driver.vehicle_make}</span>
+                      <div className="vehicle-details">
+                        <div className="vehicle-characteristics">
+                          <span>Type: {driver.vehicle_type}</span>
+                          <span>Model: {driver.vehicle_model}</span>
+                          <span>Color: {driver.vehicle_color}</span>
+                          <span>Make: {driver.vehicle_make}</span>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="secondary-info">
-                      <div className="driver-secondary-details">
-                        <span>Reg Date: {driver.vehicle_registered_date}</span>
-                        <span>Condition: {driver.vehicle_vehicle_condition}</span>
-                        <span>Status: {driver.vehicle_status}</span>
+                      <div className="secondary-info">
+                        <div className="driver-secondary-details">
+                          <span>Reg Date: {driver.vehicle_registered_date}</span>
+                          <span>Condition: {driver.vehicle_vehicle_condition}</span>
+                          <span>Status: {driver.vehicle_status}</span>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="secondary-info">
-                      <div className="driver-secondary-details">
-                        <span>Country: {driver.driver_registered_country}</span>
-                        <span>Type: {driver.driver_type}</span>
-                        <span>NIC: {driver.driver_nic}</span>
-                        <span>Reg Date: {driver.driver_registered_date}</span>
-                        <span>Driver Status: {driver.driver_status}</span>
+                      <div className="secondary-info">
+                        <div className="driver-secondary-details">
+                          <span>Country: {driver.driver_registered_country}</span>
+                          <span>Type: {driver.driver_type}</span>
+                          <span>NIC: {driver.driver_nic}</span>
+                          <span>Reg Date: {driver.driver_registered_date}</span>
+                          <span>Driver Status: {driver.driver_status}</span>
+                        </div>
                       </div>
+                      {!isAllocated && (driverId === driver.id ? (
+                        <CButton
+                          color="dark"
+                          disabled
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver(driver)}
+                        >
+                          Selected
+                        </CButton>
+                      ) : (
+                        <CButton
+                          color="warning"
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver(driver)}
+                        >
+                          Select Vehicle
+                        </CButton>
+                      ))}
                     </div>
-                    {driverId === driver.id ? (
-                      <CButton
-                        color="dark"
-                        disabled
-                        className="select-allocation-btn"
-                        onClick={() => handleChooseDriver(driver)}
-                      >
-                        Selected
-                      </CButton>
-                    ) : (
-                      <CButton
-                        color="warning"
-                        className="select-allocation-btn"
-                        onClick={() => handleChooseDriver(driver)}
-                      >
-                        Select Vehicle
-                      </CButton>
-                    )}
-                  </div>
-                ))
+                  )
+                })
             )}
           </div>
         </Modal.Body>
