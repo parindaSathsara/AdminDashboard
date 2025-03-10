@@ -796,7 +796,8 @@ function OrderDetails(props) {
               {/* {props?.productViewData ? null : ( */}
               <Tab eventKey="acc" title="Accounts Details">
                 <AccountsDetails
-                  dataset={productData}
+                  productData={productData}
+                  dataset={orderMainDetails}
                   orderid={props.orderid}
                   relord={() => reload()}
                   pnlType={props.pageType}
@@ -858,6 +859,7 @@ function OrderDetails(props) {
                       dataset={orderMainDetails}
                       orderid={props.orderid}
                       relord={() => reload()}
+                      pnlType={props.pageType}
                       paymentproof={(val) => handlePaymentProof(val)}
                     />
                   </Tab>

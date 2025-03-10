@@ -27,21 +27,26 @@ function AccountsDetails(props) {
   const [selectedDocument, setSelectedDocument] = useState([])
 
   useEffect(() => {
-    getPaymentStatusById(
-      props.dataset?.oid,
-      props.dataset?.oid,
-      props.dataset?.pay_type,
-      props.dataset?.pay_category,
-    ).then((res) => {
-      setDataSet(res.data[0])
-      console.log("resssss payment", res.data[0])
+    if (props.pnlType == "orders") {
+      getPaymentStatusById(
+        props.dataset?.oid,
+        props.dataset?.oid,
+        props.dataset?.pay_type,
+        props.dataset?.pay_category,
+      ).then((res) => {
+        setDataSet(res.data[0])
+        console.log("resssss payment", res.data[0])
 
-      const fileUrls = res.data[0]?.reference_Image
-        ? res.data[0]?.reference_Image.split(',').map((url) => url.trim())
-        : []
-      console.log(fileUrls, 'Extracted File URLs')
-      setSelectedDocument(fileUrls)
-    })
+        const fileUrls = res.data[0]?.reference_Image
+          ? res.data[0]?.reference_Image.split(',').map((url) => url.trim())
+          : []
+        console.log(fileUrls, 'Extracted File URLs')
+        setSelectedDocument(fileUrls)
+      })
+    } else {
+      setDataSet(props.dataset)
+    }
+
   }, [props.dataset])
 
   const handleImageView = () => {
@@ -136,13 +141,15 @@ function AccountsDetails(props) {
   const [currenctOrdeId, setCurrenctOrderId] = useState('')
   const [productPNLReport, setProductPNLReport] = useState([])
 
-  const handlePNLReport = async (id) => {
+  const handlePNLReport = async (data) => {
+    let id;
     let url = '';
     if (props?.pnlType == "orders") {
       url = "/pnl/order";
-      id = props.orderid;
+      id = data?.checkout_id;
     } else {
       url = "/pnl/order-product";
+      id = props?.productData[0]?.checkoutID;
     }
     setpnlReportLoading(true)
     await axios
@@ -221,7 +228,7 @@ function AccountsDetails(props) {
             <CCol xs={12} sm={12} lg={12}>
               <div className="mainContainerTables">
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
-                  <h6 className="cardHeader">Payment Type - {dataset?.['pay_category']}</h6>
+                  <h6 className="cardHeader">{dataset?.['pay_category'] ? "Payment Type -" : ""} {dataset?.['pay_category']}</h6>
                   {dataset?.['pay_category'] == 'Online Transfer' ? (
                     <>
                       <table class="table">
@@ -283,7 +290,7 @@ function AccountsDetails(props) {
                                       marginLeft: 20,
                                       alignContent: 'center',
                                     }}
-                                    onClick={() => handlePNLReport(dataset.checkout_id)}
+                                    onClick={() => handlePNLReport(dataset)}
                                   // onClick={() => console.log(dataset)}
                                   >
                                     Show PNL report
@@ -332,7 +339,7 @@ function AccountsDetails(props) {
                                       marginLeft: 20,
                                       alignContent: 'center',
                                     }}
-                                    onClick={() => handlePNLReport(dataset?.order_id)}
+                                    onClick={() => handlePNLReport(dataset)}
                                   // onClick={() => console.log(dataset)}
                                   >
                                     Show PNL report
@@ -356,7 +363,7 @@ function AccountsDetails(props) {
                               marginLeft: 20,
                               alignContent: 'center',
                             }}
-                            onClick={() => handlePNLReport(props?.dataset[0]?.checkoutID)}
+                            onClick={() => handlePNLReport(dataset)}
                           // onClick={() => console.log(dataset)}
                           >
                             Show PNL report

@@ -92,7 +92,7 @@ export default function TravellerExperience(props) {
 
   // }
 
-  const createTravellerExperience = async (rowData,idx) => {
+  const createTravellerExperience = async (rowData, idx) => {
     const data = {
       pid: rowData?.data?.checkoutID,
       delivery_date: rowData?.delivery_date,
@@ -102,7 +102,7 @@ export default function TravellerExperience(props) {
       location1: '',
     }
 
-    console.log(data,"Data values areeeee1233123123123")
+    console.log(data, "Data values areeeee1233123123123")
 
 
     if (!data.reconfirmation_date || !data.qc || !data.delivery_status) {
@@ -119,8 +119,7 @@ export default function TravellerExperience(props) {
       if (response.data.status == 200) {
         await axios
           .post(
-            `${axios.defaults.url}/sendConfirmationMail/${
-              rowData?.data?.checkoutID
+            `${axios.defaults.url}/sendConfirmationMail/${rowData?.data?.checkoutID
             }/${'CompletedDelivery'}`,
           )
           .then((res) => {
@@ -286,6 +285,8 @@ export default function TravellerExperience(props) {
 
   const [mapViewData, setMapViewData] = useState([])
 
+  const [allocateProductData, setAllocateProductData] = useState({});
+
   const getMapView = async (data) => {
     setMapView(true)
     setMapViewData(data)
@@ -294,6 +295,7 @@ export default function TravellerExperience(props) {
   const [driverId, setDriverId] = useState('')
   const handleClickDriverAllocation = (dataset) => {
     // console.log(dataset, "Dataset Value is")
+    setAllocateProductData(dataset?.data);
     if (dataset.data.category === 'Lifestyles') {
       setDriverId(dataset.data.vehicle_driver_id)
       setDriverAllocationStatus({ status: true, data: dataset })
@@ -478,18 +480,18 @@ export default function TravellerExperience(props) {
           <CFormSelect
             custom
             onChange={(e) => {
-                const updatedProductData = [...productData]
-                updatedProductData[rowData.index] = {
-                  ...updatedProductData[rowData.index],
-                  deliveryStatus: e.target.value,
-                }
-    
-                setProductData(updatedProductData)
+              const updatedProductData = [...productData]
+              updatedProductData[rowData.index] = {
+                ...updatedProductData[rowData.index],
+                deliveryStatus: e.target.value,
+              }
 
-                
-              console.log(updatedProductData,"Updated Product Dataaaaaaaaaaaaaaaa")
+              setProductData(updatedProductData)
 
-            //   handleInputFields('delivery_status', e.target.value)
+
+              console.log(updatedProductData, "Updated Product Dataaaaaaaaaaaaaaaa")
+
+              //   handleInputFields('delivery_status', e.target.value)
             }}
             disabled={getDisableStatus(rowData)}
           >
@@ -519,21 +521,21 @@ export default function TravellerExperience(props) {
           {['driver allocate'].some((permission) =>
             userData?.permissions?.includes(permission),
           ) && (
-            <CButton
-              color="info"
-              disabled={rowData.data.category != 'Lifestyles' || rowData?.data?.status ==="Cancel" || rowData?.data?.status ==="CustomerOrdered" || rowData?.data?.status ==="Completed"}
-              style={{
-                fontSize: 14,
-                color: 'white',
-                backgroundColor: rowData.data.vehicle_allocation == 1 ? '#476e7c' : null,
-                border: 0,
-              }}
-              onClick={() => handleClickDriverAllocation(rowData)}
-              className="btn btn-primary"
-            >
-              {rowData.data.vehicle_allocation == 1 ? 'View Allocation' : 'Allocate driver'}
-            </CButton>
-          )}
+              <CButton
+                color="info"
+                disabled={rowData.data.category != 'Lifestyles' || rowData?.data?.status === "Cancel" || rowData?.data?.status === "CustomerOrdered" || rowData?.data?.status === "Completed"}
+                style={{
+                  fontSize: 14,
+                  color: 'white',
+                  backgroundColor: rowData.data.vehicle_allocation == 1 ? '#476e7c' : null,
+                  border: 0,
+                }}
+                onClick={() => handleClickDriverAllocation(rowData)}
+                className="btn btn-primary"
+              >
+                {rowData.data.vehicle_allocation == 1 ? 'View Allocation' : 'Allocate driver'}
+              </CButton>
+            )}
         </Tooltip>
       ),
     },
@@ -566,10 +568,10 @@ export default function TravellerExperience(props) {
               {['submit traveler request'].some((permission) =>
                 userData?.permissions?.includes(permission),
               ) && (
-                <CButton color="success" style={{ fontSize: 14, color: 'white' }}>
-                  Submit
-                </CButton>
-              )}
+                  <CButton color="success" style={{ fontSize: 14, color: 'white' }}>
+                    Submit
+                  </CButton>
+                )}
             </div>
           )
         } else if (rowData?.data.status == 'Completed') {
@@ -659,13 +661,15 @@ export default function TravellerExperience(props) {
           Swal.fire({
             title: response.data.message,
             text: '',
-            icon: 'success',
+            icon: 'error',
           })
           handleResetAllocationModal()
           props.reload()
         }
+        setDriverAllocationStatus(false);
       })
       .catch((response) => {
+        setDriverAllocationStatus(false);
         console.log(response.response.data.message, 'Catch Response Value is')
         Swal.fire({
           title: response.response.data.message,
@@ -677,7 +681,7 @@ export default function TravellerExperience(props) {
 
   return (
     <>
-      <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen" style={{zIndex: 999999999}}>
+      <Modal show={mapView} onHide={() => setMapView(false)} size="fullscreen" style={{ zIndex: 999999999 }}>
         <Modal.Header closeButton>
           <Modal.Title>Location Data</Modal.Title>
         </Modal.Header>
@@ -692,7 +696,7 @@ export default function TravellerExperience(props) {
         size="lg"
         onHide={handleResetAllocationModal}
         centered
-        style={{zIndex: 999999999}}
+        style={{ zIndex: 9999 }}
       >
         <Modal.Header closeButton >
           <Modal.Title>Allocate Vehicle</Modal.Title>
@@ -712,75 +716,84 @@ export default function TravellerExperience(props) {
               </div>
             ) : (
               driverDetails
-              .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
-              .map((driver, index) => (
-                <div
-                  key={index}
-                  className="driver-vehicle-card"
-                  style={{ backgroundColor: driverId === driver.id ? '#f0e68c ' : null }}
-                >
-                  <div className="vehicle-primary-info">
-                    <div className="vehicle-identification">
-                      <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
-                      <span className="vehicle-province">{driver.vehicle_province}</span>
-                    </div>
-                    <div className="driver-name">
-                      <span>Driver: {driver.driver_name}</span>
-                    </div>
-                  </div>
-
-                  <div className="vehicle-details">
-                    <div className="vehicle-characteristics">
-                      <span>Type: {driver.vehicle_type}</span>
-                      <span>Model: {driver.vehicle_model}</span>
-                      <span>Color: {driver.vehicle_color}</span>
-                      <span>Make: {driver.vehicle_make}</span>
-                    </div>
-                  </div>
-
-                  <div className="secondary-info">
-                    <div className="driver-secondary-details">
-                      <span>Reg Date: {driver.vehicle_registered_date}</span>
-                      <span>Condition: {driver.vehicle_vehicle_condition}</span>
-                      <span>Status: {driver.vehicle_status}</span>
-                    </div>
-                  </div>
-
-                  <div className="secondary-info">
-                    <div className="driver-secondary-details">
-                      <span>Country: {driver.driver_registered_country}</span>
-                      <span>Type: {driver.driver_type}</span>
-                      <span>NIC: {driver.driver_nic}</span>
-                      <span>Reg Date: {driver.driver_registered_date}</span>
-                      <span>Driver Status: {driver.driver_status}</span>
-                    </div>
-                  </div>
-                  {driverId === driver.id ? (
-                    <CButton
-                      color="dark"
-                      disabled
-                      className="select-allocation-btn"
-                      onClick={() => handleChooseDriver(driver)}
+                .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
+                .map((driver, index) => {
+                  const isAllocated = driver.allocation.find((item) => {
+                    return (
+                      item.service_date == allocateProductData.service_date &&
+                      item.time_slot == allocateProductData.pickupTime
+                    );
+                  });
+                  return (
+                    <div
+                      key={index}
+                      className="driver-vehicle-card"
+                      style={{ backgroundColor: driverId === driver.id ? '#f0e68c ' : null }}
                     >
-                      Selected
-                    </CButton>
-                  ) : (
-                    <CButton
-                      color="warning"
-                      className="select-allocation-btn"
-                      onClick={() => handleChooseDriver(driver)}
-                    >
-                      Select Vehicle
-                    </CButton>
-                  )}
-                </div>
-              ))
+                      <div className="vehicle-primary-info">
+                        <div className="vehicle-identification">
+                          {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)}
+                          <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
+                          <span className="vehicle-province">{driver.vehicle_province}</span>
+                        </div>
+                        <div className="driver-name">
+                          <span>Driver: {driver.driver_name}</span>
+                        </div>
+                      </div>
+
+                      <div className="vehicle-details">
+                        <div className="vehicle-characteristics">
+                          <span>Type: {driver.vehicle_type}</span>
+                          <span>Model: {driver.vehicle_model}</span>
+                          <span>Color: {driver.vehicle_color}</span>
+                          <span>Make: {driver.vehicle_make}</span>
+                        </div>
+                      </div>
+
+                      <div className="secondary-info">
+                        <div className="driver-secondary-details">
+                          <span>Reg Date: {driver.vehicle_registered_date}</span>
+                          <span>Condition: {driver.vehicle_vehicle_condition}</span>
+                          <span>Status: {driver.vehicle_status}</span>
+                        </div>
+                      </div>
+
+                      <div className="secondary-info">
+                        <div className="driver-secondary-details">
+                          <span>Country: {driver.driver_registered_country}</span>
+                          <span>Type: {driver.driver_type}</span>
+                          <span>NIC: {driver.driver_nic}</span>
+                          <span>Reg Date: {driver.driver_registered_date}</span>
+                          <span>Driver Status: {driver.driver_status}</span>
+                        </div>
+                      </div>
+                      {!isAllocated && (driverId === driver.id ? (
+                        <CButton
+                          color="dark"
+                          disabled
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver(driver)}
+                        >
+                          Selected
+                        </CButton>
+                      ) : (
+                        <CButton
+                          color="warning"
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver(driver)}
+                        >
+                          Select Vehicle
+                        </CButton>
+                      ))}
+                    </div>
+                  )
+                })
             )}
           </div>
         </Modal.Body>
       </Modal>
 
-      <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal} style={{zIndex: 999999999}}>
+      <Modal show={PNLVoucherView} size="xl" onHide={handleCLosePNRLReportModal} style={{ zIndex: 999999999 }}>
         <Modal.Header closeButton>
           <Modal.Title>Supplier Voucher</Modal.Title>
           {productPNLReport.status !== 'fail' &&
@@ -796,7 +809,7 @@ export default function TravellerExperience(props) {
         </Modal.Header>
         <Modal.Body>
           {productPNLReport.status === 'fail' &&
-          productPNLReport.message === 'No data to display' ? (
+            productPNLReport.message === 'No data to display' ? (
             <div className="d-flex flex-column align-items-center my-5">
               <h6>Oops! Sorry</h6>
               <p>The product has been yet to be approved !</p>
