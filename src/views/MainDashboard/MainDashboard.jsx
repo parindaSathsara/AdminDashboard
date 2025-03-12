@@ -68,7 +68,7 @@ const MainDashboard = () => {
                 // <OrderAllocate normalUser={false}></OrderAllocate>
                 <OrderAllocate normalUser={false}></OrderAllocate>
                 : 
-                <OrderAllocate normalUser={false}></OrderAllocate> 
+                <OrderAllocate normalUser={true}></OrderAllocate> 
                }
 
 
