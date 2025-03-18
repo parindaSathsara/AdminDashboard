@@ -89,6 +89,8 @@ import VIewBlog from './Panels/BlogWriting/VIewBlog'
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 import AccessManagement from './views/ManageAccess/AccessManagement';
+import Bridgify from './Panels/API_details/Bridgify'
+import TBO from './Panels/API_details/TBO'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -145,12 +147,18 @@ const routes = [
   // driver and vechicle allocation
   { path: '/allocation', name: 'Orders Allocations', element: AllocationsHomepage, exact: true },
 
-  { path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
+  {path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
   {path:'/analytics',name:'Analytics',element:UserAnalytics,exact:true},
   {path:'/kpidashboard',name:'KPI Dashboard',element:KpiDashboard,exact:true},
   {path:'/kpidashboard/team',name:'Team KPI',element:KpiDashboard},
   {path:'/kpidashboard/globaltarget',name:'Global Target',element:GlobalTarget},
   {path:'/kpidashboard/chat',name:'Chat Analytics',element:ChatAnalytics},
+ 
+
+  // services 
+  {path:'/services/bridgyfy',name:'Bridgify',element:Bridgify},
+  {path:'/services/tbo',name:'TBO',element:TBO},
+
 
 ]
 

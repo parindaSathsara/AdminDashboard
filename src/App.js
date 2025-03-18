@@ -8,7 +8,6 @@ import './scss/style.scss'
 import './App.css';
 
 
-
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
 axios.defaults.withCredentials = true
@@ -31,16 +30,14 @@ axios.defaults.url = 'https://staging-gateway.aahaas.com/api';
 
 // axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
 // axios.defaults.data = 'http://172.16.26.67:8000'
-
+axios.defaults.baseURL = 'http://192.16.26.61:8000/api'
+axios.defaults.data = 'http://192.16.26.61:8000'
 
 // axios.defaults.baseURL = 'http://172.16.26.238:8000/api'
 // axios.defaults.data = 'http://172.16.26.238:8000'
 
 // axios.defaults.baseURL = 'http://172.16.26.121:8000/api'
 // axios.defaults.data = 'http://172.16.26.121:8000'
-
-
-
 
 // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
 // if (csrfTokenMeta) {
