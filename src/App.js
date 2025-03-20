@@ -24,6 +24,11 @@ axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
 axios.defaults.data = 'https://staging-admin-api.aahaas.com';
 axios.defaults.url = 'https://staging-gateway.aahaas.com/api';
 
+// axios.defaults.imageUrl = 'http://192.16.26.54:8000/';
+// axios.defaults.baseURL = 'http://192.16.26.54:8000/api';
+// axios.defaults.data = 'http://192.16.26.54:8000';
+// axios.defaults.url = 'http://192.16.26.54:8000/api';
+
 // axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
 // axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
 // axios.defaults.data = 'https://admin-api.aahaas.com'
