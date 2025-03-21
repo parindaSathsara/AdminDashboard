@@ -126,8 +126,7 @@ const Bridgify = () => {
     const fetchCartDetails = async (shortUuid) => {
         try {
             setModalLoading(true)
-            // const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
-            const response = await axios.get(`/bridgify/carts/order-info/2025031908354683564`)
+            const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
             
             if (response.data.success && response.data.data) {
                 setSelectedCart(response.data.data)
