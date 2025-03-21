@@ -418,6 +418,7 @@ export default function BookingExperience(props) {
   }
 
   const [bookingDataModel, setBookingDataModel] = useState(false);
+  const [hotelProvider, setHotelProvider] = useState(null);
   const [bookingData, setBookingData] = useState(null);
   const [modelDefaultMessage, setModelDefaultMessage] = useState("Loading booking data...");
 
@@ -426,16 +427,33 @@ export default function BookingExperience(props) {
 
       console.log(`/tbov2/booking/booking-info/${data.checkoutID}`, "Checkout ID value dat aisssssssssssss")
       setBookingDataModel(true);
-      const response = await axios.get(`/tbov2/booking/booking-info/${data.checkoutID}`);
+      let url = "";
+      if (data?.Provider == "hotelTbo") {
+        url = `/tbov2/booking/booking-info/${data.checkoutID}`;
+      } else if (data?.Provider == "hotelTboH") {
+        url = `/tboh/hotels/booking-details/${data.checkoutID}`;
+      }
+      const response = await axios.get(url);
 
-      console.log(response, "TBO Response value isssss")
-      if (response.data?.data?.bookingData) {
+      if (data?.Provider == "hotelTbo") {
+        if (response.data?.data?.bookingData) {
+          setHotelProvider('hotelTbo')
+          setBookingData(response.data.data)
+        }
+        else {
+          setModelDefaultMessage("No booking data found for this order.")
+        }
         setBookingData(response.data.data)
       }
-      else {
-        setModelDefaultMessage("No booking data found for this order.")
+      else if (data?.Provider == "hotelTboH") {
+        if (response?.data?.data?.BookingDetail) {
+          setHotelProvider('hotelTboH')
+          setBookingData(response?.data?.data?.BookingDetail)
+        }
+        else {
+          setModelDefaultMessage("No booking data found for this order.")
+        }
       }
-      // setBookingData(response.data.data)
       console.log(bookingData);
     } catch (error) {
       console.log(error);
@@ -614,7 +632,7 @@ export default function BookingExperience(props) {
           else {
             return (
               <>
-                {e?.data?.Provider == "hotelTbo" ?
+                {e?.data?.Provider == "hotelTbo" || e?.data?.Provider === "hotelTboH" ?
                   <CButton color="warning" style={{ fontSize: 11, color: 'white', marginBottom: 2 }} onClick={() => showBookingDataModal(e?.data)}>View Booking Details</CButton>
                   :
                   ""
@@ -861,122 +879,182 @@ export default function BookingExperience(props) {
               <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
-            <div className="p-4">
-              {/* Hotel Header Section */}
-              <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-800">
-                      {bookingData?.bookingData?.HotelName}
-                    </h2>
-                    <div className="flex items-center gap-2 mt-2">
-                      {/* <MapPin className="w-4 h-4 text-gray-500" /> */}
-                      <span className="text-gray-600">
-                        {bookingData?.bookingData?.City}, {bookingData?.bookingData?.CountryCode}
-                      </span>
+            hotelProvider === "hotelTbo" ? (
+              <div className="p-4">
+                {/* Hotel Header Section */}
+                <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800">
+                        {bookingData?.bookingData?.HotelName}
+                      </h2>
+                      <div className="flex items-center gap-2 mt-2">
+                        {/* <MapPin className="w-4 h-4 text-gray-500" /> */}
+                        <span className="text-gray-600">
+                          {bookingData?.bookingData?.City}, {bookingData?.bookingData?.CountryCode}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="font-semibold">{bookingData?.bookingData?.StarRating}</span>
+                      {/* <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" /> */}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span className="font-semibold">{bookingData?.bookingData?.StarRating}</span>
-                    {/* <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" /> */}
+                </div>
+
+                {/* Booking Status Banner */}
+                <div className={`mb-6 p-3 rounded-lg text-center ${bookingData?.bookingData?.HotelBookingStatus === 'Confirmed'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                  <span className="font-semibold">
+                    Status: {bookingData?.bookingData?.HotelBookingStatus}
+                  </span>
+                </div>
+
+                {/* Main Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Dates & Room Info */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <Calendar className="w-5 h-5 text-blue-600" /> */}
+                      Stay Details
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Check-in:</span>
+                        <span className="font-medium">
+                          {new Date(bookingData?.bookingData?.CheckInDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Check-out:</span>
+                        <span className="font-medium">
+                          {new Date(bookingData?.bookingData?.CheckOutDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Rooms:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.NoOfRooms}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Info */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <CreditCard className="w-5 h-5 text-blue-600" /> */}
+                      Payment Details
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Invoice Amount:</span>
+                        <span className="font-medium">₹{bookingData?.bookingData?.InvoiceAmount}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Invoice No:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.InvoiceNo}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Booking Source:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.BookingSource}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Guest Info */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <User className="w-5 h-5 text-blue-600" /> */}
+                      Guest Information
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Nationality:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.GuestNationality}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Confirmation No:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.ConfirmationNo}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Booking Ref:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.BookingRefNo}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hotel Policy */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <Flag className="w-5 h-5 text-blue-600" /> */}
+                      Hotel Policy
+                    </h3>
+                    <p className="text-gray-600">
+                      {bookingData?.bookingData?.HotelPolicyDetail || 'No policy information available'}
+                    </p>
                   </div>
                 </div>
               </div>
+            ) : (
+              <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
+                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #3498db', paddingBottom: '10px', marginTop: '0' }}>Booking Details</h2>
 
-              {/* Booking Status Banner */}
-              <div className={`mb-6 p-3 rounded-lg text-center ${bookingData?.bookingData?.HotelBookingStatus === 'Confirmed'
-                ? 'bg-green-100 text-green-800'
-                : 'bg-yellow-100 text-yellow-800'
-                }`}>
-                <span className="font-semibold">
-                  Status: {bookingData?.bookingData?.HotelBookingStatus}
-                </span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '6px', marginBottom: '10px' }}>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Booking Status:</span> <span style={{ color: bookingData.BookingStatus === 'Confirmed' ? '#27ae60' : '#e74c3c', fontWeight: 'bold' }}>{bookingData.BookingStatus}</span></p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Confirmation Number:</span> {bookingData.ConfirmationNumber}</p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Invoice Number:</span> {bookingData.InvoiceNumber}</p>
+                    </div>
+                  </div>
+
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '6px', marginBottom: '10px' }}>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Check-In:</span> {new Date(bookingData.CheckIn).toDateString()}</p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Check-Out:</span> {new Date(bookingData.CheckOut).toDateString()}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 style={{ color: '#2c3e50', borderBottom: '1px solid #eaeaea', paddingBottom: '8px' }}>Hotel Information</h3>
+                <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '6px', marginBottom: '20px' }}>
+                  <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Name:</span> {bookingData.HotelDetails.HotelName}</p>
+                  <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>City:</span> {bookingData.HotelDetails.City}</p>
+                  <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Address:</span> {bookingData.HotelDetails.AddressLine1}</p>
+                </div>
+
+                <h3 style={{ color: '#2c3e50', borderBottom: '1px solid #eaeaea', paddingBottom: '8px' }}>Room Details</h3>
+                {bookingData.Rooms.map((room, index) => (
+                  <div key={index} style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '6px', marginBottom: '15px', borderLeft: '4px solid #3498db' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                      <div style={{ flex: '2', minWidth: '250px' }}>
+                        <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: 'bold', color: '#2c3e50' }}>{room.Name[0]}</p>
+                        <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : '#e74c3c' }}>{room.Status}</span></p>
+                        <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> {room.MealType}</p>
+                      </div>
+                      <div style={{ flex: '1', minWidth: '150px', borderLeft: '1px solid #eaeaea', paddingLeft: '20px' }}>
+                        <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Price:</span> <span style={{ fontWeight: 'bold' }}>${room.TotalFare}</span></p>
+                        <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Tax:</span> ${room.TotalTax}</p>
+                        <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Total:</span> <span style={{ fontWeight: 'bold', color: '#2c3e50' }}>${(parseFloat(room.TotalFare) + parseFloat(room.TotalTax)).toFixed(2)}</span></p>
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: '10px' }}>
+                      <h4 style={{ margin: '10px 0 5px 0', color: '#2c3e50' }}>Guests:</h4>
+                      <ul style={{ margin: '0', paddingLeft: '20px', listStyleType: 'none' }}>
+                        {room.CustomerDetails[0].CustomerNames.map((guest, i) => (
+                          <li key={i} style={{ margin: '5px 0', padding: '3px 0', borderBottom: '1px dotted #eee' }}>
+                            <span style={{ marginRight: '5px' }}>{guest.Title}</span>
+                            <span style={{ fontWeight: 'bold' }}>{guest.FirstName} {guest.LastName}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              {/* Main Details Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Dates & Room Info */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <Calendar className="w-5 h-5 text-blue-600" /> */}
-                    Stay Details
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Check-in:</span>
-                      <span className="font-medium">
-                        {new Date(bookingData?.bookingData?.CheckInDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Check-out:</span>
-                      <span className="font-medium">
-                        {new Date(bookingData?.bookingData?.CheckOutDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Rooms:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.NoOfRooms}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Payment Info */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <CreditCard className="w-5 h-5 text-blue-600" /> */}
-                    Payment Details
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Invoice Amount:</span>
-                      <span className="font-medium">₹{bookingData?.bookingData?.InvoiceAmount}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Invoice No:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.InvoiceNo}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Booking Source:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.BookingSource}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Guest Info */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <User className="w-5 h-5 text-blue-600" /> */}
-                    Guest Information
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Nationality:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.GuestNationality}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Confirmation No:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.ConfirmationNo}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Booking Ref:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.BookingRefNo}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Hotel Policy */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <Flag className="w-5 h-5 text-blue-600" /> */}
-                    Hotel Policy
-                  </h3>
-                  <p className="text-gray-600">
-                    {bookingData?.bookingData?.HotelPolicyDetail || 'No policy information available'}
-                  </p>
-                </div>
-              </div>
-            </div>
+            )
           )}
         </Modal.Body>
       </Modal>
