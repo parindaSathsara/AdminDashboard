@@ -998,7 +998,7 @@ export default function BookingExperience(props) {
               </div>
             ) : (
               <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
-                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #3498db', paddingBottom: '10px', marginTop: '0' }}>Booking Details</h2>
+                {/* <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #3498db', paddingBottom: '10px', marginTop: '0' }}>Booking Details</h2> */}
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
                   <div style={{ flex: '1', minWidth: '250px' }}>
