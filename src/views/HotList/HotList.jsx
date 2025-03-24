@@ -5,25 +5,25 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 export default function HotList({ increaseNotification, display, data }) {
 
-    const [hotList, setHotList] = useState([])
+  const [hotList, setHotList] = useState([])
 
 
 
-    useEffect(() => {
+  useEffect(() => {
 
-        setHotList(data)
+    setHotList(data)
 
-    }, [data])
+  }, [data])
 
 
-    return (
-        <div>
-            {hotList?.map(res => {
-                return (
-                    <HotListCard data={res}></HotListCard>
-                )
-            })}
+  return (
+    <div>
+      {hotList?.map((res, idx) => {
+        return (
+          <HotListCard data={res} key={idx}></HotListCard>
+        )
+      })}
 
-        </div>
-    )
+    </div>
+  )
 }

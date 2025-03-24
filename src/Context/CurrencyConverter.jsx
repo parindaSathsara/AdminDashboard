@@ -7,8 +7,8 @@ import { CurrencyContext } from "./CurrencyContext";
 const CurrencyConverter = (conversionCurrency, amount, dataSet) => {
 
 
-    const { currencyData, setCurrencyData } = useContext(CurrencyContext);
-
+    // const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+  const currencyData = dataSet
 
 
     var totalPrice = 0.00;

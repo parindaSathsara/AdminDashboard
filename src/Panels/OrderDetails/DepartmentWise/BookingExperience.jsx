@@ -18,6 +18,7 @@ import { render } from '@testing-library/react';
 import axios from 'axios';
 import DiscountView from '../DiscountView.jsx';
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { CurrencyContext } from 'src/Context/CurrencyContext';
 
 const mapContainerStyle = {
   width: '40vw',
@@ -683,6 +684,7 @@ export default function BookingExperience(props) {
 
 
 
+  const { currencyData, setCurrencyData } = useContext(CurrencyContext);
 
   const data = productData?.map(value => ({
     pid: value?.['PID'],
@@ -690,9 +692,9 @@ export default function BookingExperience(props) {
     qty: value?.['Quantity'],
     date: value?.['DDate'],
     address: value?.['DAddress'],
-    total_amount: CurrencyConverter(value.currency, value?.['total_amount']),
-    paid_amount: CurrencyConverter(value.currency, value?.['paid_amount']),
-    balance_amount: CurrencyConverter(value.currency, value?.['balance_amount']),
+    total_amount: CurrencyConverter(value.currency, value?.['total_amount'], currencyData),
+    paid_amount: CurrencyConverter(value.currency, value?.['paid_amount'], currencyData),
+    balance_amount: CurrencyConverter(value.currency, value?.['balance_amount'], currencyData),
     checkoutID: value?.checkoutID,
     supplier_status: value?.supplier_status,
     data: value,
