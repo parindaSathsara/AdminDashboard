@@ -146,7 +146,7 @@ function AccountsDetails(props) {
     let url = '';
     if (props?.pnlType == "orders") {
       url = "/pnl/order";
-      id = data?.checkout_id;
+      id = props?.orderid;
     } else {
       url = "/pnl/order-product";
       id = props?.productData[0]?.checkoutID;
