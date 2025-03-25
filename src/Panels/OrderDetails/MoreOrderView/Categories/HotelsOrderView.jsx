@@ -621,7 +621,7 @@ export default function HotelsOrderView(props) {
                     {room.CancelPolicies.map((policy, i) => (
                       <div key={i} style={{ marginBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', paddingBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', borderBottom: i < room.CancelPolicies.length - 1 ? '1px solid #eee' : 'none' }}>
                         <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
-                          <span style={{ fontWeight: 'bold' }}>From {new Date(policy.FromDate.replace(/-/g, '/')).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}:</span>
+                          <span style={{ fontWeight: 'bold' }}>From {policy.FromDate.substring(0, 10)}:</span>
                         </p>
                         <p style={{ margin: '0', fontSize: '14px', color: policy.CancellationCharge === 0 ? '#27ae60' : '#e74c3c' }}>
                           {policy.CancellationCharge === 0 ?
