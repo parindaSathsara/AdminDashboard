@@ -27,6 +27,9 @@ import axios from 'axios'
 import MaterialTable from 'material-table'
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
+import bridgifyData from '../../Data/Bridgify-Lifestyle.json'
+import { utils, writeFile } from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const Bridgify = () => {
     const [cartItems, setCartItems] = useState([])
@@ -39,7 +42,151 @@ const Bridgify = () => {
 
     useEffect(() => {
         fetchCartItems()
+        console.log("Bridgify", bridgifyData);
+
+
     }, [])
+
+    // Create a separate function for Excel export
+    // Function to export Bridgify attractions data to Excel
+  // Function to export Bridgify attractions data to Excel
+const exportToExcel = () => {
+    try {
+        // Show loading state
+        Swal.fire({
+            title: 'Processing',
+            text: 'Preparing Excel file...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading()
+            }
+        });
+
+        // Use bridgifyData instead of making an API call
+        const data = bridgifyData;
+        
+        // Check if data exists and has attractions property
+        if (!data || !data.attractions) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Data Error',
+                text: 'The required data structure is not available in the imported JSON file.'
+            });
+            return;
+        }
+
+        // Extract attractions data
+        const attractions = data.attractions;
+
+        // Create a flattened array for Excel export
+        const flattenedData = attractions.map(attraction => {
+            // Extract categories as comma-separated strings
+            const categoriesMain = attraction.categories_main?.map(cat => cat.name).join(', ') || '';
+            const categoriesSubcategory = attraction.categories_subcategory?.map(cat => cat.name).join(', ') || '';
+            const features = attraction.features?.map(feature => feature.name).join(', ') || '';
+
+            // Process address to remove HTML tags
+            const cleanAddress = attraction.address?.replace(/<[^>]*>/g, '') || '';
+
+            // Create a flattened object for Excel
+            return {
+                'Title': attraction.title || '',
+                'Description': attraction.description || '',
+                'Category': categoriesMain,
+                'Subcategory': categoriesSubcategory,
+                'Features': features,
+                'Price': attraction.price || 0,
+                'Currency': attraction.currency || '',
+                'Duration (seconds)': attraction.duration || '',
+                'Rating': attraction.rating || 'N/A',
+                'Reviews': attraction.number_of_reviews || 0,
+                'Address': cleanAddress,
+                'City': attraction.external_city_name || '',
+                'Country': attraction.external_country_name || '',
+                'Is Free': attraction.is_free ? 'Yes' : 'No',
+                'Free Cancellation': attraction.free_cancellation ? 'Yes' : 'No',
+                'Cancellation Policy': attraction.cancellation_policy || '',
+                'Instant Booking': attraction.instant_booking ? 'Yes' : 'No',
+                'Hotel Pickup': attraction.hotel_pickup ? 'Yes' : 'No',
+                'Supplier': attraction.inventory_supplier || '',
+                'Product ID': attraction.external_id || '',
+                'UUID': attraction.uuid || '',
+                'URL': attraction.order_webpage || '',
+                'Last Updated': attraction.last_updated || '',
+                'Latitude': attraction.geolocation?.lat || '',
+                'Longitude': attraction.geolocation?.lng || ''
+            };
+        });
+
+        // Create worksheet with the prepared data
+        const worksheet = utils.json_to_sheet(flattenedData);
+
+        // Set column widths for better readability
+        const columnWidths = [
+            { wch: 40 }, // Title
+            { wch: 50 }, // Description
+            { wch: 20 }, // Category
+            { wch: 20 }, // Subcategory
+            { wch: 20 }, // Features
+            { wch: 10 }, // Price
+            { wch: 8 },  // Currency
+            { wch: 15 }, // Duration
+            { wch: 8 },  // Rating
+            { wch: 10 }, // Reviews
+            { wch: 40 }, // Address
+            { wch: 15 }, // City
+            { wch: 15 }, // Country
+            { wch: 8 },  // Is Free
+            { wch: 8 },  // Free Cancellation
+            { wch: 40 }, // Cancellation Policy
+            { wch: 8 },  // Instant Booking
+            { wch: 8 },  // Hotel Pickup
+            { wch: 15 }, // Supplier
+            { wch: 15 }, // Product ID
+            { wch: 36 }, // UUID
+            { wch: 50 }, // URL
+            { wch: 20 }, // Last Updated
+            { wch: 12 }, // Latitude
+            { wch: 12 }  // Longitude
+        ];
+
+        worksheet['!cols'] = columnWidths;
+
+        // Create workbook and add the worksheet
+        const workbook = {
+            Sheets: {
+                'Attractions': worksheet
+            },
+            SheetNames: ['Attractions']
+        };
+
+        // Generate Excel file
+        const excelBuffer = writeFile(workbook, 'bridgify_attractions.xlsx', {
+            bookType: 'xlsx',
+            type: 'array'
+        });
+
+        // Save the file using FileSaver.js
+        const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        saveAs(dataBlob, 'bridgify_attractions.xlsx');
+
+        // Close loading indicator and show success message
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Attractions data exported to Excel successfully!'
+        });
+    } catch (error) {
+        console.error("Excel export error:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Export Failed',
+            text: 'There was an error exporting the data: ' + error.message
+        });
+    }
+};
+
+    
 
     const getStatusBadge = (status) => {
         switch (status) {
@@ -127,7 +274,7 @@ const Bridgify = () => {
         try {
             setModalLoading(true)
             const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
-            
+
             if (response.data.success && response.data.data) {
                 setSelectedCart(response.data.data)
                 setShowModal(true)
@@ -157,9 +304,9 @@ const Bridgify = () => {
                 ...prevState,
                 [index]: true
             }))
-            
+
             const response = await axios.get(`/bridgify/carts/cancelation/${shortUuid}`)
-            
+
             if (response.data.success && response.data.data) {
                 setCancellationInfo(prevState => ({
                     ...prevState,
@@ -208,10 +355,10 @@ const Bridgify = () => {
                                 Swal.showLoading()
                             }
                         })
-                        
+
                         // Make cancellation request
                         const response = await axios.post(`/bridgify/carts/cancelation/${shortUuid}/${cartItemUuid}`)
-                        
+
                         if (response.data.success) {
                             Swal.fire(
                                 'Cancellation Requested!',
@@ -246,7 +393,7 @@ const Bridgify = () => {
         if (collapseElement) {
             const isShowing = collapseElement.classList.contains('show')
             collapseElement.classList.toggle('show')
-            
+
             // Fetch cancellation info if opening and haven't fetched it yet
             if (!isShowing && !cancellationInfo[shortUuid]) {
                 fetchCancellationInfo(shortUuid, index)
@@ -264,17 +411,17 @@ const Bridgify = () => {
     const getMockCancellationInfo = (item) => {
         // This is just example data - in reality, this would come from the API
         if (!item) return null;
-        
+
         return {
             cancellation_eligible: item.status === 'paid',
-            cancellation_deadline: item.attraction_date 
+            cancellation_deadline: item.attraction_date
                 ? new Date(new Date(item.attraction_date).getTime() - 48 * 60 * 60 * 1000).toISOString().split('T')[0]
                 : 'N/A',
-            refund_amount: item.merchant_total_price 
+            refund_amount: item.merchant_total_price
                 ? (parseFloat(item.merchant_total_price) * 0.75).toFixed(2)
                 : 'N/A',
             refund_percentage: '75%',
-            cancellation_fee: item.merchant_total_price 
+            cancellation_fee: item.merchant_total_price
                 ? (parseFloat(item.merchant_total_price) * 0.25).toFixed(2)
                 : 'N/A',
             cancellation_fee_percentage: '25%',
@@ -287,6 +434,7 @@ const Bridgify = () => {
         <CContainer className="mt-4">
             <CCard>
                 <CCardBody>
+
                     <CCardTitle className="mb-4">Bridgify Cart Items</CCardTitle>
 
                     {loading ? (
@@ -314,6 +462,18 @@ const Bridgify = () => {
                             }}
                         />
                     )}
+
+                    <CCardTitle className="mb-4">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Bridgify Cart Items</span>
+                            <CButton
+                                color="success"
+                                onClick={exportToExcel}
+                            >
+                                Export to Excel
+                            </CButton>
+                        </div>
+                    </CCardTitle>
                 </CCardBody>
             </CCard>
 
@@ -435,7 +595,7 @@ const Bridgify = () => {
                                                     </CCol>
                                                 </CRow>
                                             )}
-                                            
+
                                             {/* Cancellation Information Dropdown */}
                                             <CRow className="mt-3">
                                                 <CCol>
@@ -452,7 +612,7 @@ const Bridgify = () => {
                                                             color="danger"
                                                             size="sm"
                                                             onClick={() => handleCancellationRequest(orderId, item.order_item_uuid)}
-                                                            // disabled={item.status !== 'paid'}
+                                                        // disabled={item.status !== 'paid'}
                                                         >
                                                             Request Cancellation
                                                         </CButton>
