@@ -41,8 +41,10 @@ export default function HotelsOrderView(props) {
   // console.log(props.dataset, "Product Data value issss")
   // console.log(props, "Product Data value issss")
 
-  const basicDetails = props.productData
-  console.log(basicDetails?.decoded_data?.hotelMainRequest?.hotelData?.images, "Basic Details value is")
+  // console.log(basicDetails?.decoded_data?.hotelMainRequest?.hotelData?.images, "Basic Details value is")
+
+
+
 
   // const InventoryDetails = () => {
   //     const columns = [
@@ -256,19 +258,19 @@ export default function HotelsOrderView(props) {
   const fetchBookingData = async (data) => {
     try {
       let url = "";
-      if (basicDetails?.Provider == "hotelTbo") {
+      if (data?.Provider == "hotelTbo") {
         url = `/tbov2/booking/booking-info/${data.checkoutID}`;
-      } else if (basicDetails?.Provider == "hotelTboH") {
+      } else if (data?.Provider == "hotelTboH") {
         url = `/tboh/hotels/booking-details/${data.checkoutID}`;
       }
       const response = await axios.get(url);
 
-      if (basicDetails?.Provider == "hotelTbo") {
+      if (data?.Provider == "hotelTbo") {
         if (response.data?.data?.bookingData) {
           setBookingData(response.data.data)
         }
       }
-      else if (basicDetails?.Provider == "hotelTboH") {
+      else if (data?.Provider == "hotelTboH") {
         if (response?.data?.data?.BookingDetail) {
           setBookingData(response?.data?.data?.BookingDetail)
         }
@@ -277,9 +279,13 @@ export default function HotelsOrderView(props) {
       console.log(error);
     }
   };
+
+  const [basicDetails, setBasicDetails] = useState([])
+
   useEffect(() => {
-    fetchBookingData(basicDetails);
-  }, []);
+    fetchBookingData(props.productData);
+    setBasicDetails(props?.productData)
+  }, [props.productData]);
 
 
 
