@@ -102,6 +102,7 @@ export default function EssentialsOrderView(props) {
                 data={data}
                 options={{
                     headerStyle: {
+                          backgroundColor: '#E5D3FA',
                         fontSize: '14px', // Adjust the header font size here
                     },
                     cellStyle: {
@@ -110,7 +111,7 @@ export default function EssentialsOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
@@ -164,9 +165,11 @@ export default function EssentialsOrderView(props) {
                 title="Rate Details"
                 columns={columns}
                 data={data}
+                style={{ backgroundColor: '#FBFAF4' }}
                 options={{
                     headerStyle: {
-                        fontSize: '14px', // Adjust the header font size here
+                        fontSize: '14px', // Adjust the header font size here4
+                        backgroundColor: '#FEF5D1',
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -174,7 +177,7 @@ export default function EssentialsOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
@@ -185,7 +188,11 @@ export default function EssentialsOrderView(props) {
 
 
 
-
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -220,7 +227,7 @@ export default function EssentialsOrderView(props) {
 
                     <h4 className='mb-2'>{basicDetails?.['listing_title']}</h4>
 
-                    <CCardText className='mb-4'>{basicDetails?.["listing_description"]}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["listing_description"])}</CCardText>
 
                     <CRow>
                         <CCol xs="12" lg="4">
@@ -264,16 +271,18 @@ export default function EssentialsOrderView(props) {
 
 
             <CCol className='my-4'>
-
+            <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
                 <InventoryDetails />
-
+                            </div>
 
             </CCol>
 
 
 
             <CCol className='my-4'>
+            <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
                 <RateDetails />
+                </div>
             </CCol>
 
 

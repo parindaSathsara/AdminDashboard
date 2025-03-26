@@ -30,6 +30,7 @@ import "./Login.css"
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
 import clip from '../../../assets/travelVid.mp4';
+import { CurrencyContext } from 'src/Context/CurrencyContext'
 
 
 
@@ -57,10 +58,31 @@ const Login = () => {
     setLoginInput({ ...loginInput, [e.target.name]: e.target.value });
 
   }
+  const { currencyData, setCurrencyData } = useContext(CurrencyContext)
 
+  const setCurrencyDefault = async () => {
+    await axios.get(`getCurrency/${"USD"}`).then(response => {
+      if (response?.data?.status == 200) {
+        console.log(response.data, "Currency Data");
+        localStorage.setItem('currencyData', JSON.stringify(response.data));
+
+        setCurrencyData(response.data)
+
+      }
+    });
+  }
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (loginInput.email === '' || loginInput.password === '') {
+      Swal.fire({
+        title: "Login Failed",
+        text: "Please fill in all fields.",
+        icon: "error"
+      });
+      return;
+    }
 
     // const formdata = new FormData();
     // formdata.append('_token', csrfToken);
@@ -81,6 +103,7 @@ const Login = () => {
 
     // console.log(csrfToken)
     // console.log(loginInput)
+
 
     try {
 
@@ -103,6 +126,7 @@ const Login = () => {
           localStorage.setItem('user', JSON.stringify(res.data.user_data));
           localStorage.setItem('userID', res.data.user_id);
           localStorage.setItem('token', res.data.access_token);
+          setCurrencyDefault();
 
           setUserLogin(true)
           navigate("/dashboard")

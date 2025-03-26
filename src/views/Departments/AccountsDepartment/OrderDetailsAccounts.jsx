@@ -31,21 +31,25 @@ function OrderDetailsAccounts(props) {
     }, [props.paymentDataSet])
 
 
+
+    console.log(paymentDataSet, "Payment Data set value is")
+
+
     return (
 
         <div className="orderDetailsMainContainer">
 
             <CRow>
-                <CCol xs={12} sm={6} lg={4}>
+                <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
                         text="Lorem ipsum dolor sit amet enim."
                         progress={{ color: 'info', value: 100 }}
                         title="Total Amount"
-                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount}
+                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount?.toFixed(2)}
                     />
                 </CCol>
-                <CCol xs={12} sm={6} lg={4}>
+                <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
 
@@ -55,12 +59,22 @@ function OrderDetailsAccounts(props) {
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.paid_amount}
                     />
                 </CCol>
-                <CCol xs={12} sm={6} lg={4}>
+                <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
                         value={paymentDataSet.ItemCurrency + " " + paymentDataSet.balance_amount}
                         title="Balance Amount"
                         progress={{ color: 'warning', value: (paymentDataSet.balance_amount / paymentDataSet.total_amount) * 100 }}
+                        text="Lorem ipsum dolor sit amet enim."
+                    />
+                </CCol>
+
+                <CCol xs={12} sm={6} lg={3}>
+                    <CWidgetStatsC
+                        className="mb-4"
+                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.delivery_charge}
+                        title="Delivery Amount"
+                        progress={{ color: 'warning', value: (paymentDataSet.delivery_charge / paymentDataSet.total_amount) * 100 }}
                         text="Lorem ipsum dolor sit amet enim."
                     />
                 </CCol>
@@ -70,7 +84,7 @@ function OrderDetailsAccounts(props) {
             <div className='mainContainerTables'>
 
 
-                <AccountsDetails dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
+                <AccountsDetails pnlType={"orders"} dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
 
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
                     <OrderDetails dataset={props?.paymentDataSet} orderid={props.orderid} orderData={props?.paymentDataSet} hideStatus={false} accounts />

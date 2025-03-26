@@ -22,19 +22,22 @@ const getMoreDataSet = async (id, preID) => {
 
     var returnData = []
 
+    console.log(id,preID,"Pre ID value isss")
+    if (id && preID) {
 
-    // console.log(`/fetch_more_order_data/${id}/${preID}`, "Pre ID Value is")
-    await axios.post(`/fetch_more_order_data/${id}/${preID}`).then((res) => {
-        // console.log(res)
-        if (res.data.status === 200) {
-            returnData = res.data
-        }
+        await axios.post(`/fetch_more_order_data/${id}/${preID}`).then((res) => {
+            // console.log(res)
+            if (res.data.status === 200) {
+                returnData = res.data
+            }
 
-    }).catch((err) => {
-        throw new Error(err);
-    })
+        }).catch((err) => {
+            throw new Error(err);
+        })
 
-    return returnData
+        return returnData
+    }
+
 
 }
 

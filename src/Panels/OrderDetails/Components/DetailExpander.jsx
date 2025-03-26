@@ -7,12 +7,13 @@ export default function DetailExpander(props) {
             {...props}
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
+            className='details'
             centered
         >
 
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Order Details - {props.orderid}
+                {props?.orderid ? `Order Details - ${props.orderid}` : 'Order Details'}
                 </Modal.Title>
             </Modal.Header>
 

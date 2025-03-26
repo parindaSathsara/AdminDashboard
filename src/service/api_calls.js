@@ -172,7 +172,7 @@ async function getDashboardProductOrderDetails(id) {
     var dataArray = [];
 
 
-    console.log(`/fetch_order_details_by_pid/${id}`, "Fetch Orders ID is")
+    // console.log(`/fetch_order_details_by_pid/${id}`, "Fetch Orders ID is")
 
     await axios.get(`/fetch_order_details_by_pid/${id}`).then((res) => {
 
@@ -206,7 +206,7 @@ async function getDashboardOrdersIdWise(id) {
 
     await axios.get(`/fetch_order_details/${id}`).then((res) => {
 
-      // console.log(res)
+      console.log('dataaaaaaaaaaaaaaaaaaaaaaaa',res)
       if (res.data.status === 200) {
         dataArray = res.data
       }
@@ -304,7 +304,7 @@ async function getPaymentStatusById(rowid, orderid, paymentmood, paymenttype) {
 }
 
 async function updateDeliveryStatus(id, value, type) {
-
+  console.log("iddddddddddddddddddddddddddddddddddddddddddddddd", id)
   try {
     // console.log(id, value, type)
     const data = {
@@ -313,28 +313,35 @@ async function updateDeliveryStatus(id, value, type) {
       type: type
 
     }
-    console.log(data, "DataSet is Updated123 ")
+    // console.log(data, "DataSet is Updated123 ")
 
 
 
     await axios.post('/update_delivery_status_by_product', data).then((res) => {
-
-      console.log(res.data, "Update Delivery Status")
+      // console.log("iddddddddddddddddddddddddddddddddddddddddddddddd", res)
+      console.log(res, "Update Delivery Status")
 
       if (res.data.status === 200) {
 
         Swal.fire({
-          title: "Order " + id + " Confirmed",
-          text: "Order - " + id + " Order Confirmed",
+          title: "Order Confirmation",
+          text: "Order - " + id + " (Checkout id) Order Confirmed",
           icon: "success"
         })
         // toast.success('Updated!')
         // return 200
       }
-      else if (res.data.status == 201) {
+      else if (res.data.status === 201) {
+        Swal.fire({
+          title: "Order " + id + " (Checkout id) is on Editing",
+          text: "Order - " + id + " (Checkout id) Order is Editing by Customer and Supplier.",
+          icon: "error"
+        })
+        // return 201
+      } else if (res.data.status === 422) {
         Swal.fire({
           title: "Order " + id + " is on Editing",
-          text: "Order - " + id + " Order is Editing by Customer and Supplier.",
+          text: "Order - " + id + " something went wrong.",
           icon: "error"
         })
         // return 201
@@ -342,7 +349,7 @@ async function updateDeliveryStatus(id, value, type) {
       else {
 
         Swal.fire({
-          title: "Order " + id + " is Already Updated",
+          title: "Order " + id + " (Checkout id) is Already Updated",
           icon: "error"
         })
 
@@ -353,12 +360,20 @@ async function updateDeliveryStatus(id, value, type) {
 
 
     }).catch((err) => {
-      console.log(err, "Checkout err isssss")
+      // console.log(err, "Checkout err isssss")
+      if (err.response.data.status === 422) {
+        Swal.fire({
+          title: "Order Change status",
+          text: "Order - " + id + "(Checkout id) something went wrong.",
+          icon: "error"
+        })
+        // return 201
+      }
     })
 
-    console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
+    // console.log(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`, "Testing Send Confirmation")
 
-    axios.post(`https://gateway.aahaas.com/api/sendConfirmationMail/${id}/${value}`).then((res) => {
+    axios.post(`${axios.defaults.url}/sendConfirmationMail/${id}/${value}`).then((res) => {
 
       // console.log(res)
 
@@ -382,7 +397,7 @@ async function candelOrder(data) {
 
 
 
-  console.log("Cancel order data set is", data)
+  // console.log("Cancel order data set is", data)
   await axios.post("cancel_order", data).then((res) => {
     if (res.data.status === 200) {
       Swal.fire({

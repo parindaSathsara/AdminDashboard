@@ -34,6 +34,7 @@ import { io } from 'socket.io-client'
 import productSound from '../../assets/productSound.mp3'
 import LoaderPanel from 'src/Panels/LoaderPanel'
 
+
 function ProductList() {
 
     const [productList, setProductList] = useState([])
@@ -111,9 +112,16 @@ function ProductList() {
         setMoreData(data)
     }
 
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
+
     const data = {
         columns: [
             {
+                title: 'Info',
                 field: 'view', align: 'left', editable: 'never', filtering: false, render: (e) => {
                     return (
                         <>
@@ -180,7 +188,7 @@ function ProductList() {
         ],
         rows: productList.map(product => ({
             product_title: product.title,
-            product_description: product.description,
+            product_description: stripHtmlTags(product.description),
             product_image: product.image,
             category: toTitleCase(product.category),
             created_date: moment(product.dateCreated).format("YYYY-MM-DD"),
@@ -262,11 +270,11 @@ function ProductList() {
                         sorting: true, search: true,
                         searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
                         filtering: true, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 20,
-                        paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
+                        paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both",
                         exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                         showSelectAllCheckbox: false, showTextRowsSelected: false,
                         grouping: true, columnsButton: true,
-                        headerStyle: { background: '#070e1a', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
+                        headerStyle: { background: '#626f75', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                         rowStyle: rowStyle,
 
                         // fixedColumns: {

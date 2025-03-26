@@ -1,0 +1,211 @@
+/* DriverAllocationModal.css */
+.driver-allocation-modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.no-drivers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.driver-vehicle-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.driver-vehicle-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+.vehicle-primary-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.vehicle-identification {
+    display: flex;
+    flex-direction: column;
+}
+
+.vehicle-number {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.vehicle-province {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.driver-name {
+    font-weight: 500;
+    color: #343a40;
+}
+
+.vehicle-details,
+.secondary-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.vehicle-characteristics,
+.vehicle-secondary-details,
+.driver-secondary-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.vehicle-characteristics span,
+.vehicle-secondary-details span,
+.driver-secondary-details span {
+    background-color: #e9ecef;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #495057;
+}
+
+.select-allocation-btn {
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    color: white;
+
+}
+
+.select-allocation-btn:hover {
+    transform: scale(1.02);
+
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    .vehicle-details,
+    .secondary-info {
+        flex-direction: column;
+    }
+
+    .vehicle-characteristics,
+    .vehicle-secondary-details,
+    .driver-secondary-details {
+        flex-direction: column;
+    }
+}
+
+
+
+
+
+
+
+.custom-datepicker {
+    z-index: 9999 !important;
+    /* Ensure it’s on top of other components */
+}
+
+.driverListModalBody-mainContainer {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.driverListModalBody-mainContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+.driverListModalBody-mainContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.driverListModalBody-mainContainer::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.driver-vehicle-list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+    margin: 10px;
+    gap: 0px;
+    border-bottom: 1px solid rgb(210, 220, 224);
+}
+
+.driver-vehicle-list .select-allocation {
+    margin-top: 5px;
+    padding: 5px !important;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.vehicle-details,
+.driver-details,
+.vehicle-details-secondary,
+.driver-details-secondary {
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.vehicle-details h6 {
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 14px !important;
+}
+
+.driver-details h6,
+.vehicle-details-secondary h6,
+.driver-details-secondary h6 {
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 12px !important;
+}
+
+.driver-vehicle-list .btn-submit-button {
+    all: unset;
+    font-size: 10px;
+    padding: 4px 10px;
+    text-align: center;
+    background-color: lightblue;
+    margin-top: 10px;
+}

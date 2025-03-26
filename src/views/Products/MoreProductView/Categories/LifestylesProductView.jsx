@@ -99,7 +99,7 @@ export default function LifestylesProductView(props) {
                             },
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                             paging: false,
 
                         }}
@@ -182,7 +182,7 @@ export default function LifestylesProductView(props) {
 
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                     paging: false
 
                 }}
@@ -259,7 +259,7 @@ export default function LifestylesProductView(props) {
                             paging: true,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                             grouping: true
                         }}
                     />
@@ -353,7 +353,7 @@ export default function LifestylesProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -372,6 +372,7 @@ export default function LifestylesProductView(props) {
             { title: 'Max Child Occupancy', field: 'maxChildOccupancy' },
             { title: 'Total Occupancy', field: 'totalOccupancy' },
             { title: 'Rate type', field: 'rateType' },
+            { title: 'Description', field: 'description' },
             { title: 'Package Rate', field: 'packageRate' },
             { title: 'Adult Rate', field: 'adultRate' },
             { title: 'Child Rate', field: 'childRate' },
@@ -387,12 +388,14 @@ export default function LifestylesProductView(props) {
             maxChildOccupancy: packageItem.max_child_occupancy,
             totalOccupancy: packageItem.total_occupancy,
             rateType: packageItem.rate_type,
+            description: packageItem.description,
             packageRate: packageItem.package_rate,
             adultRate: packageItem.adult_rate,
             childRate: packageItem.child_rate,
             packageName: packageItem.package_name,
             packageType: packageItem.package_type,
         }));
+
 
         return (
             <CCol xs="12" lg="12">
@@ -414,7 +417,7 @@ export default function LifestylesProductView(props) {
                             paging: true,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -426,7 +429,11 @@ export default function LifestylesProductView(props) {
 
 
 
-
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -459,9 +466,9 @@ export default function LifestylesProductView(props) {
 
                 <CCol className='py-4' xs="12" lg="8">
 
-                    <h4 className='mb-2'>{basicDetails?.[0]?.['lifestyle_name']}</h4>
+                    <h4 className='mb-2'>{stripHtmlTags(basicDetails?.[0]?.['lifestyle_name'])}</h4>
 
-                    <CCardText className='mb-4'>{basicDetails?.[0]?.["lifestyle_description"]}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.[0]?.["lifestyle_description"])}</CCardText>
 
 
                     {/* <div style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '10px', backgroundColor: '#f8f9fa', marginBottom: '20px' }}> */}
@@ -487,9 +494,7 @@ export default function LifestylesProductView(props) {
             </CCol>
 
             <CCol className='my-4'>
-
                 <InventoryDetails />
-
 
             </CCol>
 

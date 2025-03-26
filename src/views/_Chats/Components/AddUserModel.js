@@ -84,11 +84,11 @@ const AddUserModel = (props) => {
 
   useEffect(() => {
     fetchUsers();
-    // // console.log(props.conversation_data);
+    // console.log(props.conversation_data);
     // setSelectedUser(props.conversation_data.supplier_id);
-    // // console.log(props.conversation_data.supplier_id);
+    // console.log(props.conversation_data.supplier_id);
     // handleSelectUser(props.conversation_data.supplier_id);
-    // // console.log(selectedUser);
+    // console.log(selectedUser);
   }, [props.conversation_data])
 
   return (

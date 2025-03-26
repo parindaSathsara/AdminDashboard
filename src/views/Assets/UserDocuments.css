@@ -1,0 +1,263 @@
+/* UserDocuments.css */
+.userDoc .overflow-x-auto {
+  overflow-x: auto;
+}
+
+.userDoc table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.userDoc thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #78a0ee;
+}
+
+.userDoc th,
+.userDoc td {
+  padding: 16px;
+  text-align: left;
+}
+
+.userDoc tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.userDoc .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.userDoc .rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.userDoc button {
+  transition: all 0.2s ease-in-out;
+}
+
+.userDoc button:hover {
+  transform: translateY(-1px);
+}
+
+.userDoc .text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.userDoc .font-bold {
+  font-weight: 700;
+}
+
+.userDoc .mb-4 {
+  margin-bottom: 1rem;
+}
+
+/* UserDocuments.css */
+
+/* Container Styles */
+.userDoc .container {
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Table Container */
+.userDoc .table-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* Header Styles */
+.userDoc .page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  text-align: left;
+  padding-left: 1rem;
+}
+
+/* Table Styles */
+.userDoc .table-wrapper {
+  overflow-x: auto;
+  margin: 0 auto;
+}
+
+.userDoc table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Header Cell Styles */
+.userDoc thead th {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* Table Body Styles */
+.userDoc tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+
+.userDoc tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.userDoc tbody tr:hover {
+  background-color: #eff6ff;
+  transform: translateY(-1px);
+}
+
+/* Table Cell Styles */
+.userDoc td {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+
+/* Order ID Cell */
+.userDoc td:first-child {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* File Links */
+.userDoc .file-link {
+  color: #2563eb;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.userDoc .file-link:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Empty Data Placeholder */
+.userDoc .empty-data {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Button Styles */
+.userDoc .view-details-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.userDoc .view-details-btn:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading State */
+.userDoc .loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.125rem;
+  color: #64748b;
+}
+
+/* Error State */
+.userDoc .error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 1rem;
+}
+
+.userDoc .error-message {
+  background-color: #fef2f2;
+  border-left: 4px solid #dc2626;
+  padding: 1rem;
+  border-radius: 4px;
+  color: #dc2626;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .userDoc .container {
+    padding: 1rem;
+  }
+
+  .userDoc .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .userDoc td,
+  .userDoc th {
+    padding: 0.75rem 1rem;
+  }
+
+  .userDoc .view-details-btn {
+    padding: 0.375rem 0.75rem;
+  }
+}
+
+/* Animation for Loading Spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.userDoc .loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+/* Add this to your existing CSS */
+.userDoc .location-link {
+  cursor: pointer;
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.userDoc .location-link:hover {
+  color: #1d4ed8;
+}

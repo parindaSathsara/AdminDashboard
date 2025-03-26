@@ -104,7 +104,7 @@ export default function EssentialsProductView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
 
@@ -176,7 +176,7 @@ export default function EssentialsProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -237,7 +237,7 @@ export default function EssentialsProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -310,7 +310,7 @@ export default function EssentialsProductView(props) {
                             paging: false,
                             search: false,
                             columnsButton: true,
-                            exportButton: true,
+                            // exportButton: true,
                         }}
                     />
                 </div>
@@ -339,7 +339,8 @@ export default function EssentialsProductView(props) {
                 <CCol xs="12" lg="4">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.[0]?.["product_images"].includes("http") ? basicDetails?.[0]?.["product_images"] : "https://supplier.aahaas.com/" + basicDetails?.[0]?.["product_images"]}
+                            // src={basicDetails?.[0]?.["product_images"].includes("http") ? basicDetails?.[0]?.["product_images"] : "https://supplier.aahaas.com/" + basicDetails?.[0]?.["product_images"]}
+                            src={basicDetails?.[0]?.["product_images"] && basicDetails[0]["product_images"].includes("http") ? basicDetails[0]["product_images"] : "https://supplier.aahaas.com/" + basicDetails?.[0]?.["product_images"]}
                             fluid
                             style={{
                                 position: 'absolute',

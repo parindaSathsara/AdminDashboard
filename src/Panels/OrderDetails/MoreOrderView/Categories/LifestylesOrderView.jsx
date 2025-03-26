@@ -34,11 +34,16 @@ import MaterialTable from 'material-table';
 
 export default function LifestylesOrderView(props) {
 
+    console.log(props.productData, "Lifestyle Data")
+
     const basicDetails = props.productData?.lifestyleBasic
     const inventory = props.productData?.lifestyleInventory
     const rate = props.productData?.lifestyleRateData
     const packageData = props.productData?.lifestylePackageData
     const bookData = props.productData?.lifestyleBookingData
+
+    console.log( basicDetails?.["image"],"Image Data")
+
 
     const InventoryDetails = () => {
         const columns = [
@@ -88,6 +93,7 @@ export default function LifestylesOrderView(props) {
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
+                           backgroundColor: '#E5D3FA'
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -96,7 +102,7 @@ export default function LifestylesOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
@@ -175,6 +181,7 @@ export default function LifestylesOrderView(props) {
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
+                        backgroundColor: '#FEF5D1',
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -182,7 +189,7 @@ export default function LifestylesOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
@@ -234,6 +241,7 @@ export default function LifestylesOrderView(props) {
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
+                        backgroundColor: "#CFE8F9"
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -241,7 +249,7 @@ export default function LifestylesOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
 
             />
@@ -251,7 +259,11 @@ export default function LifestylesOrderView(props) {
 
 
 
-
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -265,7 +277,12 @@ export default function LifestylesOrderView(props) {
                 <CCol xs="12" lg="3">
                     <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
                         <CImage
-                            src={basicDetails?.["image"]}
+                            // src={basicDetails?.["image"]}
+                            src={
+                                basicDetails?.["image"]?.includes(',')
+                                    ? basicDetails["image"].split(',')[0].trim() // Use the first image from the list
+                                    : basicDetails?.["image"] // Use the single image
+                            }
                             fluid
                             style={{
                                 position: 'absolute',
@@ -284,7 +301,7 @@ export default function LifestylesOrderView(props) {
 
                     <h4 className='mb-2'>{basicDetails?.['lifestyle_name']}</h4>
 
-                    <CCardText className='mb-4'>{basicDetails?.["lifestyle_description"]}</CCardText>
+                    <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["lifestyle_description"])}</CCardText>
 
                     <CRow>
                         <CCol xs="12" lg="4">
@@ -413,21 +430,25 @@ export default function LifestylesOrderView(props) {
 
 
             <CCol className='my-4'>
-
+            <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
                 <InventoryDetails />
-
+                </div>
 
             </CCol>
 
 
 
             <CCol className='my-4'>
+            <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
                 <RateDetails />
+                </div>
             </CCol>
 
 
             <CCol className='my-4'>
+            <div style={{ border: '2px solid #CFE8F9', borderRadius: '8px', padding: '10px', backgroundColor: '#F1F6FA', marginBottom: '20px' }}>
                 <PackageDetails />
+                </div>
             </CCol>
 
 

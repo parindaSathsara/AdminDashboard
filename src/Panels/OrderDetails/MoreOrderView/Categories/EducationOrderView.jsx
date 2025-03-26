@@ -42,6 +42,9 @@ export default function EducationOrderView(props) {
     const sessionData = props.productData?.sessionData
 
 
+    console.log(props.productData, "Rate Values aree the valuessssssssssssssssss")
+
+
     // console.log(sessionData)
 
     function renderVariations(value) {
@@ -115,9 +118,11 @@ export default function EducationOrderView(props) {
                 title="Inventory Details"
                 columns={columns}
                 data={data}
+                // style={{zIndex:1}}
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
+                        backgroundColor: '#E5D3FA'
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -125,7 +130,8 @@ export default function EducationOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+
+                    // exportButton: true,
                 }}
             />
         );
@@ -194,9 +200,11 @@ export default function EducationOrderView(props) {
                 title="Rate Details"
                 columns={columns}
                 data={data}
+                style={{ backgroundColor: '#FBFAF4' }}
                 options={{
                     headerStyle: {
                         fontSize: '14px', // Adjust the header font size here
+                        backgroundColor: '#FEF5D1',
                     },
                     cellStyle: {
                         fontSize: '14px', // Adjust the column font size here
@@ -204,12 +212,18 @@ export default function EducationOrderView(props) {
                     paging: false,
                     search: false,
                     columnsButton: true,
-                    exportButton: true,
+                    // exportButton: true,
                 }}
             />
         );
     };
 
+
+    function stripHtmlTags(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
+    }
 
 
 
@@ -272,7 +286,7 @@ export default function EducationOrderView(props) {
                     <h4 className='mb-2'>{basicDetails?.['course_name']}</h4>
 
                     <CCardText className='mb-4' style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-                        {basicDetails?.["course_description"]}
+                        {stripHtmlTags(basicDetails?.["course_description"])}
                     </CCardText>
 
                     <CRow>
@@ -367,16 +381,19 @@ export default function EducationOrderView(props) {
 
 
             <CCol className='my-4'>
+                <div style={{ border: '2px solid #E5D3FA', borderRadius: '8px', padding: '10px', backgroundColor: '#FAF7FE', marginBottom: '20px' }}>
 
-                <InventoryDetails />
-
+                    <InventoryDetails />
+                </div>
 
             </CCol>
 
 
 
             <CCol className='my-4'>
-                <RateDetails />
+                <div style={{ border: '2px solid #FEF5D1', borderRadius: '8px', padding: '10px', backgroundColor: '#FBFAF4', marginBottom: '20px' }}>
+                    <RateDetails />
+                </div>
             </CCol>
 
 

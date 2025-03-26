@@ -43,8 +43,8 @@ import avatar4 from 'src/assets/images/avatars/4.jpg';
 import avatar5 from 'src/assets/images/avatars/5.jpg';
 import avatar6 from 'src/assets/images/avatars/6.jpg';
 
-import WidgetsBrand from '../widgets/WidgetsBrand';
-import WidgetsDropdown from '../widgets/WidgetsDropdown';
+
+
 import { DocsExample } from 'src/components';
 import { getAllCardData, getAllDataUserWise, getDashboardOrdersIdWise } from 'src/service/api_calls';
 import MaterialTable from 'material-table';
@@ -55,7 +55,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import AdditionalData from 'src/Panels/AdditionalData/AdditionalData';
 import MailBox from 'src/Panels/MailBox/MailBox';
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox';
-import Cards from '../base/cards/Cards';
+
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 
 import { io } from 'socket.io-client';
@@ -72,6 +72,8 @@ import { db } from 'src/firebase';
 import FlightOrderView from './FlightUI/FlightOrderView';
 import CurrencyConverter from 'src/Context/CurrencyConverter';
 import { CurrencyContext } from 'src/Context/CurrencyContext';
+import axios from 'axios';
+import Scrollbar from 'react-scrollbars-custom';
 
 const Orders = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -181,29 +183,37 @@ const Orders = () => {
     });
   };
 
+  const [detailPanelExpanded, setDetailPanelExpanded] = useState(false)
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, 'order_ids'),
-      (querySnapshot) => {
-        if (!querySnapshot.empty) {
-          initialDataHandler("realtime");
-        } else {
-          console.log("No orders found.");
+
+    if (detailPanelExpanded == false) {
+      const unsubscribe = onSnapshot(
+        collection(db, 'order_ids'),
+        (querySnapshot) => {
+          if (!querySnapshot.empty) {
+
+            initialDataHandler("realtime");
+
+
+          } else {
+            // console.log("No orders found.");
+          }
+
+        },
+        (error) => {
+          console.error("Error fetching real-time data: ", error);
         }
+      );
 
-      },
-      (error) => {
-        console.error("Error fetching real-time data: ", error);
-      }
-    );
+      return () => unsubscribe();
+    }
 
-    return () => unsubscribe();
-
-  }, [])
+  }, [detailPanelExpanded])
 
 
   const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+
 
 
   const data = useMemo(() => ({
@@ -211,6 +221,7 @@ const Orders = () => {
 
       { accessorKey: 'oid', header: 'Order Id', align: 'left' },
       { accessorKey: 'booking_date', header: 'Booking Date | Time', align: 'left' },
+      { accessorKey: 'minServiceDate', header: 'MinService Date', align: 'left' },
       { accessorKey: 'pay_type', header: 'Payment Type', align: 'left' },
       { accessorKey: 'pay_category', header: 'Payment Category', align: 'left' },
       {
@@ -221,7 +232,7 @@ const Orders = () => {
               <>
 
                 <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-                  Refunding {CurrencyConverter(row?.original?.currency, row?.original?.refundAmount)}
+                  Refunding {CurrencyConverter(row?.original?.currency, row?.original?.refundAmount, currencyData)}
                 </CBadge>
 
               </>
@@ -276,14 +287,15 @@ const Orders = () => {
 
       oid: value.OrderId,
       booking_date: value.checkout_date,
+      minServiceDate: value.minServiceDate,
       pay_type: value.payment_type,
       pay_category: value.pay_category,
-      total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount),
-      paid_amount: CurrencyConverter(value.ItemCurrency, value.paid_amount),
-      discount_amount: CurrencyConverter(value.ItemCurrency, value.discount_price),
-      delivery_charge: CurrencyConverter(value.ItemCurrency, value.delivery_charge),
+      total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount, currencyData),
+      paid_amount: CurrencyConverter(value.ItemCurrency, value.paid_amount, currencyData),
+      discount_amount: CurrencyConverter(value.ItemCurrency, value.discount_price, currencyData),
+      delivery_charge: CurrencyConverter(value.ItemCurrency, value.delivery_charge, currencyData),
       additional_data: value.additional_data,
-      balance_amount: CurrencyConverter(value.ItemCurrency, value.balance_amount),
+      balance_amount: CurrencyConverter(value.ItemCurrency, value.balance_amount, currencyData),
       refundAmount: (value.refundableAmount || 0.00),
       currency: value.ItemCurrency
 
@@ -316,6 +328,8 @@ const Orders = () => {
     setDetailExpander(true)
   }
 
+
+
   const table = useMaterialReactTable({
     columns: data.columns,
     data: data.rows,
@@ -327,7 +341,12 @@ const Orders = () => {
     enableFilters: true,
     enablePagination: true,
     pageSizes: [20, 25, 50, 100],
-    initialState: { pagination: { pageSize: 10 } },
+    initialState: { expanded: false },
+    enableColumnResizing: true,
+    muiTableContainerProps: { sx: { maxHeight: '500px' } },
+    enableStickyHeader: true,
+
+    // initialState: { pagination: { pageSize: 10 } },
     paginationType: 'stepped',
 
     paginationPosition: 'both',
@@ -337,8 +356,10 @@ const Orders = () => {
 
     enableGrouping: true,
     enableColumnActions: true,
-    initialState: { expanded: false },
 
+    enableStickyFooter: true,
+    // initialState: { expanded: false },
+    initialState: { expanded: false, columnVisibility: { pay_category: false, pay_type: false, additional_data: false } },
     defaultColumn: {
       headerStyle: {
         background: '#070e1a',
@@ -347,8 +368,10 @@ const Orders = () => {
         fontSize: '17px',
         fontWeight: '500',
       },
+
       cellStyle: {},
     },
+
     enableRowActions: true,
 
     renderRowActions: ({ row }) => [
@@ -368,9 +391,16 @@ const Orders = () => {
         backgroundColor: 'white'
       }),
     }),
-    //custom expand button rotation
+
     muiExpandButtonProps: ({ row, table }) => ({
-      onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //only 1 detail panel open at a time
+      onClick: () => {
+        const isExpanded = row.getIsExpanded();
+        table.setExpanded({ [row.id]: !isExpanded });
+        setDetailPanelExpanded(!isExpanded);
+
+
+        console.log(isExpanded, "Expanded value iss")
+      },
       sx: {
         transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
         transition: 'transform 0.2s',
@@ -381,10 +411,24 @@ const Orders = () => {
       row?.original?.oid ?
         (
 
-          <OrderDetails orderid={row.original.oid} orderData={row?.original} hideStatus={false} updatedData={() => console.log("Updated")} />
+          <OrderDetails pageType={"orders"} orderid={row.original.oid} orderData={row?.original} hideStatus={false} updatedData={() => console.log("Updated")} />
 
         ) : null
   });
+
+
+
+
+  const handleTest = () => {
+
+    for (let index = 0; index < 50; index++) {
+      // console.log("first trigger test")
+      axios.get(`button_trigger_test`).then(response => {
+
+      })
+    }
+
+  }
 
   if (loading) {
     return <LoaderPanel message={"Data processing in progress"} />;
@@ -405,7 +449,8 @@ const Orders = () => {
           <CCol xs={12} sm={6} lg={3}>
             <CWidgetStatsB
               className="mb-4"
-              value={cardData.salesCount.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ""}
+              value={CurrencyConverter("USD", cardData.salesCount, currencyData)}
+
               title="Sales"
               color="danger"
               inverse
@@ -441,25 +486,23 @@ const Orders = () => {
           <CCardBody>
             <CRow>
               <CCol sm={5}>
-                <h4 id="traffic" className="card-title mb-0">
+                <h4 id="traffic" className="mb-0">
                   Customer Orders
                 </h4>
+
+
+                {/* <button onClick={handleTest}>Testttt</button> */}
               </CCol>
             </CRow>
 
 
 
-            <Tabs
-              defaultActiveKey="group"
-              id="uncontrolled-tab-example"
-              className="mt-4"
-              style={{ fontSize: 16 }}
-            >
+            <Tabs defaultActiveKey="group" id="uncontrolled-tab-example" className="mt-4" style={{ fontSize: 16 }} >
               <Tab eventKey="group" title="Group Wise">
-                <MaterialReactTable
-                  table={table}
+                {/* <Scrollbar style={{ width: '100%', height: '40vh' }}> */}
+                <MaterialReactTable table={table} />
+                {/* </Scrollbar> */}
 
-                />
               </Tab>
               <Tab eventKey="product" title="Product Wise">
                 <ProductWiseOrders />
@@ -473,7 +516,7 @@ const Orders = () => {
           onHide={() => setDetailExpander(false)}
           orderid={selectedOrderDetails.oid}
           component={
-            <OrderDetails dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
+            <OrderDetails pageType={"orders"} dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
           }
         />
 

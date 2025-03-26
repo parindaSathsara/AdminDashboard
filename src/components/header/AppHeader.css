@@ -1,6 +1,8 @@
-
-
 .toggleClassTop {
 
     display: flex !important;
+}
+
+.header-notification-bell {
+    cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CCardText, CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
@@ -16,14 +16,18 @@ import 'simplebar/dist/simplebar.min.css'
 import navigation from '../_nav'
 import logo from '../assets/brand/aahaas.png'
 import './AppSidebar.css';
+import getNavigationHook from '../_nav'
+import { UserLoginContext } from 'src/Context/UserLoginContext'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const { userData } = useContext(UserLoginContext);
 
   return (
     <CSidebar
+      style={{}}
       position="fixed"
       unfoldable={unfoldable}
       visible={sidebarShow}
@@ -32,7 +36,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img src={logo} height={30}></img>
+        <img src={logo} height={40}></img>
 
       </CSidebarBrand>
 
@@ -41,7 +45,7 @@ const AppSidebar = () => {
 
       <CSidebarNav className='sideBarSub'>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav items={getNavigationHook(userData.permissions)} />
         </SimpleBar>
 
 
@@ -51,7 +55,12 @@ const AppSidebar = () => {
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
       /> */}
-      <CCardText style={{ textAlign: 'center', padding: 10, color: '#AAAEB0' }}>V1.1.8</CCardText>
+
+      <div style={{ borderTop: '3px solid rgb(223, 159, 31)' }}>
+        <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.54</CCardText>
+      </div>
+
+
     </CSidebar>
   )
 }

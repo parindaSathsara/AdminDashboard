@@ -10,11 +10,12 @@ import { getProductData } from './functions/getProductData';
 import LifestylesProductView from './Categories/LifestylesProductView';
 import EssentialsProductView from './Categories/EssentialsProductView';
 import EducationProductView from './Categories/EducationProductView';
+import HotelProductView from './Categories/HotelProductView';
 
 export default function MoreProductView(props) {
 
 
-
+    // console.log(props, "Props Value is")
     var category = props.productData.category
     var productData = props.productData
 
@@ -23,7 +24,7 @@ export default function MoreProductView(props) {
 
     const [productDataSet, setProductDataSet] = useState([])
 
-    // console.log(props.preID, "Pre ID 123")
+    // console.log(props.productData, "Pre ID 123")
     // console.log(props.category, "Category 123")
 
     const [loading, setLoading] = useState(false)
@@ -35,8 +36,7 @@ export default function MoreProductView(props) {
         getProductData(productData).then(response => {
             setProductDataSet(response)
             setLoading(false)
-
-            // console.log(response, "Data Response Value is111")
+            // console.log(response, "Pre ID 123")
         }).catch(response => {
             // console.log(response, "Catch Response is")
             setLoading(false)
@@ -55,6 +55,7 @@ export default function MoreProductView(props) {
             size="fullscreen"
             aria-labelledby="contained-modal-title-vcenter"
             centered
+            style={{ zIndex: 1300 }}
         >
 
             <Modal.Header closeButton>
@@ -79,17 +80,19 @@ export default function MoreProductView(props) {
                             :
                             null
                         }
-
-
-
                         {category == "Essentials" ?
                             <EssentialsProductView productData={productDataSet}></EssentialsProductView>
                             :
                             null
                         }
-
+                        
                         {category == "Educations" ?
                             <EducationProductView productData={productDataSet}></EducationProductView>
+                            :
+                            null
+                        }
+                        {category == "Hotels" ?
+                            <HotelProductView productData={productDataSet}></HotelProductView>
                             :
                             null
                         }

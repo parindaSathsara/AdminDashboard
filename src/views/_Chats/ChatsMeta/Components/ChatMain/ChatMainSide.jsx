@@ -17,9 +17,15 @@ const ChatMainSide = ({ selectedData = [] }) => {
     const chatBodyRef = useRef(null);
 
 
-    console.log(selectedData, "DataSet Val")
+    // console.log(chatMessages, "DataSet Val 123444444444444444444444444")
+
+
     useEffect(() => {
-        fetchMessages(selectedData?.customer_collection_id)
+
+        if (selectedData?.customer_collection_id) {
+            fetchMessages(selectedData?.customer_collection_id)
+        }
+
 
 
     }, [selectedData])
@@ -33,7 +39,7 @@ const ChatMainSide = ({ selectedData = [] }) => {
                 fetchedMessages.push({ ...doc.data(), id: doc.id });
             });
 
-            console.log(fetchedMessages, "Fetched messages")
+            // console.log(fetchedMessages, "Fetched messages")
 
 
             if (chatBodyRef.current) {
@@ -99,7 +105,7 @@ const ChatMainSide = ({ selectedData = [] }) => {
                     </CCol>
                     <CCol className='chat_icon_column d-flex justify-content-end align-items-center'>
                         <CIcon icon={cilInfo} className='chat_icon_right' size='lg' onClick={() => handleChatInfoIcon()} />
-                        <CIcon icon={cilDelete} className='chat_icon_right' size='lg' />
+                        {/* <CIcon icon={cilDelete} className='chat_icon_right' size='lg' /> */}
                     </CCol>
                 </CRow>
 

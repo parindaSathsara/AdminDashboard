@@ -17,6 +17,7 @@ import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import { Tab, Tabs } from 'react-bootstrap';
 
 import '../../dashboard/MainComponents/ProductWiseOrders.css'
+import HotelsOrderView from 'src/Panels/OrderDetails/MoreOrderView/Categories/HotelsOrderView';
 
 
 // Function to fetch and map rows
@@ -40,7 +41,7 @@ const OrderAllocate = ({ normalUser = false }) => {
 
         if (val == false) {
             const response = await getAllProductsOrders();
-
+            // console.log(response, "Response dataaaaaaaaaa")
             return response.map((result, index) => ({
                 id: index + 1,
                 product_id: result.PID,
@@ -154,7 +155,7 @@ const OrderAllocate = ({ normalUser = false }) => {
         // // console.log("Assigned Employee:", selectedEmployee, "to Row:", selectedRow);
         // handleCloseModal();
 
-        // console.log(rowData.info.checkoutID, "Row Data is")
+        console.log(rowData)
         setSelectedRow(rowData?.info);
         setShowModal(true);
 
@@ -170,7 +171,7 @@ const OrderAllocate = ({ normalUser = false }) => {
     const customStyles = {
         menuPortal: (base) => ({
             ...base,
-            zIndex: 9999,
+            zIndex: 99999999999,
         }),
     };
 
@@ -211,7 +212,10 @@ const OrderAllocate = ({ normalUser = false }) => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
+            cancelButtonText: 'No',
+            // didOpen: (popup) => {
+            //     popup.style.zIndex = '99999999999'; 
+            // }
         });
 
         if (confirmation.isConfirmed) {
@@ -268,7 +272,8 @@ const OrderAllocate = ({ normalUser = false }) => {
                         <CIcon icon={cilInfo} className="text-info" size="xl" />
                     </CButton>
                 ),
-                size: 50, // Fixed size for the Info column
+                size: 50, 
+                enableSorting: false
             },
             {
                 accessorKey: 'order_id',
@@ -277,7 +282,7 @@ const OrderAllocate = ({ normalUser = false }) => {
             {
                 accessorKey: 'assigned_user',
                 header: 'Assigned User',
-
+                enableSorting: false,
                 Cell: ({ cell }) => {
 
                     // console.log(cell.row.original, "Cell Value is")
@@ -285,14 +290,14 @@ const OrderAllocate = ({ normalUser = false }) => {
                     return (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-
+                        {(["view assign employee order","delete assign employee order", "assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                             <CButton color="dark" className="position-relative" onClick={() => handleAssignEmployee(cell.row.original)}>
                                 Assign Employees
                                 <CBadge color="danger" position="top-end" shape="rounded-pill">
                                     {allocatedUsers?.length}
                                 </CBadge>
                             </CButton>
-
+                        }
 
 
                         </div>
@@ -306,6 +311,7 @@ const OrderAllocate = ({ normalUser = false }) => {
             {
                 accessorKey: 'product_image',
                 header: 'Product Image',
+                enableSorting: false,
                 Cell: ({ cell }) => (
                     <div style={{ width: "120px", height: "100px", borderRadius: "10px", overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <CCardImage
@@ -333,6 +339,12 @@ const OrderAllocate = ({ normalUser = false }) => {
         muiTableBodyRowProps: ({ row }) => ({
             sx: rowStyle(row.original), // Apply row style based on the data
         }),
+
+        
+        muiTableContainerProps: { sx: { maxHeight: '500px' } },
+
+    enableStickyHeader: true,
+    
     });
 
     const rowStyle = (data) => {
@@ -426,9 +438,15 @@ const OrderAllocate = ({ normalUser = false }) => {
     const [moreOrderDetails, setMoreOrderDetails] = useState("")
     const [mainDataSet, setMainDataSet] = useState([])
 
+
+
+    const [hotelDataSet, setHotelDataSet] = useState([])
     const handleMoreInfoModal = (row) => {
 
         // console.log(row, "Row Data iss Data set")
+
+
+        console.log(row?.info, "Info is data value")
 
         setMoreOrderModalCategory(row?.info.catid)
         if (row?.info.catid == 3) {
@@ -437,6 +455,14 @@ const OrderAllocate = ({ normalUser = false }) => {
         }
         else if (row?.info.catid == 1) {
             setMoreOrderDetails(row?.info.essential_pre_order_id)
+            setMoreOrderModal(true)
+        }
+
+
+        else if (row?.info.catid == 4) {
+            setMoreOrderDetails(row?.info.hotel_pre_booking_id)
+
+            setHotelDataSet(row?.info)
             setMoreOrderModal(true)
         }
 
@@ -462,7 +488,9 @@ const OrderAllocate = ({ normalUser = false }) => {
                 preID={moreOrderDetails}
                 category={moreOrderModalCategory}
                 productViewData
-                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData />}
+                hotelsOrderView={hotelDataSet}
+                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e=>console.log(e)}/>}
+
             >
             </MoreOrderView>
 
@@ -472,6 +500,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
+                style={{ zIndex: 1305 }}
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
@@ -510,9 +539,11 @@ const OrderAllocate = ({ normalUser = false }) => {
                                             <CTableDataCell>{response.name}</CTableDataCell>
                                             <CTableDataCell>{response.allotStatus}</CTableDataCell>
                                             <CTableDataCell>
+                                            {(["delete assign employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                                                 <CButton color="danger" onClick={() => handleDeleteEmployee(response.allotId, response?.checkout_id)} style={{ color: 'white', fontSize: 14 }}>
                                                     Delete   <CIcon icon={cilTrash} />
                                                 </CButton>
+                                            }
                                             </CTableDataCell>
                                         </CTableRow>
                                     ))}
@@ -527,7 +558,9 @@ const OrderAllocate = ({ normalUser = false }) => {
 
                 </Modal.Body>
                 <Modal.Footer>
+                {(["assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                     <CButton onClick={handleAllocateEmployee} color="dark">Assign Employee</CButton>
+                }
                 </Modal.Footer>
             </Modal>
 
@@ -542,25 +575,24 @@ const OrderAllocate = ({ normalUser = false }) => {
                 }}
                 onSelect={handleSelect}
             >
-                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders</span>} itemID='tabAll'>
+                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{ordersDataStatic.length}</span></span>} itemID='tabAll'>
 
                 </Tab>
-                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending</span>} itemID='tabPending'>
+                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class="text-white  badge text-bg-secondary">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} itemID='tabPending'>
 
                 </Tab>
-                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing</span>} itemID='tabApproved'>
+                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Approved").length}</span></span>} itemID='tabApproved'>
 
                 </Tab>
-                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed</span>} itemID='tabCompleted'>
+                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Completed").length}</span></span>} itemID='tabCompleted'>
 
                 </Tab>
-                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled</span>} itemID='tabCompleted'>
+                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Cancel").length}</span></span>} itemID='tabCompleted'>
 
                 </Tab>
             </Tabs >
 
             <MaterialReactTable table={table} />
-
 
         </>
     );
