@@ -698,10 +698,61 @@ export default function TravellerExperience(props) {
         centered
         style={{ zIndex: 9999 }}
       >
-        <Modal.Header closeButton >
+        <Modal.Header closeButton>
           <Modal.Title>Allocate Vehicle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* Add Filter Inputs */}
+          <div className="mb-3">
+            <CRow>
+              <CCol md={4}>
+                <CFormInput
+                  placeholder="Filter by Driver Name"
+                  onChange={(e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const filtered = driverDetails.filter(driver =>
+                      driver.driver_name.toLowerCase().includes(searchTerm)
+                    );
+                    setDriverDetails(filtered);
+                    if (e.target.value === '') {
+                      getAllExistingDeivers(); // Reset to original list if search is cleared
+                    }
+                  }}
+                />
+              </CCol>
+              <CCol md={4}>
+                <CFormInput
+                  placeholder="Filter by Vehicle Number"
+                  onChange={(e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const filtered = driverDetails.filter(driver =>
+                      driver.vehicle_number.toLowerCase().includes(searchTerm)
+                    );
+                    setDriverDetails(filtered);
+                    if (e.target.value === '') {
+                      getAllExistingDeivers();
+                    }
+                  }}
+                />
+              </CCol>
+              <CCol md={4}>
+                <CFormInput
+                  placeholder="Filter by Vehicle Province"
+                  onChange={(e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const filtered = driverDetails.filter(driver =>
+                      driver.vehicle_province.toLowerCase().includes(searchTerm)
+                    );
+                    setDriverDetails(filtered);
+                    if (e.target.value === '') {
+                      getAllExistingDeivers();
+                    }
+                  }}
+                />
+              </CCol>
+            </CRow>
+          </div>
+
           <div className="driver-allocation-modal-body">
             {driverDetailsLoading ? (
               <div className="loading-container">
