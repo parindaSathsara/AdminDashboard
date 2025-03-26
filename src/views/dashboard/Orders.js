@@ -216,7 +216,6 @@ const Orders = () => {
 
 
 
-
   const data = useMemo(() => ({
     columns: [
 
@@ -233,7 +232,7 @@ const Orders = () => {
               <>
 
                 <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-                  Refunding {CurrencyConverter(row?.original?.currency, row?.original?.refundAmount)}
+                  Refunding {CurrencyConverter(row?.original?.currency, row?.original?.refundAmount, currencyData)}
                 </CBadge>
 
               </>
@@ -291,12 +290,12 @@ const Orders = () => {
       minServiceDate: value.minServiceDate,
       pay_type: value.payment_type,
       pay_category: value.pay_category,
-      total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount),
-      paid_amount: CurrencyConverter(value.ItemCurrency, value.paid_amount),
-      discount_amount: CurrencyConverter(value.ItemCurrency, value.discount_price),
-      delivery_charge: CurrencyConverter(value.ItemCurrency, value.delivery_charge),
+      total_amount: CurrencyConverter(value.ItemCurrency, value.total_amount, currencyData),
+      paid_amount: CurrencyConverter(value.ItemCurrency, value.paid_amount, currencyData),
+      discount_amount: CurrencyConverter(value.ItemCurrency, value.discount_price, currencyData),
+      delivery_charge: CurrencyConverter(value.ItemCurrency, value.delivery_charge, currencyData),
       additional_data: value.additional_data,
-      balance_amount: CurrencyConverter(value.ItemCurrency, value.balance_amount),
+      balance_amount: CurrencyConverter(value.ItemCurrency, value.balance_amount, currencyData),
       refundAmount: (value.refundableAmount || 0.00),
       currency: value.ItemCurrency
 
@@ -450,7 +449,8 @@ const Orders = () => {
           <CCol xs={12} sm={6} lg={3}>
             <CWidgetStatsB
               className="mb-4"
-              value={cardData.salesCount.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ""}
+              value={CurrencyConverter("USD", cardData.salesCount, currencyData)}
+
               title="Sales"
               color="danger"
               inverse
@@ -516,7 +516,7 @@ const Orders = () => {
           onHide={() => setDetailExpander(false)}
           orderid={selectedOrderDetails.oid}
           component={
-            <OrderDetails  pageType={"orders"} dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
+            <OrderDetails pageType={"orders"} dataset={selectedOrderDetails} orderid={selectedOrderDetails.oid} orderData={selectedOrderDetails} hideStatus={false} updatedData={() => console.log("Updated")} />
           }
         />
 

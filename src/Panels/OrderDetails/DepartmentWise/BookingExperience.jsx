@@ -18,6 +18,7 @@ import { render } from '@testing-library/react';
 import axios from 'axios';
 import DiscountView from '../DiscountView.jsx';
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { CurrencyContext } from 'src/Context/CurrencyContext';
 
 const mapContainerStyle = {
   width: '40vw',
@@ -418,6 +419,7 @@ export default function BookingExperience(props) {
   }
 
   const [bookingDataModel, setBookingDataModel] = useState(false);
+  const [hotelProvider, setHotelProvider] = useState(null);
   const [bookingData, setBookingData] = useState(null);
   const [modelDefaultMessage, setModelDefaultMessage] = useState("Loading booking data...");
 
@@ -426,16 +428,33 @@ export default function BookingExperience(props) {
 
       console.log(`/tbov2/booking/booking-info/${data.checkoutID}`, "Checkout ID value dat aisssssssssssss")
       setBookingDataModel(true);
-      const response = await axios.get(`/tbov2/booking/booking-info/${data.checkoutID}`);
+      let url = "";
+      if (data?.Provider == "hotelTbo") {
+        url = `/tbov2/booking/booking-info/${data.checkoutID}`;
+      } else if (data?.Provider == "hotelTboH") {
+        url = `/tboh/hotels/booking-details/${data.checkoutID}`;
+      }
+      const response = await axios.get(url);
 
-      console.log(response, "TBO Response value isssss")
-      if (response.data?.data?.bookingData) {
+      if (data?.Provider == "hotelTbo") {
+        if (response.data?.data?.bookingData) {
+          setHotelProvider('hotelTbo')
+          setBookingData(response.data.data)
+        }
+        else {
+          setModelDefaultMessage("No booking data found for this order.")
+        }
         setBookingData(response.data.data)
       }
-      else {
-        setModelDefaultMessage("No booking data found for this order.")
+      else if (data?.Provider == "hotelTboH") {
+        if (response?.data?.data?.BookingDetail) {
+          setHotelProvider('hotelTboH')
+          setBookingData(response?.data?.data?.BookingDetail)
+        }
+        else {
+          setModelDefaultMessage("No booking data found for this order.")
+        }
       }
-      // setBookingData(response.data.data)
       console.log(bookingData);
     } catch (error) {
       console.log(error);
@@ -614,7 +633,7 @@ export default function BookingExperience(props) {
           else {
             return (
               <>
-                {e?.data?.Provider == "hotelTbo" ?
+                {e?.data?.Provider == "hotelTbo" || e?.data?.Provider === "hotelTboH" ?
                   <CButton color="warning" style={{ fontSize: 11, color: 'white', marginBottom: 2 }} onClick={() => showBookingDataModal(e?.data)}>View Booking Details</CButton>
                   :
                   ""
@@ -665,6 +684,7 @@ export default function BookingExperience(props) {
 
 
 
+  const { currencyData, setCurrencyData } = useContext(CurrencyContext);
 
   const data = productData?.map(value => ({
     pid: value?.['PID'],
@@ -672,9 +692,9 @@ export default function BookingExperience(props) {
     qty: value?.['Quantity'],
     date: value?.['DDate'],
     address: value?.['DAddress'],
-    total_amount: CurrencyConverter(value.currency, value?.['total_amount']),
-    paid_amount: CurrencyConverter(value.currency, value?.['paid_amount']),
-    balance_amount: CurrencyConverter(value.currency, value?.['balance_amount']),
+    total_amount: CurrencyConverter(value.currency, value?.['total_amount'], currencyData),
+    paid_amount: CurrencyConverter(value.currency, value?.['paid_amount'], currencyData),
+    balance_amount: CurrencyConverter(value.currency, value?.['balance_amount'], currencyData),
     checkoutID: value?.checkoutID,
     supplier_status: value?.supplier_status,
     data: value,
@@ -861,122 +881,337 @@ export default function BookingExperience(props) {
               <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
-            <div className="p-4">
-              {/* Hotel Header Section */}
-              <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-800">
-                      {bookingData?.bookingData?.HotelName}
-                    </h2>
-                    <div className="flex items-center gap-2 mt-2">
-                      {/* <MapPin className="w-4 h-4 text-gray-500" /> */}
-                      <span className="text-gray-600">
-                        {bookingData?.bookingData?.City}, {bookingData?.bookingData?.CountryCode}
-                      </span>
+            hotelProvider === "hotelTbo" ? (
+              <div className="p-4">
+                {/* Hotel Header Section */}
+                <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800">
+                        {bookingData?.bookingData?.HotelName}
+                      </h2>
+                      <div className="flex items-center gap-2 mt-2">
+                        {/* <MapPin className="w-4 h-4 text-gray-500" /> */}
+                        <span className="text-gray-600">
+                          {bookingData?.bookingData?.City}, {bookingData?.bookingData?.CountryCode}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="font-semibold">{bookingData?.bookingData?.StarRating}</span>
+                      {/* <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" /> */}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span className="font-semibold">{bookingData?.bookingData?.StarRating}</span>
-                    {/* <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" /> */}
+                </div>
+
+                {/* Booking Status Banner */}
+                <div className={`mb-6 p-3 rounded-lg text-center ${bookingData?.bookingData?.HotelBookingStatus === 'Confirmed'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                  <span className="font-semibold">
+                    Status: {bookingData?.bookingData?.HotelBookingStatus}
+                  </span>
+                </div>
+
+                {/* Main Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Dates & Room Info */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <Calendar className="w-5 h-5 text-blue-600" /> */}
+                      Stay Details
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Check-in:</span>
+                        <span className="font-medium">
+                          {new Date(bookingData?.bookingData?.CheckInDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Check-out:</span>
+                        <span className="font-medium">
+                          {new Date(bookingData?.bookingData?.CheckOutDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Rooms:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.NoOfRooms}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Info */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <CreditCard className="w-5 h-5 text-blue-600" /> */}
+                      Payment Details
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Invoice Amount:</span>
+                        <span className="font-medium">₹{bookingData?.bookingData?.InvoiceAmount}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Invoice No:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.InvoiceNo}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Booking Source:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.BookingSource}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Guest Info */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <User className="w-5 h-5 text-blue-600" /> */}
+                      Guest Information
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Nationality:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.GuestNationality}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Confirmation No:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.ConfirmationNo}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Booking Ref:</span>
+                        <span className="font-medium">{bookingData?.bookingData?.BookingRefNo}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hotel Policy */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      {/* <Flag className="w-5 h-5 text-blue-600" /> */}
+                      Hotel Policy
+                    </h3>
+                    <p className="text-gray-600">
+                      {bookingData?.bookingData?.HotelPolicyDetail || 'No policy information available'}
+                    </p>
                   </div>
                 </div>
               </div>
+            ) : (
+              <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
+                {/* <h1 style={{ color: '#2c3e50', borderBottom: '3px solid #3498db', paddingBottom: '10px', marginTop: '0', fontSize: '28px' }}>Booking Confirmation</h1> */}
 
-              {/* Booking Status Banner */}
-              <div className={`mb-6 p-3 rounded-lg text-center ${bookingData?.bookingData?.HotelBookingStatus === 'Confirmed'
-                ? 'bg-green-100 text-green-800'
-                : 'bg-yellow-100 text-yellow-800'
-                }`}>
-                <span className="font-semibold">
-                  Status: {bookingData?.bookingData?.HotelBookingStatus}
-                </span>
+                {/* Main Booking Info */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
+                        <span style={{ color: '#27ae60', fontWeight: 'bold', backgroundColor: 'rgba(39, 174, 96, 0.1)', padding: '3px 8px', borderRadius: '4px' }}>{bookingData.BookingStatus}</span>
+                        {bookingData.VoucherStatus && <span style={{ marginLeft: '10px', fontSize: '13px', backgroundColor: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '4px' }}>Voucher Available</span>}
+                      </p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation Number:</span> {bookingData.ConfirmationNumber}</p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span> {bookingData.InvoiceNumber}</p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span> {new Date(bookingData.BookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span> {bookingData.NoOfRooms}</p>
+                    </div>
+                  </div>
+
+                  <div style={{ flex: '1', minWidth: '250px' }}>
+                    <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Stay Information</h3>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+                        <div style={{ textAlign: 'center', flex: '1' }}>
+                          <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
+                          <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                          <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckIn).getFullYear()}</p>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
+                          <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                          <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>1 Night</div>
+                          <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                        </div>
+
+                        <div style={{ textAlign: 'center', flex: '1' }}>
+                          <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
+                          <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                          <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckOut).getFullYear()}</p>
+                        </div>
+                      </div>
+                      <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-in Time:</span> 12:00 PM</p>
+                      <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-out Time:</span> 12:00 PM</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hotel Information */}
+                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
+                <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
+                  <div style={{ flex: '1', minWidth: '300px' }}>
+                    <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>{bookingData.HotelDetails.HotelName}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                      <div style={{ display: 'inline-block' }}>
+                        {Array(3).fill(0).map((_, i) => (
+                          <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
+                        ))}
+                      </div>
+                      <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>Three Star</span>
+                    </div>
+                    <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> {bookingData.HotelDetails.AddressLine1}</p>
+                    <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> {bookingData.HotelDetails.City}</p>
+                  </div>
+
+                  <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
+                      <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
+                      <div style={{ fontSize: '14px' }}>Map Coordinates:</div>
+                      <div style={{ fontSize: '13px' }}>{bookingData.HotelDetails.Map}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Room Details */}
+                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Room Details</h2>
+                {bookingData.Rooms.map((room, index) => (
+                  <div key={index} style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px', borderLeft: '4px solid #3498db', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', marginBottom: '20px' }}>
+                      <div style={{ flex: '2', minWidth: '300px' }}>
+                        <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50', fontSize: '18px' }}>{room.Name[0]}</h3>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+                          <div style={{ flex: '1', minWidth: '200px' }}>
+                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : room.Status === 'Not Cancelled' ? '#f39c12' : '#e74c3c' }}>{room.Status}</span></p>
+                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> {room.MealType.replace(/_/g, ' ')}</p>
+                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span> {room.Inclusion}</p>
+                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span> <span style={{ color: room.IsRefundable ? '#27ae60' : '#e74c3c' }}>{room.IsRefundable ? 'Yes' : 'No'}</span></p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ flex: '1', minWidth: '200px', backgroundColor: '#fff', padding: '15px', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                        <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>Price Details ({room.Currency})</h4>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
+                          <span style={{ color: '#555' }}>Room Price:</span>
+                          <span style={{ fontWeight: 'bold' }}>${(room.TotalFare - room.TotalTax).toFixed(2)}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
+                          <span style={{ color: '#555' }}>Tax:</span>
+                          <span>${room.TotalTax.toFixed(2)}</span>
+                        </div>
+                        {room.Supplements && room.Supplements[0] && (
+                          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
+                            <span style={{ color: '#555' }}>{room.Supplements[0][0].Description}:</span>
+                            <span>${room.Supplements[0][0].Price.toFixed(2)}</span>
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '12px 0 0 0', paddingTop: '12px', borderTop: '1px dashed #eee', fontWeight: 'bold' }}>
+                          <span>Total:</span>
+                          <span style={{ color: '#2c3e50', fontSize: '18px' }}>${room.TotalFare.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px' }}>
+                      <div style={{ flex: '1', minWidth: '250px' }}>
+                        <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Guests:</h4>
+                        <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                          {room.CustomerDetails[0].CustomerNames.map((guest, i) => (
+                            <div key={i} style={{ padding: '8px', borderBottom: i < room.CustomerDetails[0].CustomerNames.length - 1 ? '1px solid #eee' : 'none', display: 'flex', alignItems: 'center' }}>
+                              <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#3498db', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', fontSize: '14px', fontWeight: 'bold' }}>
+                                {guest.FirstName[0]}{guest.LastName[0]}
+                              </div>
+                              <div>
+                                <div style={{ fontWeight: 'bold' }}>{guest.Title} {guest.FirstName} {guest.LastName}</div>
+                                <div style={{ fontSize: '13px', color: '#7f8c8d' }}>{guest.Type}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div style={{ flex: '1', minWidth: '300px' }}>
+                        <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Cancellation Policy:</h4>
+                        <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '15px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                          {room.CancelPolicies.map((policy, i) => (
+                            <div key={i} style={{ marginBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', paddingBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', borderBottom: i < room.CancelPolicies.length - 1 ? '1px solid #eee' : 'none' }}>
+                              <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
+                                <span style={{ fontWeight: 'bold' }}>From {new Date(policy.FromDate.replace(/-/g, '/')).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}:</span>
+                              </p>
+                              <p style={{ margin: '0', fontSize: '14px', color: policy.CancellationCharge === 0 ? '#27ae60' : '#e74c3c' }}>
+                                {policy.CancellationCharge === 0 ?
+                                  'Free cancellation' :
+                                  `${policy.CancellationCharge}% of total amount will be charged`
+                                }
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Additional Information */}
+                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Additional Information</h2>
+                <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Rate Conditions</h3>
+                    <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                      {bookingData.RateConditions.filter(condition => !condition.includes('CheckIn Time') && !condition.includes('CheckOut Time') && !condition.includes('CheckIn Instructions') && !condition.includes('Special Instructions') && !condition.includes('Mandatory Fees') && !condition.includes('Optional Fees') && !condition.includes('Cards Accepted') && !condition.includes('Pets not allowed')).map((condition, index) => (
+                        <li key={index} style={{ margin: '5px 0', color: '#555' }}>{condition}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {bookingData.RateConditions.some(condition => condition.includes('CheckIn Instructions')) && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Check-In Instructions</h3>
+                      <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('CheckIn Instructions')).split(': ')[1] }}></div>
+                    </div>
+                  )}
+
+                  {bookingData.RateConditions.some(condition => condition.includes('Special Instructions')) && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Special Instructions</h3>
+                      <p style={{ margin: '5px 0', color: '#555' }}>{bookingData.RateConditions.find(condition => condition.includes('Special Instructions')).split(': ')[1]}</p>
+                    </div>
+                  )}
+
+                  {bookingData.RateConditions.some(condition => condition.includes('Mandatory Fees')) && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Mandatory Fees</h3>
+                      <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Mandatory Fees')).split(': ')[1] }}></div>
+                    </div>
+                  )}
+
+                  {bookingData.RateConditions.some(condition => condition.includes('Optional Fees')) && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Optional Fees</h3>
+                      <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Optional Fees')).split(': ')[1] }}></div>
+                    </div>
+                  )}
+
+                  {bookingData.RateConditions.some(condition => condition.includes('Cards Accepted')) && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Payment Information</h3>
+                      <p style={{ margin: '5px 0', color: '#555' }}><strong>Accepted Payment Methods:</strong> {bookingData.RateConditions.find(condition => condition.includes('Cards Accepted')).split(': ')[1].split(',').join(', ')}</p>
+                    </div>
+                  )}
+
+                  {bookingData.RateConditions.some(condition => condition.includes('Pets not allowed')) && (
+                    <div>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Property Policies</h3>
+                      <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                        {bookingData.RateConditions.find(condition => condition.includes('Pets not allowed')).split(',').map((policy, index) => (
+                          <li key={index} style={{ margin: '5px 0', color: '#555' }}>{policy.trim()}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
-
-              {/* Main Details Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Dates & Room Info */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <Calendar className="w-5 h-5 text-blue-600" /> */}
-                    Stay Details
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Check-in:</span>
-                      <span className="font-medium">
-                        {new Date(bookingData?.bookingData?.CheckInDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Check-out:</span>
-                      <span className="font-medium">
-                        {new Date(bookingData?.bookingData?.CheckOutDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Rooms:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.NoOfRooms}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Payment Info */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <CreditCard className="w-5 h-5 text-blue-600" /> */}
-                    Payment Details
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Invoice Amount:</span>
-                      <span className="font-medium">₹{bookingData?.bookingData?.InvoiceAmount}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Invoice No:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.InvoiceNo}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Booking Source:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.BookingSource}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Guest Info */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <User className="w-5 h-5 text-blue-600" /> */}
-                    Guest Information
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Nationality:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.GuestNationality}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Confirmation No:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.ConfirmationNo}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Booking Ref:</span>
-                      <span className="font-medium">{bookingData?.bookingData?.BookingRefNo}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Hotel Policy */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    {/* <Flag className="w-5 h-5 text-blue-600" /> */}
-                    Hotel Policy
-                  </h3>
-                  <p className="text-gray-600">
-                    {bookingData?.bookingData?.HotelPolicyDetail || 'No policy information available'}
-                  </p>
-                </div>
-              </div>
-            </div>
+            )
           )}
         </Modal.Body>
       </Modal>

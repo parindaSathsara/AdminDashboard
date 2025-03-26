@@ -41,7 +41,7 @@ function AccountsDetails(props) {
           ? res.data[0]?.reference_Image.split(',').map((url) => url.trim())
           : []
         console.log(fileUrls, 'Extracted File URLs')
-        setSelectedDocument(fileUrls)
+        setSelectedDocument(res.data[0]?.paySlips)
       })
     } else {
       setDataSet(props.dataset)
@@ -146,7 +146,7 @@ function AccountsDetails(props) {
     let url = '';
     if (props?.pnlType == "orders") {
       url = "/pnl/order";
-      id = data?.checkout_id;
+      id = props?.orderid;
     } else {
       url = "/pnl/order-product";
       id = props?.productData[0]?.checkoutID;
@@ -252,10 +252,10 @@ function AccountsDetails(props) {
                               {selectedDocument.length === 1 ? (
                                 <a
                                   target="_blank"
-                                  href={`${axios.defaults.imageUrl}/${dataset['reference_Image']}`}
+                                  href={dataset['paySlips'][0]}
                                 >
                                   <img
-                                    src={`${axios.defaults.imageUrl}/${dataset['reference_Image']}`}
+                                    src={dataset['paySlips'][0]}
                                     width="150"
                                     height="150"
                                     style={{ objectFit: 'cover' }}
@@ -418,49 +418,115 @@ function AccountsDetails(props) {
         show={documentViewModal}
         style={{ marginTop: '20%', zIndex: 999999999 }}
         onHide={() => setDocumentViewModal(false)}
-        size="sm"
+        size="lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Document View</Modal.Title>
+          <Modal.Title>Payment Slips</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedDocument && selectedDocument.length > 0 ? (
-            <ul style={{ padding: 0, listStyleType: 'none' }}>
-              {selectedDocument.map((url, index) => {
-                const fileName = url.split('/').pop() // Extract the file name from the URL
-                return (
-                  <li
-                    key={index}
-                    style={{
-                      marginBottom: '10px',
+            <div className="document-container" style={{
+              maxWidth: "800px",
+              margin: "0 auto",
+              // boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              borderRadius: "8px",
+              overflow: "hidden",
+              backgroundColor: "#fff"
+            }}>
+              <ul style={{
+                padding: 0,
+                margin: 0,
+                listStyleType: 'none'
+              }}>
+                {selectedDocument.map((url, index) => {
+                  const fileName = `Slip ${index + 1}`;
+                  return (
+                    <li key={index} style={{
+                      padding: '16px',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between', // Align file name and icon
-                      borderBottom: '1px solid #ddd', // Add a divider between items
-                      paddingBottom: '5px',
+                      borderBottom: index !== selectedDocument.length - 1 ? '1px solid #eee' : 'none',
+                      transition: 'background-color 0.2s',
+                      cursor: 'pointer',
+                      position: 'relative'
                     }}
-                  >
-                    <span style={{ fontWeight: '500' }}>{fileName}</span>
-                    <a
-                      href={axios.defaults.imageUrl + url}
-                      download={fileName} // This attribute will prompt a download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: '#007bff',
-                        textDecoration: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
-                      <CIcon icon={cilInfo} size="lg" />
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
+                      {/* Document number and name */}
+                      <div style={{
+                        fontWeight: '500',
+                        marginRight: '16px',
+                        minWidth: '100px'
+                      }}>
+                        {fileName}
+                      </div>
+
+                      {/* Thumbnail with hover effect */}
+                      <div style={{
+                        position: 'relative',
+                        marginRight: '20px'
+                      }}>
+                        <img
+                          src={url}
+                          alt={fileName}
+                          style={{
+                            width: '100px',
+                            height: '75px',
+                            objectFit: 'cover',
+                            borderRadius: '4px',
+                            border: '1px solid #e9ecef',
+                            transition: 'transform 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                        />
+                      </div>
+
+                      {/* Spacer */}
+                      <div style={{ flexGrow: 1 }}></div>
+
+                      {/* Actions */}
+                      <div style={{ display: 'flex', gap: '12px' }}>
+                        {/* View button */}
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px 12px',
+                            backgroundColor: '#e9ecef',
+                            color: '#495057',
+                            borderRadius: '4px',
+                            textDecoration: 'none',
+                            fontSize: '14px',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = '#dee2e6'}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = '#e9ecef'}
+                        >
+                          <CIcon icon={cilInfo} style={{ marginRight: '6px' }} /> View
+                        </a>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           ) : (
-            <p>No documents available to display.</p>
+            <div style={{
+              padding: '40px',
+              textAlign: 'center',
+              backgroundColor: '#f8f9fa',
+              borderRadius: '8px',
+              color: '#6c757d'
+            }}>
+              <div style={{ fontSize: '24px', marginBottom: '12px' }}>No documents available</div>
+              <p style={{ margin: 0 }}>Upload documents to see them displayed here.</p>
+            </div>
           )}
         </Modal.Body>
       </Modal>

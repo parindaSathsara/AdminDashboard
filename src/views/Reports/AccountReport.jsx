@@ -85,7 +85,7 @@ const ReportGenerationPage = () => {
   }, [currencyData?.base])
 
   const [categories, setCategories] = useState([
-    { value: '0', label: 'Summery' },
+    { value: '0', label: 'Summary' },
     { value: '1', label: 'Detail' },
   ])
 
@@ -143,42 +143,42 @@ const ReportGenerationPage = () => {
 
   const handleGenerateReport = async () => {
     const errors = {}
-    console.log('currency',currency);
+    console.log('currency', currency);
     if (!reportType) {
-        console.log('No report type selected');
-        errors.reportType = 'Report type is required';
-        if (!category) errors.category = 'Category is required';
-        if (!currencyType) errors.currencyType = 'Currency type is required';
+      console.log('No report type selected');
+      errors.reportType = 'Report type is required';
+      if (!category) errors.category = 'Category is required';
+      if (!currencyType) errors.currencyType = 'Currency type is required';
     } else {
-        switch (reportType?.value) {
-            case 'pnl':
-            console.log('pnl');
-            if (category.length === 0) errors.category = 'Category is required';
-            break;
-            case 'payable':
-                console.log('payable');
-                if (category.length === 0) errors.category = 'Category is required';
-                if (!currencyType) errors.currencyType = 'Currency type is required';
-                if (reportType?.value === 'payable' && currencyType?.value != 'all' && !currency?.value ) errors.currency = 'Currency type is required';
-                break;
-    
-            case 'receivable':
-                console.log('receivable');
-                if (category.length === 0) errors.category = 'Category is required';
-                if (!currency?.value) errors.currency = 'Currency type is required';
-                break;
-    
-            case 'cashflow':
-                console.log('cashflow',currency);
-                if (category.length === 0) errors.category = 'Category is required';
-                if (!currency?.value) errors.currency = 'Currency type is required';
-                break;
-    
-            default:
-                console.log('Unknown report type');
-        }
+      switch (reportType?.value) {
+        case 'pnl':
+          console.log('pnl');
+          if (category.length === 0) errors.category = 'Category is required';
+          break;
+        case 'payable':
+          console.log('payable');
+          if (category.length === 0) errors.category = 'Category is required';
+          if (!currencyType) errors.currencyType = 'Currency type is required';
+          if (reportType?.value === 'payable' && currencyType?.value != 'all' && !currency?.value) errors.currency = 'Currency type is required';
+          break;
+
+        case 'receivable':
+          console.log('receivable');
+          if (category.length === 0) errors.category = 'Category is required';
+          if (!currency?.value) errors.currency = 'Currency type is required';
+          break;
+
+        case 'cashflow':
+          console.log('cashflow', currency);
+          if (category.length === 0) errors.category = 'Category is required';
+          if (!currency?.value) errors.currency = 'Currency type is required';
+          break;
+
+        default:
+          console.log('Unknown report type');
+      }
     }
-    
+
     if (!category) errors.category = 'Category is required';
     if (!startDate) errors.startDate = 'Start date is required'
     if (!endDate) errors.endDate = 'End date is required'
@@ -224,38 +224,29 @@ const ReportGenerationPage = () => {
     let url
     if (data.reportType === 'pnl' && data.category === '0') {
       console.log('Data pnl by categories')
-      url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&dateType=${data.dateType}`
+      url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}`
     } else if (data.reportType === 'pnl' && data.category === '1') {
       console.log('Data pnl by orders')
-      url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&dateType=${data.dateType}`
+      url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}`
     } else if (data.reportType === 'payable' && data.category === '0') {
-      url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${
-        data.currencyValue
-      }`
+      url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue
+        }`
     } else if (data.reportType === 'payable' && data.category === '1') {
-      url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${
-        data.currencyValue
-      }`
+      url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue
+        }`
     } else if (data.reportType === 'receivable' && data.category === '0') {
-      url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
+      url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
     } else if (data.reportType === 'receivable' && data.category === '1') {
-      url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
+      url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
     } else if (data.reportType === 'cashflow') {
-      url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${
-        data.currency || currencyData?.base
-      }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
+      url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
     }
 
     return url
@@ -275,8 +266,8 @@ const ReportGenerationPage = () => {
         // setCurrenctOrderId(id);
         // console.log(response.data, "response data")
         setProductPNLReport(response.data)
-        
-        
+
+
       })
       .catch((error) => {
         Swal.fire({
@@ -436,10 +427,10 @@ const ReportGenerationPage = () => {
                     reportType?.value === 'receivable'
                       ? categories2
                       : reportType?.value === 'pnl'
-                      ? categories3
-                      : reportType?.value === 'cashflow'
-                      ? categories4
-                      : categories
+                        ? categories3
+                        : reportType?.value === 'cashflow'
+                          ? categories4
+                          : categories
                   }
                   value={category}
                   onChange={(selectedOption) => {
@@ -478,9 +469,9 @@ const ReportGenerationPage = () => {
                 </CCol>
               ) : null}
 
-              { reportType?.value === 'payable' && currencyType?.value === 'all'?(
+              {reportType?.value === 'payable' && currencyType?.value === 'all' ? (
                 null
-              ):(reportType?.value != 'pnl'? (
+              ) : (reportType?.value != 'pnl' ? (
                 <CCol xs={12} sm={6} lg={2}>
                   <CFormLabel htmlFor="currency">Currency</CFormLabel>
                   <br />
@@ -540,7 +531,7 @@ const ReportGenerationPage = () => {
                   )}
                 </CCol>
                 <CCol xs={12} sm={6} lg={3}>
-                  <CFormLabel htmlFor="end-date" style={{marginTop:"4%"}}>End Date</CFormLabel>
+                  <CFormLabel htmlFor="end-date" style={{ marginTop: "4%" }}>End Date</CFormLabel>
                   <br />
                   <DatePicker
                     disabled={statusDate}
@@ -560,10 +551,10 @@ const ReportGenerationPage = () => {
                 {['generate account report', 'all accounts access'].some((permission) =>
                   userData?.permissions?.includes(permission),
                 ) && (
-                  <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
-                    Generate Report
-                  </CButton>
-                )}
+                    <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
+                      Generate Report
+                    </CButton>
+                  )}
               </CCol>
             </CRow>
 
@@ -623,7 +614,7 @@ const ReportGenerationPage = () => {
               Download PDF
             </CButton>
           } */}
-          <CDropdown style={{marginLeft:"68%"}} variant="btn-group">
+          <CDropdown style={{ marginLeft: "68%" }} variant="btn-group">
             <CDropdownToggle color="success">Download File</CDropdownToggle>
             <CDropdownMenu>
               <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadPdf()}>
@@ -638,7 +629,7 @@ const ReportGenerationPage = () => {
         </Modal.Header>
         <Modal.Body>
           {productPNLReport.status === 'fail' &&
-          productPNLReport.message === 'No data to display' ? (
+            productPNLReport.message === 'No data to display' ? (
             <div className="d-flex flex-column align-items-center my-5">
               <h6>Oops! Sorry</h6>
               <p>The product has been yet to be approved !</p>
