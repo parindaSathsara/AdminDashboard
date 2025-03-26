@@ -91,6 +91,7 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 import AccessManagement from './views/ManageAccess/AccessManagement';
 import Bridgify from './Panels/API_details/Bridgify'
 import TBO from './Panels/API_details/TBO'
+import UserCountStats from './Panels/UserCount/UserCountStats'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -158,6 +159,7 @@ const routes = [
   // services 
   {path:'/services/bridgyfy',name:'Bridgify',element:Bridgify},
   {path:'/services/tbo',name:'TBO',element:TBO},
+  {path:'/users/stats',name:'User Stats',element:UserCountStats},
 
 
 ]
