@@ -8,6 +8,7 @@ import { cilUser, cilChart, cilArrowCircleTop, cilClock } from '@coreui/icons';
 import 'react-toastify/dist/ReactToastify.css';
 import BeepSound from '../../assets/beep-sound.mp3';
 import { Line } from 'react-chartjs-2';
+import { Tabs, Tab } from 'react-bootstrap';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,6 +19,23 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  writeBatch,
+} from 'firebase/firestore'
+
+import { db } from 'src/firebase'
 
 
 // Register ChartJS components
@@ -47,9 +65,14 @@ const UserCountStats = () => {
   const [newLastUsers, setNewLastUsers] = useState([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const beepSoundRef = useRef(null);
+  const [chatList, setChatList] = useState([])
+  const [currentFilter, setCurrentFilter] = useState('All');
   const lastNotificationTime = useRef(0);
   const processedUserIds = useRef(new Set());
   const notificationCount = useRef(0);
+  const [newChatMessages, setNewChatMessages] = useState([]);
+  const processedChatIds = useRef(new Set());
+
 
   useEffect(() => {
     beepSoundRef.current = new Audio(BeepSound);
@@ -59,8 +82,93 @@ const UserCountStats = () => {
       console.error('Audio error:', e);
       toast.error('Sound playback failed. Check audio file.');
     };
+
+
+
   }, []);
 
+
+
+  const getChatlists = async () => {
+    const q = query(collection(db, 'customer-chat-lists'), orderBy('updatedAt', 'desc'),limit(10));
+
+    const getmessages = onSnapshot(q, async (QuerySnapshot) => {
+      const fetchedMessages = [];
+      const newMessages = [];
+
+      const messagePromises = QuerySnapshot.docs.map(async (chatDoc) => {
+        const chatData = { ...chatDoc.data(), id: chatDoc.id };
+
+        try {
+          const messagesRef = collection(db, 'customer-chat-lists', chatDoc.id, 'messages');
+          const messagesQuery = query(
+            messagesRef,
+            orderBy('timestamp', 'desc'),
+            limit(10)
+          );
+
+          const messagesSnapshot = await getDocs(messagesQuery);
+
+          console.log("hdewrhdfih",messagesSnapshot?.docs);
+          
+          const lastMessages = messagesSnapshot.docs.map(msgDoc => ({
+            ...msgDoc.data(),
+            id: msgDoc.id
+          })).reverse(); 
+          console.log(lastMessages);
+
+          chatData.lastMessages = lastMessages;
+
+          if (lastMessages.length > 0) {
+            const lastMessage = lastMessages[lastMessages.length - 1];
+            chatData.last_message = {
+              value: lastMessage.text || lastMessage.type || 'No message',
+              timestamp: lastMessage.timestamp
+            };
+          }
+        } catch (error) {
+          console.error(`Error fetching messages for chat ${chatDoc.id}:`, error);
+          chatData.lastMessages = [];
+        }
+
+        fetchedMessages.push(chatData);
+
+        if (!processedChatIds.current.has(chatData.id)) {
+          newMessages.push(chatData);
+          processedChatIds.current.add(chatData.id);
+
+          if (beepSoundRef.current) {
+            beepSoundRef.current.currentTime = 0;
+            beepSoundRef.current.play().catch(e => {
+              console.error('Chat sound play failed:', e);
+            });
+          }
+        }
+
+        return chatData;
+      });
+
+      // Wait for all message fetching to complete
+      await Promise.all(messagePromises);
+
+      if (newMessages.length > 0) {
+        setNewChatMessages(prevNewMessages => {
+          // Ensure no duplicates
+          const uniqueNewMessages = [...prevNewMessages, ...newMessages]
+            .filter((chat, index, self) =>
+              index === self.findIndex(t => t.id === chat.id)
+            );
+          return uniqueNewMessages;
+        });
+      }
+
+      if (JSON.stringify(fetchedMessages) !== JSON.stringify(chatList)) {
+        setChatList(fetchedMessages);
+      }
+    });
+
+    return () => getmessages();
+  };
 
 
   const fetchUserStats = async () => {
@@ -193,6 +301,7 @@ const UserCountStats = () => {
     fetchUserStats();
     checkNewUsers();
     fetchLastUsers()
+    getChatlists()
 
 
 
@@ -224,7 +333,7 @@ const UserCountStats = () => {
       {/* Left Side: New Users */}
       <div style={{
         flex: '0.8',
-        background: 'rgba(45, 55, 72, 0.7)',
+        background: 'rgba(245, 245, 245, 0.9)',
         borderRadius: '16px',
         padding: '24px',
         overflowY: 'auto',
@@ -233,62 +342,89 @@ const UserCountStats = () => {
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: '700',
-          color: '#63b3ed',
+          color: '#2b6cb0',
           marginBottom: '16px',
           textAlign: 'center'
         }}>
           <CIcon icon={cilArrowCircleTop} style={{ marginRight: '12px' }} size="xl" />
-          New Users
+          Chat Overview
         </h3>
-        {newUsers.length > 0 ? (
-          <div style={{
-            display: 'grid',
-            gap: '16px'
-          }}>
-            {newUsers.map(user => (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                style={{
-                  background: 'rgba(76, 81, 96, 0.5)',
-                  borderRadius: '12px',
-                  padding: '16px',
+
+        <Tabs defaultActiveKey="All" id="chat-tabs" className="mb-3">
+
+
+          <Tab eventKey="New" title={`New Chats (${newChatMessages.length})`}>
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              {newChatMessages.map((chat, index) => (
+                <div key={index} style={{
+                  padding: '12px',
+                  borderBottom: '1px solid rgba(0,0,0,0.1)',
                   display: 'flex',
-                  alignItems: 'center',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
-                }}
-              >
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '50%',
-                  background: '#63b3ed',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: '16px'
+                  flexDirection: 'column',
+                  backgroundColor: 'rgba(56, 161, 105, 0.1)'
                 }}>
-                  {user.email ? user.email.charAt(0).toUpperCase() : '?'}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px'
+                  }}>
+                    <div>
+                      <div style={{ fontWeight: '600', color: '#38a169' }}>
+                        {chat.chat_name || 'Unnamed Chat'}
+                      </div>
+                      <div style={{ fontSize: '0.875rem', color: '#4a5568' }}>
+                        {chat.chat_related || 'No Category'}
+                      </div>
+                    </div>
+                    <div style={{
+                      backgroundColor: '#38a169',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem'
+                    }}>
+                      New
+                    </div>
+                  </div>
+
+                  {/* Last Messages Display */}
+                  <div style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    padding: '8px',
+                    maxHeight: '200px',
+                    overflowY: 'auto'
+                  }}>
+                    {chat.lastMessages && chat.lastMessages.map((message, msgIndex) => (
+                      <div key={msgIndex} style={{
+                        marginBottom: '4px',
+                        borderBottom: '1px solid rgba(0,0,0,0.1)',
+                        paddingBottom: '4px'
+                      }}>
+                        <div style={{
+                          fontSize: '0.875rem',
+                          color: message.sender === 'user' ? '#4299e1' : '#48bb78'
+                        }}>
+                          {message.text || message.type || 'No message content'}
+                        </div>
+                        <div style={{
+                          fontSize: '0.75rem',
+                          color: '#718096',
+                          textAlign: 'right'
+                        }}>
+                          {new Date(message.timestamp?.toDate?.() || Date.now()).toLocaleTimeString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  {/* <p style={{ fontWeight: '600', color: '#e2e8f0' }}>{user.username}</p> */}
-                  <p style={{ fontSize: '0.875rem', color: '#a0aec0' }}>{user.email}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <div style={{
-            textAlign: 'center',
-            color: '#718096',
-            padding: '24px'
-          }}>
-            No new users at the moment
-          </div>
-        )}
+              ))}
+            </div>
+          </Tab>
+        </Tabs>
       </div>
+
 
       {/* Middle: Total Users Round */}
       <div style={{
