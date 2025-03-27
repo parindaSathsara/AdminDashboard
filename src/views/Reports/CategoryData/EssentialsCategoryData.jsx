@@ -123,13 +123,13 @@ const EssentialsCategoryData = ({ data, category }) => {
                 <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>
                     Export All Data
                 </Button>
-                <Button
+                {/* <Button
                     disabled={table.getPrePaginationRowModel().rows.length === 0}
                     onClick={() => handleExportRows(table.getPrePaginationRowModel().rows, table.getVisibleLeafColumns())}
                     startIcon={<FileDownloadIcon />}
                 >
                     Export All Rows
-                </Button>
+                </Button> */}
                 <Button
                     disabled={table.getRowModel().rows.length === 0}
                     onClick={() => handleExportRows(table.getRowModel().rows, table.getVisibleLeafColumns())}

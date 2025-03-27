@@ -223,6 +223,7 @@ const ReportGenerationPage = () => {
   const returnURL = (data, dataType) => {
     let url
     if (data.reportType === 'pnl' && data.category === '0') {
+      console.log(data,"Data =>");
       console.log('Data pnl by categories')
       url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}`
@@ -230,6 +231,8 @@ const ReportGenerationPage = () => {
       console.log('Data pnl by orders')
       url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}`
+        console.log(url,"PNL Report URL");
+        
     } else if (data.reportType === 'payable' && data.category === '0') {
       url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue
@@ -274,6 +277,8 @@ const ReportGenerationPage = () => {
           text: 'Failed to Proceed the PDF',
           icon: 'error',
         })
+        console.log(error);
+        
       })
   }
 
