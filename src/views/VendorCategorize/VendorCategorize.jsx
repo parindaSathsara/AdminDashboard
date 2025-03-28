@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Badge, Tabs, Tab, Spinner, Modal, Pagination } from 'react-bootstrap';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { Card, Badge, Tabs, Tab, Spinner, Modal, Pagination, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
+import { debounce } from 'lodash';
 
 const CATEGORY_NAMES = {
   1: 'Essentials',
@@ -25,7 +27,43 @@ const VendorCategorize = () => {
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [vendorSummary, setVendorSummary] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState('');
 
+  // Memoized filtered vendors
+  const filteredVendors = useMemo(() => {
+    const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
+
+    if (activeVendorType === 'DMC') {
+      return [];
+    }
+
+    if (activeCategory !== 'all') {
+      return vendors.filter(vendor => 
+        vendor['Catergory ID'] === activeCategory.toString()
+      );
+    }
+
+    if (!searchTerm) return vendors;
+
+    return vendors.filter(vendor => 
+      vendor.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${vendor.first_name} ${vendor.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
+
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((searchValue) => {
+      setSearchTerm(searchValue);
+    }, 500),
+    []
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    debouncedSearch(e.target.value);
+  };
 
   const getVendorSummary = async () => {
     try {
@@ -37,7 +75,6 @@ const VendorCategorize = () => {
       console.error('Error fetching vendor summary:', error);
     }
   };
-
 
   const getVendorDetailsCategorize = async (page = 1, perPage = 50) => {
     try {
@@ -100,29 +137,102 @@ const VendorCategorize = () => {
   useEffect(() => {
     fetchVendorData();
     getVendorSummary();
-
   }, [activeVendorType]);
 
   const handlePageChange = (page) => {
     fetchVendorData(page);
   };
 
-  const getFilteredVendors = () => {
-    const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
+  const downloadVendorExcel = (vendor) => {
+    const data = [];
 
-    if (activeVendorType === 'DMC') {
-      return []; // Always return empty array for DMC
-    }
+    // Basic Details
+    data.push(['Vendor Details', '']);
+    data.push(['Company Name', vendor.company_name || 'N/A']);
+    data.push(['Contact Name', `${vendor.first_name || ''} ${vendor.last_name || ''}`.trim() || 'N/A']);
+    data.push(['Email', vendor.email || 'N/A']);
+    data.push(['Phone', vendor.phone || 'N/A']);
+    data.push(['', '']);
 
-    if (activeCategory === 'all') return vendors;
+    // Category Summary
+    data.push(['Category Summary', 'Count']);
+    Object.entries(CATEGORY_NAMES).forEach(([categoryId, categoryName]) => {
+        let count = 0;
+        if (categoryName === 'Essentials') count = vendor.essentials?.count || 0;
+        else if (categoryName === 'Non-Essentials') count = vendor.non_essentials?.count || 0;
+        else if (categoryName === 'Lifestyle') count = vendor.lifestyles?.length || 0;
+        else if (categoryName === 'Hotels') count = vendor.hotels?.length || 0;
+        else if (categoryName === 'Education') count = vendor.education?.length || 0;
+        data.push([categoryName, count]);
+    });
 
-    return vendors.filter(vendor =>
-      vendor['Catergory ID'] === activeCategory.toString()
-    );
-  };
+    // =======================
+    // Detailed Category Section
+    // =======================
+
+    // Lifestyles Details
+    data.push(['', '']);
+    data.push(['Lifestyle Details', '']);
+    data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link']);
+    vendor.lifestyles?.forEach(item => {
+        data.push([
+            item.lifestyle_name || 'N/A',
+            item.lifestyle_city || 'N/A',
+            item.lifestyle_attraction_type || 'N/A',
+            item.preferred == 1 ? 'Yes' : 'No',
+            item.micro_location || 'N/A',
+            item.tripadvisor || 'N/A'
+        ]);
+    });
+
+    // Education Details
+    data.push(['', '']);
+    data.push(['Education Details', '']);
+    data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method']);
+    vendor.education?.forEach(item => {
+        data.push([
+            item.course_name || 'N/A',
+            item.medium || 'N/A',
+            item.course_mode || 'N/A',
+            item.group_type || 'N/A',
+            item.free_session || 'N/A',
+            item.payment_method || 'N/A'
+        ]);
+    });
+
+    // Hotel Details
+    data.push(['', '']);
+    data.push(['Hotel Details', '']);
+    data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date']);
+    vendor.hotels?.forEach(item => {
+        data.push([
+            item.hotel_name || 'N/A',
+            item.star_classification || 'N/A',
+            item.city || 'N/A',
+            item.hotel_address || 'N/A',
+            item.trip_advisor_link || 'N/A',
+            item.start_date || 'N/A',
+            item.end_date || 'N/A'
+        ]);
+    });
+
+    // =======================
+    // Export to Excel
+    // =======================
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+
+    ws['!cols'] = [{ width: 30 }, { width: 25 }, { width: 25 }, { width: 25 }, { width: 25 }, { width: 30 }];
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Vendor Details');
+
+    const fileName = `Vendor_${vendor.id}_${vendor.company_name || 'details'}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+};
+
 
   const renderCategoryCounts = (vendor) => {
-    // Only render category counts for Direct vendors
     if (activeVendorType !== 'Direct') return null;
 
     return Object.entries(CATEGORY_NAMES).map(([categoryId, categoryName]) => {
@@ -162,6 +272,51 @@ const VendorCategorize = () => {
       );
     });
   };
+
+  const VendorCard = React.memo(({ vendor }) => {
+    return (
+      <div className="col-md-6 col-lg-4 mb-4">
+        <Card className="shadow-sm h-100" style={{ borderTop: '3px solid #3c4b64' }}>
+          <Card.Header style={{ backgroundColor: '#3c4b64', color: 'white' }}>
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">{vendor.company_name || 'Unnamed Vendor'}</h5>
+              <Badge bg="dark">ID: {vendor.id}</Badge>
+            </div>
+          </Card.Header>
+          <Card.Body>
+            <p><strong>Name:</strong> {vendor.first_name} {vendor.last_name}</p>
+            <p><strong>Email:</strong> {vendor.email}</p>
+            <p><strong>Phone:</strong> {vendor.phone}</p>
+
+            {activeVendorType === 'Direct' ? (
+              <>
+                <h6 className="mt-3">Category Presence</h6>
+                <div className="d-flex flex-wrap">
+                  {renderCategoryCounts(vendor).length > 0 ? (
+                    renderCategoryCounts(vendor)
+                  ) : (
+                    <p className="text-danger fw-bold">No product yet</p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <p className="text-danger fw-bold mt-3">No product yet</p>
+            )}
+          </Card.Body>
+          <Card.Footer className="bg-light">
+            <Button 
+              variant="outline-primary" 
+              size="sm"
+              onClick={() => downloadVendorExcel(vendor)}
+              className="w-100"
+            >
+              <i className="bi bi-download me-2"></i> Download Excel
+            </Button>
+          </Card.Footer>
+        </Card>
+      </div>
+    );
+  });
 
   const handleShowDetails = (categoryName, vendorId, categoryIds) => {
     const vendor = vendorDetails.find(v => v.id === vendorId);
@@ -266,7 +421,6 @@ const VendorCategorize = () => {
         <Modal.Header
           closeButton
           style={{ backgroundColor: '#3c4b64', color: 'white' }}
-
         >
           <Modal.Title>
             {selectedDetails.categoryName} Details ({selectedDetails.details.length})
@@ -290,7 +444,7 @@ const VendorCategorize = () => {
                       <strong style={{ color: '#3c4b64' }}>{item.label}:</strong>
                       <div className="text-muted">
                         {typeof item.value === 'string' ?
-                          item.value.replace(/<[^>]*>?/gm, '') : // Remove HTML tags if present
+                          item.value.replace(/<[^>]*>?/gm, '') :
                           item.value}
                       </div>
                     </div>
@@ -330,12 +484,10 @@ const VendorCategorize = () => {
       </div>
     );
   }
+
   return (
     <div className="p-4 bg-light">
-      <h1
-        className="text-center mb-4"
-        style={{ color: '#3c4b64' }}
-      >
+      <h1 className="text-center mb-4" style={{ color: '#3c4b64' }}>
         Vendor Categorization
       </h1>
 
@@ -368,6 +520,16 @@ const VendorCategorize = () => {
         </div>
       )}
 
+      {/* Search Bar */}
+      <div className="mb-4">
+        <Form.Control
+          type="text"
+          placeholder="Search vendors by company name..."
+          value={searchInput}
+          onChange={handleSearchChange}
+          style={{ maxWidth: '400px' }}
+        />
+      </div>
 
       {/* Vendor Type Tabs */}
       <Tabs
@@ -388,52 +550,21 @@ const VendorCategorize = () => {
         className="mb-4"
       >
         <Tab eventKey="all" title="All Vendors" />
-
       </Tabs>
-      <div className="row">
-        {getFilteredVendors().length > 0 ? (
-          getFilteredVendors().map(vendor => (
-            <div key={vendor.id} className="col-md-6 col-lg-4 mb-4">
-              <Card className="shadow-sm" style={{ borderTop: '3px solid #3c4b64' }}>
-                <Card.Header style={{ backgroundColor: '#3c4b64', color: 'white' }}>
-                  <div className="d-flex justify-content-between">
-                    <h5>{vendor.company_name || 'Unnamed Vendor'}</h5>
-                    <Badge bg="dark">ID: {vendor.id}</Badge>
-                  </div>
-                </Card.Header>
-                <Card.Body>
-                  <p><strong>Name:</strong> {vendor.first_name} {vendor.last_name}</p>
-                  <p><strong>Email:</strong> {vendor.email}</p>
-                  <p><strong>Phone:</strong> {vendor.phone}</p>
 
-                  {activeVendorType === 'Direct' ? (
-                    <>
-                      <h6 className="mt-3">Category Presence</h6>
-                      <div className="d-flex flex-wrap">
-                        {renderCategoryCounts(vendor).length > 0 ? (
-                          renderCategoryCounts(vendor)
-                        ) : (
-                          <p className="text-danger fw-bold">No product yet</p>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-danger fw-bold mt-3">No product yet</p>
-                  )}
-                </Card.Body>
-              </Card>
-            </div>
+      <div className="row">
+        {filteredVendors.length > 0 ? (
+          filteredVendors.map(vendor => (
+            <VendorCard key={vendor.id} vendor={vendor} />
           ))
         ) : (
           <div className="col-12 text-center py-5">
-            <p className="text-danger fw-bold">No product yet</p>
+            <p className="text-danger fw-bold">No vendors found</p>
           </div>
         )}
       </div>
 
-
-       {/* Pagination - Now conditionally rendered based on activeVendorType */}
-       {!loading && activeVendorType === 'Direct' && pagination.total > pagination.per_page && (
+      {!loading && activeVendorType === 'Direct' && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First
@@ -471,7 +602,6 @@ const VendorCategorize = () => {
         </div>
       )}
 
-      {/* Per Page Selection - Also conditionally rendered */}
       {activeVendorType === 'Direct' && (
         <div className="d-flex justify-content-end mb-3">
           <select
