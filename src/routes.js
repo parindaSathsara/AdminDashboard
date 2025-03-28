@@ -92,6 +92,7 @@ import AccessManagement from './views/ManageAccess/AccessManagement';
 import Bridgify from './Panels/API_details/Bridgify'
 import TBO from './Panels/API_details/TBO'
 import UserCountStats from './Panels/UserCount/UserCountStats'
+import VendorCategorize from './views/VendorCategorize/VendorCategorize'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -136,8 +137,6 @@ const routes = [
   // { path: '/theme/AccountSystem', name: 'AccountSystem', element: AccountSystem },
   { path: '/base', name: 'Base', element: MoreOrderView, exact: true },
 
-
-
   // { path: "/login", name: 'login', element: Login },
   // { path: "/register", name: 'register', element: Register }
 
@@ -154,12 +153,14 @@ const routes = [
   {path:'/kpidashboard/team',name:'Team KPI',element:KpiDashboard},
   {path:'/kpidashboard/globaltarget',name:'Global Target',element:GlobalTarget},
   {path:'/kpidashboard/chat',name:'Chat Analytics',element:ChatAnalytics},
- 
 
   // services 
   {path:'/services/bridgyfy',name:'Bridgify',element:Bridgify},
   {path:'/services/tbo',name:'TBO',element:TBO},
   {path:'/users/stats',name:'User Stats',element:UserCountStats},
+  
+  // vendor categorize
+  {path:'/vendors/categorize',name:'Vendor Categorize',element:VendorCategorize},
 
 
 ]
