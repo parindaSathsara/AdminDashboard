@@ -31,26 +31,44 @@ const VendorCategorize = () => {
   const [searchInput, setSearchInput] = useState('');
 
   // Memoized filtered vendors
+  // Update the filteredVendors memo to handle DMC vendors
   const filteredVendors = useMemo(() => {
     const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
 
-    if (activeVendorType === 'DMC') {
-      return [];
-    }
+    console.log('vendors', vendors);
+    console.log(activeVendorType);
 
+    // Map vendor type to business_type filter
+    const businessTypeMatch = (vendor) => {
+      if (activeVendorType === 'Direct') {
+        return vendor.business_type?.toLowerCase() === 'individual';
+      } else if (activeVendorType === 'DMC') {
+        return vendor.business_type?.toLowerCase() === 'company';
+      }
+      return true; // if no activeVendorType filter applied
+    };
+
+    // First filter by vendor type
+    const typeFiltered = vendors.filter(businessTypeMatch);
+
+    console.log('typeFiltered', typeFiltered);
+
+    // Then filter by category if needed
     if (activeCategory !== 'all') {
-      return vendors.filter(vendor => 
+      return typeFiltered.filter(vendor =>
         vendor['Catergory ID'] === activeCategory.toString()
       );
     }
 
-    if (!searchTerm) return vendors;
+    // Then filter by search term if present
+    if (!searchTerm) return typeFiltered;
 
-    return vendors.filter(vendor => 
+    return typeFiltered.filter(vendor =>
       vendor.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       `${vendor.first_name} ${vendor.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
+
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -85,6 +103,8 @@ const VendorCategorize = () => {
           vendor_type: activeVendorType
         }
       });
+      // console.log('response_vendors', response);
+      
 
       if (response.data.status === 200) {
         return {
@@ -117,7 +137,8 @@ const VendorCategorize = () => {
       setError(null);
 
       const vendorsResponse = await getVendorDetailsCategorize(page, pagination.per_page);
-
+      console.log(vendorsResponse,"vendor_response");
+      
       setVendorDetails(vendorsResponse.data);
       setPagination({
         current_page: vendorsResponse.current_page,
@@ -157,13 +178,13 @@ const VendorCategorize = () => {
     // Category Summary
     data.push(['Category Summary', 'Count']);
     Object.entries(CATEGORY_NAMES).forEach(([categoryId, categoryName]) => {
-        let count = 0;
-        if (categoryName === 'Essentials') count = vendor.essentials?.count || 0;
-        else if (categoryName === 'Non-Essentials') count = vendor.non_essentials?.count || 0;
-        else if (categoryName === 'Lifestyle') count = vendor.lifestyles?.length || 0;
-        else if (categoryName === 'Hotels') count = vendor.hotels?.length || 0;
-        else if (categoryName === 'Education') count = vendor.education?.length || 0;
-        data.push([categoryName, count]);
+      let count = 0;
+      if (categoryName === 'Essentials') count = vendor.essentials?.count || 0;
+      else if (categoryName === 'Non-Essentials') count = vendor.non_essentials?.count || 0;
+      else if (categoryName === 'Lifestyle') count = vendor.lifestyles?.length || 0;
+      else if (categoryName === 'Hotels') count = vendor.hotels?.length || 0;
+      else if (categoryName === 'Education') count = vendor.education?.length || 0;
+      data.push([categoryName, count]);
     });
 
     // =======================
@@ -175,14 +196,14 @@ const VendorCategorize = () => {
     data.push(['Lifestyle Details', '']);
     data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link']);
     vendor.lifestyles?.forEach(item => {
-        data.push([
-            item.lifestyle_name || 'N/A',
-            item.lifestyle_city || 'N/A',
-            item.lifestyle_attraction_type || 'N/A',
-            item.preferred == 1 ? 'Yes' : 'No',
-            item.micro_location || 'N/A',
-            item.tripadvisor || 'N/A'
-        ]);
+      data.push([
+        item.lifestyle_name || 'N/A',
+        item.lifestyle_city || 'N/A',
+        item.lifestyle_attraction_type || 'N/A',
+        item.preferred == 1 ? 'Yes' : 'No',
+        item.micro_location || 'N/A',
+        item.tripadvisor || 'N/A'
+      ]);
     });
 
     // Education Details
@@ -190,14 +211,14 @@ const VendorCategorize = () => {
     data.push(['Education Details', '']);
     data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method']);
     vendor.education?.forEach(item => {
-        data.push([
-            item.course_name || 'N/A',
-            item.medium || 'N/A',
-            item.course_mode || 'N/A',
-            item.group_type || 'N/A',
-            item.free_session || 'N/A',
-            item.payment_method || 'N/A'
-        ]);
+      data.push([
+        item.course_name || 'N/A',
+        item.medium || 'N/A',
+        item.course_mode || 'N/A',
+        item.group_type || 'N/A',
+        item.free_session || 'N/A',
+        item.payment_method || 'N/A'
+      ]);
     });
 
     // Hotel Details
@@ -205,15 +226,15 @@ const VendorCategorize = () => {
     data.push(['Hotel Details', '']);
     data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date']);
     vendor.hotels?.forEach(item => {
-        data.push([
-            item.hotel_name || 'N/A',
-            item.star_classification || 'N/A',
-            item.city || 'N/A',
-            item.hotel_address || 'N/A',
-            item.trip_advisor_link || 'N/A',
-            item.start_date || 'N/A',
-            item.end_date || 'N/A'
-        ]);
+      data.push([
+        item.hotel_name || 'N/A',
+        item.star_classification || 'N/A',
+        item.city || 'N/A',
+        item.hotel_address || 'N/A',
+        item.trip_advisor_link || 'N/A',
+        item.start_date || 'N/A',
+        item.end_date || 'N/A'
+      ]);
     });
 
     // =======================
@@ -229,11 +250,11 @@ const VendorCategorize = () => {
 
     const fileName = `Vendor_${vendor.id}_${vendor.company_name || 'details'}.xlsx`;
     XLSX.writeFile(wb, fileName);
-};
+  };
 
 
   const renderCategoryCounts = (vendor) => {
-    if (activeVendorType !== 'Direct') return null;
+    // if (activeVendorType !== 'Direct') return null;
 
     return Object.entries(CATEGORY_NAMES).map(([categoryId, categoryName]) => {
       let count = 0;
@@ -288,7 +309,7 @@ const VendorCategorize = () => {
             <p><strong>Email:</strong> {vendor.email}</p>
             <p><strong>Phone:</strong> {vendor.phone}</p>
 
-            {activeVendorType === 'Direct' ? (
+            {activeVendorType === 'Direct' || 'DMC' ? (
               <>
                 <h6 className="mt-3">Category Presence</h6>
                 <div className="d-flex flex-wrap">
@@ -304,8 +325,8 @@ const VendorCategorize = () => {
             )}
           </Card.Body>
           <Card.Footer className="bg-light">
-            <Button 
-              variant="outline-primary" 
+            <Button
+              variant="outline-primary"
               size="sm"
               onClick={() => downloadVendorExcel(vendor)}
               className="w-100"
@@ -493,7 +514,7 @@ const VendorCategorize = () => {
 
       {vendorSummary && (
         <div className="row mb-4">
-          <div className="col-md-4">
+          <div className="col-md-4"> 
             <Card className="text-center shadow-sm" style={{ borderTop: '3px solid #3c4b64' }}>
               <Card.Body>
                 <h5>Total Vendors</h5>
@@ -535,11 +556,15 @@ const VendorCategorize = () => {
       <Tabs
         id="vendor-type-tabs"
         activeKey={activeVendorType}
-        onSelect={(key) => setActiveVendorType(key)}
+        onSelect={(key) => {
+          setActiveVendorType(key);
+          setActiveCategory('all'); // Reset category filter when changing vendor type
+          // fetchVendorData(1); // Fetch fresh data for the new vendor type
+        }}
         className="mb-3"
       >
-        <Tab eventKey="Direct" title={`Direct (${vendorDetails.vendor_count || 894})`} />
-        <Tab eventKey="DMC" title={`DMC (${vendorDetails.vendor_count || 0})`} />
+        <Tab eventKey="Direct" title={`Direct (${vendorSummary?.direct_vendors || 0})`} />
+        <Tab eventKey="DMC" title={`DMC (${vendorSummary?.dmc_vendors || 0})`} />
       </Tabs>
 
       {/* Category Tabs */}
@@ -564,7 +589,7 @@ const VendorCategorize = () => {
         )}
       </div>
 
-      {!loading && activeVendorType === 'Direct' && pagination.total > pagination.per_page && (
+      {!loading && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First
@@ -602,7 +627,7 @@ const VendorCategorize = () => {
         </div>
       )}
 
-      {activeVendorType === 'Direct' && (
+      {activeVendorType === ('DMC' || 'Direct')  && (
         <div className="d-flex justify-content-end mb-3">
           <select
             className="form-select w-auto"
