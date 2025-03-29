@@ -87,7 +87,9 @@ const VendorCategorize = () => {
     try {
       const response = await axios.get('/getVendorSummary');
       if (response.data.status === 200) {
+        console.log(response.data.vendor_summary);
         setVendorSummary(response.data.vendor_summary);
+
       }
     } catch (error) {
       console.error('Error fetching vendor summary:', error);
@@ -104,7 +106,7 @@ const VendorCategorize = () => {
         }
       });
       // console.log('response_vendors', response);
-      
+
 
       if (response.data.status === 200) {
         return {
@@ -137,8 +139,8 @@ const VendorCategorize = () => {
       setError(null);
 
       const vendorsResponse = await getVendorDetailsCategorize(page, pagination.per_page);
-      console.log(vendorsResponse,"vendor_response");
-      
+      console.log(vendorsResponse, "vendor_response");
+
       setVendorDetails(vendorsResponse.data);
       setPagination({
         current_page: vendorsResponse.current_page,
@@ -514,32 +516,71 @@ const VendorCategorize = () => {
 
       {vendorSummary && (
         <div className="row mb-4">
-          <div className="col-md-4"> 
-            <Card className="text-center shadow-sm" style={{ borderTop: '3px solid #3c4b64' }}>
-              <Card.Body>
-                <h5>Total Vendors</h5>
-                <h3 style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
-              </Card.Body>
-            </Card>
-          </div>
+
+          {/* Total Vendors */}
           <div className="col-md-4">
-            <Card className="text-center shadow-sm" style={{ borderTop: '3px solid green' }}>
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
               <Card.Body>
-                <h5>Active Vendors</h5>
-                <h3 style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Total Vendors</h5>
+                  <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
+                </div>
               </Card.Body>
             </Card>
           </div>
+
+
+          {/* Active Vendors */}
           <div className="col-md-4">
-            <Card className="text-center shadow-sm" style={{ borderTop: '3px solid red' }}>
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
               <Card.Body>
-                <h5>Inactive Vendors</h5>
-                <h3 style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Active Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+                </div>
               </Card.Body>
             </Card>
           </div>
+
+          {/* Inactive Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Inactive Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+
+          {/* Direct Vendors */}
+          <div className="col-md-6 mt-3">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Direct Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'orange' }}>{vendorSummary.direct_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+
+          {/* DMC Vendors */}
+          <div className="col-md-6 mt-3">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">DMC Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'purple' }}>{vendorSummary.dmc_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+
         </div>
       )}
+
 
       {/* Search Bar */}
       <div className="mb-4">
@@ -627,7 +668,7 @@ const VendorCategorize = () => {
         </div>
       )}
 
-      {activeVendorType === ('DMC' || 'Direct')  && (
+      {activeVendorType === ('DMC' || 'Direct') && (
         <div className="d-flex justify-content-end mb-3">
           <select
             className="form-select w-auto"
