@@ -647,3 +647,32 @@
 .chat-suggestion-item:hover {
     background-color: #eee;
 }
+
+/* Pagination styling */
+.pagination {
+    gap: 4px;
+  }
+  
+  .page-item .page-link {
+    border-radius: 4px !important;
+    min-width: 40px;
+    text-align: center;
+  }
+  
+  .page-item.active .page-link {
+    background-color: #3c4b64;
+    border-color: #3c4b64;
+  }
+  
+  .page-item:not(.active) .page-link {
+    color: #3c4b64;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .page-item .page-link {
+      min-width: 32px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
