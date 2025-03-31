@@ -12,6 +12,13 @@ const CATEGORY_NAMES = {
   5: 'Education'
 };
 
+const API_VENDORS = [
+  { id: 'api1', name: 'ChatGPT', description: 'OpenAI API services' },
+  { id: 'api2', name: 'Google Cloud', description: 'Google Cloud Platform APIs' },
+  { id: 'api3', name: 'Giata', description: 'Hotel content API' },
+  { id: 'api4', name: 'Bridgify', description: 'Travel API services' },
+];
+
 const VendorCategorize = () => {
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,6 +40,12 @@ const VendorCategorize = () => {
   // Memoized filtered vendors
   // Update the filteredVendors memo to handle DMC vendors
   const filteredVendors = useMemo(() => {
+
+    // Return hardcoded API vendors when API tab is selected
+    if (activeVendorType === 'API') {
+      return API_VENDORS;
+    }
+
     const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
 
     console.log('vendors', vendors);
@@ -297,6 +310,39 @@ const VendorCategorize = () => {
   };
 
   const VendorCard = React.memo(({ vendor }) => {
+    if (activeVendorType === 'API') {
+      return (
+        <div className="col-md-6 col-lg-4 mb-4">
+          <Card className="shadow-sm h-100" style={{ borderTop: '3px solid #6f42c1' }}>
+            <Card.Header style={{ backgroundColor: '#6f42c1', color: 'white' }}>
+              <div className="d-flex justify-content-between align-items-center">
+                <h5 className="mb-0">{vendor.name}</h5>
+                <Badge bg="dark">API</Badge>
+              </div>
+            </Card.Header>
+            <Card.Body>
+              <p><strong>Description:</strong> {vendor.description}</p>
+            </Card.Body>
+            <Card.Footer className="bg-light">
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={() => {
+                  setSelectedDetails({
+                    categoryName: 'API',
+                    details: [vendor]
+                  });
+                  setShowDetailsModal(true);
+                }}
+                className="w-100"
+              >
+                <i className="bi bi-info-circle me-2"></i> View Details
+              </Button>
+            </Card.Footer>
+          </Card>
+        </div>
+      );
+    }
     return (
       <div className="col-md-6 col-lg-4 mb-4">
         <Card className="shadow-sm h-100" style={{ borderTop: '3px solid #3c4b64' }}>
@@ -392,6 +438,13 @@ const VendorCategorize = () => {
     if (!selectedDetails) return null;
 
     const getDetailsContent = (detail) => {
+      if (selectedDetails.categoryName === 'API') {
+        return [
+          { label: 'API Name', value: detail.name || 'N/A' },
+          { label: 'Description', value: detail.description || 'N/A' },
+          { label: 'Type', value: 'API Service' }
+        ];
+      }
       switch (selectedDetails.categoryName) {
         case 'Essentials':
         case 'Non-Essentials':
@@ -606,17 +659,21 @@ const VendorCategorize = () => {
       >
         <Tab eventKey="Direct" title={`Direct (${vendorSummary?.direct_vendors || 0})`} />
         <Tab eventKey="DMC" title={`DMC (${vendorSummary?.dmc_vendors || 0})`} />
+        <Tab eventKey="API" title={`API (${API_VENDORS.length})`} />
+
       </Tabs>
 
-      {/* Category Tabs */}
-      <Tabs
-        id="vendor-tabs"
-        activeKey={activeCategory}
-        onSelect={(key) => setActiveCategory(key)}
-        className="mb-4"
-      >
-        <Tab eventKey="all" title="All Vendors" />
-      </Tabs>
+      {/* Category Tabs - Hide when in API tab */}
+      {activeVendorType !== 'API' && (
+        <Tabs
+          id="vendor-tabs"
+          activeKey={activeCategory}
+          onSelect={(key) => setActiveCategory(key)}
+          className="mb-4"
+        >
+          <Tab eventKey="all" title="All Vendors" />
+        </Tabs>
+      )}
 
       <div className="row">
         {filteredVendors.length > 0 ? (
@@ -630,7 +687,7 @@ const VendorCategorize = () => {
         )}
       </div>
 
-      {!loading && pagination.total > pagination.per_page && (
+      {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First
@@ -668,7 +725,7 @@ const VendorCategorize = () => {
         </div>
       )}
 
-      {activeVendorType === ('DMC' || 'Direct') && (
+      {activeVendorType !== 'API' && activeVendorType === ('DMC' || 'Direct') && (
         <div className="d-flex justify-content-end mb-3">
           <select
             className="form-select w-auto"
