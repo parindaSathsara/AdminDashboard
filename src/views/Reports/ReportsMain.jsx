@@ -23,6 +23,7 @@ import ChatReportData from './ChatData/ChatReportData';
 import DriverAllocationData from './CategoryData/DriverAllocationData';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import HotelsCategoryData from './CategoryData/HotelsCategoryData';
+import MainOrderReport from "./MainOrderReport/MainOrderReport";
 
 
 const ReportGenerationPage = () => {
@@ -54,7 +55,8 @@ const ReportGenerationPage = () => {
 
   const reportTypes = [
     { value: 'products_report', label: 'Products Report' },
-    { value: 'orders_report', label: 'Orders Report' },
+    { value: 'orders_report', label: 'Orders Report (product wise)' },
+    { value: 'main_orders_report', label: 'Orders Report' },
     { value: 'customer_report', label: 'Customer Report' },
     { value: 'chats_report', label: 'Chats Report' },
     { value: 'driver_allocation', label: 'Driver Allocation' },
@@ -189,12 +191,16 @@ const ReportGenerationPage = () => {
                   placeholder="Select a Report Type" id="report-type" />
                 {validationErrors.reportType && <div className="text-danger">{validationErrors.reportType}</div>}
               </CCol>
-              <CCol xs={12} sm={6} lg={2}>
-                <CFormLabel htmlFor="category">Category</CFormLabel>
-                <br />
-                <Select options={reportType?.value === 'chats_report' ? chatCategories : categories} value={category} onChange={selectedOption => setCategory(selectedOption)} placeholder="Select a category" id="category" isDisabled={reportType?.value == "customer_report"} />
-                {validationErrors.category && <div className="text-danger">{validationErrors.category}</div>}
-              </CCol>
+              {
+                reportType?.value !== 'main_orders_report' && (
+                  <CCol xs={12} sm={6} lg={2}>
+                    <CFormLabel htmlFor="category">Category</CFormLabel>
+                    <br />
+                    <Select options={reportType?.value === 'chats_report' ? chatCategories : categories} value={category} onChange={selectedOption => setCategory(selectedOption)} placeholder="Select a category" id="category" isDisabled={reportType?.value == "customer_report"} />
+                    {validationErrors.category && <div className="text-danger">{validationErrors.category}</div>}
+                  </CCol>
+                )
+              }
               <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
                 {(["generate all report", "all accounts access"].some(permission => userData?.permissions?.includes(permission))) &&
                   <CButton color="dark" className="full-width" onClick={handleGenerateReport}>Generate Report</CButton>
@@ -204,7 +210,7 @@ const ReportGenerationPage = () => {
             </CRow>
 
             {
-              (reportType?.value === 'orders_report' || reportType?.value === 'driver_allocation') &&
+              (reportType?.value === 'main_orders_report' || reportType?.value === 'orders_report' || reportType?.value === 'driver_allocation') &&
               <CRow className="mt-3">
                 <CCol xs={12}>
                   <CFormLabel htmlFor="date-type" style={{ fontWeight: "bold" }}>Date Type</CFormLabel>
@@ -223,25 +229,26 @@ const ReportGenerationPage = () => {
 
         loading ? <LoaderPanel message="Report Data Fetching" /> :
           reportDataSet.length > 0 ?
-            reportType?.value === 'driver_allocation' ?
-              <DriverAllocationData dataSet={reportDataSet} />
-              // <p>Test</p>
-              :
-              reportType?.value === 'products_report' ?
-                category.value == 3 ?
-                  <LifestylesCategoryData data={reportDataSet} />
-                  : (category.value == 1 || category.value == 2) ?
-                    <EssentialsCategoryData data={reportDataSet} category={category.value} />
-                    : category.value == 5 ?
-                      <EducationCategoryData data={reportDataSet} />
-                      : category.value == 4 ? <HotelsCategoryData data={reportDataSet} />
-                        : null
-                : reportType.value === "customer_report" ?
-                  <CustomersData dataSet={reportDataSet} category={category.value} />
-                  :
-                  reportType?.value === 'chats_report' ?
-                    <ChatReportData dataSet={reportDataSet} category={category.value} />
-                    : <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} />
+            reportType?.value === 'main_orders_report' ? <MainOrderReport dataSet={reportDataSet} /> :
+              reportType?.value === 'driver_allocation' ?
+                <DriverAllocationData dataSet={reportDataSet} />
+                // <p>Test</p>
+                :
+                reportType?.value === 'products_report' ?
+                  category.value == 3 ?
+                    <LifestylesCategoryData data={reportDataSet} />
+                    : (category.value == 1 || category.value == 2) ?
+                      <EssentialsCategoryData data={reportDataSet} category={category.value} />
+                      : category.value == 5 ?
+                        <EducationCategoryData data={reportDataSet} />
+                        : category.value == 4 ? <HotelsCategoryData data={reportDataSet} />
+                          : null
+                  : reportType.value === "customer_report" ?
+                    <CustomersData dataSet={reportDataSet} category={category.value} />
+                    :
+                    reportType?.value === 'chats_report' ?
+                      <ChatReportData dataSet={reportDataSet} category={category.value} />
+                      : <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} />
             :
             dataEmptyState ? <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>
               : null
