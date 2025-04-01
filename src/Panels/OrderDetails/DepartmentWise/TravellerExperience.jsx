@@ -781,6 +781,13 @@ export default function TravellerExperience(props) {
                       item.time_slot == allocateProductData.pickupTime
                     );
                   });
+                  const isAllocatedToCurrent = driver.allocation.filter((item) => {
+                    return (
+                      item.order_product_id == allocateProductData.checkoutID
+                    );
+                  });
+                  const hasDrop = isAllocatedToCurrent.some(item => item.transfer_type === "drop");
+                  const hasPickup = isAllocatedToCurrent.some(item => item.transfer_type === "pickup");
                   return (
                     <div
                       key={index}
@@ -824,7 +831,35 @@ export default function TravellerExperience(props) {
                           <span>Driver Status: {driver.driver_status}</span>
                         </div>
                       </div>
-                      {!isAllocated && (driverId === driver.id ? (
+                      <div>
+                        {isAllocatedToCurrent.length > 0 &&
+                          isAllocatedToCurrent.map((item, index) => (
+                            <div key={index}>
+                              <span className='badge bg-dark m-1'>Allocated Date: {item.service_date}</span>
+                              <span className='badge bg-dark m-1'>Time Slot: {item.time_slot}</span>
+                              <span className='badge bg-dark m-1'>Transfer Type: {item.transfer_type}</span>
+                            </div>
+                          ))
+                        }
+                      </div>
+                      {console.log("isAllocatedToCurrent", isAllocatedToCurrent)}
+                      {!hasDrop && (<CButton
+                        color="success"
+                        className="select-allocation-btn"
+                        onClick={() => handleChooseDriver('drop', driver)}
+                      >
+                        Select vehicle for drop
+                      </CButton>)}
+                      {!hasPickup && (<CButton
+                        color="primary"
+                        className="select-allocation-btn"
+                        onClick={() => handleChooseDriver('pickup', driver)}
+                      >
+                        Select vehicle for pickup
+                      </CButton>)}
+
+
+                      {/* {!isAllocated && (driverId === driver.id ? (
                         <CButton
                           color="dark"
                           disabled
@@ -859,7 +894,7 @@ export default function TravellerExperience(props) {
                         >
                           Select vehicle for two way
                         </CButton>
-                      ))}
+                      ))} */}
                     </div>
                   )
                 })
