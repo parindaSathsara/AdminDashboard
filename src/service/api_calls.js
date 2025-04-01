@@ -69,6 +69,155 @@ const getVendorDetails = async () => {
   return dataArray;
 
 }
+const getVendorSummary = async () => {
+  var dataArray = [];
+  await axios
+    .get('/getVendorSummary')
+    .then((res) => {
+      // console.log(res)
+
+      if (res.data.status === 200) {
+        dataArray = res.data.response
+      }
+    })
+    .catch((err) => {
+      throw new Error(err)
+    })
+
+  return dataArray;
+
+}
+// Get all vendors with pagination
+const getVendorDetailsCategorize = async (page = 1, perPage = 50) => {
+  try {
+    const response = await axios.get('/getAllVendorsCategorize', {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
+
+    if (response.data.status === 200) {
+      return {
+        data: response.data.response,
+        current_page: response.data.current_page || 1,
+        per_page: response.data.per_page || perPage,
+        total: response.data.total || 0,
+        last_page: response.data.last_page || 1,
+        vendor_count:response.data.vendor_count || 894
+      };
+    }
+    
+    return {
+      data: [],
+      current_page: 1,
+      per_page: perPage,
+      total: 0,
+      last_page: 1
+    };
+  } catch (error) {
+    console.error('Error fetching vendor details:', error);
+    throw error;
+  }
+};
+
+// Get vendor category counts with pagination
+const getVendorCategoryCounts = async (page = 1, perPage = 50) => {
+  try {
+    const response = await axios.get('/getVendorCategoryCounts', {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
+
+    if (response.data.status === 200) {
+      return response.data.category_counts;
+    }
+    
+    return {
+      data: {},
+      current_page: 1,
+      per_page: perPage,
+      total: 0,
+      last_page: 1
+    };
+  } catch (error) {
+    console.error('Error fetching vendor category counts:', error);
+    throw error;
+  }
+};
+// Function to get Essentials details
+export const getEssentialsDetails = async () => {
+  try {
+    const res = await axios.get('/getEssentialsDetails');
+    if (res.data.status === 200) {
+      return res.data.essentials_details;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error fetching Essentials details:', err);
+    throw new Error(err);
+  }
+};
+
+// Function to get Non-Essentials details
+export const getNonEssentialsDetails = async () => {
+  try {
+    const res = await axios.get('/getNonEssentialsDetails');
+    if (res.data.status === 200) {
+      return res.data.non_essentials_details;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error fetching Non-Essentials details:', err);
+    throw new Error(err);
+  }
+};
+
+// Function to get Lifestyle details
+export const getLifestyleDetails = async () => {
+  try {
+    const res = await axios.get('/getLifestyleDetails');
+    if (res.data.status === 200) {
+      return res.data.lifestyle_details;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error fetching Lifestyle details:', err);
+    throw new Error(err);
+  }
+};
+
+// Function to get Hotels details
+export const getHotelsDetails = async () => {
+  try {
+    const res = await axios.get('/getHotelsDetails');
+    if (res.data.status === 200) {
+      return res.data.hotels_details;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error fetching Hotels details:', err);
+    throw new Error(err);
+  }
+};
+
+// Function to get Education details
+export const getEducationDetails = async () => {
+  try {
+    const res = await axios.get('/getEducationDetails');
+    if (res.data.status === 200) {
+      return res.data.education_details;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error fetching Education details:', err);
+    throw new Error(err);
+  }
+};
+
+
 
 const getAllFeedbacks = async (id) => {
   var dataArray = [];
@@ -714,5 +863,6 @@ async function adminToggleStatus(status, userID) {
 export {
   getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus, getDashboardOrdersIdWiseProduct, getDashboardProductOrderDetails,
   getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, candelOrder, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
-  availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId
+  availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId,
+  getVendorDetailsCategorize, getVendorCategoryCounts,getVendorSummary
 }

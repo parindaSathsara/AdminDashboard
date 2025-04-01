@@ -102,6 +102,8 @@ const VendorList = () => {
 
         setLoading(true)
         getVendorDetails().then(res => {
+            console.log(res,"res");
+            
             setVendorDetails(res)
             setLoading(false)
         })
