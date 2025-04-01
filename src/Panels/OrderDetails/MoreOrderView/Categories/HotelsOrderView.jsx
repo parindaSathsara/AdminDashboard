@@ -255,7 +255,12 @@ export default function HotelsOrderView(props) {
   // };
 
   const [bookingData, setBookingData] = useState(null);
+  const [nightCount, setNightCount] = useState(0);
+  const [starCount, setStarCount] = useState(0);
+
+
   const fetchBookingData = async (data) => {
+    console.log(data, "Data value is");
     try {
       let url = "";
       if (data?.Provider == "hotelTbo") {
@@ -267,18 +272,47 @@ export default function HotelsOrderView(props) {
 
       if (data?.Provider == "hotelTbo") {
         if (response.data?.data?.bookingData) {
+          console.log(response.data?.data?.bookingData, "Booking Data");
           setBookingData(response.data.data)
         }
       }
       else if (data?.Provider == "hotelTboH") {
         if (response?.data?.data?.BookingDetail) {
           setBookingData(response?.data?.data?.BookingDetail)
+          console.log(response?.data?.data?.BookingDetail, "Booking Data");
+
         }
       }
+
+      const checkInDate = new Date(bookingData.CheckIn);
+      const checkOutDate = new Date(bookingData.CheckOut);
+       nightCount = Math.max(1, (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)); // Calculate nights
+
+      console.log(nightCount, "Night Count");
+      
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Recalculate nightCount when bookingData updates
+useEffect(() => {
+  if (bookingData?.CheckIn && bookingData?.CheckOut) {
+    const checkInDate = new Date(bookingData.CheckIn);
+    const checkOutDate = new Date(bookingData.CheckOut);
+    setNightCount(Math.max(1, (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)));
+    const ratingMap = {
+      OneStar: 1,
+      TwoStar: 2,
+      ThreeStar: 3,
+      FourStar: 4,
+      FiveStar: 5
+    };
+
+    setStarCount(ratingMap[bookingData?.HotelDetails?.Rating] || 0);
+  }
+}, [bookingData]);
+
 
   const [basicDetails, setBasicDetails] = useState([])
 
@@ -290,7 +324,6 @@ export default function HotelsOrderView(props) {
 
 
   const mealAllocation = basicDetails?.decoded_data?.customerDetails?.mealAllocation;
-
 
 
   return (
@@ -521,7 +554,8 @@ export default function HotelsOrderView(props) {
 
                   <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
                     <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
-                    <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>1 Night</div>
+                    {/* <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>1 Night</div> */}
+                    <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>{nightCount} {nightCount > 1 ? "Nights" : "Night"}</div>
                     <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
                   </div>
 
@@ -544,11 +578,11 @@ export default function HotelsOrderView(props) {
               <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>{bookingData.HotelDetails.HotelName}</p>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <div style={{ display: 'inline-block' }}>
-                  {Array(3).fill(0).map((_, i) => (
+                  {Array(starCount).fill(0).map((_, i) => (
                     <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
                   ))}
                 </div>
-                <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>Three Star</span>
+                {/* <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>Three Star</span> */}
               </div>
               <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> {bookingData.HotelDetails.AddressLine1}</p>
               <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> {bookingData.HotelDetails.City}</p>
