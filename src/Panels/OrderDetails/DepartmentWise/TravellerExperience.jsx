@@ -638,16 +638,22 @@ export default function TravellerExperience(props) {
     })
   }
 
-  const handleChooseDriver = async (dataset) => {
+  const handleChooseDriver = async (type, dataset) => {
     console.log(dataset, 'Dataset Value is')
     let Prod_ID = driverAllocationStatus.data.data.checkoutID
     let Veh_ID = dataset.id
+
+    const formData = new FormData();
+    formData.append('transfer_type', type);
+
     await axios
-      .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`, {
-        xsrfHeaderName: 'X-CSRF-Token',
-        withCredentials: true,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`,
+        formData,
+        {
+          xsrfHeaderName: 'X-CSRF-Token',
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
       .then((response) => {
         if (response.data.message === 'success') {
           Swal.fire({
@@ -775,6 +781,13 @@ export default function TravellerExperience(props) {
                       item.time_slot == allocateProductData.pickupTime
                     );
                   });
+                  const isAllocatedToCurrent = driver.allocation.filter((item) => {
+                    return (
+                      item.order_product_id == allocateProductData.checkoutID
+                    );
+                  });
+                  const hasDrop = isAllocatedToCurrent.some(item => item.transfer_type === "drop");
+                  const hasPickup = isAllocatedToCurrent.some(item => item.transfer_type === "pickup");
                   return (
                     <div
                       key={index}
@@ -818,7 +831,35 @@ export default function TravellerExperience(props) {
                           <span>Driver Status: {driver.driver_status}</span>
                         </div>
                       </div>
-                      {!isAllocated && (driverId === driver.id ? (
+                      <div>
+                        {isAllocatedToCurrent.length > 0 &&
+                          isAllocatedToCurrent.map((item, index) => (
+                            <div key={index}>
+                              <span className='badge bg-dark m-1'>Allocated Date: {item.service_date}</span>
+                              <span className='badge bg-dark m-1'>Time Slot: {item.time_slot}</span>
+                              <span className='badge bg-dark m-1'>Transfer Type: {item.transfer_type}</span>
+                            </div>
+                          ))
+                        }
+                      </div>
+                      {console.log("isAllocatedToCurrent", isAllocatedToCurrent)}
+                      {!hasDrop && (<CButton
+                        color="success"
+                        className="select-allocation-btn"
+                        onClick={() => handleChooseDriver('drop', driver)}
+                      >
+                        Select vehicle for drop
+                      </CButton>)}
+                      {!hasPickup && (<CButton
+                        color="primary"
+                        className="select-allocation-btn"
+                        onClick={() => handleChooseDriver('pickup', driver)}
+                      >
+                        Select vehicle for pickup
+                      </CButton>)}
+
+
+                      {/* {!isAllocated && (driverId === driver.id ? (
                         <CButton
                           color="dark"
                           disabled
@@ -831,11 +872,29 @@ export default function TravellerExperience(props) {
                         <CButton
                           color="warning"
                           className="select-allocation-btn"
-                          onClick={() => handleChooseDriver(driver)}
+                          onClick={() => handleChooseDriver('one-way', driver)}
                         >
-                          Select Vehicle
+                          Select vehicle for one way
                         </CButton>
                       ))}
+                      {!isAllocated && (driverId === driver.id ? (
+                        <CButton
+                          color="dark"
+                          disabled
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver(driver)}
+                        >
+                          Selected
+                        </CButton>
+                      ) : (
+                        <CButton
+                          color="success"
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver('two-way', driver)}
+                        >
+                          Select vehicle for two way
+                        </CButton>
+                      ))} */}
                     </div>
                   )
                 })
