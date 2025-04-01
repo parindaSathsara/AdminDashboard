@@ -775,12 +775,12 @@ export default function TravellerExperience(props) {
               driverDetails
                 .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
                 .map((driver, index) => {
-                  const isAllocated = driver.allocation.find((item) => {
-                    return (
-                      item.service_date == allocateProductData.service_date &&
-                      item.time_slot == allocateProductData.pickupTime
-                    );
-                  });
+                  // const isAllocated = driver.allocation.find((item) => {
+                  //   return (
+                  //     item.service_date == allocateProductData.service_date &&
+                  //     item.time_slot == allocateProductData.pickupTime
+                  //   );
+                  // });
                   const isAllocatedToCurrent = driver.allocation.filter((item) => {
                     return (
                       item.order_product_id == allocateProductData.checkoutID
@@ -792,11 +792,11 @@ export default function TravellerExperience(props) {
                     <div
                       key={index}
                       className="driver-vehicle-card"
-                      style={{ backgroundColor: driverId === driver.id ? '#f0e68c ' : null }}
+                      style={{ backgroundColor: (hasDrop || hasPickup) ? "#f0e68c" : "transparent" }}
                     >
                       <div className="vehicle-primary-info">
                         <div className="vehicle-identification">
-                          {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)}
+                          {/* {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)} */}
                           <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
                           <span className="vehicle-province">{driver.vehicle_province}</span>
                         </div>
