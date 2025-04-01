@@ -638,16 +638,22 @@ export default function TravellerExperience(props) {
     })
   }
 
-  const handleChooseDriver = async (dataset) => {
+  const handleChooseDriver = async (type, dataset) => {
     console.log(dataset, 'Dataset Value is')
     let Prod_ID = driverAllocationStatus.data.data.checkoutID
     let Veh_ID = dataset.id
+
+    const formData = new FormData();
+    formData.append('transfer_type', type);
+
     await axios
-      .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`, {
-        xsrfHeaderName: 'X-CSRF-Token',
-        withCredentials: true,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`,
+        formData,
+        {
+          xsrfHeaderName: 'X-CSRF-Token',
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
       .then((response) => {
         if (response.data.message === 'success') {
           Swal.fire({
@@ -831,9 +837,27 @@ export default function TravellerExperience(props) {
                         <CButton
                           color="warning"
                           className="select-allocation-btn"
+                          onClick={() => handleChooseDriver('one-way', driver)}
+                        >
+                          Select vehicle for one way
+                        </CButton>
+                      ))}
+                      {!isAllocated && (driverId === driver.id ? (
+                        <CButton
+                          color="dark"
+                          disabled
+                          className="select-allocation-btn"
                           onClick={() => handleChooseDriver(driver)}
                         >
-                          Select Vehicle
+                          Selected
+                        </CButton>
+                      ) : (
+                        <CButton
+                          color="success"
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver('two-way', driver)}
+                        >
+                          Select vehicle for two way
                         </CButton>
                       ))}
                     </div>
