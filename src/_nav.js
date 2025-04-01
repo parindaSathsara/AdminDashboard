@@ -99,24 +99,24 @@ function getNavigationHook(permissions) {
     // },
 
     {
-      component: CNavItem,
+      component: CNavGroup,
       name: 'Vendors',
       to: '/vendors',
       hidden: false,
       icon: <CIcon icon={cilContact} customClassName="nav-icon" />,
-      // items: [
-      //   {
-      //     component: CNavItem,
-      //     name: 'Vendors',
-      //     to: '/vendors/',
-      //   },
-      //   {
-      //     component: CNavItem,
-      //     name: 'Vendor Analytics',
-      //     to: 'vendors/analytics',
-      //   },
+      items: [
+        {
+          component: CNavItem,
+          name: 'Vendors',
+          to: '/vendors',
+        },
+        {
+          component: CNavItem,
+          name: 'Vendor Analytics',
+          to: '/vendors/categorize',
+        },
 
-      // ],
+      ],
     },
 
 
