@@ -251,40 +251,42 @@ export default function LifestylesOrderView(discount) {
 
   return (
     <CContainer style={{ backgroundColor: 'white', padding: 20, borderRadius: 20, paddingRight: 60, paddingLeft: 60 }} fluid>
-      <CRow>
+      {
+        basicDetails && (
+          <CRow>
 
-        <CCol xs="12" lg="3">
-          <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
-            <CImage
-              // src={basicDetails?.["image"]}
-              src={
-                basicDetails?.["product_images"]
-                  ? (basicDetails["product_images"].includes(',')
-                    ? basicDetails["product_images"].split(',')[0].trim() // Use the first image from the list
-                    : basicDetails["product_images"]) // Use the single image
-                  : basicDetails?.["first_image"] // Use the first_image if product_images is not available
-              }
-              fluid
-              style={{
-                position: 'absolute',
-                top: '0',
-                left: '0',
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          </div>
-        </CCol>
+            <CCol xs="12" lg="3">
+              <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
+                <CImage
+                  // src={basicDetails?.["image"]}
+                  src={
+                    basicDetails?.["product_images"]
+                      ? (basicDetails["product_images"].includes(',')
+                        ? basicDetails["product_images"].split(',')[0].trim() // Use the first image from the list
+                        : basicDetails["product_images"]) // Use the single image
+                      : basicDetails?.["first_image"] // Use the first_image if product_images is not available
+                  }
+                  fluid
+                  style={{
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
+            </CCol>
 
 
-        <CCol className='py-4'>
+            <CCol className='py-4'>
 
-          <h4 className='mb-2'>{basicDetails?.['product_name']}</h4>
+              <h4 className='mb-2'>{basicDetails?.['product_name']}</h4>
 
-          <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["description"])}</CCardText>
+              <CCardText className='mb-4'>{stripHtmlTags(basicDetails?.["description"])}</CCardText>
 
-          {/* <CRow>
+              {/* <CRow>
                         <CCol xs="12" lg="4">
                             <div style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '10px', backgroundColor: '#f8f9fa', marginBottom: '20px' }}>
                                 <CCardBody>
@@ -343,9 +345,11 @@ export default function LifestylesOrderView(discount) {
                         </CCol>
                     </CRow> */}
 
-        </CCol>
+            </CCol>
 
-      </CRow>
+          </CRow>
+        )
+      }
 
       <CCol className='my-4'>
 
