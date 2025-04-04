@@ -56,7 +56,7 @@ const ReportGenerationPage = () => {
   const reportTypes = [
     { value: 'products_report', label: 'Products Report' },
     { value: 'orders_report', label: 'Orders Report (product wise)' },
-    { value: 'main_orders_report', label: 'Orders Report' },
+    { value: 'main_orders_report', label: 'Orders Report (group wise)' },
     { value: 'customer_report', label: 'Customer Report' },
     { value: 'chats_report', label: 'Chats Report' },
     { value: 'driver_allocation', label: 'Driver Allocation' },
