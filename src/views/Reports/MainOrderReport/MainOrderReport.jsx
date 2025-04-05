@@ -3,6 +3,8 @@ import { MaterialReactTable } from 'material-react-table';
 import { Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
+
 
 const OrderCheckoutsReport = ({ dataSet }) => {
   const columns = [
@@ -29,16 +31,25 @@ const OrderCheckoutsReport = ({ dataSet }) => {
 
   return (
     <div>
-      <Button onClick={() => handleExportData(dataSet)} startIcon={<FileDownloadIcon />}>
-        Export All Data
-      </Button>
-      <MaterialReactTable
-        columns={columns}
-        data={dataSet}
-        enableSorting
-        enablePagination
-        enableColumnFilters
-      />
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CCardBody className='orderCheckoutDiv'>
+              <Button onClick={() => handleExportData(dataSet)} startIcon={<FileDownloadIcon />}>
+                Export All Data
+              </Button>
+              <MaterialReactTable
+                columns={columns}
+                data={dataSet}
+                enableSorting
+                enablePagination
+                enableColumnFilters
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
     </div>
   );
 };

@@ -19,7 +19,7 @@ import {
   CBadge,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilBell, cilMenu,cilHeadphones } from '@coreui/icons';
+import { cilBell, cilMenu, cilHeadphones } from '@coreui/icons';
 
 import { AppBreadcrumb } from './index';
 import { AppHeaderDropdown } from './header/index';
@@ -28,7 +28,7 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { adminToggleStatus } from 'src/service/api_calls';
 import CurrencyController from './CurrencyController';
 import HotList from 'src/views/HotList/HotList';
-import { fetchInAppNotifications, fetchInAppNotificationsCount, readInAppNotifications,readInAppNotificationsOrderWise } from 'src/views/HotList/service/HotListServices';
+import { fetchInAppNotifications, fetchInAppNotificationsCount, readInAppNotifications, readInAppNotificationsOrderWise } from 'src/views/HotList/service/HotListServices';
 
 import Swal from 'sweetalert2'
 import './AppHeader.css';
@@ -92,11 +92,11 @@ const AppHeader = () => {
 
   useEffect(() => {
     const fetchNotifications = () => {
-      fetchInAppNotificationsCount(userData?.id).then(response => {
-        console.log(response, "Read Notification")
-        setUnReadCount(response);
+      // fetchInAppNotificationsCount(userData?.id).then(response => {
+      //   console.log(response, "Read Notification")
+      //   setUnReadCount(response);
 
-      });
+      // });
       readInAppNotificationsOrderWise().then(response => {
         // console.log(response?.data?.data?.notifications, "Read Notification")
         setUnReadCount(response?.data?.data?.unread_count);
@@ -116,8 +116,8 @@ const AppHeader = () => {
 
   const [hotListSide, setHotListSide] = useState(false)
   const [hotList, setHotList] = useState([])
-  const [supportRequestCount,setSupportRequestCount]  =useState(0);
-  const [supportReqests,setSupportReqests] = useState([]);
+  const [supportRequestCount, setSupportRequestCount] = useState(0);
+  const [supportReqests, setSupportReqests] = useState([]);
   const [supportSidebarVisible, setSupportSidebarVisible] = useState(false);
 
 
@@ -129,27 +129,27 @@ const AppHeader = () => {
     })
   }
 
-  
+
   const getHelpCount = () => {
     axios.get("/helpcount").then((res) => {
       setSupportRequestCount(res.data.data);
     })
-    .catch((err) => {
-      throw new Error(err)
-    })
+      .catch((err) => {
+        throw new Error(err)
+      })
   }
-  
-useState(()=>{
-  const interval = setInterval(() => {
-    getHelpCount();
-    fetchSupportReq();
-  }, 60000);
 
-  return () => clearInterval(interval);
-},[]);
+  useState(() => {
+    const interval = setInterval(() => {
+      getHelpCount();
+      fetchSupportReq();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
 
-  const fetchSupportReq =()=>{
+  const fetchSupportReq = () => {
     axios.get("/help").then((res) => {
       setSupportReqests(res.data);
     })
@@ -163,7 +163,7 @@ useState(()=>{
     //   throw new Error(err)
     // })
   }
-  
+
 
   const handleSupportReqClick = () => {
     setSupportSidebarVisible(true);
@@ -235,19 +235,19 @@ useState(()=>{
                 <CurrencyController />
               </CCol>
 
-                       {/* <CCol className="d-flex align-items-center justify-content-center currency-col">
+              {/* <CCol className="d-flex align-items-center justify-content-center currency-col">
               <div className="supportCenter" style={{color:'black'}}><CIcon icon={cilHeadphones} /></div>
               </CCol> */}
               <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleSupportReqClick()}>
-              {supportRequestCount === 0 ?
+                {supportRequestCount === 0 ?
                   null
                   :
-                <CBadge color="danger" shape="rounded-pill" style={{ position: 'absolute', top: 10, marginLeft: 20 }}>
-                  {supportRequestCount}
-                </CBadge>
-              }
-              <CIcon style={{color:'black',marginTop:'5px'}} icon={cilHeadphones} size="lg" />
-            </CCol>
+                  <CBadge color="danger" shape="rounded-pill" style={{ position: 'absolute', top: 10, marginLeft: 20 }}>
+                    {supportRequestCount}
+                  </CBadge>
+                }
+                <CIcon style={{ color: 'black', marginTop: '5px' }} icon={cilHeadphones} size="lg" />
+              </CCol>
 
 
               <CCol className="d-flex align-items-center justify-content-center">
@@ -289,15 +289,15 @@ useState(()=>{
           <AppBreadcrumb />
         </CContainer>
       </CHeader>
-          {/* <SupportSidebar 
+      {/* <SupportSidebar
       visible={supportSidebarVisible}
       onClose={() => setSupportSidebarVisible(false)}
     /> */}
-    <SupportSidebar 
-      show={supportSidebarVisible}
-      onHide={() => setSupportSidebarVisible(false)}
-      getHelpCount = {getHelpCount}
-    />
+      <SupportSidebar
+        show={supportSidebarVisible}
+        onHide={() => setSupportSidebarVisible(false)}
+        getHelpCount={getHelpCount}
+      />
     </>
 
   );
