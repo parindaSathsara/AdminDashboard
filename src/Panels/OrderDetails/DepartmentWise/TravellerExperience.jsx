@@ -413,27 +413,27 @@ const hasDiscountData = (rowData) => {
   const [dateChanging, setDateChanging] = useState(false)
 
   const columns = [
-    // newly added start
-    { 
-      title: 'Discount', 
-      field: 'hasDiscount',
-      width: 80, // Keep it narrow
-      render: (rowData) => {
-        return hasDiscountData(rowData) ? (
-          <div style={{ 
-            backgroundColor: '#e8f5e9', 
-            padding: '4px 8px',
-            borderRadius: '12px',
-            display: 'inline-block',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            color: '#2e7d32'
-          }}>
-            Discount
-          </div>
-        ) : "-";
-      }
-    }, //newly added end
+    // // newly added start
+    // { 
+    //   title: 'Discount', 
+    //   field: 'hasDiscount',
+    //   width: 80, // Keep it narrow
+    //   render: (rowData) => {
+    //     return hasDiscountData(rowData) ? (
+    //       <div style={{ 
+    //         backgroundColor: '#e8f5e9', 
+    //         padding: '4px 8px',
+    //         borderRadius: '12px',
+    //         display: 'inline-block',
+    //         fontSize: '12px',
+    //         fontWeight: 'bold',
+    //         color: '#2e7d32'
+    //       }}>
+    //         Discount
+    //       </div>
+    //     ) : "-";
+    //   }
+    // }, //newly added end
 
     { title: 'PID', field: 'pid' },
     { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
@@ -995,7 +995,7 @@ const hasDiscountData = (rowData) => {
           rowStyle: rowStyle,
         }}
       /> */}
-      <MaterialTable
+<MaterialTable
   title="Traveller Experience"
   columns={columns}
   data={data}
@@ -1014,12 +1014,15 @@ const hasDiscountData = (rowData) => {
       width: '10px',  // Reduced from default
       minWidth: '10px', // Ensures it doesn't expand
       maxWidth: '10px', // Ensures it doesn't expand
-      padding: '0 5px' // Reduces padding
+      padding: '0 5px', // Reduces padding
+      display: discountData ? 'table-cell' : 'none'
+
     },
     // This prevents the column from being resizable
     columnsResizable: false
   }}
-  detailPanel={[
+  
+  detailPanel={discountData ? [
     {
       render: rowData => {
         if (!hasDiscountData(rowData)) return null;
@@ -1059,7 +1062,7 @@ const hasDiscountData = (rowData) => {
         );
       }
     }
-  ]}
+  ]:undefined}
   onRowClick={(event, rowData, togglePanel) => {
     if (hasDiscountData(rowData)) {
       togglePanel();
