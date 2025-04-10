@@ -27,9 +27,6 @@ const mapContainerStyle = {
 
 const libraries = ['places'];
 
-
-
-
 export default function BookingExperience(props) {
   const { userData } = useContext(UserLoginContext);
 
@@ -43,6 +40,7 @@ export default function BookingExperience(props) {
   }
 
   const productData = props.dataset
+  console.log(productData, "Product_Datas")
 
   const [location, setLocation] = useState({ latitude: null, longitude: null });
 
@@ -153,9 +151,6 @@ export default function BookingExperience(props) {
     }
 
   }
-
-
-
 
   const FeedbackContainer = ({ data }) => {
     // console.log(data, "Feedback Container data is");
@@ -341,10 +336,7 @@ export default function BookingExperience(props) {
 
     setSelectedStatusCheckout("Cancel")
 
-
   }
-
-
 
   const [clickedStatus, setClickedStatus] = useState("")
 
@@ -353,12 +345,8 @@ export default function BookingExperience(props) {
     setSelectedStatusCheckout("")
   }
 
-
   const [selectedCancellationModal, setSelectedCancellationModal] = useState([])
   const [cancellationModalState, setCancellationModalState] = useState(false)
-
-
-
 
   const handleMoreCancellationDetails = (data) => {
     // console.log(data, "cancellation")
@@ -387,6 +375,8 @@ export default function BookingExperience(props) {
 
   const [documentViewModal, setDocumentViewModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState([]);
+  const [cancellationViewModal, setCancellationViewModal] = useState(false);
+  const [cancellationDetails, setCancellationDetails] = useState(null);
   const [selectedDocumentLocation, setSelectedDocumentLocation] = useState([]);
   const isImage = (url) => /\.(jpg|jpeg|png|gif|webp|heic)$/i.test(url); // Check for image formats
   const isPDF = (url) => /\.pdf$/i.test(url);
@@ -408,6 +398,76 @@ export default function BookingExperience(props) {
     setSelectedDocumentLocation(data.data)
     setSelectedDocument(fileUrls);
     setDocumentViewModal(true);
+  };
+
+
+  // Updated handler function to open modal and set data
+  // Updated handler function to open modal and set data with real API data
+  const handleModelShow = async (checkoutID) => {
+    console.log("Request for checkout ID:", checkoutID);
+    try {
+      // Use the actual checkout ID from the parameter when possible
+      let url = `/bridgify/carts/cancelation/${checkoutID || '14273'}`;
+      const response = await axios.get(url);
+      console.log(response.data.data, "Cancellation Response Data is");
+
+      // Extract the cancellation info from the response
+      const cancellationData = response.data.data['cancellation-info'];
+
+      // Get the first cancellation item (using Object.values to get the first object)
+      const firstCancellationItem = Object.values(cancellationData)[0];
+
+      // Get the keys of the cancellation-info object (these are the UUIDs)
+      
+      if (firstCancellationItem) {
+        const cancellationKeys = Object.keys(cancellationData);
+        // if (cancellationKeys.length > 0) {
+          const cancellationUUID = cancellationKeys[0];
+          console.log("Cancellation UUID:", cancellationUUID);
+        // }
+        // Create properly formatted cancellation details from the API response
+        const formattedData = {
+          checkoutID: cancellationUUID,
+          cancellationPolicy: firstCancellationItem.policy || "No policy information available",
+          refundAmount: `${firstCancellationItem.currency} ${(firstCancellationItem.merchant_total_price * (firstCancellationItem.percentage / 100)).toFixed(2)}`,
+          cancellationFee: firstCancellationItem.percentage === 100 ?
+            `${firstCancellationItem.currency} 0.00` :
+            `${firstCancellationItem.currency} ${(firstCancellationItem.merchant_total_price * (1 - firstCancellationItem.percentage / 100)).toFixed(2)}`,
+          cancellationDate: new Date().toISOString(), // Current date since actual date isn't in the response
+          paymentMethod: "Credit Card", // Assuming this as it's not in the response
+          travelDate: firstCancellationItem.travel_date,
+          title: firstCancellationItem.title,
+          status: firstCancellationItem.status,
+          paxes: firstCancellationItem.paxes,
+          cancellationAllowed: firstCancellationItem.cancellation_allowed,
+          // cancellationSteps: [
+          //   "Review the cancellation policy shown above",
+          //   "Confirm you want to proceed with cancellation",
+          //   "Click the 'Proceed with Cancellation' button below",
+          //   "Wait for confirmation of your cancellation request"
+          // ]
+        };
+
+        // Set the cancellation details
+        setCancellationDetails(formattedData);
+      } else {
+        setCancellationDetails({
+          checkoutID: checkoutID,
+          cancellationPolicy: "No cancellation information available for this booking.",
+          cancellationAllowed: false
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching cancellation data:", error);
+      setCancellationDetails({
+        checkoutID: checkoutID,
+        cancellationPolicy: "Unable to retrieve cancellation information. Please contact customer support.",
+        cancellationAllowed: false
+      });
+    }
+
+    // Show the modal
+    setCancellationViewModal(true);
   };
 
   const [selectedDiscountModal, setSelectedDiscountModal] = useState(false);
@@ -557,6 +617,8 @@ export default function BookingExperience(props) {
         var status = e?.data?.status
         var supplier_status = e?.data?.supplier_status
 
+        console.log(e?.data, "Provider Value is");
+
         var cancel_role = e?.data?.cancel_role
 
         var edit = e?.data?.edit_status
@@ -656,7 +718,7 @@ export default function BookingExperience(props) {
 
                   <>
 
-                    {status == "Approved" ?
+                    {/* {status == "Approved" ?
                       <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge> :
                       status == "Completed" ?
                         <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
@@ -665,7 +727,45 @@ export default function BookingExperience(props) {
                         (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&
                         <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
 
-                    }
+                    } */}
+                    {status == "Approved" ? (
+                      <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>
+                        Admin Confirmed
+                      </CBadge>
+                    ) : status == "Completed" ? (
+                      <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>
+                        Order Delivered
+                      </CBadge>
+                    ) : (
+                      <>
+                        {["change booking order status"].some(permission =>
+                          userData?.permissions?.includes(permission)
+                        ) && (
+                            <>
+                              {/* ✅ New Button Added Above */}
+                              {e?.data?.Provider == "bridgify" ?
+                                <CButton
+                                  color="info"
+                                  style={{ fontSize: 14, marginBottom: 8, color: 'white' }}
+                                  onClick={() => handleModelShow(e?.data?.checkoutID)}
+                                >
+                                  Cancellation Details
+                                </CButton> : ""}
+
+
+                              {/* ✅ Existing Button */}
+                              <CButton
+                                color={status == "Cancel" ? "danger" : "success"}
+                                style={{ fontSize: 14, color: 'white' }}
+                                onClick={() => handleButtonClick(e?.data?.checkoutID)}
+                              >
+                                Change Order Status
+                              </CButton>
+                            </>
+                          )}
+                      </>
+                    )}
+
 
 
                   </>
@@ -681,9 +781,6 @@ export default function BookingExperience(props) {
       }
     },
   ]
-
-
-
   const { currencyData, setCurrencyData } = useContext(CurrencyContext);
 
   const data = productData?.map(value => ({
@@ -791,7 +888,76 @@ export default function BookingExperience(props) {
       />
 
 
+      <Modal
+        show={cancellationViewModal}
+        style={{ marginTop: '0%', zIndex: 999999999 }}
+        onHide={() => setCancellationViewModal(false)}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Cancellation Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {cancellationDetails ? (
+            <div>
+              <h5>{cancellationDetails.title}</h5>
+              <p><strong>Order ID:</strong> {cancellationDetails.checkoutID}</p>
 
+              <div className="mb-4">
+                <h6 className="fw-bold text-primary">Cancellation Policy</h6>
+                <p>{cancellationDetails.cancellationPolicy}</p>
+              </div>
+
+              <div className="row mb-4">
+                <div className="col-md-6">
+                  <h6 className="fw-bold text-primary">Booking Information</h6>
+                  <p><strong>Travel Date:</strong> {cancellationDetails.travelDate}</p>
+                  <p><strong>Status:</strong> 
+                  {cancellationDetails.status == "CNL" ?  <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
+                  {cancellationDetails.status}
+                      </CBadge>: <CBadge color="warning" style={{ padding: 8, fontSize: 12 }}>
+                  {cancellationDetails.status}
+                      </CBadge>} 
+                 
+                  </p>
+                  <p><strong>Passengers:</strong> {cancellationDetails.paxes ?
+                    Object.entries(cancellationDetails.paxes).map(([type, count]) =>
+                      `${type}: ${count}`).join(', ') : 'N/A'}</p>
+                </div>
+                <div className="col-md-6">
+                  <h6 className="fw-bold text-primary">Refund Information</h6>
+                  <p><strong>Refund Amount:</strong> {cancellationDetails.refundAmount}</p>
+                  <p><strong>Cancellation Fee:</strong> {cancellationDetails.cancellationFee}</p>
+                  <p><strong>Cancellation Allowed:</strong> {cancellationDetails.cancellationAllowed ? 'Yes' : 'No'}</p>
+                </div>
+              </div>
+
+              {/* {cancellationDetails.cancellationAllowed && (
+                <div className="mb-4">
+                  <h6 className="fw-bold text-primary">How to Cancel</h6>
+                  <ol>
+                    {cancellationDetails.cancellationSteps.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+              )} */}
+            </div>
+          ) : (
+            <p>Loading cancellation details...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <CButton color="secondary" onClick={() => setCancellationViewModal(false)}>
+            Close
+          </CButton>
+          {cancellationDetails && cancellationDetails.cancellationAllowed && (
+            <CButton color="danger" onClick={() => alert("Cancellation process initiated")}>
+              Proceed with Cancellation
+            </CButton>
+          )}
+        </Modal.Footer>
+      </Modal>
 
       <Modal show={documentViewModal} style={{ marginTop: '10%', zIndex: 999999999 }} onHide={() => setDocumentViewModal(false)} size="lg">
         <Modal.Header closeButton>
