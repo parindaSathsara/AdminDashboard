@@ -471,7 +471,7 @@ const VendorCategorize = () => {
     // Lifestyles Details
     data.push(['', '']);
     data.push(['Lifestyle Details', '']);
-    data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link']);
+    data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link','Status']);
     vendor.lifestyles?.forEach(item => {
       data.push([
         item.lifestyle_name || 'N/A',
@@ -479,14 +479,15 @@ const VendorCategorize = () => {
         item.lifestyle_attraction_type || 'N/A',
         item.preferred == 1 ? 'Yes' : 'No',
         item.micro_location || 'N/A',
-        item.tripadvisor || 'N/A'
+        item.tripadvisor || 'N/A',
+        item.active_status ? 'Active' : 'Inactive'
       ]);
     });
 
     // Education Details
     data.push(['', '']);
     data.push(['Education Details', '']);
-    data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method']);
+    data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method','Status']);
     vendor.education?.forEach(item => {
       data.push([
         item.course_name || 'N/A',
@@ -494,14 +495,15 @@ const VendorCategorize = () => {
         item.course_mode || 'N/A',
         item.group_type || 'N/A',
         item.free_session || 'N/A',
-        item.payment_method || 'N/A'
+        item.payment_method || 'N/A',
+        item.status ? 'Active' : 'Inactive'
       ]);
     });
 
     // Hotel Details
     data.push(['', '']);
     data.push(['Hotel Details', '']);
-    data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date']);
+    data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date','Status']);
     vendor.hotels?.forEach(item => {
       data.push([
         item.hotel_name || 'N/A',
@@ -510,7 +512,8 @@ const VendorCategorize = () => {
         item.hotel_address || 'N/A',
         item.trip_advisor_link || 'N/A',
         item.start_date || 'N/A',
-        item.end_date || 'N/A'
+        item.end_date || 'N/A',
+        item.hotel_status ? 'Active' : 'Inactive'
       ]);
     });
 
