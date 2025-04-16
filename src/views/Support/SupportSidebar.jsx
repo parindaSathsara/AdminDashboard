@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { Offcanvas, Spinner, Card, Badge, Button } from 'react-bootstrap';
 import ShowReqDetails from './ShowReqDetails';
 
-const SupportSidebar = ({ show, onHide,getHelpCount }) => {
+const SupportSidebar = ({ show, onHide, getHelpCount }) => {
   const [supportRequests, setSupportRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalShow, setModalShow] = useState(false);
@@ -14,10 +14,10 @@ const SupportSidebar = ({ show, onHide,getHelpCount }) => {
     fetchSupportReq();
   }, [show]);
 
-//   useEffect(() => {
-//     // Logs whenever supportRequests change
-//     console.log("supportRequests updated", supportRequests);
-//   }, [supportRequests]);
+  //   useEffect(() => {
+  //     // Logs whenever supportRequests change
+  //     console.log("supportRequests updated", supportRequests);
+  //   }, [supportRequests]);
 
   const formatDate = (dateString) => {
     try {
@@ -32,7 +32,7 @@ const SupportSidebar = ({ show, onHide,getHelpCount }) => {
     axios.get("/help")
       .then((res) => {
         setSupportRequests(res.data);
-        console.log(res.data);   
+        console.log(res.data);
         getHelpCount();
         setLoading(false);
       })
@@ -70,45 +70,49 @@ const SupportSidebar = ({ show, onHide,getHelpCount }) => {
           </div>
         ) : (
           supportRequests.map((request, index) => (
-            <Card key={request.id || index} className="mb-3 shadow-sm">
-            <Card.Body style={{ position: 'relative' }}>
-              <div className="d-flex justify-content-between align-items-start">
-                <Card.Title className="h5 mb-2">
-                  {request.title || 'Untitled Request'}
-                </Card.Title>
-              </div>
-              <Card.Text className="text-muted mb-2 small">
-                {formatDate(request.created_at)}
-              </Card.Text>
-              <Card.Text className="mb-2">
-                {request.reason || 'No description provided'}
-              </Card.Text>
-              {request.user_name && (
-                <Card.Text className="text-muted small mb-0">
-                  Submitted by: {request.user_name}
+            <Card key={request.id || index} className="mb-3 shadow-sm"
+              style={{
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease',
+              }}>
+              <Card.Body style={{ position: 'relative' }} onClick={() => handleReqClick(request)}>
+                <div className="d-flex justify-content-between align-items-start">
+                  <Card.Title className="h5 mb-2">
+                    {request.title || 'Untitled Request'}
+                  </Card.Title>
+                </div>
+                <Card.Text className="text-muted mb-2 small">
+                  {formatDate(request.created_at)}
                 </Card.Text>
-              )}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '0',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                <Button onClick={()=>handleReqClick(request)}>View</Button>
-              </div>
-            </Card.Body>
-          </Card>
-          
+                <Card.Text className="mb-2">
+                  {request.reason || 'No description provided'}
+                </Card.Text>
+                {request.user_name && (
+                  <Card.Text className="text-muted small mb-0">
+                    Submitted by: {request.user_name}
+                  </Card.Text>
+                )}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '0',
+                    transform: 'translateY(-50%)',
+                  }}
+                >
+                  {/* <Button onClick={()=>handleReqClick(request)}>View</Button> */}
+                </div>
+              </Card.Body>
+            </Card>
+
           ))
         )}
         <ShowReqDetails
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-            {...selectedReq}        // Spread the properties of selectedReq (e.g., title, reason, etc.)
-            fetchSupportReq={fetchSupportReq}  // Pass fetchSupportReq as a separate prop
-            />
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          {...selectedReq}        // Spread the properties of selectedReq (e.g., title, reason, etc.)
+          fetchSupportReq={fetchSupportReq}  // Pass fetchSupportReq as a separate prop
+        />
 
       </Offcanvas.Body>
     </Offcanvas>
