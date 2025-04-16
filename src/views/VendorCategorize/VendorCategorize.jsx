@@ -273,14 +273,14 @@ const VendorCategorize = () => {
     ZM: "zambia",
     ZW: "zimbabwe"
   };
-  
+
   const filteredVendors = useMemo(() => {
     if (activeVendorType === "API") {
       return API_VENDORS;
     }
-  
+
     const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
-  
+
     const businessTypeMatch = (vendor) => {
       if (activeVendorType === "Direct") {
         return vendor.business_type?.toLowerCase() === "individual";
@@ -289,62 +289,62 @@ const VendorCategorize = () => {
       }
       return true;
     };
-  
+
     const typeFiltered = vendors.filter(businessTypeMatch);
-  
+
     if (activeCategory !== "all") {
       return typeFiltered.filter(
         (vendor) => vendor["Catergory ID"] === activeCategory.toString()
       );
     }
-  
+
     if (!searchTerm) return typeFiltered;
-  
+
     const searchTermLower = searchTerm.toLowerCase();
-  
+
     // Create a reverse mapping from country name to country code
     const countryNameToCode = {};
     Object.entries(countryCodeToName).forEach(([code, name]) => {
       countryNameToCode[name] = code;
     });
-    
+
     // Add common alternative names for Sri Lanka
     const sriLankaAliases = ["srilanka", "sri lanka", "ceylon"];
     sriLankaAliases.forEach(alias => {
       countryNameToCode[alias] = "LK";
     });
-  
+
     return typeFiltered.filter((vendor) => {
       // Check basic fields
       if (vendor.company_name?.toLowerCase().includes(searchTermLower)) return true;
       if (`${vendor.first_name || ""} ${vendor.last_name || ""}`.toLowerCase().includes(searchTermLower)) return true;
       if (vendor.address?.toLowerCase().includes(searchTermLower)) return true;
       if (vendor.lat_long?.toLowerCase().includes(searchTermLower)) return true;
-      
+
       // Check if search term matches a country name
       const searchedCountryCode = countryNameToCode[searchTermLower];
-      
+
       // Check if vendor country code matches the searched country code
-      const vendorCountryCode = vendor.country || 
-                               (vendor.lifestyles && vendor.lifestyles[0]?.country) ||
-                               (vendor.education && vendor.education[0]?.country) ||
-                               (vendor.hotels && vendor.hotels[0]?.country);
-      
+      const vendorCountryCode = vendor.country ||
+        (vendor.lifestyles && vendor.lifestyles[0]?.country) ||
+        (vendor.education && vendor.education[0]?.country) ||
+        (vendor.hotels && vendor.hotels[0]?.country);
+
       if (searchedCountryCode && vendorCountryCode === searchedCountryCode) return true;
-      
+
       // Special case for Sri Lanka - also check address and other fields
-      if (sriLankaAliases.includes(searchTermLower) && 
-          (vendor.address?.toLowerCase().includes("sri lanka") || 
-           vendor.address?.toLowerCase().includes("srilanka") ||
-           vendor.city?.toLowerCase().includes("sri lanka") ||
-           vendor.micro_location?.toLowerCase().includes("sri lanka"))) {
+      if (sriLankaAliases.includes(searchTermLower) &&
+        (vendor.address?.toLowerCase().includes("sri lanka") ||
+          vendor.address?.toLowerCase().includes("srilanka") ||
+          vendor.city?.toLowerCase().includes("sri lanka") ||
+          vendor.micro_location?.toLowerCase().includes("sri lanka"))) {
         return true;
       }
-      
+
       return false;
     });
   }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
-  
+
   // Debounced search function
   const debouncedSearch = useCallback(
     debounce((searchValue) => {
@@ -377,7 +377,8 @@ const VendorCategorize = () => {
         params: {
           page,
           per_page: perPage,
-          vendor_type: activeVendorType
+          vendor_type: activeVendorType,
+          search: searchTerm
         }
       });
       // console.log('response_vendors', response);
@@ -471,7 +472,7 @@ const VendorCategorize = () => {
     // Lifestyles Details
     data.push(['', '']);
     data.push(['Lifestyle Details', '']);
-    data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link','Status']);
+    data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link', 'Status']);
     vendor.lifestyles?.forEach(item => {
       data.push([
         item.lifestyle_name || 'N/A',
@@ -487,7 +488,7 @@ const VendorCategorize = () => {
     // Education Details
     data.push(['', '']);
     data.push(['Education Details', '']);
-    data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method','Status']);
+    data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method', 'Status']);
     vendor.education?.forEach(item => {
       data.push([
         item.course_name || 'N/A',
@@ -503,7 +504,7 @@ const VendorCategorize = () => {
     // Hotel Details
     data.push(['', '']);
     data.push(['Hotel Details', '']);
-    data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date','Status']);
+    data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date', 'Status']);
     vendor.hotels?.forEach(item => {
       data.push([
         item.hotel_name || 'N/A',
@@ -952,7 +953,7 @@ const VendorCategorize = () => {
         )}
       </div>
 
-      {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
+      {/* {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First
@@ -988,9 +989,108 @@ const VendorCategorize = () => {
             />
           </Pagination>
         </div>
+      )} */}
+
+      {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
+        <div className="d-flex justify-content-center mt-4">
+          <Pagination>
+            <Pagination.First
+              onClick={() => handlePageChange(1)}
+              disabled={pagination.current_page === 1}
+            />
+            <Pagination.Prev
+              onClick={() => handlePageChange(pagination.current_page - 1)}
+              disabled={pagination.current_page === 1}
+            />
+
+            {/* Modified Pagination Items Logic */}
+            {(() => {
+              const totalPages = pagination.last_page;
+              const currentPage = pagination.current_page;
+              const delta = 2; // Number of pages to show before and after current page
+
+              let pages = [];
+
+              // Always show first page
+              pages.push(1);
+
+              // Calculate range around current page
+              const leftBound = Math.max(2, currentPage - delta);
+              const rightBound = Math.min(totalPages - 1, currentPage + delta);
+
+              // Add ellipsis after first page if needed
+              if (leftBound > 2) {
+                pages.push('ellipsis-left');
+              }
+
+              // Add pages around current page
+              for (let i = leftBound; i <= rightBound; i++) {
+                pages.push(i);
+              }
+
+              // Add ellipsis before last page if needed
+              if (rightBound < totalPages - 1) {
+                pages.push('ellipsis-right');
+              }
+
+              // Always show last page if it's not the first page
+              if (totalPages > 1) {
+                pages.push(totalPages);
+              }
+
+              // Render pagination items
+              return pages.map((page, index) => {
+                if (page === 'ellipsis-left' || page === 'ellipsis-right') {
+                  return <Pagination.Ellipsis key={page} disabled />;
+                }
+
+                return (
+                  <Pagination.Item
+                    key={`page-${page}`}
+                    active={page === currentPage}
+                    onClick={() => handlePageChange(page)}
+                    style={{
+                      backgroundColor: page === currentPage ? '#3c4b64' : 'inherit',
+                      color: page === currentPage ? 'white' : 'inherit'
+                    }}
+                  >
+                    {page}
+                  </Pagination.Item>
+                );
+              });
+            })()}
+
+            <Pagination.Next
+              onClick={() => handlePageChange(pagination.current_page + 1)}
+              disabled={pagination.current_page === pagination.last_page}
+            />
+            <Pagination.Last
+              onClick={() => handlePageChange(pagination.last_page)}
+              disabled={pagination.current_page === pagination.last_page}
+            />
+          </Pagination>
+        </div>
       )}
 
-      {activeVendorType !== 'API' && activeVendorType === ('DMC' || 'Direct') && (
+      {/* {activeVendorType !== 'API' && activeVendorType === ('DMC' || 'Direct') && (
+        <div className="d-flex justify-content-end mb-3">
+          <select
+            className="form-select w-auto"
+            value={pagination.per_page}
+            onChange={(e) => {
+              setPagination({ ...pagination, per_page: parseInt(e.target.value) });
+              fetchVendorData(1);
+            }}
+          >
+            <option value="10">10 per page</option>
+            <option value="25">25 per page</option>
+            <option value="50">50 per page</option>
+            <option value="100">100 per page</option>
+          </select>
+        </div>
+      )} */}
+
+      {activeVendorType !== 'API' && (activeVendorType === 'DMC' || activeVendorType === 'Direct') && (
         <div className="d-flex justify-content-end mb-3">
           <select
             className="form-select w-auto"
