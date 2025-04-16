@@ -393,7 +393,7 @@ export default function TravellerExperience(props) {
       render: (rowData) => (
         <CButton
           color="info"
-          style={{ fontSize: 14, color: 'white' }}
+          style={{ fontSize: 11, color: 'white' }}
           onClick={() => getMapView(rowData.data)}
         >
           Show in Map
@@ -416,6 +416,7 @@ export default function TravellerExperience(props) {
         // console.log(rowData, 'Row DAta value issssss')
         return (
           <CFormInput
+            style={{ fontSize: '11px' }}
             disabled={getDisableStatus(rowData)}
             defaultValue={rowData?.reconfirmationDate}
             type="date"
@@ -449,6 +450,7 @@ export default function TravellerExperience(props) {
       field: 'qc',
       render: (rowData) => (
         <CFormSelect
+          style={{ fontSize: '11px' }}
           disabled={getDisableStatus(rowData)}
           custom
           onChange={(e) => {
@@ -478,6 +480,7 @@ export default function TravellerExperience(props) {
       render: (rowData) => {
         return (
           <CFormSelect
+            style={{ fontSize: '11px' }}
             custom
             onChange={(e) => {
               const updatedProductData = [...productData]
@@ -525,7 +528,7 @@ export default function TravellerExperience(props) {
                 color="info"
                 disabled={rowData.data.category != 'Lifestyles' || rowData?.data?.status === "Cancel" || rowData?.data?.status === "CustomerOrdered" || rowData?.data?.status === "Completed"}
                 style={{
-                  fontSize: 14,
+                  fontSize: 11,
                   color: 'white',
                   backgroundColor: rowData.data.vehicle_allocation == 1 ? '#476e7c' : null,
                   border: 0,
@@ -550,7 +553,7 @@ export default function TravellerExperience(props) {
               // onClick={() => console.log(rowData)}
 
               onClick={() => handlePNLReport(rowData?.data?.checkoutID)}
-              style={{ fontSize: 14, color: 'white', backgroundColor: '#ed4242', border: 0 }}
+              style={{ fontSize: 11, color: 'white', backgroundColor: '#ed4242', border: 0 }}
               color="info"
             >
               Show PNL report
@@ -935,8 +938,8 @@ export default function TravellerExperience(props) {
         columns={columns}
         data={data}
         options={{
-          headerStyle: { fontSize: '14px' },
-          cellStyle: { fontSize: '14px' },
+          headerStyle: { fontSize: '11px' },
+          cellStyle: { fontSize: '11px' },
           paging: false,
           search: false,
           columnsButton: true,
