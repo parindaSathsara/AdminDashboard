@@ -621,7 +621,7 @@ export default function TravellerExperience(props) {
               {['submit traveler request'].some((permission) =>
                 userData?.permissions?.includes(permission),
               ) && (
-                  <CButton color="success" style={{ fontSize: 14, color: 'white' }}>
+                  <CButton color="success" style={{ fontSize: 11, color: 'white' }}>
                     Submit
                   </CButton>
                 )}
@@ -631,13 +631,13 @@ export default function TravellerExperience(props) {
           return <CIcon icon={cilCheckCircle} size="xxl" />
         } else if (rowData?.data.status == 'Cancel') {
           return (
-            <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>
+            <CBadge color="danger" style={{ padding: 5, fontSize: 11 }}>
               Order Cancelled
             </CBadge>
           )
         } else {
           return (
-            <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>
+            <CBadge color="danger" style={{ padding: 5, fontSize: 11 }}>
               Waiting For Approval
             </CBadge>
           )
@@ -1003,8 +1003,8 @@ export default function TravellerExperience(props) {
         columns={columns}
         data={data}
         options={{
-          headerStyle: { fontSize: '14px' },
-          cellStyle: { fontSize: '14px' },
+          headerStyle: { fontSize: '11px' },
+          cellStyle: { fontSize: '11px' },
           paging: false,
           search: false,
           columnsButton: true,
