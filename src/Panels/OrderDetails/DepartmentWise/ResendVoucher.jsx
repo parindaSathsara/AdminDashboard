@@ -19,7 +19,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
 
 
 
-    if (selected.length === 0  && type=="All") {
+    if (selected.length === 0 && type == "All") {
       Swal.fire({
         title: 'Email Addresses Missing',
         text: 'Please enter recipient email addresses to send the voucher.',
@@ -29,7 +29,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
     } else {
       var email = `https://gateway.aahaas.com/api/sendOrderIndividualItemMailsVoucher/${voucherData?.checkout_id}/${orderID}`
       const postdata = {
-        emails: type=="Supplier"? [voucherData?.email] : selected,
+        emails: type == "Supplier" ? [voucherData?.email] : selected,
       }
 
 
@@ -70,7 +70,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
     }
   }
 
-  const handleSendToSelected = () => {}
+  const handleSendToSelected = () => { }
 
   const validateEmails = (emails) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -101,18 +101,32 @@ export default function ResendVoucher({ voucherData, orderID }) {
       <CContainer>
         <CCardTitle style={{ marginBottom: 10 }}>Type Emails Here</CCardTitle>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-         
-          <h6 style={{ color:"#c3b9b9",fontSize:'14px' }}> <CIcon icon={cilInfo} className="text-info" size="sm" />   Please press enter after adding the email</h6>
+
+          <h6 style={{ color: "#c3b9b9", fontSize: '14px' }}> <CIcon icon={cilInfo} className="text-info" size="sm" />   Please press enter after adding the email</h6>
         </div>
-          
-        <TagsInput
+
+        {/* <TagsInput
           value={selected} 
           onChange={(e) => setSelected(e)}
           name="emails"
           placeHolder="Enter Email"
          
+        /> */}
+        <TagsInput
+          value={selected}
+          onChange={(e) => setSelected(e)}
+          name="emails"
+          placeHolder="Enter Email"
+          classNames={{
+            input: 'tags-input-custom',
+            tag: 'tag-custom'
+          }}
+          style={{
+            width: '100%',
+            overflow: 'hidden',
+          }}
         />
-       
+
         <CButton
           title="Send to Supplier Origin Email"
           color="info"

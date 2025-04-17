@@ -275,7 +275,7 @@ function OrderDetails(props) {
     })
   }
 
-    const { currencyData, setCurrencyData } = useContext(CurrencyContext);
+  const { currencyData, setCurrencyData } = useContext(CurrencyContext);
 
 
   const lifestyles = {
@@ -319,9 +319,9 @@ function OrderDetails(props) {
       childCount: value.childCount,
       adultCount: value.adultCount,
       service_date: value.service_date,
-      balance_amount: CurrencyConverter(value.currency, value.balance_amount,currencyData),
-      paid_amount: CurrencyConverter(value.currency, value.paid_amount,currencyData),
-      total_amount: CurrencyConverter(value.currency, value.total_amount,currencyData),
+      balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),
+      paid_amount: CurrencyConverter(value.currency, value.paid_amount, currencyData),
+      total_amount: CurrencyConverter(value.currency, value.total_amount, currencyData),
       booking_date: value.booking_date,
       supplier_order: value.supplier_status,
       status: value.status,
@@ -377,9 +377,9 @@ function OrderDetails(props) {
       pid: value.PID,
       product_title: value.product_title,
       student_type: value.student_type,
-      balance_amount: CurrencyConverter(value.currency, value.balance_amount,currencyData),
-      paid_amount: CurrencyConverter(value.currency, value.paid_amount,currencyData),
-      total_amount: CurrencyConverter(value.currency, value.total_amount,currencyData),
+      balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),
+      paid_amount: CurrencyConverter(value.currency, value.paid_amount, currencyData),
+      total_amount: CurrencyConverter(value.currency, value.total_amount, currencyData),
       booking_date: value.preffered_booking_date,
       supplier_order: value.supplier_status,
       status: value.status,
@@ -434,9 +434,9 @@ function OrderDetails(props) {
       quantity: value.quantity,
       preffered_date: value.preffered_date,
       address: value.location,
-      balance_amount: CurrencyConverter(value.currency, value.balance_amount,currencyData),
-      paid_amount: CurrencyConverter(value.currency, value.paid_amount,currencyData),
-      total_amount: CurrencyConverter(value.currency, value.total_amount,currencyData),
+      balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),
+      paid_amount: CurrencyConverter(value.currency, value.paid_amount, currencyData),
+      total_amount: CurrencyConverter(value.currency, value.total_amount, currencyData),
       features: renderVariations(value), // Render variations
       supplier_order: value.supplier_status,
       status: value.status, // Default value
@@ -582,9 +582,9 @@ function OrderDetails(props) {
       NoOfAdults: value.NoOfAdults,
       checkInDate: moment(value.checkInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       checkOutDate: moment(value.checkOutDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-      balance_amount: CurrencyConverter(value.currency, value.balance_amount,currencyData),
-      paid_amount: CurrencyConverter(value.currency, value.paid_amount,currencyData),
-      total_amount: CurrencyConverter(value.currency, value.total_amount,currencyData),
+      balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),
+      paid_amount: CurrencyConverter(value.currency, value.paid_amount, currencyData),
+      total_amount: CurrencyConverter(value.currency, value.total_amount, currencyData),
       supplier_order: value.supplier_status,
       status: value.status,
       hotelData: value,
@@ -857,7 +857,7 @@ function OrderDetails(props) {
                   />
                 </Tab>
 
-                {props?.productViewData ? null : (
+                {/* {props?.productViewData ? null : (
                   <Tab eventKey="acc" title="Accounts Details">
                     <AccountsDetails
                       dataset={orderMainDetails}
@@ -867,7 +867,17 @@ function OrderDetails(props) {
                       paymentproof={(val) => handlePaymentProof(val)}
                     />
                   </Tab>
-                )}
+                )} */}
+                <Tab eventKey="acc" title="Accounts Details">
+                  <AccountsDetails
+                    productData={productData}
+                    dataset={orderMainDetails}
+                    orderid={props.orderid}
+                    relord={() => reload()}
+                    pnlType={props.pageType}
+                    paymentproof={(val) => handlePaymentProof(val)}
+                  />
+                </Tab>
               </Tabs>
             }
           ></DetailExpander>

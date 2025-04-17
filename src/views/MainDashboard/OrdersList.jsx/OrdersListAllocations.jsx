@@ -267,6 +267,7 @@ const OrderAllocate = ({ normalUser = false }) => {
             {
                 accessorKey: 'info',
                 header: 'Info',
+                enableColumnFilter: false, // Disable filtering for this column
                 Cell: ({ cell }) => (
                     <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} onClick={() => handleMoreInfoModal(cell.row.original)}>
                         <CIcon icon={cilInfo} className="text-info" size="xl" />
@@ -283,6 +284,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 accessorKey: 'assigned_user',
                 header: 'Assigned User',
                 enableSorting: false,
+                enableColumnFilter: false, // Disable filtering for this column
                 Cell: ({ cell }) => {
 
                     // console.log(cell.row.original, "Cell Value is")
@@ -312,6 +314,7 @@ const OrderAllocate = ({ normalUser = false }) => {
                 accessorKey: 'product_image',
                 header: 'Product Image',
                 enableSorting: false,
+                enableColumnFilter: false, // Disable filtering for this column
                 Cell: ({ cell }) => (
                     <div style={{ width: "120px", height: "100px", borderRadius: "10px", overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <CCardImage
