@@ -38,7 +38,22 @@ const VendorCategorize = () => {
   const [error, setError] = useState(null);
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [vendorSummary, setVendorSummary] = useState(null);
+  // const [vendorSummary, setVendorSummary] = useState(null);
+  const [vendorSummary, setVendorSummary] = useState({
+    total_vendors: 0,
+    active_vendors: 0,
+    inactive_vendors: 0,
+    direct_vendors: 0,
+    dmc_vendors: 0,
+    vendor_categories: {
+      essentials: { total: 0, active: 0, inactive: 0 },
+      non_essentials: { total: 0, active: 0, inactive: 0 },
+      lifestyle: { total: 0, active: 0, inactive: 0 },
+      hotels: { total: 0, active: 0, inactive: 0 },
+      education: { total: 0, active: 0, inactive: 0 }
+    },
+    total_products: { total: 0, active: 0, inactive: 0 }
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [searchInput, setSearchInput] = useState('');
 
@@ -358,16 +373,50 @@ const VendorCategorize = () => {
     debouncedSearch(e.target.value);
   };
 
+  // const getVendorSummary = async () => {
+  //   try {
+  //     const response = await axios.get('/getVendorSummary');
+  //     if (response.data.status === 200) {
+  //       console.log(response.data.vendor_summary);
+  //       setVendorSummary(response.data.vendor_summary);
+
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching vendor summary:', error);
+  //   }
+  // };
+
   const getVendorSummary = async () => {
     try {
       const response = await axios.get('/getVendorSummary');
       if (response.data.status === 200) {
-        console.log(response.data.vendor_summary);
-        setVendorSummary(response.data.vendor_summary);
-
+        setVendorSummary({
+          ...response.data.vendor_summary,
+          total_products: response.data.vendor_summary.total_products || {
+            total: 0,
+            active: 0,
+            inactive: 0
+          }
+        });
       }
     } catch (error) {
       console.error('Error fetching vendor summary:', error);
+      // Set default values if API fails
+      setVendorSummary({
+        total_vendors: 0,
+        active_vendors: 0,
+        inactive_vendors: 0,
+        direct_vendors: 0,
+        dmc_vendors: 0,
+        vendor_categories: {
+          essentials: { total: 0, active: 0, inactive: 0 },
+          non_essentials: { total: 0, active: 0, inactive: 0 },
+          lifestyle: { total: 0, active: 0, inactive: 0 },
+          hotels: { total: 0, active: 0, inactive: 0 },
+          education: { total: 0, active: 0, inactive: 0 }
+        },
+        total_products: { total: 0, active: 0, inactive: 0 }
+      });
     }
   };
 
@@ -899,6 +948,82 @@ const VendorCategorize = () => {
 
         </div>
       )}
+
+      {/* Vendor Categories */}
+      {vendorSummary?.vendor_categories && (
+        <div className="row mt-4">
+          {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
+            // Define category display names and colors
+            const categoryTitles = {
+              essentials: 'Essentials',
+              non_essentials: 'Non Essentials',
+              lifestyle: 'Lifestyle',
+              hotels: 'Hotels',
+              education: 'Education',
+            };
+
+            const categoryColors = {
+              essentials: '#007bff',
+              non_essentials: '#17a2b8',
+              lifestyle: '#6f42c1',
+              hotels: '#fd7e14',
+              education: '#20c997',
+            };
+
+            return (
+              <div key={key} className="col-md-4 mt-3">
+                <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
+                  <Card.Body>
+                    <h5 className="mb-2">{categoryTitles[key]}</h5>
+                    <div className="d-flex justify-content-around">
+                      <div>
+                        <small>Total</small>
+                        <h6>{value.total}</h6>
+                      </div>
+                      <div>
+                        <small style={{ color: 'green' }}>Active</small>
+                        <h6 style={{ color: 'green' }}>{value.active}</h6>
+                      </div>
+                      <div>
+                        <small style={{ color: 'red' }}>Inactive</small>
+                        <h6 style={{ color: 'red' }}>{value.inactive}</h6>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Total Products Summary */}
+{vendorSummary?.total_products && (
+  <div className="row mt-4 mb-3">
+    <div className="col-md-12">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+        <Card.Body>
+          <h5 className="mb-2">Total Products Summary</h5>
+          <div className="d-flex justify-content-around">
+            <div>
+              <small>Total</small>
+              <h6>{vendorSummary.total_products.total}</h6>
+            </div>
+            <div>
+              <small style={{ color: 'green' }}>Active</small>
+              <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+            </div>
+            <div>
+              <small style={{ color: 'red' }}>Inactive</small>
+              <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+  </div>
+)}
+
 
 
       {/* Search Bar */}
