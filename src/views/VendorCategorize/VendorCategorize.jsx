@@ -25,6 +25,7 @@ const API_VENDORS = [
 ];
 
 const VendorCategorize = () => {
+  const [showProductSummary, setShowProductSummary] = useState(true);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -950,7 +951,7 @@ const VendorCategorize = () => {
       )}
 
       {/* Vendor Categories */}
-      {vendorSummary?.vendor_categories && (
+      {/* {vendorSummary?.vendor_categories && (
         <div className="row mt-4">
           {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
             // Define category display names and colors
@@ -995,36 +996,127 @@ const VendorCategorize = () => {
             );
           })}
         </div>
-      )}
+      )} */}
 
       {/* Total Products Summary */}
-{vendorSummary?.total_products && (
-  <div className="row mt-4 mb-3">
-    <div className="col-md-12">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
-        <Card.Body>
-          <h5 className="mb-2">Total Products Summary</h5>
-          <div className="d-flex justify-content-around">
-            <div>
-              <small>Total</small>
-              <h6>{vendorSummary.total_products.total}</h6>
-            </div>
-            <div>
-              <small style={{ color: 'green' }}>Active</small>
-              <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
-            </div>
-            <div>
-              <small style={{ color: 'red' }}>Inactive</small>
-              <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+      {/* {vendorSummary?.total_products && (
+        <div className="row mt-4 mb-3">
+          <div className="col-md-12">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+              <Card.Body>
+                <h5 className="mb-2">Total Products Summary</h5>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <small>Total</small>
+                    <h6>{vendorSummary.total_products.total}</h6>
+                  </div>
+                  <div>
+                    <small style={{ color: 'green' }}>Active</small>
+                    <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+                  </div>
+                  <div>
+                    <small style={{ color: 'red' }}>Inactive</small>
+                    <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        </div>
+      )} */}
+
+<Card className="mb-4">
+      <Card.Header 
+        onClick={() => setShowProductSummary(!showProductSummary)}
+        style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <h5 className="mb-0">Product Summary</h5>
+          <span>
+            {showProductSummary ? (
+              <i className="bi bi-chevron-up"></i>
+            ) : (
+              <i className="bi bi-chevron-down"></i>
+            )}
+          </span>
+        </div>
+      </Card.Header>
+      <Card.Body className={showProductSummary ? '' : 'd-none'}>
+        {/* Vendor Categories */}
+        {vendorSummary?.vendor_categories && (
+          <div className="row mt-2">
+            {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
+              const categoryTitles = {
+                essentials: 'Essentials',
+                non_essentials: 'Non Essentials',
+                lifestyle: 'Lifestyle',
+                hotels: 'Hotels',
+                education: 'Education',
+              };
+
+              const categoryColors = {
+                essentials: '#007bff',
+                non_essentials: '#17a2b8',
+                lifestyle: '#6f42c1',
+                hotels: '#fd7e14',
+                education: '#20c997',
+              };
+
+              return (
+                <div key={key} className="col-md-4 mt-3">
+                  <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
+                    <Card.Body>
+                      <h5 className="mb-2">{categoryTitles[key]}</h5>
+                      <div className="d-flex justify-content-around">
+                        <div>
+                          <small>Total</small>
+                          <h6>{value.total}</h6>
+                        </div>
+                        <div>
+                          <small style={{ color: 'green' }}>Active</small>
+                          <h6 style={{ color: 'green' }}>{value.active}</h6>
+                        </div>
+                        <div>
+                          <small style={{ color: 'red' }}>Inactive</small>
+                          <h6 style={{ color: 'red' }}>{value.inactive}</h6>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Total Products Summary */}
+        {vendorSummary?.total_products && (
+          <div className="row mt-4">
+            <div className="col-md-12">
+              <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+                <Card.Body>
+                  <h5 className="mb-2">Total Products Summary</h5>
+                  <div className="d-flex justify-content-around">
+                    <div>
+                      <small>Total</small>
+                      <h6>{vendorSummary.total_products.total}</h6>
+                    </div>
+                    <div>
+                      <small style={{ color: 'green' }}>Active</small>
+                      <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+                    </div>
+                    <div>
+                      <small style={{ color: 'red' }}>Inactive</small>
+                      <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
             </div>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
-  </div>
-)}
-
-
+        )}
+      </Card.Body>
+    </Card>
 
       {/* Search Bar */}
       <div className="mb-4">
