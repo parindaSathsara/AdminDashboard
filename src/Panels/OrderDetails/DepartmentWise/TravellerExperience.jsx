@@ -498,6 +498,7 @@ export default function TravellerExperience(props) {
     {
       title: 'QC',
       field: 'qc',
+      cellStyle: { width: 100 },
       render: (rowData) => (
         <CFormSelect
           style={{ fontSize: '11px' }}
@@ -527,6 +528,7 @@ export default function TravellerExperience(props) {
     {
       title: 'Delivery Status',
       field: 'delivery_status',
+      cellStyle: { width: 100 },
       render: (rowData) => {
         return (
           <CFormSelect
