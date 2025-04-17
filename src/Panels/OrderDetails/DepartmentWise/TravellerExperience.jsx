@@ -80,6 +80,38 @@ const hasDiscountData = (rowData) => {
   return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined;
 };
 
+  // newly added start
+  const [discountData, setDiscountData] = useState(false);
+  const [discountDataSet, setDiscountDataSet] = useState([]);
+
+  useEffect(() => {
+    setProductData(props.dataset);
+    console.log(props.dataset, "Product Data");
+
+    if (props.dataset && props.dataset[0]?.discountData) {
+      setDiscountData(true);
+      setDiscountDataSet(props.dataset[0]?.discountData);
+      console.log(props.dataset[0]?.discountData, "Discount Data");
+      console.log(discountDataSet, "Discount Data Set");
+
+
+    } else {
+      setDiscountData(false); // optional, in case it should reset
+    }
+  }, [props.dataset]);
+
+  // Create a function to determine if a row has discount data
+  const hasDiscountData = (rowData) => {
+    return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined;
+  };
+
+  // newly added end
+
+
+  // useEffect(() => {
+  //   setProductData(props.dataset)
+  // }, [props.dataset])
+
 
   // console.log(productData, "Productttttttt")
 
@@ -430,10 +462,12 @@ const hasDiscountData = (rowData) => {
   };
 
   const columns = [
-    // discountData ? {
+
+    // // newly added start
+    // {
     //   title: 'Discount',
     //   field: 'hasDiscount',
-    //   width: 80,
+    //   width: 80, // Keep it narrow
     //   render: (rowData) => {
     //     return hasDiscountData(rowData) ? (
     //       <div style={{
@@ -450,6 +484,7 @@ const hasDiscountData = (rowData) => {
     //     ) : "-";
     //   }
     // } : null,
+
     { title: 'PID', field: 'pid' },
     { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
     {
@@ -458,7 +493,7 @@ const hasDiscountData = (rowData) => {
       render: (rowData) => (
         <CButton
           color="info"
-          style={{ fontSize: 14, color: 'white' }}
+          style={{ fontSize: 11, color: 'white' }}
           onClick={() => getMapView(rowData.data)}
         >
           Show in Map
@@ -481,6 +516,7 @@ const hasDiscountData = (rowData) => {
         // console.log(rowData, 'Row DAta value issssss')
         return (
           <CFormInput
+            style={{ fontSize: '11px' }}
             disabled={getDisableStatus(rowData)}
             defaultValue={rowData?.reconfirmationDate}
             type="date"
@@ -512,8 +548,10 @@ const hasDiscountData = (rowData) => {
     {
       title: 'QC',
       field: 'qc',
+      cellStyle: { width: 100 },
       render: (rowData) => (
         <CFormSelect
+          style={{ fontSize: '11px' }}
           disabled={getDisableStatus(rowData)}
           custom
           onChange={(e) => {
@@ -540,9 +578,11 @@ const hasDiscountData = (rowData) => {
     {
       title: 'Delivery Status',
       field: 'delivery_status',
+      cellStyle: { width: 100 },
       render: (rowData) => {
         return (
           <CFormSelect
+            style={{ fontSize: '11px' }}
             custom
             onChange={(e) => {
               const updatedProductData = [...productData]
@@ -590,7 +630,7 @@ const hasDiscountData = (rowData) => {
                 color="info"
                 disabled={rowData.data.category != 'Lifestyles' || rowData?.data?.status === "Cancel" || rowData?.data?.status === "CustomerOrdered" || rowData?.data?.status === "Completed"}
                 style={{
-                  fontSize: 14,
+                  fontSize: 11,
                   color: 'white',
                   backgroundColor: rowData.data.vehicle_allocation == 1 ? '#476e7c' : null,
                   border: 0,
@@ -615,7 +655,7 @@ const hasDiscountData = (rowData) => {
               // onClick={() => console.log(rowData)}
 
               onClick={() => handlePNLReport(rowData?.data?.checkoutID)}
-              style={{ fontSize: 14, color: 'white', backgroundColor: '#ed4242', border: 0 }}
+              style={{ fontSize: 11, color: 'white', backgroundColor: '#ed4242', border: 0 }}
               color="info"
             >
               Show PNL report
@@ -633,7 +673,7 @@ const hasDiscountData = (rowData) => {
               {['submit traveler request'].some((permission) =>
                 userData?.permissions?.includes(permission),
               ) && (
-                  <CButton color="success" style={{ fontSize: 14, color: 'white' }}>
+                  <CButton color="success" style={{ fontSize: 11, color: 'white' }}>
                     Submit
                   </CButton>
                 )}
@@ -643,13 +683,13 @@ const hasDiscountData = (rowData) => {
           return <CIcon icon={cilCheckCircle} size="xxl" />
         } else if (rowData?.data.status == 'Cancel') {
           return (
-            <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>
+            <CBadge color="danger" style={{ padding: 5, fontSize: 11 }}>
               Order Cancelled
             </CBadge>
           )
         } else {
           return (
-            <CBadge color="danger" style={{ padding: 5, fontSize: 12 }}>
+            <CBadge color="danger" style={{ padding: 5, fontSize: 11 }}>
               Waiting For Approval
             </CBadge>
           )
@@ -703,16 +743,22 @@ const hasDiscountData = (rowData) => {
     })
   }
 
-  const handleChooseDriver = async (dataset) => {
+  const handleChooseDriver = async (type, dataset) => {
     console.log(dataset, 'Dataset Value is')
     let Prod_ID = driverAllocationStatus.data.data.checkoutID
     let Veh_ID = dataset.id
+
+    const formData = new FormData();
+    formData.append('transfer_type', type);
+
     await axios
-      .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`, {
-        xsrfHeaderName: 'X-CSRF-Token',
-        withCredentials: true,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`,
+        formData,
+        {
+          xsrfHeaderName: 'X-CSRF-Token',
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
       .then((response) => {
         if (response.data.message === 'success') {
           Swal.fire({
@@ -834,21 +880,28 @@ const hasDiscountData = (rowData) => {
               driverDetails
                 .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
                 .map((driver, index) => {
-                  const isAllocated = driver.allocation.find((item) => {
+                  // const isAllocated = driver.allocation.find((item) => {
+                  //   return (
+                  //     item.service_date == allocateProductData.service_date &&
+                  //     item.time_slot == allocateProductData.pickupTime
+                  //   );
+                  // });
+                  const isAllocatedToCurrent = driver.allocation.filter((item) => {
                     return (
-                      item.service_date == allocateProductData.service_date &&
-                      item.time_slot == allocateProductData.pickupTime
+                      item.order_product_id == allocateProductData.checkoutID
                     );
                   });
+                  const hasDrop = isAllocatedToCurrent.some(item => item.transfer_type === "drop");
+                  const hasPickup = isAllocatedToCurrent.some(item => item.transfer_type === "pickup");
                   return (
                     <div
                       key={index}
                       className="driver-vehicle-card"
-                      style={{ backgroundColor: driverId === driver.id ? '#f0e68c ' : null }}
+                      style={{ backgroundColor: (hasDrop || hasPickup) ? "#f0e68c" : "transparent" }}
                     >
                       <div className="vehicle-primary-info">
                         <div className="vehicle-identification">
-                          {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)}
+                          {/* {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)} */}
                           <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
                           <span className="vehicle-province">{driver.vehicle_province}</span>
                         </div>
@@ -883,7 +936,35 @@ const hasDiscountData = (rowData) => {
                           <span>Driver Status: {driver.driver_status}</span>
                         </div>
                       </div>
-                      {!isAllocated && (driverId === driver.id ? (
+                      <div>
+                        {isAllocatedToCurrent.length > 0 &&
+                          isAllocatedToCurrent.map((item, index) => (
+                            <div key={index}>
+                              <span className='badge bg-dark m-1'>Allocated Date: {item.service_date}</span>
+                              <span className='badge bg-dark m-1'>Time Slot: {item.time_slot}</span>
+                              <span className='badge bg-dark m-1'>Transfer Type: {item.transfer_type}</span>
+                            </div>
+                          ))
+                        }
+                      </div>
+                      {console.log("isAllocatedToCurrent", isAllocatedToCurrent)}
+                      {!hasDrop && (<CButton
+                        color="success"
+                        className="select-allocation-btn"
+                        onClick={() => handleChooseDriver('drop', driver)}
+                      >
+                        Select vehicle for drop
+                      </CButton>)}
+                      {!hasPickup && (<CButton
+                        color="primary"
+                        className="select-allocation-btn"
+                        onClick={() => handleChooseDriver('pickup', driver)}
+                      >
+                        Select vehicle for pickup
+                      </CButton>)}
+
+
+                      {/* {!isAllocated && (driverId === driver.id ? (
                         <CButton
                           color="dark"
                           disabled
@@ -896,11 +977,29 @@ const hasDiscountData = (rowData) => {
                         <CButton
                           color="warning"
                           className="select-allocation-btn"
-                          onClick={() => handleChooseDriver(driver)}
+                          onClick={() => handleChooseDriver('one-way', driver)}
                         >
-                          Select Vehicle
+                          Select vehicle for one way
                         </CButton>
                       ))}
+                      {!isAllocated && (driverId === driver.id ? (
+                        <CButton
+                          color="dark"
+                          disabled
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver(driver)}
+                        >
+                          Selected
+                        </CButton>
+                      ) : (
+                        <CButton
+                          color="success"
+                          className="select-allocation-btn"
+                          onClick={() => handleChooseDriver('two-way', driver)}
+                        >
+                          Select vehicle for two way
+                        </CButton>
+                      ))} */}
                     </div>
                   )
                 })
@@ -937,18 +1036,93 @@ const hasDiscountData = (rowData) => {
       </Modal>
 
       {/* <MaterialTable
+
         title="Traveller Experience"
         columns={columns}
         data={data}
         options={{
-          headerStyle: { fontSize: '14px' },
-          cellStyle: { fontSize: '14px' },
+          headerStyle: { fontSize: '11px' },
+          cellStyle: { fontSize: '11px' },
           paging: false,
           search: false,
           columnsButton: true,
           exportButton: true,
           grouping: true,
           rowStyle: rowStyle,
+        }}
+      /> */}
+      <MaterialTable
+        title="Traveller Experience"
+        columns={columns}
+        data={data}
+        options={{
+          headerStyle: { fontSize: '11px' },
+          cellStyle: { fontSize: '11px' },
+          paging: false,
+          search: false,
+          columnsButton: true,
+          exportButton: true,
+          grouping: true,
+          rowStyle: rowStyle,
+          // These options control the detail panel column
+          detailPanelColumnAlignment: 'left',
+          detailPanelColumnStyle: {
+            width: '10px',  // Reduced from default
+            minWidth: '10px', // Ensures it doesn't expand
+            maxWidth: '10px', // Ensures it doesn't expand
+            padding: '0 5px', // Reduces padding
+            display: discountData ? 'table-cell' : 'none'
+
+          },
+          // This prevents the column from being resizable
+          columnsResizable: false
+        }}
+
+        detailPanel={discountData ? [
+          {
+            render: rowData => {
+              if (!hasDiscountData(rowData)) return null;
+
+              const discountData = rowData.data.discountData;
+              const discountMainData = discountData?.discountMainData;
+
+              if (!discountMainData) return null;
+
+              return (
+                <div style={{
+                  backgroundColor: '#e8f5e9',
+                  padding: '10px',
+                  margin: '0',
+                  border: '1px solid #c8e6c9',
+                  borderRadius: '4px',
+                  // Constrain the width of the content
+                  maxWidth: 'calc(100% - 10px)', // Accounts for the column width
+                  marginLeft: '20px' // Aligns with the column
+                }}>
+                  <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>
+                    {discountMainData.discount_tag_line || 'Special Discount Offer'}
+                  </h5>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                    <div>
+                      <p><strong>Discount Type:</strong> {discountMainData.discount_type}</p>
+                      <p><strong>Valid Until:</strong> {discountMainData.discount_end_date}</p>
+                    </div>
+                    <div>
+                      <p><strong>Travel Period:</strong> {discountMainData.discount_travel_start_date} to {discountMainData.discount_travel_end_date}</p>
+                      {discountData.productData && (
+                        <p><strong>Free Product:</strong> {discountData.productData.product_name}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          }
+        ] : undefined}
+        onRowClick={(event, rowData, togglePanel) => {
+          if (hasDiscountData(rowData)) {
+            togglePanel();
+          }
         }}
       /> */}
 
