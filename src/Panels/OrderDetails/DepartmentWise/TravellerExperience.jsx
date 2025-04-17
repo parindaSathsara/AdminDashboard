@@ -59,30 +59,26 @@ export default function TravellerExperience(props) {
   const [discountData, setDiscountData] = useState(false);
   const [discountDataSet, setDiscountDataSet] = useState([]);
 
-useEffect(() => {
-  setProductData(props.dataset);
-  console.log(props.dataset, "Product Data");
+  useEffect(() => {
+    setProductData(props.dataset);
+    console.log(props.dataset, "Product Data");
 
-  if (props.dataset && props.dataset[0]?.discountData !== null) {
-    setDiscountData(true);
-    setDiscountDataSet(props.dataset[0]?.discountData);
-    console.log(props.dataset[0]?.discountData, "Discount Data");
-    console.log(discountDataSet, "Discount Data Set");
-    
-    
-  } else {
-    setDiscountData(false); // optional, in case it should reset
-  }
-}, [props.dataset]);
+    if (props.dataset && props.dataset[0]?.discountData !== null) {
+      setDiscountData(true);
+      setDiscountDataSet(props.dataset[0]?.discountData);
+      console.log(props.dataset[0]?.discountData, "Discount Data");
+      console.log(discountDataSet, "Discount Data Set");
 
-// Create a function to determine if a row has discount data
-const hasDiscountData = (rowData) => {
-  return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined;
-};
 
-  // newly added start
-  const [discountData, setDiscountData] = useState(false);
-  const [discountDataSet, setDiscountDataSet] = useState([]);
+    } else {
+      setDiscountData(false); // optional, in case it should reset
+    }
+  }, [props.dataset]);
+
+  // Create a function to determine if a row has discount data
+  const hasDiscountData = (rowData) => {
+    return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined;
+  };
 
   useEffect(() => {
     setProductData(props.dataset);
@@ -100,10 +96,6 @@ const hasDiscountData = (rowData) => {
     }
   }, [props.dataset]);
 
-  // Create a function to determine if a row has discount data
-  const hasDiscountData = (rowData) => {
-    return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined;
-  };
 
   // newly added end
 
@@ -456,7 +448,7 @@ const hasDiscountData = (rowData) => {
         borderRadius: '4px'
       }}>
         <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>Special Discount Offer</h5>
-{/* <p>{discountDataSet}</p> */}
+        {/* <p>{discountDataSet}</p> */}
       </div>
     );
   };
@@ -1051,7 +1043,7 @@ const hasDiscountData = (rowData) => {
           rowStyle: rowStyle,
         }}
       /> */}
-      <MaterialTable
+      {/* <MaterialTable
         title="Traveller Experience"
         columns={columns}
         data={data}
@@ -1124,82 +1116,82 @@ const hasDiscountData = (rowData) => {
             togglePanel();
           }
         }}
-      /> */}
+      />  */}
 
-<MaterialTable
-  title="Traveller Experience"
-  columns={columns}
-  data={data}
-  options={{
-    headerStyle: { fontSize: '14px' },
-    cellStyle: { fontSize: '14px' },
-    paging: false,
-    search: false,
-    columnsButton: true,
-    exportButton: true,
-    grouping: true,
-    rowStyle: rowStyle,
-    // These options control the detail panel column
-    detailPanelColumnAlignment: 'left',
-    detailPanelColumnStyle: { 
-      width: '10px',  // Reduced from default
-      minWidth: '10px', // Ensures it doesn't expand
-      maxWidth: '10px', // Ensures it doesn't expand
-      padding: '0 5px', // Reduces padding
-      display: discountData ? 'table-cell' : 'none'
+      <MaterialTable
+        title="Traveller Experience"
+        columns={columns}
+        data={data}
+        options={{
+          headerStyle: { fontSize: '14px' },
+          cellStyle: { fontSize: '14px' },
+          paging: false,
+          search: false,
+          columnsButton: true,
+          exportButton: true,
+          grouping: true,
+          rowStyle: rowStyle,
+          // These options control the detail panel column
+          detailPanelColumnAlignment: 'left',
+          detailPanelColumnStyle: {
+            width: '10px',  // Reduced from default
+            minWidth: '10px', // Ensures it doesn't expand
+            maxWidth: '10px', // Ensures it doesn't expand
+            padding: '0 5px', // Reduces padding
+            display: discountData ? 'table-cell' : 'none'
 
-    },
-    // This prevents the column from being resizable
-    columnsResizable: false
-  }}
-  
-  detailPanel={discountData ? [
-    {
-      render: rowData => {
-        if (!hasDiscountData(rowData)) return null;
-        
-        const discountData = rowData.data.discountData;
-        const discountMainData = discountData?.discountMainData;
-        
-        if (!discountMainData) return null;
-        
-        return (
-          <div style={{ 
-            backgroundColor: '#e8f5e9', 
-            padding: '10px',
-            margin: '0',
-            border: '1px solid #c8e6c9', 
-            borderRadius: '4px',
-            // Constrain the width of the content
-            maxWidth: 'calc(100% - 10px)', // Accounts for the column width
-            marginLeft: '20px' // Aligns with the column
-          }}>
-            <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>
-              {discountMainData.discount_tag_line || 'Special Discount Offer'}
-            </h5>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-              <div>
-                <p><strong>Discount Type:</strong> {discountMainData.discount_type}</p>
-                <p><strong>Valid Until:</strong> {discountMainData.discount_end_date}</p>
-              </div>
-              <div>
-                <p><strong>Travel Period:</strong> {discountMainData.discount_travel_start_date} to {discountMainData.discount_travel_end_date}</p>
-                {discountData.productData && (
-                  <p><strong>Free Product:</strong> {discountData.productData.product_name}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      }
-    }
-  ]:undefined}
-  onRowClick={(event, rowData, togglePanel) => {
-    if (hasDiscountData(rowData)) {
-      togglePanel();
-    }
-  }}
-/>
+          },
+          // This prevents the column from being resizable
+          columnsResizable: false
+        }}
+
+        detailPanel={discountData ? [
+          {
+            render: rowData => {
+              if (!hasDiscountData(rowData)) return null;
+
+              const discountData = rowData.data.discountData;
+              const discountMainData = discountData?.discountMainData;
+
+              if (!discountMainData) return null;
+
+              return (
+                <div style={{
+                  backgroundColor: '#e8f5e9',
+                  padding: '10px',
+                  margin: '0',
+                  border: '1px solid #c8e6c9',
+                  borderRadius: '4px',
+                  // Constrain the width of the content
+                  maxWidth: 'calc(100% - 10px)', // Accounts for the column width
+                  marginLeft: '20px' // Aligns with the column
+                }}>
+                  <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>
+                    {discountMainData.discount_tag_line || 'Special Discount Offer'}
+                  </h5>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                    <div>
+                      <p><strong>Discount Type:</strong> {discountMainData.discount_type}</p>
+                      <p><strong>Valid Until:</strong> {discountMainData.discount_end_date}</p>
+                    </div>
+                    <div>
+                      <p><strong>Travel Period:</strong> {discountMainData.discount_travel_start_date} to {discountMainData.discount_travel_end_date}</p>
+                      {discountData.productData && (
+                        <p><strong>Free Product:</strong> {discountData.productData.product_name}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          }
+        ] : undefined}
+        onRowClick={(event, rowData, togglePanel) => {
+          if (hasDiscountData(rowData)) {
+            togglePanel();
+          }
+        }}
+      />
 
       {/* {
         discountData && <DiscountRow />
