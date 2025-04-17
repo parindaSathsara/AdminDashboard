@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 export default function DetailExpander(props) {
   return (
     <Modal
-      style={{ zIndex: 9999 }}
+      // style={{ zIndex: 99 }}
       {...props}
       size="fullscreen"
       aria-labelledby="contained-modal-title-vcenter"
