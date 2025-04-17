@@ -59,7 +59,11 @@ const SupplierSupport = () => {
             {
                 title: 'Status',
                 field: 'status',
-                render: rowData => rowData?.status === "1" ? 'Seen' : 'Pending'
+                render: rowData => rowData?.status === "1" ? 'Seen' : 'Pending',
+                customFilterAndSearch: (term, rowData) => {
+                  const value = rowData.status === "1" ? 'Seen' : 'Pending'
+                  return value.toLowerCase().includes(term.toLowerCase())
+                }
             },
             { title: 'User Type', field: 'user_type' },
             { title: 'Title', field: 'title' },

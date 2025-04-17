@@ -152,6 +152,12 @@ function getNavigationHook(permissions) {
     },
     {
       component: CNavItem,
+      name: 'Promotions',
+      to: '/promotions',
+      icon: <CIcon icon={cilChartLine} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavItem,
       name: 'Products',
       to: '/products',
       icon: <CIcon icon={cilGrain} customClassName="nav-icon" />,
