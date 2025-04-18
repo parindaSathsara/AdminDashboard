@@ -25,7 +25,6 @@ const API_VENDORS = [
 ];
 
 const VendorCategorize = () => {
-  const [showProductSummary, setShowProductSummary] = useState(true);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -1075,6 +1074,7 @@ const VendorCategorize = () => {
             );
           })}
         </div>
+      )} */}
       )} */}
 
       {/* Total Products Summary */}
