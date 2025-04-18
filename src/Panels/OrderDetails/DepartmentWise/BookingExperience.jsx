@@ -403,69 +403,147 @@ export default function BookingExperience(props) {
 
   // Updated handler function to open modal and set data
   // Updated handler function to open modal and set data with real API data
+  // const handleModelShow = async (checkoutID) => {
+  //   console.log("Request for checkout ID:", checkoutID);
+  //   try {
+  //     // Use the actual checkout ID from the parameter when possible
+  //     // let url = `/bridgify/carts/cancelation/${checkoutID || '14273'}`;
+  //     let url = `/bridgify/carts/cancelation/${checkoutID || '14273'}`;
+  //     const response = await axios.get(url);
+  //     console.log(response.data.data, "Cancellation Response Data is");
+
+  //     // Extract the cancellation info from the response
+  //     const cancellationData = response.data.data['cancellation-info'];
+
+  //     // Get the first cancellation item (using Object.values to get the first object)
+  //     const firstCancellationItem = Object.values(cancellationData)[0];
+
+  //     // Get the keys of the cancellation-info object (these are the UUIDs)
+      
+  //     if (firstCancellationItem) {
+  //       const cancellationKeys = Object.keys(cancellationData);
+  //       // if (cancellationKeys.length > 0) {
+  //         const cancellationUUID = cancellationKeys[0];
+  //         console.log("Cancellation UUID:", cancellationUUID);
+  //       // }
+  //       // Create properly formatted cancellation details from the API response
+  //       const formattedData = {
+  //         checkoutID: cancellationUUID,
+  //         cancellationPolicy: firstCancellationItem.policy || "No policy information available",
+  //         refundAmount: `${firstCancellationItem.currency} ${(firstCancellationItem.merchant_total_price * (firstCancellationItem.percentage / 100)).toFixed(2)}`,
+  //         cancellationFee: firstCancellationItem.percentage === 100 ?
+  //           `${firstCancellationItem.currency} 0.00` :
+  //           `${firstCancellationItem.currency} ${(firstCancellationItem.merchant_total_price * (1 - firstCancellationItem.percentage / 100)).toFixed(2)}`,
+  //         cancellationDate: new Date().toISOString(), // Current date since actual date isn't in the response
+  //         paymentMethod: "Credit Card", // Assuming this as it's not in the response
+  //         travelDate: firstCancellationItem.travel_date,
+  //         title: firstCancellationItem.title,
+  //         status: firstCancellationItem.status,
+  //         paxes: firstCancellationItem.paxes,
+  //         cancellationAllowed: firstCancellationItem.cancellation_allowed,
+  //         // cancellationSteps: [
+  //         //   "Review the cancellation policy shown above",
+  //         //   "Confirm you want to proceed with cancellation",
+  //         //   "Click the 'Proceed with Cancellation' button below",
+  //         //   "Wait for confirmation of your cancellation request"
+  //         // ]
+  //       };
+
+  //       // Set the cancellation details
+  //       setCancellationDetails(formattedData);
+  //     } else {
+  //       setCancellationDetails({
+  //         checkoutID: checkoutID,
+  //         cancellationPolicy: "No cancellation information available for this booking.",
+  //         cancellationAllowed: false
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching cancellation data:", error);
+  //     setCancellationDetails({
+  //       checkoutID: checkoutID,
+  //       cancellationPolicy: "Unable to retrieve cancellation information. Please contact customer support.",
+  //       cancellationAllowed: false
+  //     });
+  //   }
+
+  //   // Show the modal
+  //   setCancellationViewModal(true);
+  // };
+
   const handleModelShow = async (checkoutID) => {
     console.log("Request for checkout ID:", checkoutID);
     try {
-      // Use the actual checkout ID from the parameter when possible
-      let url = `/bridgify/carts/cancelation/${checkoutID || '14273'}`;
+      let url = `/bridgify/order-details/${checkoutID || '14273'}`;
       const response = await axios.get(url);
-      console.log(response.data.data, "Cancellation Response Data is");
-
-      // Extract the cancellation info from the response
-      const cancellationData = response.data.data['cancellation-info'];
-
-      // Get the first cancellation item (using Object.values to get the first object)
-      const firstCancellationItem = Object.values(cancellationData)[0];
-
-      // Get the keys of the cancellation-info object (these are the UUIDs)
+      console.log(response.data.data, "Booking Response Data is");
+  
+      // Extract both order details and cancellation info
+      const orderDetails = response.data.data.order_details;
+      const cancellationData = response.data.data.cancelation_details['cancellation-info'];
+  
+      // Get the order ID (the key in order_details)
+      const orderId = Object.keys(orderDetails)[0];
       
-      if (firstCancellationItem) {
+      // Get all order items
+      const orderItems = orderDetails[orderId] || [];
+      const mainOrderItem = orderItems[0] || {};
+  
+      // Process tickets information
+      const tickets = mainOrderItem.tickets || [];
+      
+      // Format data including all arrays
+      let formattedData = {
+        orderId: orderId,
+        checkoutID: checkoutID,
+        title: mainOrderItem.attraction_title,
+        attractionDate: mainOrderItem.attraction_date,
+        attractionTime: mainOrderItem.attraction_time,
+        status: mainOrderItem.status,
+        currency: mainOrderItem.currency,
+        merchantTotalPrice: mainOrderItem.merchant_total_price,
+        externalOrderId: mainOrderItem.external_order_id,
+        inventorySupplier: mainOrderItem.inventory_supplier,
+        orderItemUuid: mainOrderItem.order_item_uuid,
+        externalCreatedAt: mainOrderItem.external_created_at,
+        cancellationPolicy: mainOrderItem.cancellation_policy,
+        customer: mainOrderItem.customer || {},
+        tickets: tickets,
+        allOrderItems: orderItems, // Store all order items for reference
+        cancellationAllowed: true, // Default
+        refundAmount: "N/A",
+        cancellationFee: "N/A"
+      };
+  
+      // Add cancellation details if available
+      if (cancellationData && Object.keys(cancellationData).length > 0) {
         const cancellationKeys = Object.keys(cancellationData);
-        // if (cancellationKeys.length > 0) {
-          const cancellationUUID = cancellationKeys[0];
-          console.log("Cancellation UUID:", cancellationUUID);
-        // }
-        // Create properly formatted cancellation details from the API response
-        const formattedData = {
+        const cancellationUUID = cancellationKeys[0];
+        const firstCancellationItem = cancellationData[cancellationUUID];
+        
+        formattedData = {
+          ...formattedData,
           checkoutID: cancellationUUID,
-          cancellationPolicy: firstCancellationItem.policy || "No policy information available",
+          cancellationPolicy: firstCancellationItem.policy || mainOrderItem.cancellation_policy,
           refundAmount: `${firstCancellationItem.currency} ${(firstCancellationItem.merchant_total_price * (firstCancellationItem.percentage / 100)).toFixed(2)}`,
           cancellationFee: firstCancellationItem.percentage === 100 ?
             `${firstCancellationItem.currency} 0.00` :
             `${firstCancellationItem.currency} ${(firstCancellationItem.merchant_total_price * (1 - firstCancellationItem.percentage / 100)).toFixed(2)}`,
-          cancellationDate: new Date().toISOString(), // Current date since actual date isn't in the response
-          paymentMethod: "Credit Card", // Assuming this as it's not in the response
-          travelDate: firstCancellationItem.travel_date,
-          title: firstCancellationItem.title,
-          status: firstCancellationItem.status,
-          paxes: firstCancellationItem.paxes,
-          cancellationAllowed: firstCancellationItem.cancellation_allowed,
-          // cancellationSteps: [
-          //   "Review the cancellation policy shown above",
-          //   "Confirm you want to proceed with cancellation",
-          //   "Click the 'Proceed with Cancellation' button below",
-          //   "Wait for confirmation of your cancellation request"
-          // ]
+          cancellationAllowed: firstCancellationItem.cancellation_allowed
         };
-
-        // Set the cancellation details
-        setCancellationDetails(formattedData);
-      } else {
-        setCancellationDetails({
-          checkoutID: checkoutID,
-          cancellationPolicy: "No cancellation information available for this booking.",
-          cancellationAllowed: false
-        });
       }
+  
+      // Set the details
+      setCancellationDetails(formattedData);
     } catch (error) {
-      console.error("Error fetching cancellation data:", error);
+      console.error("Error fetching booking data:", error);
       setCancellationDetails({
         checkoutID: checkoutID,
-        cancellationPolicy: "Unable to retrieve cancellation information. Please contact customer support.",
+        cancellationPolicy: "Unable to retrieve booking information. Please contact customer support.",
         cancellationAllowed: false
       });
     }
-
+  
     // Show the modal
     setCancellationViewModal(true);
   };
@@ -749,7 +827,7 @@ export default function BookingExperience(props) {
                                   style={{ fontSize: 14, marginBottom: 8, color: 'white' }}
                                   onClick={() => handleModelShow(e?.data?.checkoutID)}
                                 >
-                                  Cancellation Details
+                                  Booking Details
                                 </CButton> : ""}
 
 
@@ -895,9 +973,133 @@ export default function BookingExperience(props) {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Cancellation Details</Modal.Title>
+          <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+  {cancellationDetails ? (
+    <div>
+      <h5>{cancellationDetails.title}</h5>
+      
+      <div className="d-flex justify-content-between mb-3">
+        <p><strong>Order ID:</strong> {cancellationDetails.orderId}</p>
+        <p><strong>External Order ID:</strong> {cancellationDetails.externalOrderId}</p>
+      </div>
+
+      <div className="mb-4">
+        <h6 className="fw-bold text-primary">Cancellation Policy</h6>
+        <p>{cancellationDetails.cancellationPolicy}</p>
+      </div>
+
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <h6 className="fw-bold text-primary">Booking Information</h6>
+          <p><strong>Travel Date:</strong> {cancellationDetails.attractionDate}</p>
+          <p><strong>Time:</strong> {cancellationDetails.attractionTime}</p>
+          <p>
+            <strong>Status:</strong>
+            {cancellationDetails.status === "CNL" ? (
+              <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
+                Cancelled
+              </CBadge>
+            ) : cancellationDetails.status === "FAL" ? (
+              <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
+                Failed
+              </CBadge>
+            ) : (
+              <CBadge color="warning" style={{ padding: 8, fontSize: 12 }}>
+                {cancellationDetails.status}
+              </CBadge>
+            )}
+          </p>
+          <p><strong>Price:</strong> {cancellationDetails.currency} {cancellationDetails.merchantTotalPrice}</p>
+          <p><strong>Supplier:</strong> {cancellationDetails.inventorySupplier}</p>
+          <p><strong>Created:</strong> {new Date(cancellationDetails.externalCreatedAt).toLocaleString()}</p>
+        </div>
+        
+        <div className="col-md-6">
+          <h6 className="fw-bold text-primary">Customer Information</h6>
+          <p><strong>Name:</strong> {cancellationDetails.customer.first_name} {cancellationDetails.customer.last_name}</p>
+          <p><strong>Email:</strong> {cancellationDetails.customer.email}</p>
+          <p><strong>Phone:</strong> {cancellationDetails.customer.phone}</p>
+          
+          <h6 className="fw-bold text-primary mt-4">Ticket Information</h6>
+          {cancellationDetails.tickets && cancellationDetails.tickets.length > 0 ? (
+            <div>
+              {cancellationDetails.tickets.map((ticket, index) => (
+                <div key={index} className="mb-2">
+                  <p><strong>Type:</strong> {ticket.title}</p>
+                  <p><strong>Quantity:</strong> {ticket.quantity}</p>
+                  <p><strong>ID:</strong> {ticket.external_ticket_id}</p>
+                  {ticket.voucher_url && ticket.voucher_url.length > 0 && (
+                    <p><strong>Voucher:</strong> <a href={ticket.voucher_url[0]} target="_blank" rel="noopener noreferrer">View Voucher</a></p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No ticket information available</p>
+          )}
+        </div>
+      </div>
+
+      {/* Additional information for multiple order items if available */}
+      {cancellationDetails.allOrderItems && cancellationDetails.allOrderItems.length > 1 && (
+        <div className="mb-4">
+          <h6 className="fw-bold text-primary">Additional Order Items</h6>
+          <div className="table-responsive">
+            <table className="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Attraction</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cancellationDetails.allOrderItems.slice(1).map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.attraction_title}</td>
+                    <td>{item.attraction_date}</td>
+                    <td>{item.attraction_time}</td>
+                    <td>
+                      {item.status === "CNL" ? (
+                        <CBadge color="danger" style={{ padding: 5, fontSize: 10, color: "white" }}>
+                          Cancelled
+                        </CBadge>
+                      ) : item.status === "FAL" ? (
+                        <CBadge color="danger" style={{ padding: 5, fontSize: 10, color: "white" }}>
+                          Failed
+                        </CBadge>
+                      ) : (
+                        <CBadge color="warning" style={{ padding: 5, fontSize: 10 }}>
+                          {item.status}
+                        </CBadge>
+                      )}
+                    </td>
+                    <td>{item.currency} {item.merchant_total_price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Refund Information */}
+      <div className="mb-4">
+        <h6 className="fw-bold text-primary">Refund Information</h6>
+        <p><strong>Refund Amount:</strong> {cancellationDetails.refundAmount}</p>
+        <p><strong>Cancellation Fee:</strong> {cancellationDetails.cancellationFee}</p>
+        <p><strong>Cancellation Allowed:</strong> {cancellationDetails.cancellationAllowed ? 'Yes' : 'No'}</p>
+      </div>
+    </div>
+  ) : (
+    <p>Loading booking details...</p>
+  )}
+</Modal.Body>
+        {/* <Modal.Body>
           {cancellationDetails ? (
             <div>
               <h5>{cancellationDetails.title}</h5>
@@ -932,21 +1134,12 @@ export default function BookingExperience(props) {
                 </div>
               </div>
 
-              {/* {cancellationDetails.cancellationAllowed && (
-                <div className="mb-4">
-                  <h6 className="fw-bold text-primary">How to Cancel</h6>
-                  <ol>
-                    {cancellationDetails.cancellationSteps.map((step, index) => (
-                      <li key={index}>{step}</li>
-                    ))}
-                  </ol>
-                </div>
-              )} */}
+             
             </div>
           ) : (
             <p>Loading cancellation details...</p>
           )}
-        </Modal.Body>
+        </Modal.Body> */}
         <Modal.Footer>
           <CButton color="secondary" onClick={() => setCancellationViewModal(false)}>
             Close
