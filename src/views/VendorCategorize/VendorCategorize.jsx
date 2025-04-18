@@ -25,6 +25,7 @@ const API_VENDORS = [
 ];
 
 const VendorCategorize = () => {
+  const [showProductSummary, setShowProductSummary] = useState(true);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -1075,7 +1076,6 @@ const VendorCategorize = () => {
           })}
         </div>
       )} */}
-      )} */}
 
       {/* Total Products Summary */}
       {/* {vendorSummary?.total_products && (
@@ -1109,8 +1109,8 @@ const VendorCategorize = () => {
         onClick={() => setShowProductSummary(!showProductSummary)}
         style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
       >
-        <div className="text-center d-flex justify-content-between align-items-center">
-          <h5 className="mb-0 ">Product Summary</h5>
+        <div className="d-flex justify-content-between align-items-center">
+          <h5 className="mb-0 d-flex justify-content-between align-items-center">Product Summary</h5>
           <span>
             {showProductSummary ? (
               <i className="bi bi-chevron-up"></i>
@@ -1249,7 +1249,7 @@ const VendorCategorize = () => {
         )}
       </div>
 
-      {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
+      {/* {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First
@@ -1285,9 +1285,9 @@ const VendorCategorize = () => {
             />
           </Pagination>
         </div>
-      )}
+      )} */}
 
-      {/* {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
+      {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First
@@ -1299,7 +1299,7 @@ const VendorCategorize = () => {
               disabled={pagination.current_page === 1}
             />
 
-       
+            {/* Modified Pagination Items Logic */}
             {(() => {
               const totalPages = pagination.last_page;
               const currentPage = pagination.current_page;
@@ -1366,7 +1366,7 @@ const VendorCategorize = () => {
             />
           </Pagination>
         </div>
-      )} */}
+      )}
 
       {/* {activeVendorType !== 'API' && activeVendorType === ('DMC' || 'Direct') && (
         <div className="d-flex justify-content-end mb-3">
