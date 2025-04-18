@@ -25,6 +25,14 @@ const API_VENDORS = [
 ];
 
 const VendorCategorize = () => {
+  const [selectedCountry, setSelectedCountry] = useState('all');
+  const [countryVendors, setCountryVendors] = useState([]);
+  const [countryLoading, setCountryLoading] = useState(false);
+  const [countryError, setCountryError] = useState(null);
+
+  const [countrySearchInput, setCountrySearchInput] = useState('');
+  const [countrySearchTerm, setCountrySearchTerm] = useState('');
+
   const [showProductSummary, setShowProductSummary] = useState(true);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +67,14 @@ const VendorCategorize = () => {
   const [searchInput, setSearchInput] = useState('');
 
   const [vendorCountries, setVendorCountries] = useState({});
+  const [countryPagination, setCountryPagination] = useState({
+    current_page: 1,
+    per_page: 50,
+    total: 0,
+    last_page: 1
+  });
+
+
 
   // Memoized filtered vendors
   // useEffect(() => {
@@ -361,13 +377,123 @@ const VendorCategorize = () => {
   //   });
   // }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
 
+  // Add debounced search function for country vendors
+const debouncedCountrySearch = useCallback(
+  debounce((searchValue) => {
+    setCountrySearchTerm(searchValue);
+    if (selectedCountry !== 'all') {
+      fetchVendorsByCountry(selectedCountry, 1, countryPagination.per_page, searchValue);
+    }
+  }, 500),
+  [selectedCountry, countryPagination.per_page]
+);
+
+  // Add this function to fetch vendors by country
+  // Update the fetchVendorsByCountry function to support pagination
+  // const fetchVendorsByCountry = async (countryCode, page = 1, perPage = 50) => {
+  //   try {
+  //     setCountryLoading(true);
+  //     setCountryError(null);
+
+  //     console.log(`Fetching vendors for country code: ${countryCode}, page: ${page}, perPage: ${perPage}`);
+
+  //     const response = await axios.get('/getVendorsByCountry', {
+  //       params: {
+  //         country_code: countryCode,
+  //         page: page,
+  //         per_page: perPage
+  //       }
+  //     });
+
+  //     console.log('Country search response:', response.data);
+
+  //     if (response.data.status === 200) {
+  //       setCountryVendors(response.data.vendors || []);
+
+  //       // Store pagination information for country vendors
+  //       setCountryPagination({
+  //         current_page: response.data.current_page || 1,
+  //         per_page: response.data.per_page || perPage,
+  //         total: response.data.total || 0,
+  //         last_page: response.data.last_page || 1
+  //       });
+  //     } else {
+  //       setCountryVendors([]);
+  //       setCountryError(response.data.message || 'No vendors found for this country');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching vendors by country:', error);
+  //     setCountryError('Failed to fetch vendors by country. Please try again.');
+  //     setCountryVendors([]);
+  //   } finally {
+  //     setCountryLoading(false);
+  //   }
+  // };
+
+  // Update the fetchVendorsByCountry function to include search
+const fetchVendorsByCountry = async (countryCode, page = 1, perPage = 50, search = '') => {
+  try {
+    setCountryLoading(true);
+    setCountryError(null);
+
+    console.log(`Fetching vendors for country code: ${countryCode}, page: ${page}, perPage: ${perPage}, search: ${search}`);
+
+    const response = await axios.get('/getVendorsByCountry', {
+      params: { 
+        country_code: countryCode,
+        page: page,
+        per_page: perPage,
+        search: search
+      }
+    });
+
+    console.log('Country search response:', response.data);
+
+    if (response.data.status === 200) {
+      setCountryVendors(response.data.vendors || []);
+      
+      // Store pagination information for country vendors
+      setCountryPagination({
+        current_page: response.data.current_page || 1,
+        per_page: response.data.per_page || perPage,
+        total: response.data.total || 0,
+        last_page: response.data.last_page || 1
+      });
+    } else {
+      setCountryVendors([]);
+      setCountryError(response.data.message || 'No vendors found for this country');
+    }
+  } catch (error) {
+    console.error('Error fetching vendors by country:', error);
+    setCountryError('Failed to fetch vendors by country. Please try again.');
+    setCountryVendors([]);
+  } finally {
+    setCountryLoading(false);
+  }
+};
+
+// Add a handler for country search input changes
+const handleCountrySearchChange = (e) => {
+  setCountrySearchInput(e.target.value);
+  debouncedCountrySearch(e.target.value);
+};
+
+ // Update the handleCountryPageChange function to include search
+const handleCountryPageChange = (page) => {
+  fetchVendorsByCountry(selectedCountry, page, countryPagination.per_page, countrySearchTerm);
+};
   const filteredVendors = useMemo(() => {
     if (activeVendorType === "API") {
       return API_VENDORS;
     }
-  
+
+    if (activeVendorType === "Countries") {
+      // For Countries tab, we're already filtering in the backend
+      return Array.isArray(vendorDetails) ? vendorDetails : [];
+    }
+
     const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
-  
+
     const businessTypeMatch = (vendor) => {
       if (activeVendorType === "Direct") {
         return vendor.business_type?.toLowerCase() === "individual";
@@ -376,69 +502,69 @@ const VendorCategorize = () => {
       }
       return true;
     };
-  
+
     const typeFiltered = vendors.filter(businessTypeMatch);
-  
+
     if (activeCategory !== "all") {
       return typeFiltered.filter(
         (vendor) => vendor["Catergory ID"] === activeCategory.toString()
       );
     }
-  
+
     if (!searchTerm) return typeFiltered;
-  
+
     const searchTermLower = searchTerm.toLowerCase();
-  
+
     // Check if the search term is a country name
     const searchedCountryCode = Object.entries(countryCodeToName).find(
       ([code, name]) => name === searchTermLower
     )?.[0];
-  
+
     // Check if search term is a 2-letter country code
     const isCountryCode = searchTerm.length === 2 && /^[a-zA-Z]{2}$/.test(searchTerm);
-    
+
     return typeFiltered.filter((vendor) => {
       // Basic field checks
       if (vendor.company_name?.toLowerCase().includes(searchTermLower)) return true;
       if (`${vendor.first_name || ""} ${vendor.last_name || ""}`.toLowerCase().includes(searchTermLower)) return true;
       if (vendor.address?.toLowerCase().includes(searchTermLower)) return true;
-      
+
       // Country code check - either direct match on the vendor's country or in any of the vendor's products
       if (isCountryCode || searchedCountryCode) {
         const codeToCheck = isCountryCode ? searchTerm.toUpperCase() : searchedCountryCode;
-        
+
         // Check vendor's direct country if available
         if (vendor.country === codeToCheck) return true;
-        
+
         // Check country in vendor's products
         const hasCountryInLifestyles = vendor.lifestyles?.some(item => item.country === codeToCheck);
         const hasCountryInHotels = vendor.hotels?.some(item => item.country === codeToCheck);
         const hasCountryInEducation = vendor.education?.some(item => item.country === codeToCheck);
-        
+
         if (hasCountryInLifestyles || hasCountryInHotels || hasCountryInEducation) return true;
       }
-      
+
       // Special case for Sri Lanka
       if (searchTermLower === "sri lanka" || searchTermLower === "srilanka" || searchTermLower === "ceylon") {
-        const hasLKInProducts = 
+        const hasLKInProducts =
           vendor.lifestyles?.some(item => item.country === "LK") ||
           vendor.hotels?.some(item => item.country === "LK") ||
           vendor.education?.some(item => item.country === "LK");
-          
+
         if (hasLKInProducts) return true;
-        
+
         // Also check address fields
         if (vendor.address?.toLowerCase().includes("sri lanka") ||
-            vendor.address?.toLowerCase().includes("srilanka") ||
-            vendor.city?.toLowerCase().includes("sri lanka") ||
-            vendor.micro_location?.toLowerCase().includes("sri lanka")) {
+          vendor.address?.toLowerCase().includes("srilanka") ||
+          vendor.city?.toLowerCase().includes("sri lanka") ||
+          vendor.micro_location?.toLowerCase().includes("sri lanka")) {
           return true;
         }
       }
-      
+
       return false;
     });
-  }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
+  }, [vendorDetails, activeVendorType, activeCategory, searchTerm, selectedCountry]);
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -1025,103 +1151,131 @@ const VendorCategorize = () => {
         </div>
       )} */}
 
-{vendorSummary && (
-  <div className="row mb-4">
-    {/* Total Vendors */}
-    <div className="col-md-4">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Total Vendors</h5>
-            <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
+      {vendorSummary && (
+        <div className="row mb-4">
+          {/* Total Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Total Vendors</h5>
+                  <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
 
-    {/* Active Vendors */}
-    <div className="col-md-4">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Active Vendors</h5>
-            <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+          {/* Active Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Active Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
 
-    {/* Inactive Vendors */}
-    <div className="col-md-4">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Inactive Vendors</h5>
-            <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+          {/* Inactive Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Inactive Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
 
-    {/* Direct Vendor Products */}
-    <div className="col-md-6 mt-3">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
-        <Card.Body>
-          <h5 className="mb-2">Direct Vendor Products</h5>
-          <div className="d-flex justify-content-around">
-            <div>
-              <small>Total</small>
-              <h3 className="mb-0" style={{ color: 'orange' }}>
-                {vendorSummary.direct_products?.total || 0}
-              </h3>
-            </div>
-            <div>
-              <small style={{ color: 'green' }}>Active</small>
-              <h3 className="mb-0" style={{ color: 'green' }}>
-                {vendorSummary.direct_products?.active || 0}
-              </h3>
-            </div>
-            <div>
-              <small style={{ color: 'red' }}>Inactive</small>
-              <h3 className="mb-0" style={{ color: 'red' }}>
-                {vendorSummary.direct_products?.inactive || 0}
-              </h3>
-            </div>
+          {/* Direct Vendor Products */}
+          <div className="col-md-6 mt-3">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
+              <Card.Body>
+                <h5 className="mb-2">Direct Vendor Products</h5>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <small>Total</small>
+                    <h3 className="mb-0" style={{ color: 'orange' }}>
+                      {vendorSummary.direct_products?.total || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'green' }}>Active</small>
+                    <h3 className="mb-0" style={{ color: 'green' }}>
+                      {vendorSummary.direct_products?.active || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'red' }}>Inactive</small>
+                    <h3 className="mb-0" style={{ color: 'red' }}>
+                      {vendorSummary.direct_products?.inactive || 0}
+                    </h3>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
 
-    {/* DMC Vendor Products */}
-    <div className="col-md-6 mt-3">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
-        <Card.Body>
-          <h5 className="mb-2">DMC Vendor Products</h5>
-          <div className="d-flex justify-content-around">
-            <div>
-              <small>Total</small>
-              <h3 className="mb-0" style={{ color: 'purple' }}>
-                {vendorSummary.dmc_products?.total || 0}
-              </h3>
-            </div>
-            <div>
-              <small style={{ color: 'green' }}>Active</small>
-              <h3 className="mb-0" style={{ color: 'green' }}>
-                {vendorSummary.dmc_products?.active || 0}
-              </h3>
-            </div>
-            <div>
-              <small style={{ color: 'red' }}>Inactive</small>
-              <h3 className="mb-0" style={{ color: 'red' }}>
-                {vendorSummary.dmc_products?.inactive || 0}
-              </h3>
-            </div>
+
+          {/* DMC Vendor Products */}
+          <div className="col-md-6 mt-3">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
+              <Card.Body>
+                <h5 className="mb-2">DMC Vendor Products</h5>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <small>Total</small>
+                    <h3 className="mb-0" style={{ color: 'purple' }}>
+                      {vendorSummary.dmc_products?.total || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'green' }}>Active</small>
+                    <h3 className="mb-0" style={{ color: 'green' }}>
+                      {vendorSummary.dmc_products?.active || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'red' }}>Inactive</small>
+                    <h3 className="mb-0" style={{ color: 'red' }}>
+                      {vendorSummary.dmc_products?.inactive || 0}
+                    </h3>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
-  </div>
-)}
+        </div>
+      )}
+      {activeVendorType === 'Countries' && selectedCountry !== 'all' && countryVendors.length > 0 && (
+        <div className="row mb-4">
+          <div className="col-md-6">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Vendors in {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}</h5>
+                  <h3 className="mb-0" style={{ color: '#3c4b64' }}>{countryVendors.length}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+
+          <div className="col-md-6">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6f42c1' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Product Count</h5>
+                  <h3 className="mb-0" style={{ color: '#6f42c1' }}>
+                    {countryVendors.reduce((total, vendor) => total + (vendor.product_counts?.total_products?.total || 0), 0)}
+                  </h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        </div>
+      )}
 
       {/* Vendor Categories */}
       {/* {vendorSummary?.vendor_categories && (
@@ -1198,109 +1352,111 @@ const VendorCategorize = () => {
         </div>
       )} */}
 
-<Card className="mb-4">
-      <Card.Header 
-        onClick={() => setShowProductSummary(!showProductSummary)}
-        style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
-      >
-        <div className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0 d-flex justify-content-between align-items-center">Product Summary</h5>
-          <span>
-            {showProductSummary ? (
-              <i className="bi bi-chevron-up"></i>
-            ) : (
-              <i className="bi bi-chevron-down"></i>
-            )}
-          </span>
-        </div>
-      </Card.Header>
-      <Card.Body className={showProductSummary ? '' : 'd-none'}>
-        {/* Vendor Categories */}
-        {vendorSummary?.vendor_categories && (
-          <div className="row mt-2">
-            {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
-              const categoryTitles = {
-                essentials: 'Essentials',
-                non_essentials: 'Non Essentials',
-                lifestyle: 'Lifestyle',
-                hotels: 'Hotels',
-                education: 'Education',
-              };
-
-              const categoryColors = {
-                essentials: '#007bff',
-                non_essentials: '#17a2b8',
-                lifestyle: '#6f42c1',
-                hotels: '#fd7e14',
-                education: '#20c997',
-              };
-
-              return (
-                <div key={key} className="col-md-4 mt-3">
-                  <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
-                    <Card.Body>
-                      <h5 className="mb-2">{categoryTitles[key]}</h5>
-                      <div className="d-flex justify-content-around">
-                        <div>
-                          <small>Total</small>
-                          <h6>{value.total}</h6>
-                        </div>
-                        <div>
-                          <small style={{ color: 'green' }}>Active</small>
-                          <h6 style={{ color: 'green' }}>{value.active}</h6>
-                        </div>
-                        <div>
-                          <small style={{ color: 'red' }}>Inactive</small>
-                          <h6 style={{ color: 'red' }}>{value.inactive}</h6>
-                        </div>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </div>
-              );
-            })}
+      <Card className="mb-4">
+        <Card.Header
+          onClick={() => setShowProductSummary(!showProductSummary)}
+          style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
+        >
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0 d-flex justify-content-between align-items-center">Product Summary</h5>
+            <span>
+              {showProductSummary ? (
+                <i className="bi bi-chevron-up"></i>
+              ) : (
+                <i className="bi bi-chevron-down"></i>
+              )}
+            </span>
           </div>
-        )}
+        </Card.Header>
+        <Card.Body className={showProductSummary ? '' : 'd-none'}>
+          {/* Vendor Categories */}
+          {vendorSummary?.vendor_categories && (
+            <div className="row mt-2">
+              {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
+                const categoryTitles = {
+                  essentials: 'Essentials',
+                  non_essentials: 'Non Essentials',
+                  lifestyle: 'Lifestyle',
+                  hotels: 'Hotels',
+                  education: 'Education',
+                };
 
-        {/* Total Products Summary */}
-        {vendorSummary?.total_products && (
-          <div className="row mt-4">
-            <div className="col-md-12">
-              <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
-                <Card.Body>
-                  <h5 className="mb-2">Total Products Summary</h5>
-                  <div className="d-flex justify-content-around">
-                    <div>
-                      <small>Total</small>
-                      <h6>{vendorSummary.total_products.total}</h6>
-                    </div>
-                    <div>
-                      <small style={{ color: 'green' }}>Active</small>
-                      <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
-                    </div>
-                    <div>
-                      <small style={{ color: 'red' }}>Inactive</small>
-                      <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
-                    </div>
+                const categoryColors = {
+                  essentials: '#007bff',
+                  non_essentials: '#17a2b8',
+                  lifestyle: '#6f42c1',
+                  hotels: '#fd7e14',
+                  education: '#20c997',
+                };
+
+                return (
+                  <div key={key} className="col-md-4 mt-3">
+                    <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
+                      <Card.Body>
+                        <h5 className="mb-2">{categoryTitles[key]}</h5>
+                        <div className="d-flex justify-content-around">
+                          <div>
+                            <small>Total</small>
+                            <h6>{value.total}</h6>
+                          </div>
+                          <div>
+                            <small style={{ color: 'green' }}>Active</small>
+                            <h6 style={{ color: 'green' }}>{value.active}</h6>
+                          </div>
+                          <div>
+                            <small style={{ color: 'red' }}>Inactive</small>
+                            <h6 style={{ color: 'red' }}>{value.inactive}</h6>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
                   </div>
-                </Card.Body>
-              </Card>
+                );
+              })}
             </div>
-          </div>
-        )}
-      </Card.Body>
-    </Card>
+          )}
 
-      {/* Search Bar */}
-      <div className="mb-4">
-        <Form.Control
-          type="text"
-          placeholder="Search vendors by company name, location..."
-          value={searchInput}
-          onChange={handleSearchChange}
-          style={{ maxWidth: '400px' }}
-        />
-      </div>
+          {/* Total Products Summary */}
+          {vendorSummary?.total_products && (
+            <div className="row mt-4">
+              <div className="col-md-12">
+                <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+                  <Card.Body>
+                    <h5 className="mb-2">Total Products Summary</h5>
+                    <div className="d-flex justify-content-around">
+                      <div>
+                        <small>Total</small>
+                        <h6>{vendorSummary.total_products.total}</h6>
+                      </div>
+                      <div>
+                        <small style={{ color: 'green' }}>Active</small>
+                        <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+                      </div>
+                      <div>
+                        <small style={{ color: 'red' }}>Inactive</small>
+                        <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </div>
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+
+      {/* Search Bar - Hide when in Countries tab */}
+      {activeVendorType !== 'Countries' && (
+        <div className="mb-4">
+          <Form.Control
+            type="text"
+            placeholder="Search vendors by company name, location..."
+            value={searchInput}
+            onChange={handleSearchChange}
+            style={{ maxWidth: '400px' }}
+          />
+        </div>
+      )}
 
       {/* Vendor Type Tabs */}
       <Tabs
@@ -1308,17 +1464,88 @@ const VendorCategorize = () => {
         activeKey={activeVendorType}
         onSelect={(key) => {
           setActiveVendorType(key);
-          setActiveCategory('all'); // Reset category filter when changing vendor type
-          // fetchVendorData(1); // Fetch fresh data for the new vendor type
+          setActiveCategory('all');
+          setSearchInput('');
+          setSearchTerm('');
+
+          if (key === 'Countries') {
+            // Reset country selection when switching to Countries tab
+            setSelectedCountry('all');
+            setCountryVendors([]);
+          } else {
+            // Fetch regular data for other tabs
+            fetchVendorData(1);
+          }
         }}
         className="mb-3"
       >
         <Tab eventKey="Direct" title={`Direct (${vendorSummary?.direct_vendors || 0})`} />
         <Tab eventKey="DMC" title={`DMC (${vendorSummary?.dmc_vendors || 0})`} />
         <Tab eventKey="API" title={`API (${API_VENDORS.length})`} />
+        <Tab eventKey="Countries" title="Countries" />
+
 
       </Tabs>
+      {/* Country Selector - Only show when Countries tab is active */}
+      {activeVendorType === 'Countries' && (
+  <div className="mb-4">
+    <div className="row align-items-end">
+      <div className="col-md-4">
+        <Form.Label>Select Country</Form.Label>
+        <Form.Select
+          value={selectedCountry}
+          onChange={(e) => {
+            const countryCode = e.target.value;
+            setSelectedCountry(countryCode);
+            setCountryPagination({
+              current_page: 1,
+              per_page: countryPagination.per_page,
+              total: 0,
+              last_page: 1
+            });
+            setCountrySearchInput('');
+            setCountrySearchTerm('');
 
+            if (countryCode !== 'all') {
+              fetchVendorsByCountry(countryCode, 1, countryPagination.per_page, '');
+            } else {
+              setCountryVendors([]);
+            }
+          }}
+        >
+          <option value="all">Select a Country</option>
+          {Object.entries(countryCodeToName).map(([code, name]) => (
+            <option key={code} value={code}>
+              {name.charAt(0).toUpperCase() + name.slice(1)} ({code})
+            </option>
+          ))}
+        </Form.Select>
+      </div>
+      
+      {/* {selectedCountry !== 'all' && (
+        <div className="col-md-4">
+          <Form.Label>Search in {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Search by company name, email, phone..."
+            value={countrySearchInput}
+            onChange={handleCountrySearchChange}
+          />
+        </div>
+      )} */}
+    </div>
+
+    {selectedCountry !== 'all' && (
+      <div className="mt-2 text-info">
+        <small>
+          <i className="bi bi-info-circle me-1"></i>
+          Showing vendors from {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1) || selectedCountry}
+          {countrySearchTerm && ` matching "${countrySearchTerm}"`}
+        </small>
+      </div>
+    )}
+  </div>
+)}
       {/* Category Tabs - Hide when in API tab */}
       {activeVendorType !== 'API' && (
         <Tabs
@@ -1332,14 +1559,149 @@ const VendorCategorize = () => {
       )}
 
       <div className="row">
-        {filteredVendors.length > 0 ? (
-          filteredVendors.map(vendor => (
-            <VendorCard key={vendor.id} vendor={vendor} />
-          ))
-        ) : (
-          <div className="col-12 text-center py-5">
-            <p className="text-danger fw-bold">No vendors found</p>
+        {activeVendorType === 'Countries' ? (
+          <div className="col-12">
+            {countryLoading ? (
+              <div className="text-center py-5">
+                <Spinner animation="border" variant="primary" />
+                <span className="ms-2">Loading vendors for {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}...</span>
+              </div>
+            ) : countryError ? (
+              <div className="text-center py-5">
+                <div className="alert alert-danger">
+                  {countryError}
+                </div>
+              </div>
+            ) : selectedCountry === 'all' ? (
+              <div className="text-center py-5">
+                <p className="text-muted">Please select a country to view vendors</p>
+              </div>
+            ) : (
+              <>
+                <div className="row">
+                  {countryVendors.length > 0 ? (
+                    countryVendors.map(vendor => (
+                      <VendorCard key={vendor.id} vendor={vendor} />
+                    ))
+                  ) : (
+                    <div className="col-12 text-center py-5">
+                      <p className="text-danger fw-bold">No vendors found for {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Pagination for country vendors */}
+                {countryVendors.length > 0 && countryPagination.total > countryPagination.per_page && (
+                  <div className="d-flex justify-content-center mt-4">
+                    <Pagination>
+                      <Pagination.First
+                        onClick={() => handleCountryPageChange(1)}
+                        disabled={countryPagination.current_page === 1}
+                      />
+                      <Pagination.Prev
+                        onClick={() => handleCountryPageChange(countryPagination.current_page - 1)}
+                        disabled={countryPagination.current_page === 1}
+                      />
+
+                      {(() => {
+                        const totalPages = countryPagination.last_page;
+                        const currentPage = countryPagination.current_page;
+                        const delta = 2; // Number of pages to show before and after current page
+
+                        let pages = [];
+
+                        // Always show first page
+                        pages.push(1);
+
+                        // Calculate range around current page
+                        const leftBound = Math.max(2, currentPage - delta);
+                        const rightBound = Math.min(totalPages - 1, currentPage + delta);
+
+                        // Add ellipsis after first page if needed
+                        if (leftBound > 2) {
+                          pages.push('ellipsis-left');
+                        }
+
+                        // Add pages around current page
+                        for (let i = leftBound; i <= rightBound; i++) {
+                          pages.push(i);
+                        }
+
+                        // Add ellipsis before last page if needed
+                        if (rightBound < totalPages - 1) {
+                          pages.push('ellipsis-right');
+                        }
+
+                        // Always show last page if it's not the first page
+                        if (totalPages > 1) {
+                          pages.push(totalPages);
+                        }
+
+                        // Render pagination items
+                        return pages.map((page, index) => {
+                          if (page === 'ellipsis-left' || page === 'ellipsis-right') {
+                            return <Pagination.Ellipsis key={page} disabled />;
+                          }
+
+                          return (
+                            <Pagination.Item
+                              key={`country-page-${page}`}
+                              active={page === currentPage}
+                              onClick={() => handleCountryPageChange(page)}
+                              style={{
+                                backgroundColor: page === currentPage ? '#3c4b64' : 'inherit',
+                                color: page === currentPage ? 'white' : 'inherit'
+                              }}
+                            >
+                              {page}
+                            </Pagination.Item>
+                          );
+                        });
+                      })()}
+
+                      <Pagination.Next
+                        onClick={() => handleCountryPageChange(countryPagination.current_page + 1)}
+                        disabled={countryPagination.current_page === countryPagination.last_page}
+                      />
+                      <Pagination.Last
+                        onClick={() => handleCountryPageChange(countryPagination.last_page)}
+                        disabled={countryPagination.current_page === countryPagination.last_page}
+                      />
+                    </Pagination>
+                  </div>
+                )}
+
+                {/* Items per page selector for country vendors */}
+                <div className="d-flex justify-content-end mb-3 mt-3">
+                  <select
+                    className="form-select w-auto"
+                    value={countryPagination.per_page}
+                    onChange={(e) => {
+                      const newPerPage = parseInt(e.target.value);
+                      setCountryPagination({ ...countryPagination, per_page: newPerPage });
+                      fetchVendorsByCountry(selectedCountry, 1, newPerPage);
+                    }}
+                  >
+                    <option value="10">10 per page</option>
+                    <option value="25">25 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                  </select>
+                </div>
+              </>
+            )}
           </div>
+        ) : (
+          // Your existing non-country code here
+          filteredVendors.length > 0 ? (
+            filteredVendors.map(vendor => (
+              <VendorCard key={vendor.id} vendor={vendor} />
+            ))
+          ) : (
+            <div className="col-12 text-center py-5">
+              <p className="text-danger fw-bold">No vendors found</p>
+            </div>
+          )
         )}
       </div>
 
@@ -1381,7 +1743,7 @@ const VendorCategorize = () => {
         </div>
       )} */}
 
-      {activeVendorType !== 'API' && !loading && pagination.total > pagination.per_page && (
+      {activeVendorType !== 'API' && activeVendorType !== 'Countries' && !loading && pagination.total > pagination.per_page && (
         <div className="d-flex justify-content-center mt-4">
           <Pagination>
             <Pagination.First

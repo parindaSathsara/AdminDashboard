@@ -306,7 +306,7 @@ function getNavigationHook(permissions) {
       items: [
         {
           component: CNavItem,
-          name: 'Bridgify India',
+          name: 'Bridgify',
           to: '/services/bridgyfy',
         },
         {
