@@ -962,10 +962,9 @@ const VendorCategorize = () => {
         Vendor Categorization
       </h1>
 
-      {vendorSummary && (
+      {/* {vendorSummary && (
         <div className="row mb-4">
 
-          {/* Total Vendors */}
           <div className="col-md-4">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
               <Card.Body>
@@ -977,8 +976,6 @@ const VendorCategorize = () => {
             </Card>
           </div>
 
-
-          {/* Active Vendors */}
           <div className="col-md-4">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
               <Card.Body>
@@ -990,7 +987,6 @@ const VendorCategorize = () => {
             </Card>
           </div>
 
-          {/* Inactive Vendors */}
           <div className="col-md-4">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
               <Card.Body>
@@ -1002,7 +998,7 @@ const VendorCategorize = () => {
             </Card>
           </div>
 
-          {/* Direct Vendors */}
+          
           <div className="col-md-6 mt-3">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
               <Card.Body>
@@ -1012,9 +1008,9 @@ const VendorCategorize = () => {
                 </div>
               </Card.Body>
             </Card>
-          </div>
+          </div> 
 
-          {/* DMC Vendors */}
+
           <div className="col-md-6 mt-3">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
               <Card.Body>
@@ -1024,10 +1020,108 @@ const VendorCategorize = () => {
                 </div>
               </Card.Body>
             </Card>
-          </div>
+          </div> 
 
         </div>
-      )}
+      )} */}
+
+{vendorSummary && (
+  <div className="row mb-4">
+    {/* Total Vendors */}
+    <div className="col-md-4">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0">Total Vendors</h5>
+            <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Active Vendors */}
+    <div className="col-md-4">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0">Active Vendors</h5>
+            <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Inactive Vendors */}
+    <div className="col-md-4">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0">Inactive Vendors</h5>
+            <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Direct Vendor Products */}
+    <div className="col-md-6 mt-3">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
+        <Card.Body>
+          <h5 className="mb-2">Direct Vendor Products</h5>
+          <div className="d-flex justify-content-around">
+            <div>
+              <small>Total</small>
+              <h3 className="mb-0" style={{ color: 'orange' }}>
+                {vendorSummary.direct_products?.total || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'green' }}>Active</small>
+              <h3 className="mb-0" style={{ color: 'green' }}>
+                {vendorSummary.direct_products?.active || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'red' }}>Inactive</small>
+              <h3 className="mb-0" style={{ color: 'red' }}>
+                {vendorSummary.direct_products?.inactive || 0}
+              </h3>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* DMC Vendor Products */}
+    <div className="col-md-6 mt-3">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
+        <Card.Body>
+          <h5 className="mb-2">DMC Vendor Products</h5>
+          <div className="d-flex justify-content-around">
+            <div>
+              <small>Total</small>
+              <h3 className="mb-0" style={{ color: 'purple' }}>
+                {vendorSummary.dmc_products?.total || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'green' }}>Active</small>
+              <h3 className="mb-0" style={{ color: 'green' }}>
+                {vendorSummary.dmc_products?.active || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'red' }}>Inactive</small>
+              <h3 className="mb-0" style={{ color: 'red' }}>
+                {vendorSummary.dmc_products?.inactive || 0}
+              </h3>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+  </div>
+)}
 
       {/* Vendor Categories */}
       {/* {vendorSummary?.vendor_categories && (
