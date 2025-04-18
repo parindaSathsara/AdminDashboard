@@ -25,6 +25,7 @@ const API_VENDORS = [
 ];
 
 const VendorCategorize = () => {
+  const [showProductSummary, setShowProductSummary] = useState(true);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -289,13 +290,84 @@ const VendorCategorize = () => {
     ZW: "zimbabwe"
   };
 
+  // const filteredVendors = useMemo(() => {
+  //   if (activeVendorType === "API") {
+  //     return API_VENDORS;
+  //   }
+
+  //   const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
+
+  //   const businessTypeMatch = (vendor) => {
+  //     if (activeVendorType === "Direct") {
+  //       return vendor.business_type?.toLowerCase() === "individual";
+  //     } else if (activeVendorType === "DMC") {
+  //       return vendor.business_type?.toLowerCase() === "company";
+  //     }
+  //     return true;
+  //   };
+
+  //   const typeFiltered = vendors.filter(businessTypeMatch);
+
+  //   if (activeCategory !== "all") {
+  //     return typeFiltered.filter(
+  //       (vendor) => vendor["Catergory ID"] === activeCategory.toString()
+  //     );
+  //   }
+
+  //   if (!searchTerm) return typeFiltered;
+
+  //   const searchTermLower = searchTerm.toLowerCase();
+
+  //   // Create a reverse mapping from country name to country code
+  //   const countryNameToCode = {};
+  //   Object.entries(countryCodeToName).forEach(([code, name]) => {
+  //     countryNameToCode[name] = code;
+  //   });
+
+  //   // Add common alternative names for Sri Lanka
+  //   const sriLankaAliases = ["srilanka", "sri lanka", "ceylon"];
+  //   sriLankaAliases.forEach(alias => {
+  //     countryNameToCode[alias] = "LK";
+  //   });
+
+  //   return typeFiltered.filter((vendor) => {
+  //     // Check basic fields
+  //     if (vendor.company_name?.toLowerCase().includes(searchTermLower)) return true;
+  //     if (`${vendor.first_name || ""} ${vendor.last_name || ""}`.toLowerCase().includes(searchTermLower)) return true;
+  //     if (vendor.address?.toLowerCase().includes(searchTermLower)) return true;
+  //     if (vendor.lat_long?.toLowerCase().includes(searchTermLower)) return true;
+
+  //     // Check if search term matches a country name
+  //     const searchedCountryCode = countryNameToCode[searchTermLower];
+
+  //     // Check if vendor country code matches the searched country code
+  //     const vendorCountryCode = vendor.country ||
+  //       (vendor.lifestyles && vendor.lifestyles[0]?.country) ||
+  //       (vendor.education && vendor.education[0]?.country) ||
+  //       (vendor.hotels && vendor.hotels[0]?.country);
+
+  //     if (searchedCountryCode && vendorCountryCode === searchedCountryCode) return true;
+
+  //     // Special case for Sri Lanka - also check address and other fields
+  //     if (sriLankaAliases.includes(searchTermLower) &&
+  //       (vendor.address?.toLowerCase().includes("sri lanka") ||
+  //         vendor.address?.toLowerCase().includes("srilanka") ||
+  //         vendor.city?.toLowerCase().includes("sri lanka") ||
+  //         vendor.micro_location?.toLowerCase().includes("sri lanka"))) {
+  //       return true;
+  //     }
+
+  //     return false;
+  //   });
+  // }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
+
   const filteredVendors = useMemo(() => {
     if (activeVendorType === "API") {
       return API_VENDORS;
     }
-
+  
     const vendors = Array.isArray(vendorDetails) ? vendorDetails : [];
-
+  
     const businessTypeMatch = (vendor) => {
       if (activeVendorType === "Direct") {
         return vendor.business_type?.toLowerCase() === "individual";
@@ -304,58 +376,66 @@ const VendorCategorize = () => {
       }
       return true;
     };
-
+  
     const typeFiltered = vendors.filter(businessTypeMatch);
-
+  
     if (activeCategory !== "all") {
       return typeFiltered.filter(
         (vendor) => vendor["Catergory ID"] === activeCategory.toString()
       );
     }
-
+  
     if (!searchTerm) return typeFiltered;
-
+  
     const searchTermLower = searchTerm.toLowerCase();
-
-    // Create a reverse mapping from country name to country code
-    const countryNameToCode = {};
-    Object.entries(countryCodeToName).forEach(([code, name]) => {
-      countryNameToCode[name] = code;
-    });
-
-    // Add common alternative names for Sri Lanka
-    const sriLankaAliases = ["srilanka", "sri lanka", "ceylon"];
-    sriLankaAliases.forEach(alias => {
-      countryNameToCode[alias] = "LK";
-    });
-
+  
+    // Check if the search term is a country name
+    const searchedCountryCode = Object.entries(countryCodeToName).find(
+      ([code, name]) => name === searchTermLower
+    )?.[0];
+  
+    // Check if search term is a 2-letter country code
+    const isCountryCode = searchTerm.length === 2 && /^[a-zA-Z]{2}$/.test(searchTerm);
+    
     return typeFiltered.filter((vendor) => {
-      // Check basic fields
+      // Basic field checks
       if (vendor.company_name?.toLowerCase().includes(searchTermLower)) return true;
       if (`${vendor.first_name || ""} ${vendor.last_name || ""}`.toLowerCase().includes(searchTermLower)) return true;
       if (vendor.address?.toLowerCase().includes(searchTermLower)) return true;
-      if (vendor.lat_long?.toLowerCase().includes(searchTermLower)) return true;
-
-      // Check if search term matches a country name
-      const searchedCountryCode = countryNameToCode[searchTermLower];
-
-      // Check if vendor country code matches the searched country code
-      const vendorCountryCode = vendor.country ||
-        (vendor.lifestyles && vendor.lifestyles[0]?.country) ||
-        (vendor.education && vendor.education[0]?.country) ||
-        (vendor.hotels && vendor.hotels[0]?.country);
-
-      if (searchedCountryCode && vendorCountryCode === searchedCountryCode) return true;
-
-      // Special case for Sri Lanka - also check address and other fields
-      if (sriLankaAliases.includes(searchTermLower) &&
-        (vendor.address?.toLowerCase().includes("sri lanka") ||
-          vendor.address?.toLowerCase().includes("srilanka") ||
-          vendor.city?.toLowerCase().includes("sri lanka") ||
-          vendor.micro_location?.toLowerCase().includes("sri lanka"))) {
-        return true;
+      
+      // Country code check - either direct match on the vendor's country or in any of the vendor's products
+      if (isCountryCode || searchedCountryCode) {
+        const codeToCheck = isCountryCode ? searchTerm.toUpperCase() : searchedCountryCode;
+        
+        // Check vendor's direct country if available
+        if (vendor.country === codeToCheck) return true;
+        
+        // Check country in vendor's products
+        const hasCountryInLifestyles = vendor.lifestyles?.some(item => item.country === codeToCheck);
+        const hasCountryInHotels = vendor.hotels?.some(item => item.country === codeToCheck);
+        const hasCountryInEducation = vendor.education?.some(item => item.country === codeToCheck);
+        
+        if (hasCountryInLifestyles || hasCountryInHotels || hasCountryInEducation) return true;
       }
-
+      
+      // Special case for Sri Lanka
+      if (searchTermLower === "sri lanka" || searchTermLower === "srilanka" || searchTermLower === "ceylon") {
+        const hasLKInProducts = 
+          vendor.lifestyles?.some(item => item.country === "LK") ||
+          vendor.hotels?.some(item => item.country === "LK") ||
+          vendor.education?.some(item => item.country === "LK");
+          
+        if (hasLKInProducts) return true;
+        
+        // Also check address fields
+        if (vendor.address?.toLowerCase().includes("sri lanka") ||
+            vendor.address?.toLowerCase().includes("srilanka") ||
+            vendor.city?.toLowerCase().includes("sri lanka") ||
+            vendor.micro_location?.toLowerCase().includes("sri lanka")) {
+          return true;
+        }
+      }
+      
       return false;
     });
   }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
@@ -882,10 +962,9 @@ const VendorCategorize = () => {
         Vendor Categorization
       </h1>
 
-      {vendorSummary && (
+      {/* {vendorSummary && (
         <div className="row mb-4">
 
-          {/* Total Vendors */}
           <div className="col-md-4">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
               <Card.Body>
@@ -897,8 +976,6 @@ const VendorCategorize = () => {
             </Card>
           </div>
 
-
-          {/* Active Vendors */}
           <div className="col-md-4">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
               <Card.Body>
@@ -910,7 +987,6 @@ const VendorCategorize = () => {
             </Card>
           </div>
 
-          {/* Inactive Vendors */}
           <div className="col-md-4">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
               <Card.Body>
@@ -922,7 +998,7 @@ const VendorCategorize = () => {
             </Card>
           </div>
 
-          {/* Direct Vendors */}
+          
           <div className="col-md-6 mt-3">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
               <Card.Body>
@@ -932,9 +1008,9 @@ const VendorCategorize = () => {
                 </div>
               </Card.Body>
             </Card>
-          </div>
+          </div> 
 
-          {/* DMC Vendors */}
+
           <div className="col-md-6 mt-3">
             <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
               <Card.Body>
@@ -944,13 +1020,111 @@ const VendorCategorize = () => {
                 </div>
               </Card.Body>
             </Card>
-          </div>
+          </div> 
 
         </div>
-      )}
+      )} */}
+
+{vendorSummary && (
+  <div className="row mb-4">
+    {/* Total Vendors */}
+    <div className="col-md-4">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0">Total Vendors</h5>
+            <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Active Vendors */}
+    <div className="col-md-4">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0">Active Vendors</h5>
+            <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Inactive Vendors */}
+    <div className="col-md-4">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
+        <Card.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="mb-0">Inactive Vendors</h5>
+            <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Direct Vendor Products */}
+    <div className="col-md-6 mt-3">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
+        <Card.Body>
+          <h5 className="mb-2">Direct Vendor Products</h5>
+          <div className="d-flex justify-content-around">
+            <div>
+              <small>Total</small>
+              <h3 className="mb-0" style={{ color: 'orange' }}>
+                {vendorSummary.direct_products?.total || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'green' }}>Active</small>
+              <h3 className="mb-0" style={{ color: 'green' }}>
+                {vendorSummary.direct_products?.active || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'red' }}>Inactive</small>
+              <h3 className="mb-0" style={{ color: 'red' }}>
+                {vendorSummary.direct_products?.inactive || 0}
+              </h3>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* DMC Vendor Products */}
+    <div className="col-md-6 mt-3">
+      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
+        <Card.Body>
+          <h5 className="mb-2">DMC Vendor Products</h5>
+          <div className="d-flex justify-content-around">
+            <div>
+              <small>Total</small>
+              <h3 className="mb-0" style={{ color: 'purple' }}>
+                {vendorSummary.dmc_products?.total || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'green' }}>Active</small>
+              <h3 className="mb-0" style={{ color: 'green' }}>
+                {vendorSummary.dmc_products?.active || 0}
+              </h3>
+            </div>
+            <div>
+              <small style={{ color: 'red' }}>Inactive</small>
+              <h3 className="mb-0" style={{ color: 'red' }}>
+                {vendorSummary.dmc_products?.inactive || 0}
+              </h3>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+  </div>
+)}
 
       {/* Vendor Categories */}
-      {vendorSummary?.vendor_categories && (
+      {/* {vendorSummary?.vendor_categories && (
         <div className="row mt-4">
           {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
             // Define category display names and colors
@@ -995,36 +1169,127 @@ const VendorCategorize = () => {
             );
           })}
         </div>
-      )}
+      )} */}
 
       {/* Total Products Summary */}
-{vendorSummary?.total_products && (
-  <div className="row mt-4 mb-3">
-    <div className="col-md-12">
-      <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
-        <Card.Body>
-          <h5 className="mb-2">Total Products Summary</h5>
-          <div className="d-flex justify-content-around">
-            <div>
-              <small>Total</small>
-              <h6>{vendorSummary.total_products.total}</h6>
-            </div>
-            <div>
-              <small style={{ color: 'green' }}>Active</small>
-              <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
-            </div>
-            <div>
-              <small style={{ color: 'red' }}>Inactive</small>
-              <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+      {/* {vendorSummary?.total_products && (
+        <div className="row mt-4 mb-3">
+          <div className="col-md-12">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+              <Card.Body>
+                <h5 className="mb-2">Total Products Summary</h5>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <small>Total</small>
+                    <h6>{vendorSummary.total_products.total}</h6>
+                  </div>
+                  <div>
+                    <small style={{ color: 'green' }}>Active</small>
+                    <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+                  </div>
+                  <div>
+                    <small style={{ color: 'red' }}>Inactive</small>
+                    <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        </div>
+      )} */}
+
+<Card className="mb-4">
+      <Card.Header 
+        onClick={() => setShowProductSummary(!showProductSummary)}
+        style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <h5 className="mb-0 d-flex justify-content-between align-items-center">Product Summary</h5>
+          <span>
+            {showProductSummary ? (
+              <i className="bi bi-chevron-up"></i>
+            ) : (
+              <i className="bi bi-chevron-down"></i>
+            )}
+          </span>
+        </div>
+      </Card.Header>
+      <Card.Body className={showProductSummary ? '' : 'd-none'}>
+        {/* Vendor Categories */}
+        {vendorSummary?.vendor_categories && (
+          <div className="row mt-2">
+            {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
+              const categoryTitles = {
+                essentials: 'Essentials',
+                non_essentials: 'Non Essentials',
+                lifestyle: 'Lifestyle',
+                hotels: 'Hotels',
+                education: 'Education',
+              };
+
+              const categoryColors = {
+                essentials: '#007bff',
+                non_essentials: '#17a2b8',
+                lifestyle: '#6f42c1',
+                hotels: '#fd7e14',
+                education: '#20c997',
+              };
+
+              return (
+                <div key={key} className="col-md-4 mt-3">
+                  <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
+                    <Card.Body>
+                      <h5 className="mb-2">{categoryTitles[key]}</h5>
+                      <div className="d-flex justify-content-around">
+                        <div>
+                          <small>Total</small>
+                          <h6>{value.total}</h6>
+                        </div>
+                        <div>
+                          <small style={{ color: 'green' }}>Active</small>
+                          <h6 style={{ color: 'green' }}>{value.active}</h6>
+                        </div>
+                        <div>
+                          <small style={{ color: 'red' }}>Inactive</small>
+                          <h6 style={{ color: 'red' }}>{value.inactive}</h6>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Total Products Summary */}
+        {vendorSummary?.total_products && (
+          <div className="row mt-4">
+            <div className="col-md-12">
+              <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+                <Card.Body>
+                  <h5 className="mb-2">Total Products Summary</h5>
+                  <div className="d-flex justify-content-around">
+                    <div>
+                      <small>Total</small>
+                      <h6>{vendorSummary.total_products.total}</h6>
+                    </div>
+                    <div>
+                      <small style={{ color: 'green' }}>Active</small>
+                      <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+                    </div>
+                    <div>
+                      <small style={{ color: 'red' }}>Inactive</small>
+                      <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
             </div>
           </div>
-        </Card.Body>
-      </Card>
-    </div>
-  </div>
-)}
-
-
+        )}
+      </Card.Body>
+    </Card>
 
       {/* Search Bar */}
       <div className="mb-4">
