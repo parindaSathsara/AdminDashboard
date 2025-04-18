@@ -126,7 +126,7 @@ const routes = [
 
   { path: '/reporting/accounts', name: 'Accounts Report', element: AccountReport },
   { path: '/reporting/all', name: 'All Report', element: ReportsMain },
-  { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
+  // { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
 
   { path: '/emails/generate', name: 'Email Generate', element: EmailGeneration },
   { path: '/emails/all', name: 'Email Resend', element: EmailDashboard },
