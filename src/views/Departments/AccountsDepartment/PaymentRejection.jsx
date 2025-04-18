@@ -56,6 +56,13 @@ function PaymentRejection(props) {
     if (form.checkValidity() === false || (formData.paidAmount > balanceAmount.balanceAmountToPay && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
       event.stopPropagation();
       setValidated(true);
+      if ((formData.paidAmount > balanceAmount.balanceAmountToPay && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
+        Swal.fire({
+          title: "No Payment Required",
+          text: "The balance has already been cleared. No payment is due.",
+          icon: "info"
+        });
+      }
     } else {
       setValidated(true);
       Swal.fire({
