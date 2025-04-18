@@ -110,12 +110,12 @@ const Dashboard = () => {
   }, []);
 
   const pagePermission = ["all accounts access",
-      "view customer orders",
-      "approve customer orders",
-      "reject customer orders",
-      "view customer order pnl",
-      "download order long itinerary",
-      "download order short itinerary"]
+    "view customer orders",
+    "approve customer orders",
+    "reject customer orders",
+    "view customer order pnl",
+    "download order long itinerary",
+    "download order short itinerary"]
 
   const data = {
     columns: [
@@ -161,14 +161,14 @@ const Dashboard = () => {
         title: 'Delivery Charge', field: 'delivery_charge', align: 'right', editable: 'never',
       },
       {
-        title: 'Actions', field: 'actions', align: 'center', editable: 'never',
+        title: 'Actions', field: 'actions', align: 'center', editable: 'never', export: false
       },
 
     ],
     rows: orderData?.map((value, idx) => {
 
 
-      console.log(value,"data set value refund is")
+      console.log(value, "data set value refund is")
       return {
         // id: value.MainTId,
         data: value,
@@ -180,15 +180,15 @@ const Dashboard = () => {
         paid_amount: value.ItemCurrency + " " + (value.paid_amount?.toFixed(2) || "0.00"), // Check for null or undefined
         discount_amount: value.ItemCurrency + " " + (value.discount_price?.toFixed(2) || "0.00"), // Check for null or undefined
         delivery_charge: value.ItemCurrency + " " + (value.delivery_charge?.toFixed(2) || "0.00"), // Check for null or undefined
-        refunding_amount:value.ItemCurrency + " " + (value.refundableAmount?.toFixed(2) || "0.00"), // Check for null or undefined
+        refunding_amount: value.ItemCurrency + " " + (value.refundableAmount?.toFixed(2) || "0.00"), // Check for null or undefined
         actions:
           <div className='actions_box'>
             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
             {
-            (pagePermission.some(permission => userData?.permissions?.includes(permission))) &&
-            <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.OrderId, value) }}>View Order</button>
+              (pagePermission.some(permission => userData?.permissions?.includes(permission))) &&
+              <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.OrderId, value) }}>View Order</button>
             }
-            </div>
+          </div>
       }
     })
   }
@@ -234,7 +234,7 @@ const Dashboard = () => {
           .then(res => {
             setProgress(100);
             setPaymentDataSet({ ...paymentDataSet, MainPayStatus: "Approved" })
-            const updatedOrderData = orderData.map(order => 
+            const updatedOrderData = orderData.map(order =>
               order.OrderId === orderid ? { ...order, MainPayStatus: "Approved" } : order
             );
             setOrderData(updatedOrderData);
@@ -279,10 +279,10 @@ const Dashboard = () => {
   }
 
 
-  const handleRejectionSuccess = () =>{
+  const handleRejectionSuccess = () => {
     setPaymentRejection(false)
     setPaymentDataSet({ ...paymentDataSet, MainPayStatus: "Rejected" })
-    const updatedOrderData = orderData.map(order => 
+    const updatedOrderData = orderData.map(order =>
       order.OrderId === orderid ? { ...order, MainPayStatus: "Rejected" } : order
     );
     setOrderData(updatedOrderData);
@@ -299,30 +299,30 @@ const Dashboard = () => {
 
           <Modal.Title>Order Details - {orderid}</Modal.Title>
           {
-          paymentDataSet?.pay_category === "Card Payment"?(
-            null
-          ):(
-            paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
-              <div className="radioGroup" style={{ marginLeft: "30px" }}>
-                 {(["all accounts access","approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
-                <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
-                 }
-                 {(["all accounts access","reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
-                <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
-                }
+            paymentDataSet?.pay_category === "Card Payment" ? (
+              null
+            ) : (
+              paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
+                <div className="radioGroup" style={{ marginLeft: "30px" }}>
+                  {(["all accounts access", "approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
+                    <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
+                  }
+                  {(["all accounts access", "reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
+                    <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
+                  }
                 </div>
-            ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
-            <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
-              Payment Rejected
-            </div>
-            
-            ): (
-              <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
-                Payment Approved
-              </div>
+              ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
+                <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
+                  Payment Rejected
+                </div>
+
+              ) : (
+                <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
+                  Payment Approved
+                </div>
+              )
             )
-          )
-          
+
           }
 
 
@@ -386,7 +386,7 @@ const Dashboard = () => {
 
                 sorting: true, search: true,
                 searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                filtering: false, paging: true, pageSizeOptions: [10, 20, 25, 50, 100], pageSize: 10,
                 paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
                 exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                 showSelectAllCheckbox: false, showTextRowsSelected: false,
