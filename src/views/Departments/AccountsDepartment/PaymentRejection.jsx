@@ -26,6 +26,13 @@ function PaymentRejection(props) {
     }, [props.paymentDataSet]);
 
     const handleFormData = (e) => {
+      
+      if (e.target.name == "paidAmount") {
+        if (e.target.value > paymentDataSet.total_amount) {
+          e.target.value = paymentDataSet.total_amount
+        }
+      }
+
         const { name, value } = e.target;
 
         setFormData({
@@ -77,9 +84,9 @@ function PaymentRejection(props) {
                         text: error.response.data.message,
                         icon: "error"
                     });
-                    
+
                       });
-                    
+
                 }
             });
         }
