@@ -628,6 +628,8 @@ const handleCountryPageChange = (page) => {
 
   const getVendorDetailsCategorize = async (page = 1, perPage = 50) => {
     try {
+      console.log(`API request with: page=${page}, per_page=${perPage}`); // Add logging
+
       const response = await axios.get('/getAllVendorsCategorize', {
         params: {
           page,
@@ -664,14 +666,54 @@ const handleCountryPageChange = (page) => {
     }
   };
 
-  const fetchVendorData = async (page = 1) => {
+  // const fetchVendorData = async (page = 1) => {
+  //   try {
+  //     setLoading(true);
+  //     setError(null);
+
+  //     const vendorsResponse = await getVendorDetailsCategorize(page, pagination.per_page);
+  //     console.log(vendorsResponse, "vendor_response");
+
+  //     console.log('API response pagination:', {
+  //       current_page: vendorsResponse.current_page,
+  //       per_page: vendorsResponse.per_page,
+  //       total: vendorsResponse.total
+  //     }); // Add this logging
+
+  //     setVendorDetails(vendorsResponse.data);
+  //     setPagination({
+  //       current_page: vendorsResponse.current_page,
+  //       per_page: vendorsResponse.per_page,
+  //       total: vendorsResponse.total,
+  //       last_page: vendorsResponse.last_page
+  //     });
+  //   } catch (error) {
+  //     setError('Failed to load vendor data. Please try again later.');
+  //     console.error('Error fetching vendor data:', error);
+  //     setVendorDetails([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchVendorData = async (page = 1, perPageOverride = null) => {
     try {
       setLoading(true);
       setError(null);
-
-      const vendorsResponse = await getVendorDetailsCategorize(page, pagination.per_page);
-      console.log(vendorsResponse, "vendor_response");
-
+      
+      // Use the override if provided, otherwise use the state value
+      const perPageToUse = perPageOverride !== null ? perPageOverride : pagination.per_page;
+      
+      console.log(`Fetching vendors with: page=${page}, per_page=${perPageToUse}`);
+      
+      const vendorsResponse = await getVendorDetailsCategorize(page, perPageToUse);
+      
+      console.log('API response pagination:', {
+        current_page: vendorsResponse.current_page,
+        per_page: vendorsResponse.per_page,
+        total: vendorsResponse.total
+      });
+      
       setVendorDetails(vendorsResponse.data);
       setPagination({
         current_page: vendorsResponse.current_page,
@@ -687,7 +729,6 @@ const handleCountryPageChange = (page) => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchVendorData();
     getVendorSummary();
@@ -791,17 +832,19 @@ const handleCountryPageChange = (page) => {
 
   const renderCategoryCounts = (vendor) => {
     // if (activeVendorType !== 'Direct') return null;
+    console.log(vendor, "vendor_details");
+    
 
     return Object.entries(CATEGORY_NAMES).map(([categoryId, categoryName]) => {
       let count = 0;
       let ids = [];
 
       if (categoryName === 'Essentials') {
-        count = vendor.essentials?.count || 0;
-        ids = vendor.essentials?.ids || [];
+        count = vendor.essentials?.length || 0;
+        ids = vendor.essentials?.map(e => e.id) || [];
       } else if (categoryName === 'Non-Essentials') {
-        count = vendor.non_essentials?.count || 0;
-        ids = vendor.non_essentials?.ids || [];
+        count = vendor.non_essentials?.length || 0;
+        ids = vendor.non_essentials?.map(n => n.id) || [];
       } else if (categoryName === 'Lifestyle') {
         count = vendor.lifestyles?.length || 0;
         ids = vendor.lifestyles?.map(l => l.id) || [];
@@ -911,6 +954,10 @@ const handleCountryPageChange = (page) => {
   const handleShowDetails = (categoryName, vendorId, categoryIds) => {
     const vendor = vendorDetails.find(v => v.id === vendorId);
     if (!vendor) return;
+    console.log(vendor, "category_name_vendor_details");
+    console.log(categoryName, "category_name");
+    console.log(categoryIds, "category_name_ids");
+    console.log(vendorId, "category_name_vendorId");
 
     let details = [];
 
@@ -918,13 +965,13 @@ const handleCountryPageChange = (page) => {
       case 'Essentials':
         details = vendor.essNess?.filter(item =>
           categoryIds.includes(item.id) &&
-          item.productDetails?.category1 === 'Essentials'
+          item.productDetails?.category1 === 1
         ) || [];
         break;
       case 'Non-Essentials':
         details = vendor.essNess?.filter(item =>
           categoryIds.includes(item.id) &&
-          item.productDetails?.category2 === 'Non-Essentials'
+          item.productDetails?.category1 === 2
         ) || [];
         break;
       case 'Lifestyle':
@@ -1675,9 +1722,10 @@ const handleCountryPageChange = (page) => {
                 <div className="d-flex justify-content-end mb-3 mt-3">
                   <select
                     className="form-select w-auto"
-                    value={countryPagination.per_page}
+                    value={countryPagination.per_page.toString()}
                     onChange={(e) => {
                       const newPerPage = parseInt(e.target.value);
+                      console.log(`Changed per_page to11: ${newPerPage}`); // Add logging
                       setCountryPagination({ ...countryPagination, per_page: newPerPage });
                       fetchVendorsByCountry(selectedCountry, 1, newPerPage);
                     }}
@@ -1848,8 +1896,10 @@ const handleCountryPageChange = (page) => {
             className="form-select w-auto"
             value={pagination.per_page}
             onChange={(e) => {
-              setPagination({ ...pagination, per_page: parseInt(e.target.value) });
-              fetchVendorData(1);
+              const newPerPage = parseInt(e.target.value);
+              console.log(`Changed per_page to: ${newPerPage}`);
+              setPagination({ ...pagination, per_page: newPerPage });
+              fetchVendorData(1, newPerPage); // Pass the new per_page value directly
             }}
           >
             <option value="10">10 per page</option>
