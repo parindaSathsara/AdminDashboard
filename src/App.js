@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { Component, Suspense, useEffect, useState } from 'react'
+import React, { Component, Suspense, useEffect, useState, useRef } from 'react'
 import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { UserLoginContext } from './Context/UserLoginContext'
 import InAppNotificationService from './service/InAppNotificationService'
@@ -7,6 +7,8 @@ import { CurrencyContext } from './Context/CurrencyContext'
 import './scss/style.scss'
 import './App.css';
 import UserCountStats from './Panels/UserCount/UserCountStats'
+import NotificationContainer from './components/Notification/NotificationContainer'
+import BeepSound from 'src/assets/beep-sound.mp3';
 
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -169,7 +171,6 @@ function App() {
         }
       });
     }
-
   }, []);
 
 
@@ -186,9 +187,32 @@ function App() {
     return () => clearTimeout(timeout);
   }, [userLogin]);
 
+  const [notifications, setNotifications] = useState([]);
+
+  const addNotification = () => {
+    const audio = new Audio(BeepSound);
+    audio.play().catch((error) => {
+      console.log('Audio play failed:', error);
+    });
+
+    const id = Date.now();
+    const newNotification = {
+      id,
+      image: 'https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png',
+      title: 'A New Chat Has Arrived!',
+      description: 'Notification description',
+    };
+
+    setNotifications(prev => [...prev, newNotification]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }, 5000); // 5 seconds
+  };
+
   return (
     <CurrencyContext.Provider value={{ currencyData, setCurrencyData }}>
       <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
+        <NotificationContainer notifications={notifications} />
         <HashRouter>
           <Suspense fallback={loading}>
             <Routes>
