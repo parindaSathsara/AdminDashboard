@@ -94,6 +94,7 @@ import TBO from './Panels/API_details/TBO'
 import UserCountStats from './Panels/UserCount/UserCountStats'
 import VendorCategorize from './views/VendorCategorize/VendorCategorize'
 import Promotions from './views/Promotions/Promotions'
+import VendorStats from './views/VendorCategorize/VendorStats'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -162,6 +163,7 @@ const routes = [
   
   // vendor categorize
   {path:'/vendors/categorize',name:'Vendor Categorize',element:VendorCategorize},
+  {path:'/vendors/stats',name:'Vendor Stats',element:VendorStats},
   
   // prmotions
   {path:'/promotions',name:'Promotions',element:Promotions},

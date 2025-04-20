@@ -25,6 +25,24 @@ const API_VENDORS = [
 ];
 
 const VendorCategorize = () => {
+  const [activeSearchTab, setActiveSearchTab] = useState('country');
+const [vendorSearchInput, setVendorSearchInput] = useState('');
+const [vendorSearchTerm, setVendorSearchTerm] = useState('');
+const [searchedVendors, setSearchedVendors] = useState([]);
+const [vendorSearchLoading, setVendorSearchLoading] = useState(false);
+const [vendorSearchError, setVendorSearchError] = useState(null);
+const [vendorSearchPagination, setVendorSearchPagination] = useState({
+  current_page: 1,
+  per_page: 50,
+  total: 0,
+  last_page: 1
+});
+const [detailsPagination, setDetailsPagination] = useState({
+  current_page: 1,
+  per_page: 10, // Show 10 items per page in the modal
+  total: 0,
+  last_page: 1
+});
   const [selectedCountry, setSelectedCountry] = useState('all');
   const [countryVendors, setCountryVendors] = useState([]);
   const [countryLoading, setCountryLoading] = useState(false);
@@ -73,6 +91,17 @@ const VendorCategorize = () => {
     total: 0,
     last_page: 1
   });
+
+  useEffect(() => {
+    // Switch to country tab when country is selected and no search term is active
+    if (selectedCountry !== 'all' && !vendorSearchTerm) {
+      setActiveSearchTab('country');
+    }
+    // Switch to search tab when search term is entered
+    else if (vendorSearchTerm) {
+      setActiveSearchTab('search');
+    }
+  }, [selectedCountry, vendorSearchTerm]);
 
 
 
@@ -378,15 +407,80 @@ const VendorCategorize = () => {
   // }, [vendorDetails, activeVendorType, activeCategory, searchTerm]);
 
   // Add debounced search function for country vendors
-const debouncedCountrySearch = useCallback(
+  const debouncedCountrySearch = useCallback(
+    debounce((searchValue) => {
+      setCountrySearchTerm(searchValue);
+      if (selectedCountry !== 'all') {
+        fetchVendorsByCountry(selectedCountry, 1, countryPagination.per_page, searchValue);
+      }
+    }, 500),
+    [selectedCountry, countryPagination.per_page]
+  );
+
+  // Add debounced search function for vendor search
+const debouncedVendorSearch = useCallback(
   debounce((searchValue) => {
-    setCountrySearchTerm(searchValue);
-    if (selectedCountry !== 'all') {
-      fetchVendorsByCountry(selectedCountry, 1, countryPagination.per_page, searchValue);
+    setVendorSearchTerm(searchValue);
+    if (searchValue) {
+      searchVendorsByName(searchValue, 1, vendorSearchPagination.per_page);
+    } else {
+      setSearchedVendors([]);
     }
   }, 500),
-  [selectedCountry, countryPagination.per_page]
+  [vendorSearchPagination.per_page]
 );
+
+// Add a handler for vendor search input changes
+const handleVendorSearchChange = (e) => {
+  setVendorSearchInput(e.target.value);
+  debouncedVendorSearch(e.target.value);
+};
+
+// Add function to search vendors by name
+const searchVendorsByName = async (searchTerm, page = 1, perPage = 50) => {
+  try {
+    setVendorSearchLoading(true);
+    setVendorSearchError(null);
+
+    console.log(`Searching vendors with: search=${searchTerm}, page=${page}, per_page=${perPage}`);
+
+    const response = await axios.get('/searchVendors', {
+      params: { 
+        search: searchTerm,
+        page: page,
+        per_page: perPage
+      }
+    });
+
+    console.log('Vendor search response:', response.data);
+
+    if (response.data.status === 200) {
+      setSearchedVendors(response.data.vendors || []);
+      
+      // Store pagination information for vendor search
+      setVendorSearchPagination({
+        current_page: response.data.current_page || 1,
+        per_page: response.data.per_page || perPage,
+        total: response.data.total || 0,
+        last_page: response.data.last_page || 1
+      });
+    } else {
+      setSearchedVendors([]);
+      setVendorSearchError(response.data.message || 'No vendors found');
+    }
+  } catch (error) {
+    console.error('Error searching vendors:', error);
+    setVendorSearchError('Failed to search vendors. Please try again.');
+    setSearchedVendors([]);
+  } finally {
+    setVendorSearchLoading(false);
+  }
+};
+
+// Update the handleVendorSearchPageChange function for pagination
+const handleVendorSearchPageChange = (page) => {
+  searchVendorsByName(vendorSearchTerm, page, vendorSearchPagination.per_page);
+};
 
   // Add this function to fetch vendors by country
   // Update the fetchVendorsByCountry function to support pagination
@@ -431,57 +525,57 @@ const debouncedCountrySearch = useCallback(
   // };
 
   // Update the fetchVendorsByCountry function to include search
-const fetchVendorsByCountry = async (countryCode, page = 1, perPage = 50, search = '') => {
-  try {
-    setCountryLoading(true);
-    setCountryError(null);
+  const fetchVendorsByCountry = async (countryCode, page = 1, perPage = 50, search = '') => {
+    try {
+      setCountryLoading(true);
+      setCountryError(null);
 
-    console.log(`Fetching vendors for country code: ${countryCode}, page: ${page}, perPage: ${perPage}, search: ${search}`);
+      console.log(`Fetching vendors for country code: ${countryCode}, page: ${page}, perPage: ${perPage}, search: ${search}`);
 
-    const response = await axios.get('/getVendorsByCountry', {
-      params: { 
-        country_code: countryCode,
-        page: page,
-        per_page: perPage,
-        search: search
-      }
-    });
-
-    console.log('Country search response:', response.data);
-
-    if (response.data.status === 200) {
-      setCountryVendors(response.data.vendors || []);
-      
-      // Store pagination information for country vendors
-      setCountryPagination({
-        current_page: response.data.current_page || 1,
-        per_page: response.data.per_page || perPage,
-        total: response.data.total || 0,
-        last_page: response.data.last_page || 1
+      const response = await axios.get('/getVendorsByCountry', {
+        params: {
+          country_code: countryCode,
+          page: page,
+          per_page: perPage,
+          search: search
+        }
       });
-    } else {
+
+      console.log('Country search response:', response.data);
+
+      if (response.data.status === 200) {
+        setCountryVendors(response.data.vendors || []);
+
+        // Store pagination information for country vendors
+        setCountryPagination({
+          current_page: response.data.current_page || 1,
+          per_page: response.data.per_page || perPage,
+          total: response.data.total || 0,
+          last_page: response.data.last_page || 1
+        });
+      } else {
+        setCountryVendors([]);
+        setCountryError(response.data.message || 'No vendors found for this country');
+      }
+    } catch (error) {
+      console.error('Error fetching vendors by country:', error);
+      setCountryError('Failed to fetch vendors by country. Please try again.');
       setCountryVendors([]);
-      setCountryError(response.data.message || 'No vendors found for this country');
+    } finally {
+      setCountryLoading(false);
     }
-  } catch (error) {
-    console.error('Error fetching vendors by country:', error);
-    setCountryError('Failed to fetch vendors by country. Please try again.');
-    setCountryVendors([]);
-  } finally {
-    setCountryLoading(false);
-  }
-};
+  };
 
-// Add a handler for country search input changes
-const handleCountrySearchChange = (e) => {
-  setCountrySearchInput(e.target.value);
-  debouncedCountrySearch(e.target.value);
-};
+  // Add a handler for country search input changes
+  const handleCountrySearchChange = (e) => {
+    setCountrySearchInput(e.target.value);
+    debouncedCountrySearch(e.target.value);
+  };
 
- // Update the handleCountryPageChange function to include search
-const handleCountryPageChange = (page) => {
-  fetchVendorsByCountry(selectedCountry, page, countryPagination.per_page, countrySearchTerm);
-};
+  // Update the handleCountryPageChange function to include search
+  const handleCountryPageChange = (page) => {
+    fetchVendorsByCountry(selectedCountry, page, countryPagination.per_page, countrySearchTerm);
+  };
   const filteredVendors = useMemo(() => {
     if (activeVendorType === "API") {
       return API_VENDORS;
@@ -700,20 +794,20 @@ const handleCountryPageChange = (page) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Use the override if provided, otherwise use the state value
       const perPageToUse = perPageOverride !== null ? perPageOverride : pagination.per_page;
-      
+
       console.log(`Fetching vendors with: page=${page}, per_page=${perPageToUse}`);
-      
+
       const vendorsResponse = await getVendorDetailsCategorize(page, perPageToUse);
-      
+
       console.log('API response pagination:', {
         current_page: vendorsResponse.current_page,
         per_page: vendorsResponse.per_page,
         total: vendorsResponse.total
       });
-      
+
       setVendorDetails(vendorsResponse.data);
       setPagination({
         current_page: vendorsResponse.current_page,
@@ -753,8 +847,8 @@ const handleCountryPageChange = (page) => {
     data.push(['Category Summary', 'Count']);
     Object.entries(CATEGORY_NAMES).forEach(([categoryId, categoryName]) => {
       let count = 0;
-      if (categoryName === 'Essentials') count = vendor.essentials?.count || 0;
-      else if (categoryName === 'Non-Essentials') count = vendor.non_essentials?.count || 0;
+      if (categoryName === 'Essentials') count = vendor.essentials?.length || 0;
+      else if (categoryName === 'Non-Essentials') count = vendor.non_essentials?.length || 0;
       else if (categoryName === 'Lifestyle') count = vendor.lifestyles?.length || 0;
       else if (categoryName === 'Hotels') count = vendor.hotels?.length || 0;
       else if (categoryName === 'Education') count = vendor.education?.length || 0;
@@ -764,6 +858,38 @@ const handleCountryPageChange = (page) => {
     // =======================
     // Detailed Category Section
     // =======================
+
+     // Essentials Details
+  data.push(['', '']);
+  data.push(['Essentials Details', '']);
+  data.push(['Product Name', 'Description', 'Category 2', 'Category 3', 'Country', 'Status', 'Price']);
+  vendor.essentials?.forEach(item => {
+    data.push([
+      item.listing_title || 'N/A',
+      item.sub_description || 'N/A',
+      item.product_details?.category2 || 'N/A',
+      item.product_details?.category3 || 'N/A',
+      item.country || 'N/A',
+      item.lisiting_status === "1" ? 'Active' : 'Inactive',
+      item.price || 'N/A'
+    ]);
+  });
+  
+  // Non-Essentials Details
+  data.push(['', '']);
+  data.push(['Non-Essentials Details', '']);
+  data.push(['Product Name', 'Description', 'Category 2', 'Category 3', 'Country', 'Status', 'Price']);
+  vendor.non_essentials?.forEach(item => {
+    data.push([
+      item.listing_title || 'N/A',
+      item.sub_description || 'N/A',
+      item.product_details?.category2 || 'N/A',
+      item.product_details?.category3 || 'N/A',
+      item.country || 'N/A',
+      item.lisiting_status === "1" ? 'Active' : 'Inactive',
+      item.price || 'N/A'
+    ]);
+  });
 
     // Lifestyles Details
     data.push(['', '']);
@@ -833,7 +959,7 @@ const handleCountryPageChange = (page) => {
   const renderCategoryCounts = (vendor) => {
     // if (activeVendorType !== 'Direct') return null;
     console.log(vendor, "vendor_details");
-    
+
 
     return Object.entries(CATEGORY_NAMES).map(([categoryId, categoryName]) => {
       let count = 0;
@@ -951,59 +1077,139 @@ const handleCountryPageChange = (page) => {
     );
   });
 
+  // const handleShowDetails = (categoryName, vendorId, categoryIds) => {
+  //   const vendor = vendorDetails.find(v => v.id === vendorId);
+  //   if (!vendor) return;
+  //   console.log(vendor, "category_name_vendor_details");
+  //   console.log(categoryName, "category_name");
+  //   console.log(categoryIds, "category_name_ids");
+  //   console.log(vendorId, "category_name_vendorId");
+
+  //   let details = [];
+
+  //   switch (categoryName) {
+  //     case 'Essentials':
+  //       details = vendor.essentials?.filter(item =>
+  //         categoryIds.includes(item.id)
+  //       ) || [];
+  //       // details = vendor.essentials?.filter(item =>
+  //       //   categoryIds.includes(item.id) &&
+  //       //   item.productDetails?.category1 === 1
+  //       // ) || [];
+  //       console.log(details, "Essentials_details");
+
+  //       break;
+  //     case 'Non-Essentials':
+  //       details = vendor.non_essentials?.filter(item =>
+  //         categoryIds.includes(item.id)) || [];
+  //       console.log(details, "Non_Essentials_details");
+
+  //       break;
+  //     case 'Lifestyle':
+  //       details = vendor.lifestyles?.filter(item =>
+  //         categoryIds.includes(item.id)
+  //       ) || [];
+  //       console.log(vendor.lifestyles, "lifestyle_details");
+
+  //       break;
+  //     case 'Hotels':
+  //       details = vendor.hotels?.filter(item =>
+  //         categoryIds.includes(item.id)
+  //       ) || [];
+  //       break;
+  //     case 'Education':
+  //       details = vendor.education?.filter(item =>
+  //         categoryIds.includes(item.id)
+  //       ) || [];
+  //       break;
+  //     default:
+  //       details = [];
+  //   }
+
+  //   if (details.length > 0) {
+  //     setSelectedDetails({
+  //       categoryName,
+  //       details
+  //     });
+  //     setShowDetailsModal(true);
+  //   }
+  // };
+
   const handleShowDetails = (categoryName, vendorId, categoryIds) => {
     const vendor = vendorDetails.find(v => v.id === vendorId);
     if (!vendor) return;
-    console.log(vendor, "category_name_vendor_details");
-    console.log(categoryName, "category_name");
-    console.log(categoryIds, "category_name_ids");
-    console.log(vendorId, "category_name_vendorId");
-
-    let details = [];
-
+    
+    let allDetails = [];
+  
     switch (categoryName) {
       case 'Essentials':
-        details = vendor.essNess?.filter(item =>
-          categoryIds.includes(item.id) &&
-          item.productDetails?.category1 === 1
-        ) || [];
+        allDetails = vendor.essentials || [];
         break;
+        
       case 'Non-Essentials':
-        details = vendor.essNess?.filter(item =>
-          categoryIds.includes(item.id) &&
-          item.productDetails?.category1 === 2
-        ) || [];
+        allDetails = vendor.non_essentials || [];
         break;
+        
       case 'Lifestyle':
-        details = vendor.lifestyles?.filter(item =>
+        allDetails = vendor.lifestyles?.filter(item =>
           categoryIds.includes(item.id)
         ) || [];
         break;
+        
       case 'Hotels':
-        details = vendor.hotels?.filter(item =>
+        allDetails = vendor.hotels?.filter(item =>
           categoryIds.includes(item.id)
         ) || [];
         break;
+        
       case 'Education':
-        details = vendor.education?.filter(item =>
+        allDetails = vendor.education?.filter(item =>
           categoryIds.includes(item.id)
         ) || [];
         break;
+        
       default:
-        details = [];
+        allDetails = [];
     }
-
-    if (details.length > 0) {
+  
+    if (allDetails.length > 0) {
+      // Calculate pagination
+      const totalDetails = allDetails.length;
+      const perPage = 10; // 10 items per page in the modal
+      const lastPage = Math.ceil(totalDetails / perPage);
+      
+      setDetailsPagination({
+        current_page: 1,
+        per_page: perPage,
+        total: totalDetails,
+        last_page: lastPage
+      });
+  
       setSelectedDetails({
         categoryName,
-        details
+        details: allDetails,
+        // Store all details, will paginate in the modal
+        allDetails: allDetails
       });
+      
       setShowDetailsModal(true);
     }
   };
-
+  const handleDetailsPageChange = (page) => {
+    if (!selectedDetails || !selectedDetails.allDetails) return;
+    
+    setDetailsPagination({
+      ...detailsPagination,
+      current_page: page
+    });
+  };
   const renderDetailsModal = () => {
     if (!selectedDetails) return null;
+
+    const startIndex = (detailsPagination.current_page - 1) * detailsPagination.per_page;
+  const endIndex = startIndex + detailsPagination.per_page;
+  const paginatedDetails = selectedDetails.allDetails.slice(startIndex, endIndex);
+
 
     const getDetailsContent = (detail) => {
       if (selectedDetails.categoryName === 'API') {
@@ -1015,13 +1221,25 @@ const handleCountryPageChange = (page) => {
       }
       switch (selectedDetails.categoryName) {
         case 'Essentials':
+          return [
+            { label: 'Product Name', value: detail.listing_title || 'N/A' },
+            { label: 'Description', value: detail.listing_description || 'N/A' },
+            { label: 'Category', value: `${detail.product_details?.category1 || '1'} (Essentials)` },
+            { label: 'Subcategory', value: detail.product_details?.category2 || 'N/A' },
+            { label: 'Country', value: detail.country || 'N/A' },
+            { label: 'Price', value: detail.price || 'N/A' },
+            { label: 'Status', value: detail.lisiting_status === "1" ? 'Active' : 'Inactive' }
+          ];
+
         case 'Non-Essentials':
           return [
-            { label: 'Product Name', value: detail.product_name || 'N/A' },
-            { label: 'Description', value: detail.description || 'N/A' },
-            { label: 'Category', value: detail.category1 || 'N/A' },
-            { label: 'Subcategory', value: detail.category2 || 'N/A' },
-            { label: 'Status', value: detail.active_status ? 'Active' : 'Inactive' }
+            { label: 'Product Name', value: detail.listing_title || 'N/A' },
+            { label: 'Description', value: detail.listing_description || 'N/A' },
+            { label: 'Category', value: `${detail.product_details?.category1 || '2'} (Non-Essentials)` },
+            { label: 'Subcategory', value: detail.product_details?.category2 || 'N/A' },
+            { label: 'Country', value: detail.country || 'N/A' },
+            { label: 'Price', value: detail.price || 'N/A' },
+            { label: 'Status', value: detail.lisiting_status === "1" ? 'Active' : 'Inactive' }
           ];
         case 'Lifestyle':
           return [
@@ -1058,57 +1276,141 @@ const handleCountryPageChange = (page) => {
 
     return (
       <Modal
-        show={showDetailsModal}
-        onHide={() => setShowDetailsModal(false)}
-        size="lg"
+      show={showDetailsModal}
+      onHide={() => setShowDetailsModal(false)}
+      size="lg"
+    >
+      <Modal.Header
+        closeButton
+        style={{ backgroundColor: '#3c4b64', color: 'white' }}
       >
-        <Modal.Header
-          closeButton
-          style={{ backgroundColor: '#3c4b64', color: 'white' }}
-        >
-          <Modal.Title>
-            {selectedDetails.categoryName} Details ({selectedDetails.details.length})
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedDetails.details.map((detail, index) => (
-            <Card key={index} className="mb-4 shadow-sm">
-              <Card.Header
-                className="bg-light"
-                style={{ borderBottom: `2px solid #3c4b64` }}
-              >
-                <h5 className="mb-0">
-                  {detail.product_name || detail.lifestyle_name || detail.hotel_name || detail.course_name || `Item ${index + 1}`}
-                </h5>
-              </Card.Header>
-              <Card.Body>
-                <div className="row">
-                  {getDetailsContent(detail).map((item, idx) => (
-                    <div key={idx} className="col-md-6 mb-2">
-                      <strong style={{ color: '#3c4b64' }}>{item.label}:</strong>
-                      <div className="text-muted">
-                        {typeof item.value === 'string' ?
-                          item.value.replace(/<[^>]*>?/gm, '') :
-                          item.value}
-                      </div>
+        <Modal.Title>
+          {selectedDetails.categoryName} Details 
+          ({selectedDetails.allDetails.length})
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {paginatedDetails.map((detail, index) => (
+          <Card key={index} className="mb-4 shadow-sm">
+            <Card.Header
+              className="bg-light"
+              style={{ borderBottom: `2px solid #3c4b64` }}
+            >
+              <h5 className="mb-0">
+                {selectedDetails.categoryName === 'Essentials' || selectedDetails.categoryName === 'Non-Essentials'
+                  ? detail.listing_title
+                  : detail.product_name || detail.lifestyle_name || detail.hotel_name || detail.course_name || `Item ${startIndex + index + 1}`}
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              <div className="row">
+                {getDetailsContent(detail).map((item, idx) => (
+                  <div key={idx} className="col-md-6 mb-2">
+                    <strong style={{ color: '#3c4b64' }}>{item.label}:</strong>
+                    <div className="text-muted">
+                      {typeof item.value === 'string' ?
+                        item.value.replace(/<[^>]*>?/gm, '') :
+                        item.value}
                     </div>
-                  ))}
-                </div>
-                {detail.image || detail.hotel_image || detail.image_path ? (
-                  <div className="mt-2">
-                    <img
-                      src={detail.image || detail.hotel_image || detail.image_path}
-                      alt="Detail"
-                      className="img-fluid rounded"
-                      style={{ maxHeight: '150px' }}
-                    />
                   </div>
-                ) : null}
-              </Card.Body>
-            </Card>
-          ))}
-        </Modal.Body>
-      </Modal>
+                ))}
+              </div>
+              {(detail.product_images || detail.image || detail.hotel_image || detail.image_path) && (
+                <div className="mt-2">
+                  <img
+                    src={detail.product_images || detail.image || detail.hotel_image || detail.image_path}
+                    alt="Product"
+                    className="img-fluid rounded"
+                    style={{ maxHeight: '150px' }}
+                  />
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+        ))}
+
+        {/* Add pagination controls if there are multiple pages */}
+        {detailsPagination.last_page > 1 && (
+          <div className="d-flex justify-content-center mt-3">
+            <Pagination>
+              <Pagination.First
+                onClick={() => handleDetailsPageChange(1)}
+                disabled={detailsPagination.current_page === 1}
+              />
+              <Pagination.Prev
+                onClick={() => handleDetailsPageChange(detailsPagination.current_page - 1)}
+                disabled={detailsPagination.current_page === 1}
+              />
+
+              {(() => {
+                const totalPages = detailsPagination.last_page;
+                const currentPage = detailsPagination.current_page;
+                const delta = 1; // Show 1 page before and after current page
+
+                let pages = [];
+
+                // Always show first page
+                pages.push(1);
+
+                // Calculate range around current page
+                const leftBound = Math.max(2, currentPage - delta);
+                const rightBound = Math.min(totalPages - 1, currentPage + delta);
+
+                // Add ellipsis after first page if needed
+                if (leftBound > 2) {
+                  pages.push('ellipsis-left');
+                }
+
+                // Add pages around current page
+                for (let i = leftBound; i <= rightBound; i++) {
+                  pages.push(i);
+                }
+
+                // Add ellipsis before last page if needed
+                if (rightBound < totalPages - 1) {
+                  pages.push('ellipsis-right');
+                }
+
+                // Always show last page if it's not the first page
+                if (totalPages > 1) {
+                  pages.push(totalPages);
+                }
+
+                // Render pagination items
+                return pages.map((page, index) => {
+                  if (page === 'ellipsis-left' || page === 'ellipsis-right') {
+                    return <Pagination.Ellipsis key={page} disabled />;
+                  }
+
+                  return (
+                    <Pagination.Item
+                      key={`details-page-${page}`}
+                      active={page === currentPage}
+                      onClick={() => handleDetailsPageChange(page)}
+                      style={{
+                        backgroundColor: page === currentPage ? '#3c4b64' : 'inherit',
+                        color: page === currentPage ? 'white' : 'inherit'
+                      }}
+                    >
+                      {page}
+                    </Pagination.Item>
+                  );
+                });
+              })()}
+
+              <Pagination.Next
+                onClick={() => handleDetailsPageChange(detailsPagination.current_page + 1)}
+                disabled={detailsPagination.current_page === detailsPagination.last_page}
+              />
+              <Pagination.Last
+                onClick={() => handleDetailsPageChange(detailsPagination.last_page)}
+                disabled={detailsPagination.current_page === detailsPagination.last_page}
+              />
+            </Pagination>
+          </div>
+        )}
+      </Modal.Body>
+    </Modal>
     );
   };
 
@@ -1536,61 +1838,343 @@ const handleCountryPageChange = (page) => {
       {/* Country Selector - Only show when Countries tab is active */}
       {activeVendorType === 'Countries' && (
   <div className="mb-4">
-    <div className="row align-items-end">
-      <div className="col-md-4">
-        <Form.Label>Select Country</Form.Label>
-        <Form.Select
-          value={selectedCountry}
-          onChange={(e) => {
-            const countryCode = e.target.value;
-            setSelectedCountry(countryCode);
-            setCountryPagination({
-              current_page: 1,
-              per_page: countryPagination.per_page,
-              total: 0,
-              last_page: 1
-            });
-            setCountrySearchInput('');
-            setCountrySearchTerm('');
+    <div className="row">
+      <div className="col-md-6">
+        <Card className="mb-4">
+          <Card.Header className="bg-light">
+            <h5 className="mb-0">Search by Country</h5>
+          </Card.Header>
+          <Card.Body>
+            <Form.Label>Select Country</Form.Label>
+            <Form.Select
+              value={selectedCountry}
+              onChange={(e) => {
+                const countryCode = e.target.value;
+                setSelectedCountry(countryCode);
+                setCountryPagination({
+                  current_page: 1,
+                  per_page: countryPagination.per_page,
+                  total: 0,
+                  last_page: 1
+                });
+                setCountrySearchInput('');
+                setCountrySearchTerm('');
 
-            if (countryCode !== 'all') {
-              fetchVendorsByCountry(countryCode, 1, countryPagination.per_page, '');
-            } else {
-              setCountryVendors([]);
-            }
-          }}
-        >
-          <option value="all">Select a Country</option>
-          {Object.entries(countryCodeToName).map(([code, name]) => (
-            <option key={code} value={code}>
-              {name.charAt(0).toUpperCase() + name.slice(1)} ({code})
-            </option>
-          ))}
-        </Form.Select>
+                if (countryCode !== 'all') {
+                  fetchVendorsByCountry(countryCode, 1, countryPagination.per_page, '');
+                } else {
+                  setCountryVendors([]);
+                }
+              }}
+            >
+              <option value="all">Select a Country</option>
+              {Object.entries(countryCodeToName).map(([code, name]) => (
+                <option key={code} value={code}>
+                  {name.charAt(0).toUpperCase() + name.slice(1)} ({code})
+                </option>
+              ))}
+            </Form.Select>
+
+            {selectedCountry !== 'all' && (
+              <div className="mt-2 text-info">
+                <small>
+                  <i className="bi bi-info-circle me-1"></i>
+                  Showing vendors from {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1) || selectedCountry}
+                  {countrySearchTerm && ` matching "${countrySearchTerm}"`}
+                </small>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
       </div>
-      
-      {/* {selectedCountry !== 'all' && (
-        <div className="col-md-4">
-          <Form.Label>Search in {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Search by company name, email, phone..."
-            value={countrySearchInput}
-            onChange={handleCountrySearchChange}
-          />
-        </div>
-      )} */}
+
+      <div className="col-md-6">
+        <Card className="mb-4">
+          <Card.Header className="bg-light">
+            <h5 className="mb-0">Search All Vendors</h5>
+          </Card.Header>
+          <Card.Body>
+            <Form.Label>Search by Company Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter company name to search..."
+              value={vendorSearchInput}
+              onChange={handleVendorSearchChange}
+            />
+            {vendorSearchTerm && (
+              <div className="mt-2 text-info">
+                <small>
+                  <i className="bi bi-info-circle me-1"></i>
+                  Searching for vendors matching "{vendorSearchTerm}"
+                </small>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
+      </div>
     </div>
 
-    {selectedCountry !== 'all' && (
-      <div className="mt-2 text-info">
-        <small>
-          <i className="bi bi-info-circle me-1"></i>
-          Showing vendors from {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1) || selectedCountry}
-          {countrySearchTerm && ` matching "${countrySearchTerm}"`}
-        </small>
-      </div>
-    )}
+    <div className="row">
+      {/* Country search results */}
+      {selectedCountry !== 'all' && (
+        <div className="col-12 mb-4">
+          <Card>
+            <Card.Header className="bg-primary text-white">
+              <h5 className="mb-0">
+                Vendors in {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}
+                {countryVendors.length > 0 && ` (${countryVendors.length})`}
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              {countryLoading ? (
+                <div className="text-center py-5">
+                  <Spinner animation="border" variant="primary" />
+                  <span className="ms-2">Loading vendors...</span>
+                </div>
+              ) : countryError ? (
+                <div className="alert alert-danger">
+                  {countryError}
+                </div>
+              ) : countryVendors.length === 0 ? (
+                <div className="alert alert-info">
+                  No vendors found in {countryCodeToName[selectedCountry]?.charAt(0).toUpperCase() + countryCodeToName[selectedCountry]?.slice(1)}
+                </div>
+              ) : (
+                <>
+                  <div className="row">
+                    {countryVendors.map(vendor => (
+                      <VendorCard key={vendor.id} vendor={vendor} />
+                    ))}
+                  </div>
+
+                  {/* Pagination for country vendors */}
+                  {countryVendors.length > 0 && countryPagination.total > countryPagination.per_page && (
+                    <div className="d-flex justify-content-center mt-4">
+                      <Pagination>
+                        <Pagination.First
+                          onClick={() => handleCountryPageChange(1)}
+                          disabled={countryPagination.current_page === 1}
+                        />
+                        <Pagination.Prev
+                          onClick={() => handleCountryPageChange(countryPagination.current_page - 1)}
+                          disabled={countryPagination.current_page === 1}
+                        />
+
+                        {(() => {
+                          const totalPages = countryPagination.last_page;
+                          const currentPage = countryPagination.current_page;
+                          const delta = 2;
+
+                          let pages = [];
+                          pages.push(1);
+
+                          if (currentPage - delta > 2) {
+                            pages.push('ellipsis-left');
+                          }
+
+                          for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+                            pages.push(i);
+                          }
+
+                          if (currentPage + delta < totalPages - 1) {
+                            pages.push('ellipsis-right');
+                          }
+
+                          if (totalPages > 1) {
+                            pages.push(totalPages);
+                          }
+
+                          return pages.map((page, index) => {
+                            if (page === 'ellipsis-left' || page === 'ellipsis-right') {
+                              return <Pagination.Ellipsis key={page} disabled />;
+                            }
+
+                            return (
+                              <Pagination.Item
+                                key={`country-page-${page}`}
+                                active={page === currentPage}
+                                onClick={() => handleCountryPageChange(page)}
+                                style={{
+                                  backgroundColor: page === currentPage ? '#3c4b64' : 'inherit',
+                                  color: page === currentPage ? 'white' : 'inherit'
+                                }}
+                              >
+                                {page}
+                              </Pagination.Item>
+                            );
+                          });
+                        })()}
+
+                        <Pagination.Next
+                          onClick={() => handleCountryPageChange(countryPagination.current_page + 1)}
+                          disabled={countryPagination.current_page === countryPagination.last_page}
+                        />
+                        <Pagination.Last
+                          onClick={() => handleCountryPageChange(countryPagination.last_page)}
+                          disabled={countryPagination.current_page === countryPagination.last_page}
+                        />
+                      </Pagination>
+                    </div>
+                  )}
+
+                  {/* Items per page selector for country vendors */}
+                  <div className="d-flex justify-content-end mb-3 mt-3">
+                    <select
+                      className="form-select w-auto"
+                      value={countryPagination.per_page.toString()}
+                      onChange={(e) => {
+                        const newPerPage = parseInt(e.target.value);
+                        console.log(`Changed country per_page to: ${newPerPage}`);
+                        setCountryPagination({ ...countryPagination, per_page: newPerPage });
+                        fetchVendorsByCountry(selectedCountry, 1, newPerPage, countrySearchTerm);
+                      }}
+                    >
+                      <option value="10">10 per page</option>
+                      <option value="25">25 per page</option>
+                      <option value="50">50 per page</option>
+                      <option value="100">100 per page</option>
+                    </select>
+                  </div>
+                </>
+              )}
+            </Card.Body>
+          </Card>
+        </div>
+      )}
+
+      {/* Vendor search results */}
+      {vendorSearchTerm && (
+        <div className="col-12 mb-4">
+          <Card>
+            <Card.Header className="bg-info text-white">
+              <h5 className="mb-0">
+                Search Results for "{vendorSearchTerm}"
+                {searchedVendors.length > 0 && ` (${vendorSearchPagination.total})`}
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              {vendorSearchLoading ? (
+                <div className="text-center py-5">
+                  <Spinner animation="border" variant="info" />
+                  <span className="ms-2">Searching vendors...</span>
+                </div>
+              ) : vendorSearchError ? (
+                <div className="alert alert-danger">
+                  {vendorSearchError}
+                </div>
+              ) : searchedVendors.length === 0 ? (
+                <div className="alert alert-info">
+                  No vendors found matching "{vendorSearchTerm}"
+                </div>
+              ) : (
+                <>
+                  <div className="row">
+                    {searchedVendors.map(vendor => (
+                      <VendorCard key={vendor.id} vendor={vendor} />
+                    ))}
+                  </div>
+
+                  {/* Pagination for vendor search results */}
+                  {searchedVendors.length > 0 && vendorSearchPagination.total > vendorSearchPagination.per_page && (
+                    <div className="d-flex justify-content-center mt-4">
+                      <Pagination>
+                        <Pagination.First
+                          onClick={() => handleVendorSearchPageChange(1)}
+                          disabled={vendorSearchPagination.current_page === 1}
+                        />
+                        <Pagination.Prev
+                          onClick={() => handleVendorSearchPageChange(vendorSearchPagination.current_page - 1)}
+                          disabled={vendorSearchPagination.current_page === 1}
+                        />
+
+                        {(() => {
+                          const totalPages = vendorSearchPagination.last_page;
+                          const currentPage = vendorSearchPagination.current_page;
+                          const delta = 2;
+
+                          let pages = [];
+                          pages.push(1);
+
+                          if (currentPage - delta > 2) {
+                            pages.push('ellipsis-left');
+                          }
+
+                          for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+                            pages.push(i);
+                          }
+
+                          if (currentPage + delta < totalPages - 1) {
+                            pages.push('ellipsis-right');
+                          }
+
+                          if (totalPages > 1) {
+                            pages.push(totalPages);
+                          }
+
+                          return pages.map((page, index) => {
+                            if (page === 'ellipsis-left' || page === 'ellipsis-right') {
+                              return <Pagination.Ellipsis key={page} disabled />;
+                            }
+
+                            return (
+                              <Pagination.Item
+                                key={`vendor-search-page-${page}`}
+                                active={page === currentPage}
+                                onClick={() => handleVendorSearchPageChange(page)}
+                                style={{
+                                  backgroundColor: page === currentPage ? '#17a2b8' : 'inherit',
+                                  color: page === currentPage ? 'white' : 'inherit'
+                                }}
+                              >
+                                {page}
+                              </Pagination.Item>
+                            );
+                          });
+                        })()}
+
+                        <Pagination.Next
+                          onClick={() => handleVendorSearchPageChange(vendorSearchPagination.current_page + 1)}
+                          disabled={vendorSearchPagination.current_page === vendorSearchPagination.last_page}
+                        />
+                        <Pagination.Last
+                          onClick={() => handleVendorSearchPageChange(vendorSearchPagination.last_page)}
+                          disabled={vendorSearchPagination.current_page === vendorSearchPagination.last_page}
+                        />
+                      </Pagination>
+                    </div>
+                  )}
+
+                  {/* Items per page selector for vendor search */}
+                  <div className="d-flex justify-content-end mb-3 mt-3">
+                    <select
+                      className="form-select w-auto"
+                      value={vendorSearchPagination.per_page.toString()}
+                      onChange={(e) => {
+                        const newPerPage = parseInt(e.target.value);
+                        console.log(`Changed search per_page to: ${newPerPage}`);
+                        setVendorSearchPagination({ ...vendorSearchPagination, per_page: newPerPage });
+                        searchVendorsByName(vendorSearchTerm, 1, newPerPage);
+                      }}
+                    >
+                      <option value="10">10 per page</option>
+                      <option value="25">25 per page</option>
+                      <option value="50">50 per page</option>
+                      <option value="100">100 per page</option>
+                    </select>
+                  </div>
+                </>
+              )}
+            </Card.Body>
+          </Card>
+        </div>
+      )}
+
+      {selectedCountry === 'all' && !vendorSearchTerm && (
+        <div className="col-12 text-center py-5">
+          <p className="text-muted">Please select a country or search for vendors</p>
+        </div>
+      )}
+    </div>
   </div>
 )}
       {/* Category Tabs - Hide when in API tab */}

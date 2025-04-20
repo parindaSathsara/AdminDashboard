@@ -115,6 +115,11 @@ function getNavigationHook(permissions) {
           name: 'Vendor Analytics',
           to: '/vendors/categorize',
         },
+        {
+          component: CNavItem,
+          name: 'Vendor Stats',
+          to: '/vendors/stats',
+        },
 
       ],
     },
