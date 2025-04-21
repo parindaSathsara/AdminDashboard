@@ -227,7 +227,6 @@ function App() {
     }, 5000); // 5 seconds
   };
 
-  const isFirstSnapshot = useRef(true);
   const useChatNotifications = () => {
     const q = query(collection(db, "customer-chat-lists"), orderBy("updatedAt", "desc"));
 
