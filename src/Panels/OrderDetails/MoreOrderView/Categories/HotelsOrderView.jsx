@@ -507,6 +507,8 @@ export default function HotelsOrderView(props) {
                         </div>
                         <div>
                           <div style={{ fontWeight: 'bold' }}>{guest?.Title} {guest?.FirstName} {guest?.LastName}</div>
+                          <div style={{ fontWeight: 'bold' }}>+{guest?.Phoneno} </div>
+                          <div style={{ fontWeight: 'bold' }}>{guest?.Email} </div>
                           <div style={{ fontSize: '13px', color: '#7f8c8d' }}>Adult</div>
                         </div>
                       </div>
@@ -571,7 +573,7 @@ export default function HotelsOrderView(props) {
           <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               <div style={{ flex: '1', minWidth: '250px' }}>
-                <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50' }}>Customer Details</h4>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50' }}>Supplier Details</h4>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
                   <span style={{ fontWeight: 'bold', color: '#555', width: '100px', display: 'inline-block' }}>Email:</span>
                   {basicDetails?.email}
@@ -979,6 +981,8 @@ export default function HotelsOrderView(props) {
                         </div>
                         <div>
                           <div style={{ fontWeight: 'bold' }}>{guest?.Title} {guest?.FirstName} {guest?.LastName}</div>
+                          <div style={{ fontWeight: 'bold' }}>{guest?.Phoneno}</div>
+                          <div style={{ fontWeight: 'bold' }}>{guest?.Email} </div>
                           <div style={{ fontSize: '13px', color: '#7f8c8d' }}>Adult</div>
                         </div>
                       </div>
