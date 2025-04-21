@@ -497,7 +497,7 @@ export default function HotelsOrderView(props) {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               {/* Adult Guests */}
               <div style={{ flex: '1', minWidth: '250px' }}>
-                <h5 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#2c3e50' }}>Adults ({basicDetails?.decoded_data?.NoOfAdults || 0})</h5>
+                <h5 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#2c3e50' }}>Adultsp ({basicDetails?.decoded_data?.NoOfAdults || 0})</h5>
                 <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                   {basicDetails?.decoded_data?.paxDetails?.filter(data => data?.PaxType == "1").length > 0 ? (
                     basicDetails?.decoded_data?.paxDetails?.filter(data => data?.PaxType == "1").map((guest, i) => (
@@ -971,7 +971,7 @@ export default function HotelsOrderView(props) {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               {/* Adult Guests */}
               <div style={{ flex: '1', minWidth: '250px' }}>
-                <h5 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#2c3e50' }}>Adults ({props?.productData?.NoOfAdults || 1})</h5>
+                <h5 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#2c3e50' }}>Adultss ({props?.productData?.NoOfAdults || 1})</h5>
                 <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                   {props?.productData?.decoded_data?.paxDetails?.filter(data => data?.PaxType == "1").length > 0 ? (
                     props?.productData?.decoded_data?.paxDetails?.filter(data => data?.PaxType == "1").map((guest, i) => (
@@ -981,8 +981,8 @@ export default function HotelsOrderView(props) {
                         </div>
                         <div>
                           <div style={{ fontWeight: 'bold' }}>{guest?.Title} {guest?.FirstName} {guest?.LastName}</div>
-                          <div style={{ fontWeight: 'bold' }}>{guest?.Phoneno}</div>
-                          <div style={{ fontWeight: 'bold' }}>{guest?.Email} </div>
+                          <div >{guest?.Phoneno}</div>
+                          <div >{guest?.Email} </div>
                           <div style={{ fontSize: '13px', color: '#7f8c8d' }}>Adult</div>
                         </div>
                       </div>
@@ -1055,7 +1055,7 @@ export default function HotelsOrderView(props) {
           <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               <div style={{ flex: '1', minWidth: '250px' }}>
-                <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50' }}>Customer Details</h4>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50' }}>Supplier Details</h4>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
                   <span style={{ fontWeight: 'bold', color: '#555', width: '100px', display: 'inline-block' }}>Email:</span>
                   {props?.productData?.customerData?.customer_email || "Not specified"}
