@@ -9,6 +9,20 @@ import './App.css';
 import UserCountStats from './Panels/UserCount/UserCountStats'
 import NotificationContainer from './components/Notification/NotificationContainer'
 import BeepSound from 'src/assets/beep-sound.mp3';
+import { db } from 'src/firebase';
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  writeBatch,
+} from 'firebase/firestore'
 
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -171,6 +185,8 @@ function App() {
         }
       });
     }
+
+    useChatNotifications();
   }, []);
 
 
@@ -189,7 +205,7 @@ function App() {
 
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = () => {
+  const addNotification = (newChat, chatId) => {
     const audio = new Audio(BeepSound);
     audio.play().catch((error) => {
       console.log('Audio play failed:', error);
@@ -197,16 +213,35 @@ function App() {
 
     const id = Date.now();
     const newNotification = {
-      id,
-      image: 'https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png',
+      id: chatId,
+      image: newChat?.chat_avatar ?? "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
       title: 'A New Chat Has Arrived!',
-      description: 'Notification description',
+      description: newChat?.chat_name + " | " + newChat?.last_message?.name + ":" + newChat?.last_message?.value,
     };
 
     setNotifications(prev => [...prev, newNotification]);
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
     }, 5000); // 5 seconds
+  };
+
+  const isFirstSnapshot = useRef(true);
+  const useChatNotifications = () => {
+    const q = query(collection(db, "customer-chat-lists"), orderBy("updatedAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          const newChat = change.doc.data();
+          const chatId = change.doc.id;
+          if (newChat.admin_unreads != 0) {
+            addNotification(newChat, chatId);
+          }
+        }
+      });
+    });
+
+    return () => unsubscribe();
   };
 
   return (
