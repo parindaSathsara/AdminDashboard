@@ -8,7 +8,7 @@ import './scss/style.scss'
 import './App.css';
 import UserCountStats from './Panels/UserCount/UserCountStats'
 import NotificationContainer from './components/Notification/NotificationContainer'
-import BeepSound from 'src/assets/beep-sound.mp3';
+import ChatAlert from 'src/assets/chat_alert.wav';
 import { db } from 'src/firebase';
 import {
   addDoc,
@@ -206,7 +206,7 @@ function App() {
   const [notifications, setNotifications] = useState([]);
 
   const addNotification = (newChat, chatId) => {
-    const audio = new Audio(BeepSound);
+    const audio = new Audio(ChatAlert);
     audio.play().catch((error) => {
       console.log('Audio play failed:', error);
     });
