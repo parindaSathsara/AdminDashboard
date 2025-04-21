@@ -213,15 +213,17 @@ function App() {
 
     const id = Date.now();
     const newNotification = {
-      id: chatId,
+      id: chatId.toString(),
       image: newChat?.chat_avatar ?? "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
       title: 'A New Chat Has Arrived!',
-      description: newChat?.chat_name + " | " + newChat?.last_message?.name + ":" + newChat?.last_message?.value,
+      description: newChat?.chat_name,
+      user_name: newChat?.last_message?.name,
+      message: newChat?.last_message?.value
     };
 
     setNotifications(prev => [...prev, newNotification]);
     setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
+      setNotifications(prev => prev.filter(n => n.id !== chatId.toString()));
     }, 5000); // 5 seconds
   };
 

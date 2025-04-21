@@ -43,9 +43,15 @@
 
 .notification-description {
   margin: 4px 0 0;
-  font-size: 14px;
+  font-size: 11px;
   color: #9c9c9c;
   /* color: white; */
+}
+
+.message-description {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: rgb(220, 220, 220);
 }
 
 @keyframes fadeInUp {
