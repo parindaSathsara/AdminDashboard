@@ -25,6 +25,7 @@ import HotelsOrderView from 'src/Panels/OrderDetails/MoreOrderView/Categories/Ho
 
 const OrderAllocate = ({ normalUser = false }) => {
     const [ordersData, setOrdersData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const [ordersDataStatic, setOrdersDataStatic] = useState([]);
     const [availableEmployees, setAvailableEmployees] = useState([]);
@@ -35,62 +36,120 @@ const OrderAllocate = ({ normalUser = false }) => {
 
     const { userData, setUserData } = useContext(UserLoginContext);
 
+    // const fetchAndMapRows = async (val) => {
+
+
+
+    //     if (val == false) {
+    //         const response = await getAllProductsOrders();
+    //         // console.log(response, "Response dataaaaaaaaaa")
+    //         return response.map((result, index) => ({
+    //             id: index + 1,
+    //             product_id: result.PID,
+    //             product_image: result.product_image,
+    //             service_location: result.location,
+    //             product_title: result.product_title,
+    //             category: result.category,
+    //             service_date: result.service_date,
+    //             balance_amount: `${result.currency} ${result.balance_amount}`,
+    //             paid_amount: `${result.currency} ${result.paid_amount}`,
+    //             total_amount: `${result.currency} ${result.total_amount}`,
+    //             booked_date: result.checkout_date,
+    //             info: result,
+    //             order_id: `AHS_${result.orderID}`,
+    //             assigned_user: result.assigned_user || "Unassigned",
+    //             customerData: result?.customerData,
+    //         }));
+    //     }
+
+    //     else {
+    //         const response = await getAllProductsOrdersByEmployee(userData?.id);
+
+
+    //         // console.log(response, "Response dataaaaaaaaaa malik")
+
+    //         return response.map((result, index) => ({
+    //             id: index + 1,
+    //             product_id: result.PID,
+    //             product_image: result.product_image,
+    //             service_location: result.location,
+    //             product_title: result.product_title,
+    //             category: result.category,
+    //             service_date: result.service_date,
+    //             balance_amount: `${result.currency} ${result.balance_amount}`,
+    //             paid_amount: `${result.currency} ${result.paid_amount}`,
+    //             total_amount: `${result.currency} ${result.total_amount}`,
+    //             booked_date: result.checkout_date,
+    //             info: result,
+    //             order_id: `AHS_${result.orderID}`,
+    //             customerData: result?.customerData,
+    //         }));
+    //     }
+
+    // };
+
+    // const getRows = async () => {
+    //     const rows = await fetchAndMapRows(normalUser);
+    //     setOrdersData(rows);
+    //     setOrdersDataStatic(rows)
+    // };
+   
     const fetchAndMapRows = async (val) => {
-
-
-
-        if (val == false) {
-            const response = await getAllProductsOrders();
-            // console.log(response, "Response dataaaaaaaaaa")
-            return response.map((result, index) => ({
-                id: index + 1,
-                product_id: result.PID,
-                product_image: result.product_image,
-                service_location: result.location,
-                product_title: result.product_title,
-                category: result.category,
-                service_date: result.service_date,
-                balance_amount: `${result.currency} ${result.balance_amount}`,
-                paid_amount: `${result.currency} ${result.paid_amount}`,
-                total_amount: `${result.currency} ${result.total_amount}`,
-                booked_date: result.checkout_date,
-                info: result,
-                order_id: `AHS_${result.orderID}`,
-                assigned_user: result.assigned_user || "Unassigned",
-                customerData: result?.customerData,
-            }));
+        try {
+            if (val == false) {
+                const response = await getAllProductsOrders();
+                return response.map((result, index) => ({
+                    id: index + 1,
+                    product_id: result.PID,
+                    product_image: result.product_image,
+                    service_location: result.location,
+                    product_title: result.product_title,
+                    category: result.category,
+                    service_date: result.service_date,
+                    balance_amount: `${result.currency} ${result.balance_amount}`,
+                    paid_amount: `${result.currency} ${result.paid_amount}`,
+                    total_amount: `${result.currency} ${result.total_amount}`,
+                    booked_date: result.checkout_date,
+                    info: result,
+                    order_id: `AHS_${result.orderID}`,
+                    assigned_user: result.assigned_user || "Unassigned",
+                    customerData: result?.customerData,
+                }));
+            } else {
+                const response = await getAllProductsOrdersByEmployee(userData?.id);
+                return response.map((result, index) => ({
+                    id: index + 1,
+                    product_id: result.PID,
+                    product_image: result.product_image,
+                    service_location: result.location,
+                    product_title: result.product_title,
+                    category: result.category,
+                    service_date: result.service_date,
+                    balance_amount: `${result.currency} ${result.balance_amount}`,
+                    paid_amount: `${result.currency} ${result.paid_amount}`,
+                    total_amount: `${result.currency} ${result.total_amount}`,
+                    booked_date: result.checkout_date,
+                    info: result,
+                    order_id: `AHS_${result.orderID}`,
+                    customerData: result?.customerData,
+                }));
+            }
+        } catch (error) {
+            console.error('Error mapping rows:', error);
+            return []; // Return empty array if there's an error
         }
-
-        else {
-            const response = await getAllProductsOrdersByEmployee(userData?.id);
-
-
-            // console.log(response, "Response dataaaaaaaaaa malik")
-
-            return response.map((result, index) => ({
-                id: index + 1,
-                product_id: result.PID,
-                product_image: result.product_image,
-                service_location: result.location,
-                product_title: result.product_title,
-                category: result.category,
-                service_date: result.service_date,
-                balance_amount: `${result.currency} ${result.balance_amount}`,
-                paid_amount: `${result.currency} ${result.paid_amount}`,
-                total_amount: `${result.currency} ${result.total_amount}`,
-                booked_date: result.checkout_date,
-                info: result,
-                order_id: `AHS_${result.orderID}`,
-                customerData: result?.customerData,
-            }));
-        }
-
     };
-
     const getRows = async () => {
-        const rows = await fetchAndMapRows(normalUser);
-        setOrdersData(rows);
-        setOrdersDataStatic(rows)
+        setLoading(true);
+        try {
+            const rows = await fetchAndMapRows(normalUser);
+            setOrdersData(rows);
+            setOrdersDataStatic(rows);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
 
@@ -485,26 +544,24 @@ const OrderAllocate = ({ normalUser = false }) => {
     return (
         <>
 
-            <MoreOrderView
-                show={moreOrderModal}
-                onHide={() => setMoreOrderModal(false)}
-                preID={moreOrderDetails}
-                category={moreOrderModalCategory}
-                productViewData
-                hotelsOrderView={hotelDataSet}
-                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e=>console.log(e)}/>}
+<MoreOrderView
+            show={moreOrderModal}
+            onHide={() => setMoreOrderModal(false)}
+            preID={moreOrderDetails}
+            category={moreOrderModalCategory}
+            productViewData
+            hotelsOrderView={hotelDataSet}
+            productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e=>console.log(e)}/>}
+        />
 
-            >
-            </MoreOrderView>
-
-            <Modal
-                show={showModal}
-                onHide={handleCloseModal}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                style={{ zIndex: 1305 }}
-            >
+        <Modal
+            show={showModal}
+            onHide={handleCloseModal}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            style={{ zIndex: 1305 }}
+        >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Assign Employee
@@ -570,34 +627,30 @@ const OrderAllocate = ({ normalUser = false }) => {
 
 
             <Tabs
-                defaultActiveKey="All"
-                id="uncontrolled-tab-example"
-                className="mt-4"
-                style={{
-                    fontSize: 16,
-                }}
-                onSelect={handleSelect}
-            >
-                <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{ordersDataStatic.length}</span></span>} itemID='tabAll'>
+            defaultActiveKey="All"
+            id="uncontrolled-tab-example"
+            className="mt-4"
+            style={{ fontSize: 16 }}
+            onSelect={handleSelect}
+        >
+            <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{ordersDataStatic.length}</span></span>} />
+            <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class="text-white  badge text-bg-secondary">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} />
+            <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Approved").length}</span></span>} />
+            <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Completed").length}</span></span>} />
+            <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Cancel").length}</span></span>} />
+        </Tabs>
 
-                </Tab>
-                <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class="text-white  badge text-bg-secondary">{ordersDataStatic.filter(filterData => filterData?.info?.status == "CustomerOrdered").length}</span></span>} itemID='tabPending'>
-
-                </Tab>
-                <Tab eventKey="Approved" title={<span className="custom-tab-ongoing">Ongoing <span class=" text-white badge text-bg-warning">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Approved").length}</span></span>} itemID='tabApproved'>
-
-                </Tab>
-                <Tab eventKey="Completed" title={<span className="custom-tab-completed">Completed <span class="text-white  badge text-bg-success">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Completed").length}</span></span>} itemID='tabCompleted'>
-
-                </Tab>
-                <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Cancel").length}</span></span>} itemID='tabCompleted'>
-
-                </Tab>
-            </Tabs >
-
+        {loading ? (
+            <div className="text-center p-5">
+                <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2">Loading orders data...</p>
+            </div>
+        ) : (
             <MaterialReactTable table={table} />
-
-        </>
+        )}
+    </>
     );
 };
 

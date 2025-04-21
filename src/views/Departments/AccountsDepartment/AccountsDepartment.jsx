@@ -62,6 +62,7 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 import LoadingBar from 'react-top-loading-bar'
 
 const Dashboard = () => {
+  const [loading, setLoading] = useState(true);
   const { userData } = useContext(UserLoginContext);
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
@@ -95,18 +96,35 @@ const Dashboard = () => {
   })
   const [orderDataIDWise, setOrderDataIdWise] = useState([])
 
+  // useEffect(() => {
+  //   getAllDataUserWise().then(res => {
+  //     console.log(res)
+  //     setOrderData(res)
+  //   })
+
+  //   getAllCardData().then(res => {
+  //     // console.log(res)
+  //     setCardData(res)
+  //   })
+  //   // setOrderData(getAllDataUserWise());
+
+  // }, []);
   useEffect(() => {
-    getAllDataUserWise().then(res => {
-      console.log(res)
-      setOrderData(res)
+    setLoading(true);
+    Promise.all([
+      getAllDataUserWise(),
+      getAllCardData()
+    ])
+    .then(([orderRes, cardRes]) => {
+      setOrderData(orderRes);
+      setCardData(cardRes);
     })
-
-    getAllCardData().then(res => {
-      // console.log(res)
-      setCardData(res)
+    .catch(error => {
+      console.error("Error fetching data:", error);
     })
-    // setOrderData(getAllDataUserWise());
-
+    .finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const pagePermission = ["all accounts access",
@@ -291,6 +309,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <WidgetsDropdown /> */}
+      {/* <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} /> */}
       <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} />
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered size="fullscreen"
@@ -357,55 +376,59 @@ const Dashboard = () => {
 
 
       <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Customer Orders
-              </h4>
-              {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
-            </CCol>
+      <CCardBody>
+        <CRow>
+          <CCol sm={5}>
+            <h4 id="traffic" className="card-title mb-0">
+              Customer Orders
+            </h4>
+          </CCol>
+        </CRow>
 
-          </CRow>
-
-
-
-
-
-
-
+        {loading ? (
+          <div className="text-center p-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-2">Loading orders data...</p>
+          </div>
+        ) : (
           <ThemeProvider theme={defaultMaterialTheme}>
             <MaterialTable
               title=""
-              // tableRef={tableRef}
               data={data.rows}
               columns={data.columns}
-
-
               options={{
-
-                sorting: true, search: true,
-                searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
-                paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
-                showSelectAllCheckbox: false, showTextRowsSelected: false,
-                grouping: true, columnsButton: true,
+                sorting: true,
+                search: true,
+                searchFieldAlignment: "right",
+                searchAutoFocus: true,
+                searchFieldVariant: "standard",
+                filtering: false,
+                paging: true,
+                pageSizeOptions: [20, 25, 50, 100],
+                pageSize: 10,
+                paginationType: "stepped",
+                showFirstLastPageButtons: false,
+                paginationPosition: "both",
+                exportButton: true,
+                exportAllData: true,
+                exportFileName: "TableData",
+                addRowPosition: "first",
+                actionsColumnIndex: -1,
+                selection: false,
+                showSelectAllCheckbox: false,
+                showTextRowsSelected: false,
+                grouping: true,
+                columnsButton: true,
                 headerStyle: { background: '#626f75', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-
-                // fixedColumns: {
-                //     left: 6
-                // }
               }}
-
-
             />
           </ThemeProvider>
-
-        </CCardBody>
-
-      </CCard>
+        )}
+      </CCardBody>
+    </CCard>
 
 
 

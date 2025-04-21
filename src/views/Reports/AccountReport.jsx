@@ -38,6 +38,8 @@ import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { CurrencyContext } from 'src/Context/CurrencyContext'
 
 const ReportGenerationPage = () => {
+  const [reportLoading, setReportLoading] = useState(false);
+
   const { userData } = useContext(UserLoginContext)
 
   const { currencyData } = useContext(CurrencyContext)
@@ -142,6 +144,8 @@ const ReportGenerationPage = () => {
   const [dataEmptyState, setDataEmptyState] = useState(false)
 
   const handleGenerateReport = async () => {
+    setReportLoading(true); // Start loading
+
     const errors = {}
     console.log('currency', currency);
     if (!reportType) {
@@ -196,6 +200,7 @@ const ReportGenerationPage = () => {
 
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors)
+      setReportLoading(false); // Stop loading if validation fails
       return
     }
 
@@ -213,7 +218,18 @@ const ReportGenerationPage = () => {
 
     console.log(dataSet, 'Data set value is data')
     setReportData(dataSet)
-    handlePNLReport(dataSet)
+    // handlePNLReport(dataSet)
+    try {
+      await handlePNLReport(dataSet);
+    } catch (error) {
+      console.error('Error generating report:', error);
+      Swal.fire({
+        text: 'Failed to generate report',
+        icon: 'error',
+      });
+    } finally {
+      setReportLoading(false); // Stop loading whether success or error
+    }
   }
 
   const [PNLVoucherView, setPNLVoucherView] = useState(false)
@@ -223,7 +239,7 @@ const ReportGenerationPage = () => {
   const returnURL = (data, dataType) => {
     let url
     if (data.reportType === 'pnl' && data.category === '0') {
-      console.log(data,"Data =>");
+      console.log(data, "Data =>");
       console.log('Data pnl by categories')
       url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}`
@@ -231,8 +247,8 @@ const ReportGenerationPage = () => {
       console.log('Data pnl by orders')
       url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}`
-        console.log(url,"PNL Report URL");
-        
+      console.log(url, "PNL Report URL");
+
     } else if (data.reportType === 'payable' && data.category === '0') {
       url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue
@@ -255,31 +271,39 @@ const ReportGenerationPage = () => {
     return url
   }
 
+  // const handlePNLReport = async (data) => {
+  //   console.log(data, 'Data')
+  //   let url
+
+  //   url = returnURL(data, '')
+
+  //   // setPNLVoucherView(true)
+  //   await axios
+  //     .get(url)
+  //     .then((response) => {
+  //       setPNLVoucherView(true)
+  //       // setCurrenctOrderId(id);
+  //       // console.log(response.data, "response data")
+  //       setProductPNLReport(response.data)
+
+
+  //     })
+  //     .catch((error) => {
+  //       Swal.fire({
+  //         text: 'Failed to Proceed the PDF',
+  //         icon: 'error',
+  //       })
+  //       console.log(error);
+
+  //     })
+  // }
   const handlePNLReport = async (data) => {
     console.log(data, 'Data')
-    let url
+    let url = returnURL(data, '')
 
-    url = returnURL(data, '')
-
-    // setPNLVoucherView(true)
-    await axios
-      .get(url)
-      .then((response) => {
-        setPNLVoucherView(true)
-        // setCurrenctOrderId(id);
-        // console.log(response.data, "response data")
-        setProductPNLReport(response.data)
-
-
-      })
-      .catch((error) => {
-        Swal.fire({
-          text: 'Failed to Proceed the PDF',
-          icon: 'error',
-        })
-        console.log(error);
-        
-      })
+    const response = await axios.get(url);
+    setPNLVoucherView(true)
+    setProductPNLReport(response.data)
   }
 
   const handleCLosePNRLReportModal = () => {
@@ -556,8 +580,24 @@ const ReportGenerationPage = () => {
                 {['generate account report', 'all accounts access'].some((permission) =>
                   userData?.permissions?.includes(permission),
                 ) && (
-                    <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
-                      Generate Report
+                    // <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
+                    //   Generate Report
+                    // </CButton>
+                    <CButton
+                      color="dark"
+                      className="full-width"
+                      onClick={handleGenerateReport}
+                      disabled={reportLoading}
+                    >
+                      {reportLoading ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          <span className="visually-hidden">Loading...</span>
+                          Generating...
+                        </>
+                      ) : (
+                        "Generate Report"
+                      )}
                     </CButton>
                   )}
               </CCol>
@@ -608,7 +648,10 @@ const ReportGenerationPage = () => {
         onHide={handleCLosePNRLReportModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Account Report</Modal.Title>
+          {/* <Modal.Title>Account Report</Modal.Title> */}
+          <Modal.Title>
+            {reportLoading ? "Generating Report..." : "Account Report"}
+          </Modal.Title>
           {/* {
             // (productPNLReport.status !== 'fail' && productPNLReport.message !== 'No data to display') &&
             <CButton
@@ -619,21 +662,31 @@ const ReportGenerationPage = () => {
               Download PDF
             </CButton>
           } */}
-          <CDropdown style={{ marginLeft: "68%" }} variant="btn-group">
-            <CDropdownToggle color="success">Download File</CDropdownToggle>
-            <CDropdownMenu>
-              <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadPdf()}>
-                Download PDF
-              </CDropdownItem>
+          {!reportLoading && productPNLReport.status !== 'fail' && (
 
-              <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadExcel()}>
-                Download Excel
-              </CDropdownItem>
-            </CDropdownMenu>
-          </CDropdown>
+            <CDropdown style={{ marginLeft: "68%" }} variant="btn-group">
+              <CDropdownToggle color="success">Download File</CDropdownToggle>
+              <CDropdownMenu>
+                <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadPdf()}>
+                  Download PDF
+                </CDropdownItem>
+
+                <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => downloadExcel()}>
+                  Download Excel
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          )}
         </Modal.Header>
         <Modal.Body>
-          {productPNLReport.status === 'fail' &&
+          {reportLoading ? (
+            <div className="text-center p-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p>Generating report...</p>
+            </div>
+          ) : productPNLReport.status === 'fail' &&
             productPNLReport.message === 'No data to display' ? (
             <div className="d-flex flex-column align-items-center my-5">
               <h6>Oops! Sorry</h6>

@@ -5,6 +5,10 @@ import { debounce } from 'lodash';
 import * as XLSX from 'xlsx';
 
 const VendorStats = () => {
+  const [tabLoading, setTabLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+const [countryLoading, setCountryLoading] = useState(false);
+
   // State for vendor summary
   const [vendorSummary, setVendorSummary] = useState({
     total_vendors: 0,
@@ -342,7 +346,7 @@ const VendorStats = () => {
   const fetchVendorDetails = async (vendorId) => {
     try {
       setLoadingExcel(true);
-      const response = await axios.get(`/getVendorDetails/${vendorId}`);
+      const response = await axios.get(`/getVendorDetailsById/${vendorId}`);
       if (response.data.status === 200) {
         return response.data.vendor;
       }
@@ -523,22 +527,54 @@ const VendorStats = () => {
 
   // Handle search input change
   const handleSearchChange = (e) => {
+    setSearchLoading(true);
     debouncedSearch(e.target.value);
+    
+    // Minimum 3-second loading for search
+    setTimeout(() => {
+      setSearchLoading(false);
+    }, 30000);
   };
 
   // Handle country selection
-  const handleCountryChange = (e) => {
-    setSelectedCountry(e.target.value);
-    fetchVendors(1); // Reset to first page when changing country
-  };
+ 
+const handleCountryChange = (e) => {
+  setCountryLoading(true);
+  setSelectedCountry(e.target.value);
+  
+  // Call fetch with a minimum loading time
+  const timeoutPromise = new Promise(resolve => {
+    setTimeout(resolve, 30000); // 3 seconds
+  });
+  
+  const fetchPromise = fetchVendors(1);
+  
+  Promise.all([timeoutPromise, fetchPromise])
+    .then(() => {
+      setCountryLoading(false);
+    });
+};
 
   // Handle tab change
   const handleTabChange = (key) => {
+    setTabLoading(true);
     setActiveTab(key);
     setSearchTerm('');
     setSelectedCountry('');
-    fetchVendors(1); // Reset to first page when changing tabs
+    
+    // Fetch data with a minimum 8-second loading time
+    const timeoutPromise = new Promise(resolve => {
+      setTimeout(resolve, 8000); // 8 seconds
+    });
+    
+    const fetchPromise = fetchVendors(1, key, '', '');
+    
+    Promise.all([timeoutPromise, fetchPromise])
+      .then(() => {
+        setTabLoading(false);
+      });
   };
+  
 
   // Handle pagination
   const handlePageChange = (page) => {
@@ -951,126 +987,197 @@ const VendorStats = () => {
   onSelect={handleTabChange}
   className="mb-4"
 >
-  <Tab eventKey="all" title={`All Vendors (${vendorCounts.all})`}>
+  <Tab eventKey="all" title={
+    <div className="d-flex align-items-center">
+      All Vendors ({vendorCounts.all})
+      {tabLoading && activeTab === 'all' && 
+        <Spinner animation="border" size="sm" className="ms-2" />
+      }
+    </div>
+  }>
     <div className="mb-4 row">
       <div className="col-md-6 mb-3 mb-md-0">
         <Form.Group>
           <Form.Label>Search Vendors</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Search by name, email, phone..."
-            onChange={handleSearchChange}
-            value={searchTerm}
-          />
+          <div className="position-relative">
+            <Form.Control
+              type="text"
+              placeholder="Search by name, email, phone..."
+              onChange={handleSearchChange}
+              value={searchTerm}
+              disabled={tabLoading}
+            />
+            {searchLoading && (
+              <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+          </div>
         </Form.Group>
       </div>
       <div className="col-md-6">
         <Form.Group>
           <Form.Label>Filter by Country</Form.Label>
-          <Form.Select
-            value={selectedCountry}
-            onChange={handleCountryChange}
-          >
-            <option value="">All Countries</option>
-            {Object.entries(countryCodeToName).map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </Form.Select>
+          <div className="position-relative">
+            <Form.Select
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              disabled={tabLoading}
+            >
+              <option value="">All Countries</option>
+              {Object.entries(countryCodeToName).map(([code, name]) => (
+                <option key={code} value={code}>
+                  {name}
+                </option>
+              ))}
+            </Form.Select>
+            {countryLoading && (
+              <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+          </div>
         </Form.Group>
       </div>
     </div>
   </Tab>
   
-  <Tab eventKey="direct" title={`Direct Vendors (${vendorCounts.direct})`}>
+  <Tab eventKey="direct" title={
+    <div className="d-flex align-items-center">
+      Direct Vendors ({vendorCounts.direct})
+      {tabLoading && activeTab === 'direct' && 
+        <Spinner animation="border" size="sm" className="ms-2" />
+      }
+    </div>
+  }>
     <div className="mb-4 row">
       <div className="col-md-6 mb-3 mb-md-0">
         <Form.Group>
           <Form.Label>Search Vendors</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Search by name, email, phone..."
-            onChange={handleSearchChange}
-            value={searchTerm}
-          />
+          <div className="position-relative">
+            <Form.Control
+              type="text"
+              placeholder="Search by name, email, phone..."
+              onChange={handleSearchChange}
+              value={searchTerm}
+              disabled={tabLoading}
+            />
+            {searchLoading && (
+              <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+          </div>
         </Form.Group>
       </div>
       <div className="col-md-6">
         <Form.Group>
           <Form.Label>Filter by Country</Form.Label>
-          <Form.Select
-            value={selectedCountry}
-            onChange={handleCountryChange}
-          >
-            <option value="">All Countries</option>
-            {Object.entries(countryCodeToName).map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </Form.Select>
+          <div className="position-relative">
+            <Form.Select
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              disabled={tabLoading}
+            >
+              <option value="">All Countries</option>
+              {Object.entries(countryCodeToName).map(([code, name]) => (
+                <option key={code} value={code}>
+                  {name}
+                </option>
+              ))}
+            </Form.Select>
+            {countryLoading && (
+              <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+          </div>
         </Form.Group>
       </div>
     </div>
   </Tab>
   
-  <Tab eventKey="dmc" title={`DMC Vendors (${vendorCounts.dmc})`}>
+  <Tab eventKey="dmc" title={
+    <div className="d-flex align-items-center">
+      DMC Vendors ({vendorCounts.dmc})
+      {tabLoading && activeTab === 'dmc' && 
+        <Spinner animation="border" size="sm" className="ms-2" />
+      }
+    </div>
+  }>
     <div className="mb-4 row">
       <div className="col-md-6 mb-3 mb-md-0">
         <Form.Group>
           <Form.Label>Search Vendors</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Search by name, email, phone..."
-            onChange={handleSearchChange}
-            value={searchTerm}
-          />
+          <div className="position-relative">
+            <Form.Control
+              type="text"
+              placeholder="Search by name, email, phone..."
+              onChange={handleSearchChange}
+              value={searchTerm}
+              disabled={tabLoading}
+            />
+            {searchLoading && (
+              <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+          </div>
         </Form.Group>
       </div>
       <div className="col-md-6">
         <Form.Group>
           <Form.Label>Filter by Country</Form.Label>
-          <Form.Select
-            value={selectedCountry}
-            onChange={handleCountryChange}
-          >
-            <option value="">All Countries</option>
-            {Object.entries(countryCodeToName).map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </Form.Select>
+          <div className="position-relative">
+            <Form.Select
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              disabled={tabLoading}
+            >
+              <option value="">All Countries</option>
+              {Object.entries(countryCodeToName).map(([code, name]) => (
+                <option key={code} value={code}>
+                  {name}
+                </option>
+              ))}
+            </Form.Select>
+            {countryLoading && (
+              <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+          </div>
         </Form.Group>
       </div>
     </div>
   </Tab>
 </Tabs>
-      
-      {/* Display loading, error, or vendor cards */}
-      {loading && vendors.length === 0 ? (
-        <div className="text-center py-5">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-3">Loading Vendors...</p>
-        </div>
-      ) : error && vendors.length === 0 ? (
-        <div className="alert alert-danger">{error}</div>
-      ) : (
-        <>
-          <div className="mb-3">
-            <p>
-              Showing {vendors.length} of {pagination.total} vendors
-              {searchTerm && <span> matching "{searchTerm}"</span>}
-              {selectedCountry && <span> in {countryCodeToName[selectedCountry]}</span>}
-            </p>
-          </div>
-          
-          {renderVendorCards()}
-          
-          {pagination.totalPages > 1 && renderPagination()}
-        </>
-      )}
+
+{/* Main content area with loading indication */}
+{tabLoading || searchLoading || countryLoading ? (
+  <div className="text-center py-5">
+    <Spinner animation="border" variant="primary" />
+    <p className="mt-3">
+      {tabLoading && `Loading ${activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC'} Vendors...`}
+      {searchLoading && !tabLoading && "Searching vendors..."}
+      {countryLoading && !tabLoading && !searchLoading && "Filtering by country..."}
+    </p>
+  </div>
+) : (
+  <>
+    <div className="mb-3">
+      <p>
+        Showing {vendors.length} of {pagination.total} vendors
+        {searchTerm && <span> matching "<strong>{searchTerm}</strong>"</span>}
+        {selectedCountry && <span> in <strong>{countryCodeToName[selectedCountry]}</strong></span>}
+      </p>
+    </div>
+    
+    {renderVendorCards()}
+    
+    {pagination.totalPages > 1 && renderPagination()}
+  </>
+)}
       
       {/* Vendor Details Modal */}
       {selectedVendor && (

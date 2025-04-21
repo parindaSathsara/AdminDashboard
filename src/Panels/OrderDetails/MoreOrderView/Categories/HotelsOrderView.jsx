@@ -36,7 +36,8 @@ import axios from 'axios';
 
 
 export default function HotelsOrderView(props) {
-
+  console.log(props, "Hotel Order View Props");
+  
 
   // console.log(props.dataset, "Product Data value issss")
   // console.log(props, "Product Data value issss")
@@ -1053,11 +1054,11 @@ export default function HotelsOrderView(props) {
                 <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50' }}>Customer Details</h4>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
                   <span style={{ fontWeight: 'bold', color: '#555', width: '100px', display: 'inline-block' }}>Email:</span>
-                  {props?.productData?.email || "Not specified"}
+                  {props?.productData?.customerData?.customer_email || "Not specified"}
                 </p>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
                   <span style={{ fontWeight: 'bold', color: '#555', width: '100px', display: 'inline-block' }}>Phone:</span>
-                  {props?.productData?.phone || "Not specified"}
+                  {props?.productData?.customerData?.contact_number || "Not specified"}
                 </p>
               </div>
             </div>
