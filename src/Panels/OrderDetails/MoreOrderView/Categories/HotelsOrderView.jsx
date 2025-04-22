@@ -37,6 +37,7 @@ import axios from 'axios';
 
 export default function HotelsOrderView(props) {
   console.log(props, "Hotel Order View Props");
+  // const { bookingData } = props || {};
   
 
   // console.log(props.dataset, "Product Data value issss")
@@ -587,23 +588,44 @@ export default function HotelsOrderView(props) {
           </div>
         </div>
       )}
-      {props?.productData?.Provider == "hotelTboH" && bookingData && (
+      {props?.productData?.Provider === "hotelTboH" && (
         <div style={{ fontFamily: 'Arial, sans-serif', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
-          {/* <h1 style={{ color: '#2c3e50', borderBottom: '3px solid #3498db', paddingBottom: '10px', marginTop: '0', fontSize: '28px' }}>Booking Confirmation</h1> */}
-
           {/* Main Booking Info */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
             <div style={{ flex: '1', minWidth: '250px' }}>
               <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
-                <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
-                  <span style={{ color: '#27ae60', fontWeight: 'bold', backgroundColor: 'rgba(39, 174, 96, 0.1)', padding: '3px 8px', borderRadius: '4px' }}>{bookingData.BookingStatus}</span>
-                  {bookingData.VoucherStatus && <span style={{ marginLeft: '10px', fontSize: '13px', backgroundColor: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '4px' }}>Voucher Available</span>}
+                <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
+                  <span style={{ 
+                    color: bookingData?.BookingStatus ? '#27ae60' : props.productData?.status === 'Approved' ? '#27ae60' : '#e74c3c', 
+                    fontWeight: 'bold', 
+                    backgroundColor: bookingData?.BookingStatus ? 'rgba(39, 174, 96, 0.1)' : props.productData?.status === 'Approved' ? 'rgba(39, 174, 96, 0.1)' : 'rgba(231, 76, 60, 0.1)',
+                    padding: '3px 8px', 
+                    borderRadius: '4px' 
+                  }}>
+                    {bookingData?.BookingStatus || props.productData?.status}
+                  </span>
+                  {bookingData?.VoucherStatus && (
+                    <span style={{ marginLeft: '10px', fontSize: '13px', backgroundColor: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '4px' }}>
+                      Voucher Available
+                    </span>
+                  )}
                 </p>
-                <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation Number:</span> {bookingData.ConfirmationNumber}</p>
-                <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span> {bookingData.InvoiceNumber}</p>
-                <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span> {new Date(bookingData.BookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span> {bookingData.NoOfRooms}</p>
+                <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span> 
+                  {bookingData?.InvoiceNumber || props.productData?.orderID}
+                </p>
+                <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span> 
+                  {bookingData?.BookingDate 
+                    ? new Date(bookingData.BookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : new Date(props.productData.booked_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+                <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span> 
+                  {bookingData?.NoOfRooms || props.productData?.decoded_data?.NoOfRooms || 1}
+                </p>
               </div>
             </div>
 
@@ -613,21 +635,43 @@ export default function HotelsOrderView(props) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
                   <div style={{ textAlign: 'center', flex: '1' }}>
                     <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
-                    <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckIn).getFullYear()}</p>
+                    <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                      {bookingData?.CheckIn 
+                        ? new Date(bookingData.CheckIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                        : new Date(props.productData.checkInDate.split('/').reverse().join('-')).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p>
+                    <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
+                      {bookingData?.CheckIn 
+                        ? new Date(bookingData.CheckIn).getFullYear()
+                        : new Date(props.productData.checkInDate.split('/').reverse().join('-')).getFullYear()}
+                    </p>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
                     <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
-                    {/* <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>1 Night</div> */}
-                    <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>{nightCount} {nightCount > 1 ? "Nights" : "Night"}</div>
+                    <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>
+                      {bookingData?.CheckIn && bookingData?.CheckOut 
+                        ? Math.ceil((new Date(bookingData.CheckOut) - new Date(bookingData.CheckIn)) / (1000 * 60 * 60 * 24))
+                        : props.productData?.NoOfNights || 1} 
+                      {((bookingData?.CheckIn && bookingData?.CheckOut 
+                        ? Math.ceil((new Date(bookingData.CheckOut) - new Date(bookingData.CheckIn)) / (1000 * 60 * 60 * 24))
+                        : props.productData?.NoOfNights || 1) > 1) ? "Nights" : "Night"}
+                    </div>
                     <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
                   </div>
 
                   <div style={{ textAlign: 'center', flex: '1' }}>
                     <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
-                    <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
-                    <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckOut).getFullYear()}</p>
+                    {/* <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                      {bookingData?.CheckOut 
+                        ? new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                        : new Date(props.productData.checkOutDate.split('/').reverse().join('-')).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p> */}
+                    <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
+                      {/* {bookingData?.CheckOut 
+                        ? new Date(bookingData.CheckOut).getFullYear()
+                        : new Date(props.productData.checkOutDate.split('/').reverse().join('-')).getFullYear()} */}
+                    </p>
                   </div>
                 </div>
                 <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-in Time:</span> 12:00 PM</p>
@@ -640,93 +684,123 @@ export default function HotelsOrderView(props) {
           <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
           <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
             <div style={{ flex: '1', minWidth: '300px' }}>
-              <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>{bookingData.HotelDetails.HotelName}</p>
+              <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>
+                {bookingData?.HotelDetails?.HotelName || props.productData?.hotelName || props.productData?.PName}
+              </p>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <div style={{ display: 'inline-block' }}>
-                  {Array(starCount).fill(0).map((_, i) => (
+                  {Array(bookingData?.HotelDetails?.StarRating || props.productData?.decoded_data?.hotelMainRequest?.hotelData?.class || 4).fill(0).map((_, i) => (
                     <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
                   ))}
                 </div>
-                {/* <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>Three Star</span> */}
               </div>
-              <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> {bookingData.HotelDetails.AddressLine1}</p>
-              <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> {bookingData.HotelDetails.City}</p>
+              <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> 
+                {bookingData?.HotelDetails?.AddressLine1 || props.productData?.address}
+              </p>
+              <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> 
+                {bookingData?.HotelDetails?.City || props.productData?.decoded_data?.hotelMainRequest?.hotelData?.city}
+              </p>
             </div>
 
             <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
                 <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
                 <div style={{ fontSize: '14px' }}>Map Coordinates:</div>
-                <div style={{ fontSize: '13px' }}>{bookingData.HotelDetails.Map}</div>
+                <div style={{ fontSize: '13px' }}>
+                  {bookingData?.HotelDetails?.Map || 
+                    `${props.productData?.decoded_data?.hotelMainRequest?.hotelData?.latitude}, ${props.productData?.decoded_data?.hotelMainRequest?.hotelData?.longitude}`}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Room Details */}
           <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Room Details</h2>
-          {bookingData.Rooms.map((room, index) => (
+          {(bookingData?.Rooms || [props.productData?.decoded_data?.preBooking?.[0]?.Rooms?.[0] || {}]).map((room, index) => (
             <div key={index} style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px', borderLeft: '4px solid #3498db', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', marginBottom: '20px' }}>
                 <div style={{ flex: '2', minWidth: '300px' }}>
-                  <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50', fontSize: '18px' }}>{room.Name[0]}</h3>
+                  <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50', fontSize: '18px' }}>
+                    {room.Name?.[0] || props.productData?.decoded_data?.preBooking?.[0]?.RoomTypeName?.[0]}
+                  </h3>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
                     <div style={{ flex: '1', minWidth: '200px' }}>
-                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : room.Status === 'Not Cancelled' ? '#f39c12' : '#e74c3c' }}>{room.Status}</span></p>
-                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> {room.MealType.replace(/_/g, ' ')}</p>
-                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span> {room.Inclusion}</p>
-                      <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span> <span style={{ color: room.IsRefundable ? '#27ae60' : '#e74c3c' }}>{room.IsRefundable ? 'Yes' : 'No'}</span></p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> 
+                        <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : room.Status === 'Not Cancelled' ? '#f39c12' : '#e74c3c' }}>
+                          {room.Status || 'Confirmed'}
+                        </span>
+                      </p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> 
+                        {(room.MealType || props.productData?.decoded_data?.preBooking?.[0]?.Inclusions?.[0])?.replace(/_/g, ' ')}
+                      </p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span> 
+                        {room.Inclusion || props.productData?.decoded_data?.preBooking?.[0]?.Inclusions?.[0]}
+                      </p>
+                      <p style={{ margin: '5px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span> 
+                        <span style={{ color: room.IsRefundable ? '#27ae60' : '#e74c3c' }}>
+                          {room.IsRefundable ? 'Yes' : 'No'}
+                        </span>
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div style={{ flex: '1', minWidth: '200px', backgroundColor: '#fff', padding: '15px', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                  <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>Price Details ({room.Currency})</h4>
+                  <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
+                    Price Details ({room.Currency || props.productData?.currency || 'USD'})
+                  </h4>
                   <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
                     <span style={{ color: '#555' }}>Room Price:</span>
-                    <span style={{ fontWeight: 'bold' }}>${(room.TotalFare - room.TotalTax).toFixed(2)}</span>
+                    <span style={{ fontWeight: 'bold' }}>
+                      ${((room.TotalFare || props.productData?.paid_amount) - (room.TotalTax || 0)).toFixed(2)}
+                    </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
                     <span style={{ color: '#555' }}>Tax:</span>
-                    <span>${room.TotalTax.toFixed(2)}</span>
+                    <span>${(room.TotalTax || 0).toFixed(2)}</span>
                   </div>
-                  {room.Supplements && room.Supplements[0] && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
-                      <span style={{ color: '#555' }}>{room.Supplements[0][0].Description}:</span>
-                      <span>${room.Supplements[0][0].Price.toFixed(2)}</span>
-                    </div>
-                  )}
                   <div style={{ display: 'flex', justifyContent: 'space-between', margin: '12px 0 0 0', paddingTop: '12px', borderTop: '1px dashed #eee', fontWeight: 'bold' }}>
                     <span>Total:</span>
-                    <span style={{ color: '#2c3e50', fontSize: '18px' }}>${room.TotalFare.toFixed(2)}</span>
+                    <span style={{ color: '#2c3e50', fontSize: '18px' }}>
+                      ${(room.TotalFare || props.productData?.paid_amount || 0).toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>
 
+              {/* Guests Information */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px' }}>
                 <div style={{ flex: '1', minWidth: '250px' }}>
                   <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Guests:</h4>
                   <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                    {room.CustomerDetails[0].CustomerNames.map((guest, i) => (
-                      <div key={i} style={{ padding: '8px', borderBottom: i < room.CustomerDetails[0].CustomerNames.length - 1 ? '1px solid #eee' : 'none', display: 'flex', alignItems: 'center' }}>
+                    {(room.CustomerDetails?.[0]?.CustomerNames || props.productData?.decoded_data?.paxDetails || []).map((guest, i) => (
+                      <div key={i} style={{ padding: '8px', borderBottom: i < (room.CustomerDetails?.[0]?.CustomerNames?.length || props.productData?.decoded_data?.paxDetails?.length || 1) - 1 ? '1px solid #eee' : 'none', display: 'flex', alignItems: 'center' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#3498db', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', fontSize: '14px', fontWeight: 'bold' }}>
-                          {guest.FirstName[0]}{guest.LastName[0]}
+                          {guest.FirstName?.[0]}{guest.LastName?.[0]}
                         </div>
                         <div>
                           <div style={{ fontWeight: 'bold' }}>{guest.Title} {guest.FirstName} {guest.LastName}</div>
-                          <div style={{ fontSize: '13px', color: '#7f8c8d' }}>{guest.Type}</div>
+                          <div style={{ fontSize: '13px', color: '#7f8c8d' }}>{guest.Type || 'Adult'}</div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
+                {/* Cancellation Policy */}
                 <div style={{ flex: '1', minWidth: '300px' }}>
                   <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Cancellation Policy:</h4>
                   <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '15px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                    {room.CancelPolicies.map((policy, i) => (
-                      <div key={i} style={{ marginBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', paddingBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', borderBottom: i < room.CancelPolicies.length - 1 ? '1px solid #eee' : 'none' }}>
+                    {(room.CancelPolicies || props.productData?.decoded_data?.preBooking?.[0]?.CancellationPolicy || []).map((policy, i) => (
+                      <div key={i} style={{ marginBottom: i < (room.CancelPolicies?.length || props.productData?.decoded_data?.preBooking?.[0]?.CancellationPolicy?.length || 1) - 1 ? '10px' : '0', paddingBottom: i < (room.CancelPolicies?.length || props.productData?.decoded_data?.preBooking?.[0]?.CancellationPolicy?.length || 1) - 1 ? '10px' : '0', borderBottom: i < (room.CancelPolicies?.length || props.productData?.decoded_data?.preBooking?.[0]?.CancellationPolicy?.length || 1) - 1 ? '1px solid #eee' : 'none' }}>
                         <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
-                          <span style={{ fontWeight: 'bold' }}>From {policy.FromDate.substring(0, 10)}:</span>
+                          <span style={{ fontWeight: 'bold' }}>From {policy.FromDate?.substring(0, 10)}:</span>
                         </p>
                         <p style={{ margin: '0', fontSize: '14px', color: policy.CancellationCharge === 0 ? '#27ae60' : '#e74c3c' }}>
                           {policy.CancellationCharge === 0 ?
@@ -748,54 +822,87 @@ export default function HotelsOrderView(props) {
             <div style={{ marginBottom: '20px' }}>
               <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Rate Conditions</h3>
               <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                {bookingData.RateConditions.filter(condition => !condition.includes('CheckIn Time') && !condition.includes('CheckOut Time') && !condition.includes('CheckIn Instructions') && !condition.includes('Special Instructions') && !condition.includes('Mandatory Fees') && !condition.includes('Optional Fees') && !condition.includes('Cards Accepted') && !condition.includes('Pets not allowed')).map((condition, index) => (
-                  <li key={index} style={{ margin: '5px 0', color: '#555' }}>{condition}</li>
-                ))}
+                {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                  .filter(condition => condition && 
+                    !condition.includes('CheckIn Time') && 
+                    !condition.includes('CheckOut Time') && 
+                    !condition.includes('CheckIn Instructions') && 
+                    !condition.includes('Special Instructions') && 
+                    !condition.includes('Mandatory Fees') && 
+                    !condition.includes('Optional Fees') && 
+                    !condition.includes('Cards Accepted') && 
+                    !condition.includes('Pets not allowed'))
+                  .map((condition, index) => (
+                    <li key={index} style={{ margin: '5px 0', color: '#555' }}>{condition}</li>
+                  ))}
               </ul>
             </div>
 
-            {bookingData.RateConditions.some(condition => condition.includes('CheckIn Instructions')) && (
+            {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('CheckIn Instructions')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Check-In Instructions</h3>
-                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('CheckIn Instructions')).split(': ')[1] }}></div>
+                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ 
+                  __html: (bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                    .find(condition => condition?.includes('CheckIn Instructions'))
+                    ?.split(': ')[1] || '' 
+                }}></div>
               </div>
             )}
 
-            {bookingData.RateConditions.some(condition => condition.includes('Special Instructions')) && (
+            {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Special Instructions')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Special Instructions</h3>
-                <p style={{ margin: '5px 0', color: '#555' }}>{bookingData.RateConditions.find(condition => condition.includes('Special Instructions')).split(': ')[1]}</p>
+                <p style={{ margin: '5px 0', color: '#555' }}>
+                  {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                    .find(condition => condition?.includes('Special Instructions'))
+                    ?.split(': ')[1] || ''}
+                </p>
               </div>
             )}
 
-            {bookingData.RateConditions.some(condition => condition.includes('Mandatory Fees')) && (
+            {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Mandatory Fees')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Mandatory Fees</h3>
-                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Mandatory Fees')).split(': ')[1] }}></div>
+                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ 
+                  __html: (bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                    .find(condition => condition?.includes('Mandatory Fees'))
+                    ?.split(': ')[1] || '' 
+                }}></div>
               </div>
             )}
 
-            {bookingData.RateConditions.some(condition => condition.includes('Optional Fees')) && (
+            {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Optional Fees')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Optional Fees</h3>
-                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Optional Fees')).split(': ')[1] }}></div>
+                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ 
+                  __html: (bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                    .find(condition => condition?.includes('Optional Fees'))
+                    ?.split(': ')[1] || '' 
+                }}></div>
               </div>
             )}
 
-            {bookingData.RateConditions.some(condition => condition.includes('Cards Accepted')) && (
+            {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Cards Accepted')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Payment Information</h3>
-                <p style={{ margin: '5px 0', color: '#555' }}><strong>Accepted Payment Methods:</strong> {bookingData.RateConditions.find(condition => condition.includes('Cards Accepted')).split(': ')[1].split(',').join(', ')}</p>
+                <p style={{ margin: '5px 0', color: '#555' }}>
+                  <strong>Accepted Payment Methods:</strong> 
+                  {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                    .find(condition => condition?.includes('Cards Accepted'))
+                    ?.split(': ')[1]?.split(',').join(', ') || ''}
+                </p>
               </div>
             )}
 
-            {bookingData.RateConditions.some(condition => condition.includes('Pets not allowed')) && (
+            {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Pets not allowed')) && (
               <div>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Property Policies</h3>
                 <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                  {bookingData.RateConditions.find(condition => condition.includes('Pets not allowed')).split(',').map((policy, index) => (
-                    <li key={index} style={{ margin: '5px 0', color: '#555' }}>{policy.trim()}</li>
-                  ))}
+                  {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
+                    .find(condition => condition?.includes('Pets not allowed'))
+                    ?.split(',').map((policy, index) => (
+                      <li key={index} style={{ margin: '5px 0', color: '#555' }}>{policy.trim()}</li>
+                    ))}
                 </ul>
               </div>
             )}
@@ -1069,7 +1176,8 @@ export default function HotelsOrderView(props) {
           </div>
         </div>
       )}
-      {props?.productData?.Provider != "hotelAhs" && !bookingData && (
+      {/* {props?.productData?.Provider != "hotelAhs" && !bookingData && ( */}
+      {props?.productData?.Provider != "hotelAhs" && (
         <>
           <div>
             Loading ...
