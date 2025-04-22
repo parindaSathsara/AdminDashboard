@@ -654,6 +654,19 @@ export default function HotelsOrderView(props) {
             </div>
 
             <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CImage
+                src={basicDetails?.product_image}
+                fluid
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '6px'
+                }}
+              />
+            </div>
+
+            <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
                 <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
                 <div style={{ fontSize: '14px' }}>Map Coordinates:</div>
@@ -942,7 +955,7 @@ export default function HotelsOrderView(props) {
                       <span style={{ fontWeight: 'bold', color: '#555' }}>Meal Plan:</span>
                       {props.productData?.decoded_data.customerDetails.mealAllocation || 1}
                     </p>
-                  
+
                   </div>
                 </div>
               </div>
