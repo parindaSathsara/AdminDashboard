@@ -808,7 +808,7 @@ function ChatsMeta() {
                           // Show only current page and adjacent pages on mobile
                           if (
                             page === 1 ||
-                            page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
+                            // page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
                             (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
                           ) {
                             return (
@@ -1077,7 +1077,7 @@ function ChatsMeta() {
                           // Show only current page and adjacent pages on mobile
                           if (
                             page === 1 ||
-                            page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
+                            // page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
                             (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
                           ) {
                             return (
@@ -1250,7 +1250,7 @@ function ChatsMeta() {
                           // Show only current page and adjacent pages on mobile
                           if (
                             page === 1 ||
-                            page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
+                            // page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
                             (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
                           ) {
                             return (
