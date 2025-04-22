@@ -9,6 +9,12 @@ const VendorStats = () => {
   const [searchLoading, setSearchLoading] = useState(false);
 const [countryLoading, setCountryLoading] = useState(false);
 
+const [vendorCache, setVendorCache] = useState({
+  all: { data: [], pagination: null },
+  direct: { data: [], pagination: null },
+  dmc: { data: [], pagination: null }
+});
+
   // State for vendor summary
   const [vendorSummary, setVendorSummary] = useState({
     total_vendors: 0,
@@ -31,7 +37,8 @@ const [countryLoading, setCountryLoading] = useState(false);
   const [vendorCounts, setVendorCounts] = useState({
     all: 0,
     direct: 0,
-    dmc: 0
+    dmc: 0,
+    
   });
   
   // State for vendor management
@@ -61,6 +68,18 @@ const [countryLoading, setCountryLoading] = useState(false);
     4: "Hotels",
     5: "Education"
   };
+
+  const API_VENDORS = [
+    { id: 'api1', name: 'Drivado', description: 'Travel API services' },
+    { id: 'api2', name: 'TravelNxt', description: 'Travel APIs' },
+    { id: 'api3', name: 'Giata', description: 'Hotel content API' },
+    { id: 'api4', name: 'Bridgify', description: 'Travel API services' },
+    { id: 'api4', name: 'TBO', description: 'Hotel API services' },
+    { id: 'api4', name: 'Zetexa', description: 'E-Sim API services' },
+    { id: 'api4', name: 'Cebu', description: 'Travel API services' },
+    { id: 'api4', name: 'Sebre', description: 'Flight API services' },
+  
+  ];
 
   // Country code mapping
   const countryCodeToName = {
@@ -307,9 +326,54 @@ const [countryLoading, setCountryLoading] = useState(false);
   };
 
   // Function to fetch vendor data
+  // const fetchVendors = useCallback(async (page = 1) => {
+  //   setLoading(true);
+  //   setError(null);
+    
+  //   try {
+  //     const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
+      
+  //     const response = await axios.get('/get-vendors', {
+  //       params: {
+  //         search_term: searchTerm,
+  //         page: page,
+  //         per_page: pagination.perPage,
+  //         vendor_type: vendorType,
+  //         country: selectedCountry
+  //       }
+  //     });
+      
+  //     if (response.data && response.data.data) {
+  //       setVendors(response.data.data.data);
+  //       setPagination({
+  //         currentPage: response.data.data.current_page,
+  //         totalPages: response.data.data.last_page,
+  //         total: response.data.data.total,
+  //         perPage: response.data.data.per_page
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.error('Error fetching vendors:', err);
+  //     setError('Failed to load vendors. Please try again later.');
+  //     setVendors([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [activeTab, searchTerm, selectedCountry, pagination.perPage]);
   const fetchVendors = useCallback(async (page = 1) => {
     setLoading(true);
     setError(null);
+    
+    const cacheKey = activeTab;
+    const cache = vendorCache[cacheKey];
+    
+    // Check cache first
+    if (cache.data.length > 0 && page === 1 && !searchTerm && !selectedCountry) {
+      setVendors(cache.data);
+      setPagination(cache.pagination);
+      setLoading(false);
+      return;
+    }
     
     try {
       const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
@@ -325,13 +389,27 @@ const [countryLoading, setCountryLoading] = useState(false);
       });
       
       if (response.data && response.data.data) {
-        setVendors(response.data.data.data);
-        setPagination({
+        const newData = response.data.data.data;
+        const newPagination = {
           currentPage: response.data.data.current_page,
           totalPages: response.data.data.last_page,
           total: response.data.data.total,
           perPage: response.data.data.per_page
-        });
+        };
+        
+        setVendors(newData);
+        setPagination(newPagination);
+        
+        // Update cache if no filters applied
+        if (!searchTerm && !selectedCountry && page === 1) {
+          setVendorCache(prev => ({
+            ...prev,
+            [cacheKey]: {
+              data: newData,
+              pagination: newPagination
+            }
+          }));
+        }
       }
     } catch (err) {
       console.error('Error fetching vendors:', err);
@@ -340,7 +418,7 @@ const [countryLoading, setCountryLoading] = useState(false);
     } finally {
       setLoading(false);
     }
-  }, [activeTab, searchTerm, selectedCountry, pagination.perPage]);
+  }, [activeTab, searchTerm, selectedCountry, pagination.perPage, vendorCache]);
 
   // Fetch detailed vendor data for Excel export
   const fetchVendorDetails = async (vendorId) => {
@@ -517,64 +595,118 @@ const [countryLoading, setCountryLoading] = useState(false);
   };
 
   // Debounced search function
+  // const debouncedSearch = useCallback(
+  //   debounce((term) => {
+  //     setSearchTerm(term);
+  //     fetchVendors(1); // Reset to first page when searching
+  //   }, 500),
+  //   [fetchVendors]
+  // );
   const debouncedSearch = useCallback(
     debounce((term) => {
       setSearchTerm(term);
-      fetchVendors(1); // Reset to first page when searching
-    }, 500),
+      fetchVendors(1);
+    }, 300),
     [fetchVendors]
   );
 
   // Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchLoading(true);
-    debouncedSearch(e.target.value);
+  // const handleSearchChange = (e) => {
+  //   setSearchLoading(true);
+  //   debouncedSearch(e.target.value);
     
-    // Minimum 3-second loading for search
+  //   // Minimum 3-second loading for search
+  //   setTimeout(() => {
+  //     setSearchLoading(false);
+  //   }, 30000);
+  // };
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchLoading(true);
+    setSearchTerm(term); // Update immediately for responsive UI
+    
+    // Show loading for at least 500ms to prevent flickering
     setTimeout(() => {
       setSearchLoading(false);
-    }, 30000);
+    }, 500);
+    
+    debouncedSearch(term);
   };
 
   // Handle country selection
  
+// const handleCountryChange = (e) => {
+//   setCountryLoading(true);
+//   setSelectedCountry(e.target.value);
+  
+//   // Call fetch with a minimum loading time
+//   const timeoutPromise = new Promise(resolve => {
+//     setTimeout(resolve, 30000); // 3 seconds
+//   });
+  
+//   const fetchPromise = fetchVendors(1);
+  
+//   Promise.all([timeoutPromise, fetchPromise])
+//     .then(() => {
+//       setCountryLoading(false);
+//     });
+// };
 const handleCountryChange = (e) => {
+  const country = e.target.value;
   setCountryLoading(true);
-  setSelectedCountry(e.target.value);
+  setSelectedCountry(country);
   
-  // Call fetch with a minimum loading time
-  const timeoutPromise = new Promise(resolve => {
-    setTimeout(resolve, 30000); // 3 seconds
-  });
-  
-  const fetchPromise = fetchVendors(1);
-  
-  Promise.all([timeoutPromise, fetchPromise])
-    .then(() => {
+  // Check cache first if no search term
+  if (!searchTerm) {
+    const cacheKey = activeTab;
+    const cache = vendorCache[cacheKey];
+    
+    if (country === '' && cache.data.length > 0) {
+      setVendors(cache.data);
+      setPagination(cache.pagination);
       setCountryLoading(false);
-    });
+      return;
+    }
+  }
+  
+  // If no cache hit, fetch from server
+  fetchVendors(1).finally(() => {
+    setCountryLoading(false);
+  });
 };
 
   // Handle tab change
+  // const handleTabChange = (key) => {
+  //   setTabLoading(true);
+  //   setActiveTab(key);
+  //   setSearchTerm('');
+  //   setSelectedCountry('');
+    
+  //   // Fetch data with a minimum 8-second loading time
+  //   const timeoutPromise = new Promise(resolve => {
+  //     setTimeout(resolve, 8000); // 8 seconds
+  //   });
+    
+  //   const fetchPromise = fetchVendors(1, key, '', '');
+    
+  //   Promise.all([timeoutPromise, fetchPromise])
+  //     .then(() => {
+  //       setTabLoading(false);
+  //     });
+  // };
   const handleTabChange = (key) => {
     setTabLoading(true);
     setActiveTab(key);
     setSearchTerm('');
     setSelectedCountry('');
     
-    // Fetch data with a minimum 8-second loading time
-    const timeoutPromise = new Promise(resolve => {
-      setTimeout(resolve, 8000); // 8 seconds
+    // Clear current vendors immediately
+    setVendors([]);
+    
+    fetchVendors(1).finally(() => {
+      setTabLoading(false);
     });
-    
-    const fetchPromise = fetchVendors(1, key, '', '');
-    
-    Promise.all([timeoutPromise, fetchPromise])
-      .then(() => {
-        setTabLoading(false);
-      });
   };
-  
 
   // Handle pagination
   const handlePageChange = (page) => {
@@ -1042,14 +1174,22 @@ const handleCountryChange = (e) => {
     </div>
   </Tab>
   
-  <Tab eventKey="direct" title={
+  {/* <Tab eventKey="direct" title={
     <div className="d-flex align-items-center">
       Direct Vendors ({vendorCounts.direct})
       {tabLoading && activeTab === 'direct' && 
         <Spinner animation="border" size="sm" className="ms-2" />
       }
     </div>
-  }>
+  }> */}
+  <Tab eventKey="direct" title={
+  <div className="d-flex align-items-center">
+    Direct Vendors ({vendorCounts.direct})
+    {tabLoading && activeTab === 'direct' && 
+      <Spinner animation="border" size="sm" className="ms-2" />
+    }
+  </div>
+}>
     <div className="mb-4 row">
       <div className="col-md-6 mb-3 mb-md-0">
         <Form.Group>
@@ -1154,7 +1294,7 @@ const handleCountryChange = (e) => {
 </Tabs>
 
 {/* Main content area with loading indication */}
-{tabLoading || searchLoading || countryLoading ? (
+{/* {tabLoading || searchLoading || countryLoading ? (
   <div className="text-center py-5">
     <Spinner animation="border" variant="primary" />
     <p className="mt-3">
@@ -1178,7 +1318,31 @@ const handleCountryChange = (e) => {
     {pagination.totalPages > 1 && renderPagination()}
   </>
 )}
-      
+       */}
+{(tabLoading || searchLoading || countryLoading) && vendors.length === 0 ? (
+  <div className="text-center py-5">
+    <Spinner animation="border" variant="primary" />
+    <p className="mt-3">
+      {tabLoading && `Loading ${activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC'} Vendors...`}
+      {searchLoading && !tabLoading && "Searching vendors..."}
+      {countryLoading && !tabLoading && !searchLoading && "Filtering by country..."}
+    </p>
+  </div>
+) : (
+  <>
+    <div className="mb-3">
+      <p>
+        Showing {vendors.length} of {pagination.total} vendors
+        {searchTerm && <span> matching "<strong>{searchTerm}</strong>"</span>}
+        {selectedCountry && <span> in <strong>{countryCodeToName[selectedCountry]}</strong></span>}
+      </p>
+    </div>
+    
+    {renderVendorCards()}
+    
+    {pagination.totalPages > 1 && renderPagination()}
+  </>
+)}
       {/* Vendor Details Modal */}
       {selectedVendor && (
         <Modal
