@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
 import CIcon from '@coreui/icons-react'
 
-import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, 
-  cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings, cilBarChart, 
-  cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper, 
-  cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact, 
-  cilBellExclamation, cilShieldAlt  } from '@coreui/icons'
+import {
+  cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX,
+  cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings, cilBarChart,
+  cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper,
+  cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact,
+  cilBellExclamation, cilShieldAlt
+} from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
@@ -118,7 +120,7 @@ function getNavigationHook(permissions) {
         {
           component: CNavItem,
           name: 'Vendor Analytics',
-          to: '/vendors/stats',
+          to: '/vendor-analytics',
         },
 
       ],
@@ -307,7 +309,7 @@ function getNavigationHook(permissions) {
       component: CNavGroup,
       name: 'Services',
       to: '/services',
-      icon: <CIcon icon={cilShieldAlt} customClassName="nav-icon" /> ,
+      icon: <CIcon icon={cilShieldAlt} customClassName="nav-icon" />,
       items: [
         {
           component: CNavItem,
