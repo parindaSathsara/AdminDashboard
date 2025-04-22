@@ -486,7 +486,7 @@ const VendorList = () => {
                                 options={{
                                     sorting: true, search: true,
                                     searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                                    filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                                    filtering: false, paging: true, pageSizeOptions: [10,20, 25, 50, 100], pageSize: 10,
                                     paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: {
                                         csv: true,
                                         pdf: false,

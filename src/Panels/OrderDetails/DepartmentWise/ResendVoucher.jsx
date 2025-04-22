@@ -112,7 +112,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
           placeHolder="Enter Email"
          
         /> */}
-        <TagsInput
+        {/* <TagsInput
           value={selected}
           onChange={(e) => setSelected(e)}
           name="emails"
@@ -125,7 +125,29 @@ export default function ResendVoucher({ voucherData, orderID }) {
             width: '100%',
             overflow: 'hidden',
           }}
+        /> */}
+        <TagsInput
+          value={selected}
+          onChange={(e) => setSelected(e)}
+          name="emails"
+          placeHolder="Enter Email"
+          classNames={{
+            tag: 'tag-custom'
+          }}
+          style={{
+            width: '100%',
+            overflow: 'hidden',
+          }}
+          inputStyle={{
+            flexGrow: 1,
+            border: 'none',
+            outline: 'none',
+            padding: '5px',
+            fontSize: '0.9rem',
+            minWidth: '150px',
+          }}
         />
+
 
         <CButton
           title="Send to Supplier Origin Email"

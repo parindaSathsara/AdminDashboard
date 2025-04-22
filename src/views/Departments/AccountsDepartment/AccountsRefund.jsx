@@ -66,6 +66,8 @@ import CustomerFeedbacks from './CustomerFeedbacks'
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 
 const AccountsRefunds = () => {
+  const [loading, setLoading] = useState(true);
+
   const { userData } = useContext(UserLoginContext);
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 

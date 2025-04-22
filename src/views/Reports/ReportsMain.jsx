@@ -172,13 +172,32 @@ const ReportGenerationPage = () => {
               <CCol xs={12} sm={6} lg={3}>
                 <CFormLabel htmlFor="start-date">Start Date</CFormLabel>
                 <br />
-                <DatePicker selected={startDate} onChange={date => setStartDate(date)} className="form-control full-width" placeholderText="Select start date" id="start-date" />
+                <DatePicker
+                  selected={startDate}
+                  onChange={date => setStartDate(date)}
+                  className="form-control full-width"
+                  placeholderText="Select start date"
+                  id="start-date"
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                />
                 {validationErrors.startDate && <div className="text-danger">{validationErrors.startDate}</div>}
               </CCol>
               <CCol xs={12} sm={6} lg={3}>
                 <CFormLabel htmlFor="end-date">End Date</CFormLabel>
                 <br />
-                <DatePicker selected={endDate} onChange={date => setEndDate(date)} className="form-control full-width" placeholderText="Select end date" id="end-date" />
+                <DatePicker
+                  selected={endDate}
+                  onChange={date => setEndDate(date)}
+                  className="form-control full-width"
+                  placeholderText="Select end date"
+                  id="end-date"
+                  minDate={startDate} // This will disable dates before the selected start date
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                />
                 {validationErrors.endDate && <div className="text-danger">{validationErrors.endDate}</div>}
               </CCol>
               <CCol xs={12} sm={6} lg={2}>
