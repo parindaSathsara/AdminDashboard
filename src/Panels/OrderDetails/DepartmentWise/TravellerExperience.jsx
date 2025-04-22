@@ -558,9 +558,9 @@ export default function TravellerExperience(props) {
             // handleInputFields('qc', e.target.value)
           }}
         >
-          <option>{rowData.qc !== null ? rowData?.qc : 'Select QC'}</option>
+          <option>{'Select QC'}</option>
           {qcValues.map((qc) => (
-            <option key={qc} value={qc}>
+            <option key={qc} value={qc} selected={rowData?.qc == qc}>
               {qc}
             </option>
           ))}

@@ -115,7 +115,7 @@ const routes = [
   { path: '/orders', name: 'Orders', element: Dashboard, exact: true },
 
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
-  { path: '/accounts/customerorders', name: 'Sales', element: AccountsDepartment },
+  { path: '/accounts/customerorders', name: 'Customer orders', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
 
   { path: '/products', name: 'Products', element: ProductList },
@@ -127,7 +127,7 @@ const routes = [
 
   { path: '/reporting/accounts', name: 'Accounts Report', element: AccountReport },
   { path: '/reporting/all', name: 'All Report', element: ReportsMain },
-  { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
+  // { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
 
   { path: '/emails/generate', name: 'Email Generate', element: EmailGeneration },
   { path: '/emails/all', name: 'Email Resend', element: EmailDashboard },
@@ -149,25 +149,27 @@ const routes = [
   // driver and vechicle allocation
   { path: '/allocation', name: 'Orders Allocations', element: AllocationsHomepage, exact: true },
 
-  {path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
-  {path:'/analytics',name:'Analytics',element:UserAnalytics,exact:true},
-  {path:'/kpidashboard',name:'KPI Dashboard',element:KpiDashboard,exact:true},
-  {path:'/kpidashboard/team',name:'Team KPI',element:KpiDashboard},
-  {path:'/kpidashboard/globaltarget',name:'Global Target',element:GlobalTarget},
-  {path:'/kpidashboard/chat',name:'Chat Analytics',element:ChatAnalytics},
+  { path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
+  { path: '/analytics', name: 'Analytics', element: UserAnalytics, exact: true },
+  { path: '/kpidashboard', name: 'KPI Dashboard', element: KpiDashboard, exact: true },
+  { path: '/kpidashboard/team', name: 'Team KPI', element: KpiDashboard },
+  { path: '/kpidashboard/globaltarget', name: 'Global Target', element: GlobalTarget },
+  { path: '/kpidashboard/chat', name: 'Chat Analytics', element: ChatAnalytics },
 
-  // services 
-  {path:'/services/bridgyfy',name:'Bridgify',element:Bridgify},
-  {path:'/services/tbo',name:'TBO',element:TBO},
-  {path:'/users/stats',name:'User Stats',element:UserCountStats},
-  
+  // services
+  { path: '/services/bridgyfy', name: 'Bridgify', element: Bridgify },
+  { path: '/services/tbo', name: 'TBO', element: TBO },
+  { path: '/users/stats', name: 'User Stats', element: UserCountStats },
+
   // vendor categorize
+
   {path:'/vendors/categorize',name:'Vendor Categorize',element:VendorCategorize},
   {path:'/vendors/stats',name:'Vendor Stats',element:VendorStats},
-  
+
+
   // prmotions
-  {path:'/promotions',name:'Promotions',element:Promotions},
-  
+  { path: '/promotions', name: 'Promotions', element: Promotions },
+
 
 
 
