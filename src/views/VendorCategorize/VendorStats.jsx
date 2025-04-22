@@ -7,13 +7,17 @@ import * as XLSX from 'xlsx';
 const VendorStats = () => {
   const [tabLoading, setTabLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
-const [countryLoading, setCountryLoading] = useState(false);
+  const [countryLoading, setCountryLoading] = useState(false);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [categoryCardsLoading, setCategoryCardsLoading] = useState(false);
 
-const [vendorCache, setVendorCache] = useState({
-  all: { data: [], pagination: null },
-  direct: { data: [], pagination: null },
-  dmc: { data: [], pagination: null }
-});
+  const [vendorCache, setVendorCache] = useState({
+    all: { data: [], pagination: null },
+    direct: { data: [], pagination: null },
+    dmc: { data: [], pagination: null },
+    api: { data: [], pagination: null }  // Added this line
+
+  });
 
   // State for vendor summary
   const [vendorSummary, setVendorSummary] = useState({
@@ -38,9 +42,8 @@ const [vendorCache, setVendorCache] = useState({
     all: 0,
     direct: 0,
     dmc: 0,
-    
   });
-  
+
   // State for vendor management
   const [activeTab, setActiveTab] = useState('all');
   const [vendors, setVendors] = useState([]);
@@ -54,11 +57,13 @@ const [vendorCache, setVendorCache] = useState({
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [showProductSummary, setShowProductSummary] = useState(true);
   const [vendorDetailsForExcel, setVendorDetailsForExcel] = useState(null);
   const [loadingExcel, setLoadingExcel] = useState(false);
+  const [apiSearchTerm, setApiSearchTerm] = useState('');
 
   // Category names mapping for export
   const CATEGORY_NAMES = {
@@ -74,11 +79,19 @@ const [vendorCache, setVendorCache] = useState({
     { id: 'api2', name: 'TravelNxt', description: 'Travel APIs' },
     { id: 'api3', name: 'Giata', description: 'Hotel content API' },
     { id: 'api4', name: 'Bridgify', description: 'Travel API services' },
-    { id: 'api4', name: 'TBO', description: 'Hotel API services' },
-    { id: 'api4', name: 'Zetexa', description: 'E-Sim API services' },
-    { id: 'api4', name: 'Cebu', description: 'Travel API services' },
-    { id: 'api4', name: 'Sebre', description: 'Flight API services' },
-  
+    { id: 'api5', name: 'TBO', description: 'Hotel API services' },
+    { id: 'api6', name: 'Zetexa', description: 'E-Sim API services' },
+    { id: 'api7', name: 'Cebu', description: 'Travel API services' },
+    { id: 'api8', name: 'Sebre', description: 'Flight API services' },
+  ];
+
+  const CATEGORY_OPTIONS = [
+    { value: '', label: 'All Categories' },
+    { value: 'essentials', label: 'Essentials' },
+    { value: 'non_essentials', label: 'Non-Essentials' },
+    { value: 'lifestyles', label: 'Lifestyle' },
+    { value: 'hotels', label: 'Hotels' },
+    { value: 'education', label: 'Education' }
   ];
 
   // Country code mapping
@@ -325,69 +338,43 @@ const [vendorCache, setVendorCache] = useState({
     }
   };
 
-  // Function to fetch vendor data
-  // const fetchVendors = useCallback(async (page = 1) => {
-  //   setLoading(true);
-  //   setError(null);
-    
-  //   try {
-  //     const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
-      
-  //     const response = await axios.get('/get-vendors', {
-  //       params: {
-  //         search_term: searchTerm,
-  //         page: page,
-  //         per_page: pagination.perPage,
-  //         vendor_type: vendorType,
-  //         country: selectedCountry
-  //       }
-  //     });
-      
-  //     if (response.data && response.data.data) {
-  //       setVendors(response.data.data.data);
-  //       setPagination({
-  //         currentPage: response.data.data.current_page,
-  //         totalPages: response.data.data.last_page,
-  //         total: response.data.data.total,
-  //         perPage: response.data.data.per_page
-  //       });
-  //     }
-  //   } catch (err) {
-  //     console.error('Error fetching vendors:', err);
-  //     setError('Failed to load vendors. Please try again later.');
-  //     setVendors([]);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [activeTab, searchTerm, selectedCountry, pagination.perPage]);
-  const fetchVendors = useCallback(async (page = 1) => {
+
+  // Initial data fetches
+  useEffect(() => {
+    fetchVendors(1);
+  }, [activeTab, searchTerm, selectedCountry, selectedCategory, pagination.perPage, vendorCache]);
+
+
+  const fetchVendors = async (page = 1) => {
     setLoading(true);
+
     setError(null);
-    
+
     const cacheKey = activeTab;
     const cache = vendorCache[cacheKey];
-    
+
     // Check cache first
-    if (cache.data.length > 0 && page === 1 && !searchTerm && !selectedCountry) {
+    if (cache && cache.data.length > 0 && page === 1 && !searchTerm && !selectedCountry && !selectedCategory) {
       setVendors(cache.data);
       setPagination(cache.pagination);
       setLoading(false);
       return;
     }
-    
+
     try {
       const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
-      
+
       const response = await axios.get('/get-vendors', {
         params: {
           search_term: searchTerm,
           page: page,
           per_page: pagination.perPage,
           vendor_type: vendorType,
-          country: selectedCountry
+          country: selectedCountry,
+          category: selectedCategory || 'all'
         }
       });
-      
+
       if (response.data && response.data.data) {
         const newData = response.data.data.data;
         const newPagination = {
@@ -396,12 +383,14 @@ const [vendorCache, setVendorCache] = useState({
           total: response.data.data.total,
           perPage: response.data.data.per_page
         };
-        
+
         setVendors(newData);
         setPagination(newPagination);
-        
+
+        setLoading(false);
+
         // Update cache if no filters applied
-        if (!searchTerm && !selectedCountry && page === 1) {
+        if (!searchTerm && !selectedCountry && !selectedCategory && page === 1) {
           setVendorCache(prev => ({
             ...prev,
             [cacheKey]: {
@@ -418,7 +407,68 @@ const [vendorCache, setVendorCache] = useState({
     } finally {
       setLoading(false);
     }
-  }, [activeTab, searchTerm, selectedCountry, pagination.perPage, vendorCache]);
+  }
+  // Function to fetch vendor data
+  // const fetchVendors = useCallback(async (page = 1) => {
+  //   setLoading(true);
+  //   setError(null);
+
+  //   const cacheKey = activeTab;
+  //   const cache = vendorCache[cacheKey];
+
+  //   // Check cache first
+  //   if (cache && cache.data.length > 0 && page === 1 && !searchTerm && !selectedCountry && !selectedCategory) {
+  //     setVendors(cache.data);
+  //     setPagination(cache.pagination);
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
+
+  //     const response = await axios.get('/get-vendors', {
+  //       params: {
+  //         search_term: searchTerm,
+  //         page: page,
+  //         per_page: pagination.perPage,
+  //         vendor_type: vendorType,
+  //         country: selectedCountry,
+  //         category: selectedCategory || 'all'
+  //       }
+  //     });
+
+  //     if (response.data && response.data.data) {
+  //       const newData = response.data.data.data;
+  //       const newPagination = {
+  //         currentPage: response.data.data.current_page,
+  //         totalPages: response.data.data.last_page,
+  //         total: response.data.data.total,
+  //         perPage: response.data.data.per_page
+  //       };
+
+  //       setVendors(newData);
+  //       setPagination(newPagination);
+
+  //       // Update cache if no filters applied
+  //       if (!searchTerm && !selectedCountry && !selectedCategory && page === 1) {
+  //         setVendorCache(prev => ({
+  //           ...prev,
+  //           [cacheKey]: {
+  //             data: newData,
+  //             pagination: newPagination
+  //           }
+  //         }));
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error('Error fetching vendors:', err);
+  //     setError('Failed to load vendors. Please try again later.');
+  //     setVendors([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [activeTab, searchTerm, selectedCountry, selectedCategory, pagination.perPage, vendorCache]);
 
   // Fetch detailed vendor data for Excel export
   const fetchVendorDetails = async (vendorId) => {
@@ -441,7 +491,7 @@ const [vendorCache, setVendorCache] = useState({
   const downloadVendorExcel = async (vendor) => {
     // Show loading indicator
     setLoadingExcel(true);
-    
+
     // Try to fetch detailed vendor data if available
     let vendorForExcel = vendor;
     try {
@@ -481,105 +531,7 @@ const [vendorCache, setVendorCache] = useState({
       data.push([categoryName, count]);
     });
 
-    // =======================
-    // Detailed Category Section
-    // =======================
-
-    // Essentials Details
-    if (vendorForExcel.essentials && vendorForExcel.essentials.length > 0) {
-      data.push(['', '']);
-      data.push(['Essentials Details', '']);
-      data.push(['Product Name', 'Description', 'Category 2', 'Category 3', 'Country', 'Status', 'Price']);
-      vendorForExcel.essentials.forEach(item => {
-        data.push([
-          item.listing_title || 'N/A',
-          item.sub_description || 'N/A',
-          item.product_details?.category2 || 'N/A',
-          item.product_details?.category3 || 'N/A',
-          item.country || 'N/A',
-          item.lisiting_status === "1" ? 'Active' : 'Inactive',
-          item.price || 'N/A'
-        ]);
-      });
-    }
-    
-    // Non-Essentials Details
-    if (vendorForExcel.non_essentials && vendorForExcel.non_essentials.length > 0) {
-      data.push(['', '']);
-      data.push(['Non-Essentials Details', '']);
-      data.push(['Product Name', 'Description', 'Category 2', 'Category 3', 'Country', 'Status', 'Price']);
-      vendorForExcel.non_essentials.forEach(item => {
-        data.push([
-          item.listing_title || 'N/A',
-          item.sub_description || 'N/A',
-          item.product_details?.category2 || 'N/A',
-          item.product_details?.category3 || 'N/A',
-          item.country || 'N/A',
-          item.lisiting_status === "1" ? 'Active' : 'Inactive',
-          item.price || 'N/A'
-        ]);
-      });
-    }
-
-    // Lifestyles Details
-    if (vendorForExcel.lifestyles && vendorForExcel.lifestyles.length > 0) {
-      data.push(['', '']);
-      data.push(['Lifestyle Details', '']);
-      data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link', 'Status']);
-      vendorForExcel.lifestyles.forEach(item => {
-        data.push([
-          item.lifestyle_name || 'N/A',
-          item.lifestyle_city || 'N/A',
-          item.lifestyle_attraction_type || 'N/A',
-          item.preferred == 1 ? 'Yes' : 'No',
-          item.micro_location || 'N/A',
-          item.tripadvisor || 'N/A',
-          item.active_status ? 'Active' : 'Inactive'
-        ]);
-      });
-    }
-
-    // Education Details
-    if (vendorForExcel.education && vendorForExcel.education.length > 0) {
-      data.push(['', '']);
-      data.push(['Education Details', '']);
-      data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method', 'Status']);
-      vendorForExcel.education.forEach(item => {
-        data.push([
-          item.course_name || 'N/A',
-          item.medium || 'N/A',
-          item.course_mode || 'N/A',
-          item.group_type || 'N/A',
-          item.free_session || 'N/A',
-          item.payment_method || 'N/A',
-          item.status ? 'Active' : 'Inactive'
-        ]);
-      });
-    }
-
-    // Hotel Details
-    if (vendorForExcel.hotels && vendorForExcel.hotels.length > 0) {
-      data.push(['', '']);
-      data.push(['Hotel Details', '']);
-      data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date', 'Status']);
-      vendorForExcel.hotels.forEach(item => {
-        data.push([
-          item.hotel_name || 'N/A',
-          item.star_classification || 'N/A',
-          item.city || 'N/A',
-          item.hotel_address || 'N/A',
-          item.trip_advisor_link || 'N/A',
-          item.start_date || 'N/A',
-          item.end_date || 'N/A',
-          item.hotel_status ? 'Active' : 'Inactive'
-        ]);
-      });
-    }
-
-    // =======================
-    // Export to Excel
-    // =======================
-
+    // Export to Excel 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(data);
 
@@ -589,19 +541,12 @@ const [vendorCache, setVendorCache] = useState({
 
     const fileName = `Vendor_${vendorForExcel.id}_${vendorForExcel.company_name || 'details'}.xlsx`;
     XLSX.writeFile(wb, fileName);
-    
+
     // Hide loading indicator
     setLoadingExcel(false);
   };
 
   // Debounced search function
-  // const debouncedSearch = useCallback(
-  //   debounce((term) => {
-  //     setSearchTerm(term);
-  //     fetchVendors(1); // Reset to first page when searching
-  //   }, 500),
-  //   [fetchVendors]
-  // );
   const debouncedSearch = useCallback(
     debounce((term) => {
       setSearchTerm(term);
@@ -611,101 +556,108 @@ const [vendorCache, setVendorCache] = useState({
   );
 
   // Handle search input change
-  // const handleSearchChange = (e) => {
-  //   setSearchLoading(true);
-  //   debouncedSearch(e.target.value);
-    
-  //   // Minimum 3-second loading for search
-  //   setTimeout(() => {
-  //     setSearchLoading(false);
-  //   }, 30000);
-  // };
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchLoading(true);
     setSearchTerm(term); // Update immediately for responsive UI
-    
+
     // Show loading for at least 500ms to prevent flickering
     setTimeout(() => {
       setSearchLoading(false);
     }, 500);
-    
+
     debouncedSearch(term);
   };
 
+  // Handle API search
+  const handleApiSearchChange = (e) => {
+    const term = e.target.value.toLowerCase();
+    setApiSearchTerm(term);
+  };
+
+  // Filter API vendors based on search term
+  const filteredApiVendors = API_VENDORS.filter(vendor =>
+    vendor.name.toLowerCase().includes(apiSearchTerm) ||
+    vendor.description.toLowerCase().includes(apiSearchTerm)
+  );
+
   // Handle country selection
- 
-// const handleCountryChange = (e) => {
-//   setCountryLoading(true);
-//   setSelectedCountry(e.target.value);
-  
-//   // Call fetch with a minimum loading time
-//   const timeoutPromise = new Promise(resolve => {
-//     setTimeout(resolve, 30000); // 3 seconds
-//   });
-  
-//   const fetchPromise = fetchVendors(1);
-  
-//   Promise.all([timeoutPromise, fetchPromise])
-//     .then(() => {
-//       setCountryLoading(false);
-//     });
-// };
-const handleCountryChange = (e) => {
-  const country = e.target.value;
-  setCountryLoading(true);
-  setSelectedCountry(country);
-  
-  // Check cache first if no search term
-  if (!searchTerm) {
-    const cacheKey = activeTab;
-    const cache = vendorCache[cacheKey];
-    
-    if (country === '' && cache.data.length > 0) {
-      setVendors(cache.data);
-      setPagination(cache.pagination);
-      setCountryLoading(false);
-      return;
+  const handleCountryChange = (e) => {
+    const country = e.target.value;
+    setCountryLoading(true);
+    setSelectedCountry(country);
+
+    // Check cache first if no search term
+    if (!searchTerm) {
+      const cacheKey = activeTab;
+      const cache = vendorCache[cacheKey];
+
+      if (country === '' && cache.data.length > 0) {
+        setVendors(cache.data);
+        setPagination(cache.pagination);
+        setCountryLoading(false);
+        return;
+      }
     }
-  }
-  
-  // If no cache hit, fetch from server
-  fetchVendors(1).finally(() => {
-    setCountryLoading(false);
-  });
-};
+
+    // If no cache hit, fetch from server
+    // fetchVendors(1).finally(() => {
+    //   setCountryLoading(false);
+    // });
+
+    setCountryLoading(false)
+  };
+
+  // Handle category selection
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setCategoryLoading(true);
+    setSelectedCategory(category);
+
+    // Check cache first if no search term and no country
+    if (!searchTerm && !selectedCountry) {
+      const cacheKey = activeTab;
+      const cache = vendorCache[cacheKey];
+
+      if (category === '' && cache.data.length > 0) {
+        setVendors(cache.data);
+        setPagination(cache.pagination);
+        setCategoryLoading(false);
+        return;
+      }
+    }
+
+    // If no cache hit, fetch from server
+    // fetchVendors(1).finally(() => {
+    setCategoryLoading(false);
+    // });
+  };
 
   // Handle tab change
-  // const handleTabChange = (key) => {
-  //   setTabLoading(true);
-  //   setActiveTab(key);
-  //   setSearchTerm('');
-  //   setSelectedCountry('');
-    
-  //   // Fetch data with a minimum 8-second loading time
-  //   const timeoutPromise = new Promise(resolve => {
-  //     setTimeout(resolve, 8000); // 8 seconds
-  //   });
-    
-  //   const fetchPromise = fetchVendors(1, key, '', '');
-    
-  //   Promise.all([timeoutPromise, fetchPromise])
-  //     .then(() => {
-  //       setTabLoading(false);
-  //     });
-  // };
   const handleTabChange = (key) => {
+
     setTabLoading(true);
     setActiveTab(key);
     setSearchTerm('');
     setSelectedCountry('');
-    
+    setSelectedCategory('');
+    setApiSearchTerm('');
+
     // Clear current vendors immediately
     setVendors([]);
-    
-    fetchVendors(1).finally(() => {
+
+    if (key !== 'api') {
+
+      setTabLoading(false)
+      // setTimeout(() => {
+      //   // fetchVendors(1).finally(() => {
+      //   //   setTabLoading(false);
+      //   // });
+      // }, 0);
+    } else {
+      // Just clear loading for API tab
       setTabLoading(false);
-    });
+    }
   };
 
   // Handle pagination
@@ -723,20 +675,28 @@ const handleCountryChange = (e) => {
   useEffect(() => {
     getVendorSummary();
   }, []);
-  
-  useEffect(() => {
-    fetchVendors(1);
-  }, [fetchVendors]);
+
+  // useEffect(() => {
+  //   if (activeTab !== 'api') {
+  //     try {
+  //       fetchVendors(1);
+  //     } catch (error) {
+  //       console.error("Error in fetch vendors effect:", error);
+  //       setLoading(false);
+  //     }
+  //   }
+
+  // }, [fetchVendors, activeTab]);
 
   // Render pagination controls
   const renderPagination = () => {
     const pages = [];
     const { currentPage, totalPages } = pagination;
-    
+
     // Determine range of pages to show
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, currentPage + 2);
-    
+
     // Ensure we always show 5 pages if available
     if (endPage - startPage < 4) {
       if (startPage === 1) {
@@ -745,12 +705,12 @@ const handleCountryChange = (e) => {
         startPage = Math.max(1, totalPages - 4);
       }
     }
-    
+
     // First page
     if (startPage > 1) {
       pages.push(
-        <Pagination.Item 
-          key={1} 
+        <Pagination.Item
+          key={1}
           active={1 === currentPage}
           onClick={() => handlePageChange(1)}
         >
@@ -761,12 +721,12 @@ const handleCountryChange = (e) => {
         pages.push(<Pagination.Ellipsis key="ellipsis-start" />);
       }
     }
-    
+
     // Page range
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <Pagination.Item 
-          key={i} 
+        <Pagination.Item
+          key={i}
           active={i === currentPage}
           onClick={() => handlePageChange(i)}
         >
@@ -774,15 +734,15 @@ const handleCountryChange = (e) => {
         </Pagination.Item>
       );
     }
-    
+
     // Last page
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         pages.push(<Pagination.Ellipsis key="ellipsis-end" />);
       }
       pages.push(
-        <Pagination.Item 
-          key={totalPages} 
+        <Pagination.Item
+          key={totalPages}
           active={totalPages === currentPage}
           onClick={() => handlePageChange(totalPages)}
         >
@@ -790,15 +750,15 @@ const handleCountryChange = (e) => {
         </Pagination.Item>
       );
     }
-    
+
     return (
       <Pagination className="justify-content-center mt-4">
-        <Pagination.Prev 
+        <Pagination.Prev
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}
         />
         {pages}
-        <Pagination.Next 
+        <Pagination.Next
           disabled={currentPage === totalPages}
           onClick={() => handlePageChange(currentPage + 1)}
         />
@@ -818,7 +778,10 @@ const handleCountryChange = (e) => {
 
     return (
       <div className="row">
-        {vendors.map(vendor => (
+        {loading === true ?  <div className="bg-white p-4 rounded d-flex flex-column align-items-center">
+            <Spinner animation="border" variant="primary" />
+            <p className="mt-2 mb-0">Loading Vendors...</p>
+          </div> :  vendors.map(vendor => (
           <div key={vendor.id} className="col-md-6 col-lg-4 mb-4">
             <Card className="h-100 shadow-sm">
               <Card.Header className="d-flex justify-content-between align-items-center">
@@ -844,7 +807,7 @@ const handleCountryChange = (e) => {
                   <strong>Address:</strong>{" "}
                   <span title={vendor.address}>{vendor.address || 'N/A'}</span>
                 </p>
-                
+
                 <div className="d-flex flex-wrap mb-2">
                   {vendor.essentials_count > 0 && (
                     <Badge bg="primary" className="me-1 mb-1">
@@ -874,15 +837,15 @@ const handleCountryChange = (e) => {
                 </div>
               </Card.Body>
               <Card.Footer className="d-flex justify-content-between">
-                <Button 
-                  variant="outline-primary" 
+                <Button
+                  variant="outline-primary"
                   size="sm"
                   onClick={() => showVendorDetails(vendor)}
                 >
                   View Details
                 </Button>
-                <Button 
-                  variant="outline-success" 
+                <Button
+                  variant="outline-success"
                   size="sm"
                   onClick={() => downloadVendorExcel(vendor)}
                   disabled={loadingExcel}
@@ -890,6 +853,53 @@ const handleCountryChange = (e) => {
                   {loadingExcel ? 'Generating...' : 'Download Excel'}
                 </Button>
               </Card.Footer>
+            </Card>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Render API vendor cards
+  const renderApiVendorCards = () => {
+    if (filteredApiVendors.length === 0) {
+      return (
+        <div className="text-center py-5">
+          <p>No API vendors found matching your search.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="row">
+        {filteredApiVendors.map(vendor => (
+          <div key={vendor.id} className="col-md-6 col-lg-4 mb-4">
+            <Card className="h-100 shadow-sm">
+              <Card.Header className="d-flex justify-content-between align-items-center bg-dark text-white">
+                <h5 className="m-0 text-truncate" title={vendor.name}>
+                  {vendor.name}
+                </h5>
+                <Badge bg="info">API</Badge>
+              </Card.Header>
+              <Card.Body>
+                <p className="mb-3">{vendor.description}</p>
+                {/* <div className="d-flex justify-content-between mt-auto">
+                  <Button
+                    variant="outline-dark"
+                    size="sm"
+                    href={`#/api-details/${vendor.id}`}
+                  >
+                    View Documentation
+                  </Button>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    href={`#/api-access/${vendor.id}`}
+                  >
+                    Get API Access
+                  </Button>
+                </div> */}
+              </Card.Body>
             </Card>
           </div>
         ))}
@@ -923,426 +933,498 @@ const handleCountryChange = (e) => {
       </h1>
 
       {/* Vendor Summary Statistics */}
-      <div className="row mb-4">
-        {/* Total Vendors */}
-        <div className="col-md-4">
-          <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Total Vendors</h5>
-                <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
+      {activeTab !== 'api' && (
+        <div className="row mb-4">
+          {/* Total Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #3c4b64' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Total Vendors</h5>
+                  <h3 className="mb-0" style={{ color: '#3c4b64' }}>{vendorSummary.total_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
 
-        {/* Active Vendors */}
-        <div className="col-md-4">
-          <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Active Vendors</h5>
-                <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
+          {/* Active Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid green' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Active Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'green' }}>{vendorSummary.active_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
 
-        {/* Inactive Vendors */}
-        <div className="col-md-4">
-          <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Inactive Vendors</h5>
-                <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
+          {/* Inactive Vendors */}
+          <div className="col-md-4">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid red' }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Inactive Vendors</h5>
+                  <h3 className="mb-0" style={{ color: 'red' }}>{vendorSummary.inactive_vendors}</h3>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
 
-        {/* Direct Vendor Products */}
-        <div className="col-md-6 mt-3">
-          <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
-            <Card.Body>
-              <h5 className="mb-2">Direct Vendor Products</h5>
-              <div className="d-flex justify-content-around">
-                <div>
-                  <small>Total</small>
-                  <h3 className="mb-0" style={{ color: 'orange' }}>
-                    {vendorSummary.direct_products?.total || 0}
-                  </h3>
+          {/* Direct Vendor Products */}
+          <div className="col-md-6 mt-3">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid orange' }}>
+              <Card.Body>
+                <h5 className="mb-2">Direct Vendor Products</h5>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <small>Total</small>
+                    <h3 className="mb-0" style={{ color: 'orange' }}>
+                      {vendorSummary.direct_products?.total || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'green' }}>Active</small>
+                    <h3 className="mb-0" style={{ color: 'green' }}>
+                      {vendorSummary.direct_products?.active || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'red' }}>Inactive</small>
+                    <h3 className="mb-0" style={{ color: 'red' }}>
+                      {vendorSummary.direct_products?.inactive || 0}
+                    </h3>
+                  </div>
                 </div>
-                <div>
-                  <small style={{ color: 'green' }}>Active</small>
-                  <h3 className="mb-0" style={{ color: 'green' }}>
-                    {vendorSummary.direct_products?.active || 0}
-                  </h3>
-                </div>
-                <div>
-                  <small style={{ color: 'red' }}>Inactive</small>
-                  <h3 className="mb-0" style={{ color: 'red' }}>
-                    {vendorSummary.direct_products?.inactive || 0}
-                  </h3>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
+              </Card.Body>
+            </Card>
+          </div>
 
-        {/* DMC Vendor Products */}
-        <div className="col-md-6 mt-3">
-          <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
-            <Card.Body>
-              <h5 className="mb-2">DMC Vendor Products</h5>
-              <div className="d-flex justify-content-around">
-                <div>
-                  <small>Total</small>
-                  <h3 className="mb-0" style={{ color: 'purple' }}>
-                    {vendorSummary.dmc_products?.total || 0}
-                  </h3>
+          {/* DMC Vendor Products */}
+          <div className="col-md-6 mt-3">
+            <Card className="shadow-sm text-center" style={{ borderTop: '3px solid purple' }}>
+              <Card.Body>
+                <h5 className="mb-2">DMC Vendor Products</h5>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <small>Total</small>
+                    <h3 className="mb-0" style={{ color: 'purple' }}>
+                      {vendorSummary.dmc_products?.total || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'green' }}>Active</small>
+                    <h3 className="mb-0" style={{ color: 'green' }}>
+                      {vendorSummary.dmc_products?.active || 0}
+                    </h3>
+                  </div>
+                  <div>
+                    <small style={{ color: 'red' }}>Inactive</small>
+                    <h3 className="mb-0" style={{ color: 'red' }}>
+                      {vendorSummary.dmc_products?.inactive || 0}
+                    </h3>
+                  </div>
                 </div>
-                <div>
-                  <small style={{ color: 'green' }}>Active</small>
-                  <h3 className="mb-0" style={{ color: 'green' }}>
-                    {vendorSummary.dmc_products?.active || 0}
-                  </h3>
-                </div>
-                <div>
-                  <small style={{ color: 'red' }}>Inactive</small>
-                  <h3 className="mb-0" style={{ color: 'red' }}>
-                    {vendorSummary.dmc_products?.inactive || 0}
-                  </h3>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
+              </Card.Body>
+            </Card>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Product Summary Collapsible Section */}
-      <Card className="mb-4">
-        <Card.Header
-          onClick={() => setShowProductSummary(!showProductSummary)}
-          style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
-        >
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-0 d-flex justify-content-between align-items-center">Product Summary</h5>
-            <span>
-              {showProductSummary ? (
-                <i className="bi bi-chevron-up"></i>
-              ) : (
-                <i className="bi bi-chevron-down"></i>
-              )}
-            </span>
-          </div>
-        </Card.Header>
-        <Card.Body className={showProductSummary ? '' : 'd-none'}>
-          {/* Vendor Categories */}
-          {vendorSummary?.vendor_categories && (
-            <div className="row mt-2">
-              {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
-                const categoryTitles = {
-                  essentials: 'Essentials',
-                  non_essentials: 'Non Essentials',
-                  lifestyle: 'Lifestyle',
-                  hotels: 'Hotels',
-                  education: 'Education',
-                };
-
-                const categoryColors = {
-                  essentials: '#007bff',
-                  non_essentials: '#17a2b8',
-                  lifestyle: '#6f42c1',
-                  hotels: '#fd7e14',
-                  education: '#20c997',
-                };
-
-                return (
-                  <div key={key} className="col-md-4 mt-3">
-                    <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
-                      <Card.Body>
-                        <h5 className="mb-2">{categoryTitles[key]}</h5>
-                        <div className="d-flex justify-content-around">
-                          <div>
-                            <small>Total</small>
-                            <h6>{value.total}</h6>
-                          </div>
-                          <div>
-                            <small style={{ color: 'green' }}>Active</small>
-                            <h6 style={{ color: 'green' }}>{value.active}</h6>
-                          </div>
-                          <div>
-                            <small style={{ color: 'red' }}>Inactive</small>
-                            <h6 style={{ color: 'red' }}>{value.inactive}</h6>
-                          </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                );
-              })}
+      {activeTab !== 'api' && (
+        <Card className="mb-4">
+          <Card.Header
+            onClick={() => setShowProductSummary(!showProductSummary)}
+            style={{ cursor: 'pointer', backgroundColor: '#f8f9fa' }}
+          >
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="mb-0 d-flex justify-content-between align-items-center">Product Summary</h5>
+              <span>
+                {showProductSummary ? (
+                  <i className="bi bi-chevron-up"></i>
+                ) : (
+                  <i className="bi bi-chevron-down"></i>
+                )}
+              </span>
             </div>
-          )}
+          </Card.Header>
+          <Card.Body className={showProductSummary ? '' : 'd-none'}>
+            {/* Vendor Categories */}
+            {vendorSummary?.vendor_categories && (
+              <div className="row mt-2">
+                {Object.entries(vendorSummary.vendor_categories).map(([key, value]) => {
+                  const categoryTitles = {
+                    essentials: 'Essentials',
+                    non_essentials: 'Non-Essentials',
+                    lifestyle: 'Lifestyle',
+                    hotels: 'Hotels',
+                    education: 'Education',
+                  };
 
-          {/* Total Products Summary */}
-          {vendorSummary?.total_products && (
-            <div className="row mt-4">
-              <div className="col-md-12">
-                <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
-                  <Card.Body>
-                    <h5 className="mb-2">Total Products Summary</h5>
-                    <div className="d-flex justify-content-around">
-                      <div>
-                        <small>Total</small>
-                        <h6>{vendorSummary.total_products.total}</h6>
-                      </div>
-                      <div>
-                        <small style={{ color: 'green' }}>Active</small>
-                        <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
-                      </div>
-                      <div>
-                        <small style={{ color: 'red' }}>Inactive</small>
-                        <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
-                      </div>
+                  const categoryColors = {
+                    essentials: '#007bff',
+                    non_essentials: '#17a2b8',
+                    lifestyle: '#6f42c1',
+                    hotels: '#fd7e14',
+                    education: '#20c997',
+                  };
+
+                  return (
+                    <div key={key} className="col-md-4 mt-3">
+                      <Card className="shadow-sm text-center" style={{ borderTop: `3px solid ${categoryColors[key]}` }}>
+                        <Card.Body>
+                          <h5 className="mb-2">{categoryTitles[key]}</h5>
+                          <div className="d-flex justify-content-around">
+                            <div>
+                              <small>Total</small>
+                              <h6>{value.total}</h6>
+                            </div>
+                            <div>
+                              <small style={{ color: 'green' }}>Active</small>
+                              <h6 style={{ color: 'green' }}>{value.active}</h6>
+                            </div>
+                            <div>
+                              <small style={{ color: 'red' }}>Inactive</small>
+                              <h6 style={{ color: 'red' }}>{value.inactive}</h6>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
                     </div>
-                  </Card.Body>
-                </Card>
+                  );
+                })}
               </div>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
+            )}
+
+            {/* Total Products Summary */}
+            {vendorSummary?.total_products && (
+              <div className="row mt-4">
+                <div className="col-md-12">
+                  <Card className="shadow-sm text-center" style={{ borderTop: '3px solid #6c757d' }}>
+                    <Card.Body>
+                      <h5 className="mb-2">Total Products Summary</h5>
+                      <div className="d-flex justify-content-around">
+                        <div>
+                          <small>Total</small>
+                          <h6>{vendorSummary.total_products.total}</h6>
+                        </div>
+                        <div>
+                          <small style={{ color: 'green' }}>Active</small>
+                          <h6 style={{ color: 'green' }}>{vendorSummary.total_products.active}</h6>
+                        </div>
+                        <div>
+                          <small style={{ color: 'red' }}>Inactive</small>
+                          <h6 style={{ color: 'red' }}>{vendorSummary.total_products.inactive}</h6>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
+      )}
 
       {/* Vendor Management Tabs */}
       <Tabs
-  activeKey={activeTab}
-  onSelect={handleTabChange}
-  className="mb-4"
->
-  <Tab eventKey="all" title={
-    <div className="d-flex align-items-center">
-      All Vendors ({vendorCounts.all})
-      {tabLoading && activeTab === 'all' && 
-        <Spinner animation="border" size="sm" className="ms-2" />
-      }
-    </div>
-  }>
-    <div className="mb-4 row">
-      <div className="col-md-6 mb-3 mb-md-0">
-        <Form.Group>
-          <Form.Label>Search Vendors</Form.Label>
-          <div className="position-relative">
-            <Form.Control
-              type="text"
-              placeholder="Search by name, email, phone..."
-              onChange={handleSearchChange}
-              value={searchTerm}
-              disabled={tabLoading}
-            />
-            {searchLoading && (
-              <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
-                <Spinner animation="border" size="sm" />
-              </div>
-            )}
+        activeKey={activeTab}
+        onSelect={handleTabChange}
+        className="mb-4"
+      >
+        <Tab eventKey="all" title={
+          <div className="d-flex align-items-center">
+            All Vendors ({vendorCounts.all})
+            {tabLoading && activeTab === 'all' &&
+              <Spinner animation="border" size="sm" className="ms-2" />
+            }
           </div>
-        </Form.Group>
-      </div>
-      <div className="col-md-6">
-        <Form.Group>
-          <Form.Label>Filter by Country</Form.Label>
-          <div className="position-relative">
-            <Form.Select
-              value={selectedCountry}
-              onChange={handleCountryChange}
-              disabled={tabLoading}
-            >
-              <option value="">All Countries</option>
-              {Object.entries(countryCodeToName).map(([code, name]) => (
-                <option key={code} value={code}>
-                  {name}
-                </option>
-              ))}
-            </Form.Select>
-            {countryLoading && (
-              <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
-                <Spinner animation="border" size="sm" />
-              </div>
-            )}
+        }>
+          <div className="mb-4 row">
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Form.Group>
+                <Form.Label>Search Vendors</Form.Label>
+                <div className="position-relative">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search by name, email, phone..."
+                    onChange={handleSearchChange}
+                    value={searchTerm}
+                    disabled={tabLoading}
+                  />
+                  {searchLoading && (
+                    <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Form.Group>
+                <Form.Label>Filter by Country</Form.Label>
+                <div className="position-relative">
+                  <Form.Select
+                    value={selectedCountry}
+                    onChange={handleCountryChange}
+                    disabled={tabLoading}
+                  >
+                    <option value="">All Countries</option>
+                    {Object.entries(countryCodeToName).map(([code, name]) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {countryLoading && (
+                    <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+            <div className="col-md-4">
+              <Form.Group>
+                <Form.Label>Filter by Category</Form.Label>
+                <div className="position-relative">
+                  <Form.Select
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                    disabled={tabLoading}
+                  >
+                    {CATEGORY_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {categoryLoading && (
+                    <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
           </div>
-        </Form.Group>
-      </div>
-    </div>
-  </Tab>
-  
-  {/* <Tab eventKey="direct" title={
-    <div className="d-flex align-items-center">
-      Direct Vendors ({vendorCounts.direct})
-      {tabLoading && activeTab === 'direct' && 
-        <Spinner animation="border" size="sm" className="ms-2" />
-      }
-    </div>
-  }> */}
-  <Tab eventKey="direct" title={
-  <div className="d-flex align-items-center">
-    Direct Vendors ({vendorCounts.direct})
-    {tabLoading && activeTab === 'direct' && 
-      <Spinner animation="border" size="sm" className="ms-2" />
-    }
-  </div>
-}>
-    <div className="mb-4 row">
-      <div className="col-md-6 mb-3 mb-md-0">
-        <Form.Group>
-          <Form.Label>Search Vendors</Form.Label>
-          <div className="position-relative">
-            <Form.Control
-              type="text"
-              placeholder="Search by name, email, phone..."
-              onChange={handleSearchChange}
-              value={searchTerm}
-              disabled={tabLoading}
-            />
-            {searchLoading && (
-              <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
-                <Spinner animation="border" size="sm" />
-              </div>
-            )}
-          </div>
-        </Form.Group>
-      </div>
-      <div className="col-md-6">
-        <Form.Group>
-          <Form.Label>Filter by Country</Form.Label>
-          <div className="position-relative">
-            <Form.Select
-              value={selectedCountry}
-              onChange={handleCountryChange}
-              disabled={tabLoading}
-            >
-              <option value="">All Countries</option>
-              {Object.entries(countryCodeToName).map(([code, name]) => (
-                <option key={code} value={code}>
-                  {name}
-                </option>
-              ))}
-            </Form.Select>
-            {countryLoading && (
-              <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
-                <Spinner animation="border" size="sm" />
-              </div>
-            )}
-          </div>
-        </Form.Group>
-      </div>
-    </div>
-  </Tab>
-  
-  <Tab eventKey="dmc" title={
-    <div className="d-flex align-items-center">
-      DMC Vendors ({vendorCounts.dmc})
-      {tabLoading && activeTab === 'dmc' && 
-        <Spinner animation="border" size="sm" className="ms-2" />
-      }
-    </div>
-  }>
-    <div className="mb-4 row">
-      <div className="col-md-6 mb-3 mb-md-0">
-        <Form.Group>
-          <Form.Label>Search Vendors</Form.Label>
-          <div className="position-relative">
-            <Form.Control
-              type="text"
-              placeholder="Search by name, email, phone..."
-              onChange={handleSearchChange}
-              value={searchTerm}
-              disabled={tabLoading}
-            />
-            {searchLoading && (
-              <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
-                <Spinner animation="border" size="sm" />
-              </div>
-            )}
-          </div>
-        </Form.Group>
-      </div>
-      <div className="col-md-6">
-        <Form.Group>
-          <Form.Label>Filter by Country</Form.Label>
-          <div className="position-relative">
-            <Form.Select
-              value={selectedCountry}
-              onChange={handleCountryChange}
-              disabled={tabLoading}
-            >
-              <option value="">All Countries</option>
-              {Object.entries(countryCodeToName).map(([code, name]) => (
-                <option key={code} value={code}>
-                  {name}
-                </option>
-              ))}
-            </Form.Select>
-            {countryLoading && (
-              <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
-                <Spinner animation="border" size="sm" />
-              </div>
-            )}
-          </div>
-        </Form.Group>
-      </div>
-    </div>
-  </Tab>
-</Tabs>
+        </Tab>
 
-{/* Main content area with loading indication */}
-{/* {tabLoading || searchLoading || countryLoading ? (
-  <div className="text-center py-5">
-    <Spinner animation="border" variant="primary" />
-    <p className="mt-3">
-      {tabLoading && `Loading ${activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC'} Vendors...`}
-      {searchLoading && !tabLoading && "Searching vendors..."}
-      {countryLoading && !tabLoading && !searchLoading && "Filtering by country..."}
-    </p>
-  </div>
-) : (
-  <>
-    <div className="mb-3">
-      <p>
-        Showing {vendors.length} of {pagination.total} vendors
-        {searchTerm && <span> matching "<strong>{searchTerm}</strong>"</span>}
-        {selectedCountry && <span> in <strong>{countryCodeToName[selectedCountry]}</strong></span>}
-      </p>
-    </div>
-    
-    {renderVendorCards()}
-    
-    {pagination.totalPages > 1 && renderPagination()}
-  </>
-)}
-       */}
-{(tabLoading || searchLoading || countryLoading) && vendors.length === 0 ? (
-  <div className="text-center py-5">
-    <Spinner animation="border" variant="primary" />
-    <p className="mt-3">
-      {tabLoading && `Loading ${activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC'} Vendors...`}
-      {searchLoading && !tabLoading && "Searching vendors..."}
-      {countryLoading && !tabLoading && !searchLoading && "Filtering by country..."}
-    </p>
-  </div>
-) : (
-  <>
-    <div className="mb-3">
-      <p>
-        Showing {vendors.length} of {pagination.total} vendors
-        {searchTerm && <span> matching "<strong>{searchTerm}</strong>"</span>}
-        {selectedCountry && <span> in <strong>{countryCodeToName[selectedCountry]}</strong></span>}
-      </p>
-    </div>
-    
-    {renderVendorCards()}
-    
-    {pagination.totalPages > 1 && renderPagination()}
-  </>
-)}
+        <Tab eventKey="direct" title={
+          <div className="d-flex align-items-center">
+            Direct Vendors ({vendorCounts.direct})
+            {tabLoading && activeTab === 'direct' &&
+              <Spinner animation="border" size="sm" className="ms-2" />
+            }
+          </div>
+        }>
+          <div className="mb-4 row">
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Form.Group>
+                <Form.Label>Search Vendors</Form.Label>
+                <div className="position-relative">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search by name, email, phone..."
+                    onChange={handleSearchChange}
+                    value={searchTerm}
+                    disabled={tabLoading}
+                  />
+                  {searchLoading && (
+                    <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Form.Group>
+                <Form.Label>Filter by Country</Form.Label>
+                <div className="position-relative">
+                  <Form.Select
+                    value={selectedCountry}
+                    onChange={handleCountryChange}
+                    disabled={tabLoading}
+                  >
+                    <option value="">All Countries</option>
+                    {Object.entries(countryCodeToName).map(([code, name]) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {countryLoading && (
+                    <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+            <div className="col-md-4">
+              <Form.Group>
+                <Form.Label>Filter by Category</Form.Label>
+                <div className="position-relative">
+                  <Form.Select
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                    disabled={tabLoading}
+                  >
+                    {CATEGORY_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {categoryLoading && (
+                    <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+          </div>
+        </Tab>
+
+        <Tab eventKey="dmc" title={
+          <div className="d-flex align-items-center">
+            DMC Vendors ({vendorCounts.dmc})
+            {tabLoading && activeTab === 'dmc' &&
+              <Spinner animation="border" size="sm" className="ms-2" />
+            }
+          </div>
+        }>
+          <div className="mb-4 row">
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Form.Group>
+                <Form.Label>Search Vendors</Form.Label>
+                <div className="position-relative">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search by name, email, phone..."
+                    onChange={handleSearchChange}
+                    value={searchTerm}
+                    disabled={tabLoading}
+                  />
+                  {searchLoading && (
+                    <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Form.Group>
+                <Form.Label>Filter by Country</Form.Label>
+                <div className="position-relative">
+                  <Form.Select
+                    value={selectedCountry}
+                    onChange={handleCountryChange}
+                    disabled={tabLoading}
+                  >
+                    <option value="">All Countries</option>
+                    {Object.entries(countryCodeToName).map(([code, name]) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {countryLoading && (
+                    <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+            <div className="col-md-4">
+              <Form.Group>
+                <Form.Label>Filter by Category</Form.Label>
+                <div className="position-relative">
+                  <Form.Select
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                    disabled={tabLoading}
+                  >
+                    {CATEGORY_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {categoryLoading && (
+                    <div style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
+            </div>
+          </div>
+        </Tab>
+
+        {/* API Vendors Tab */}
+        <Tab eventKey="api" title={
+          <div className="d-flex align-items-center">
+            API Vendors ({API_VENDORS.length})
+            {tabLoading && activeTab === 'api' &&
+              <Spinner animation="border" size="sm" className="ms-2" />
+            }
+          </div>
+        }>
+          <div className="mb-4">
+            <Form.Group>
+              <Form.Label>Search API Vendors</Form.Label>
+              <div className="position-relative">
+                <Form.Control
+                  type="text"
+                  placeholder="Search by name or description..."
+                  onChange={handleApiSearchChange}
+                  value={apiSearchTerm}
+                  disabled={tabLoading}
+                />
+              </div>
+            </Form.Group>
+          </div>
+
+          {renderApiVendorCards()}
+        </Tab>
+      </Tabs>
+
+      {/* Main content area with loading indication */}
+      {activeTab !== 'api' && (
+        (tabLoading || searchLoading || countryLoading || categoryLoading) && vendors.length === 0 ? (
+          <div className="text-center py-5">
+            <Spinner animation="border" variant="primary" />
+            <p className="mt-3">
+              {tabLoading && `Loading ${activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC'} Vendors...`}
+              {searchLoading && !tabLoading && "Searching vendors..."}
+              {countryLoading && !tabLoading && !searchLoading && "Filtering by country..."}
+              {categoryLoading && !tabLoading && !searchLoading && !countryLoading && "Filtering by category..."}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="mb-3">
+              <p>
+                Showing {vendors.length} of {pagination.total} vendors
+                {searchTerm && <span> matching "<strong>{searchTerm}</strong>"</span>}
+                {selectedCountry && <span> in <strong>{countryCodeToName[selectedCountry]}</strong></span>}
+                {selectedCategory && <span> in <strong>{CATEGORY_OPTIONS.find(opt => opt.value === selectedCategory)?.label}</strong></span>}
+              </p>
+            </div>
+
+            {renderVendorCards()}
+
+            {loading === true ? "" :(pagination.totalPages > 1 && renderPagination())}
+          </>
+        )
+      )}
+
       {/* Vendor Details Modal */}
       {selectedVendor && (
         <Modal
@@ -1368,11 +1450,11 @@ const handleCountryChange = (e) => {
                 <p><strong>Location:</strong> {selectedVendor.lat_long || 'N/A'}</p>
               </div>
             </div>
-            
+
             <h5>Business Description</h5>
             <hr />
             <p>{selectedVendor.business_description || 'No description available.'}</p>
-            
+
             <h5>Category Summary</h5>
             <hr />
             <div className="row">
@@ -1419,15 +1501,15 @@ const handleCountryChange = (e) => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button 
-              variant="success" 
+            <Button
+              variant="success"
               onClick={() => downloadVendorExcel(selectedVendor)}
               disabled={loadingExcel}
             >
               {loadingExcel ? 'Generating...' : 'Download Excel'}
             </Button>
-            <Button 
-              variant="secondary" 
+            <Button
+              variant="secondary"
               onClick={() => setShowDetailsModal(false)}
             >
               Close
@@ -1435,10 +1517,10 @@ const handleCountryChange = (e) => {
           </Modal.Footer>
         </Modal>
       )}
-      
+
       {/* Global loading overlay for Excel generation */}
       {loadingExcel && (
-        <div 
+        <div
           style={{
             position: 'fixed',
             top: 0,
