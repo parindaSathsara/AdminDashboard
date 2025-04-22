@@ -53,10 +53,10 @@ function PaymentRejection(props) {
     event.preventDefault();
     const form = event.currentTarget;
 
-    if (form.checkValidity() === false || (formData.paidAmount > balanceAmount.balanceAmountToPay && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
+    if (form.checkValidity() === false || (parseFloat(formData.paidAmount) >= paymentDataSet.total_amount && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
       event.stopPropagation();
       setValidated(true);
-      if ((formData.paidAmount > balanceAmount.balanceAmountToPay && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
+      if ((parseFloat(formData.paidAmount) >= paymentDataSet.total_amount && formData.reasonRejection === "Indicates that only a portion of the total amount has been paid")) {
         Swal.fire({
           title: "No Payment Required",
           text: "The balance has already been cleared. No payment is due.",
@@ -161,7 +161,7 @@ function PaymentRejection(props) {
               onChange={handleFormData}
               required
             />
-            {formData.paidAmount > balanceAmount.balanceAmountToPay && (
+            {parseFloat(formData.paidAmount) > paymentDataSet.total_amount && (
               <CFormFeedback invalid>Paid amount cannot be greater than the balance amount.</CFormFeedback>
             )}
           </CCol>
