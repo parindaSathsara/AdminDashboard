@@ -767,6 +767,98 @@ const VendorStats = () => {
   };
 
   // Render vendor cards
+  // const renderVendorCards = () => {
+  //   if (vendors.length === 0) {
+  //     return (
+  //       <div className="text-center py-5">
+  //         <p>No vendors found. Try adjusting your search or filters.</p>
+  //       </div>
+  //     );
+  //   }
+
+  //   return (
+  //     <div className="row">
+  //       {loading === true ?  <div className="bg-white p-4 rounded d-flex flex-column align-items-center">
+  //           <Spinner animation="border" variant="primary" />
+  //           <p className="mt-2 mb-0">Loading Vendors...</p>
+  //         </div> :  vendors.map(vendor => (
+  //         <div key={vendor.id} className="col-md-6 col-lg-4 mb-4">
+  //           <Card className="h-100 shadow-sm">
+  //             <Card.Header className="d-flex justify-content-between align-items-center">
+  //               <h5 className="m-0 text-truncate" title={vendor.company_name}>
+  //                 {vendor.company_name}
+  //               </h5>
+  //               <Badge bg={vendor.status === "1" ? "success" : "danger"}>
+  //                 {vendor.status === "1" ? "Active" : "Inactive"}
+  //               </Badge>
+  //             </Card.Header>
+  //             <Card.Body>
+  //               <p className="mb-1">
+  //                 <strong>Contact:</strong>{" "}
+  //                 {`${vendor.first_name || ''} ${vendor.last_name || ''}`.trim() || 'N/A'}
+  //               </p>
+  //               <p className="mb-1">
+  //                 <strong>Phone:</strong> {vendor.phone || 'N/A'}
+  //               </p>
+  //               <p className="mb-1">
+  //                 <strong>Email:</strong> {vendor.email || 'N/A'}
+  //               </p>
+  //               <p className="mb-3">
+  //                 <strong>Address:</strong>{" "}
+  //                 <span title={vendor.address}>{vendor.address || 'N/A'}</span>
+  //               </p>
+
+  //               <div className="d-flex flex-wrap mb-2">
+  //                 {vendor.essentials_count > 0 && (
+  //                   <Badge bg="primary" className="me-1 mb-1">
+  //                     Essentials: {vendor.essentials_count}
+  //                   </Badge>
+  //                 )}
+  //                 {vendor.non_essentials_count > 0 && (
+  //                   <Badge bg="info" className="me-1 mb-1">
+  //                     Non-Essentials: {vendor.non_essentials_count}
+  //                   </Badge>
+  //                 )}
+  //                 {vendor.lifestyles_count > 0 && (
+  //                   <Badge bg="secondary" className="me-1 mb-1">
+  //                     Lifestyle: {vendor.lifestyles_count}
+  //                   </Badge>
+  //                 )}
+  //                 {vendor.hotels_count > 0 && (
+  //                   <Badge bg="warning" text="dark" className="me-1 mb-1">
+  //                     Hotels: {vendor.hotels_count}
+  //                   </Badge>
+  //                 )}
+  //                 {vendor.education_count > 0 && (
+  //                   <Badge bg="success" className="me-1 mb-1">
+  //                     Education: {vendor.education_count}
+  //                   </Badge>
+  //                 )}
+  //               </div>
+  //             </Card.Body>
+  //             <Card.Footer className="d-flex justify-content-between">
+  //               <Button
+  //                 variant="outline-primary"
+  //                 size="sm"
+  //                 onClick={() => showVendorDetails(vendor)}
+  //               >
+  //                 View Details
+  //               </Button>
+  //               <Button
+  //                 variant="outline-success"
+  //                 size="sm"
+  //                 onClick={() => downloadVendorExcel(vendor)}
+  //                 disabled={loadingExcel}
+  //               >
+  //                 {loadingExcel ? 'Generating...' : 'Download Excel'}
+  //               </Button>
+  //             </Card.Footer>
+  //           </Card>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
   const renderVendorCards = () => {
     if (vendors.length === 0) {
       return (
@@ -775,87 +867,120 @@ const VendorStats = () => {
         </div>
       );
     }
-
+  
     return (
       <div className="row">
-        {loading === true ?  <div className="bg-white p-4 rounded d-flex flex-column align-items-center">
+        {loading === true ? (
+          <div className="bg-white p-4 rounded d-flex flex-column align-items-center">
             <Spinner animation="border" variant="primary" />
             <p className="mt-2 mb-0">Loading Vendors...</p>
-          </div> :  vendors.map(vendor => (
-          <div key={vendor.id} className="col-md-6 col-lg-4 mb-4">
-            <Card className="h-100 shadow-sm">
-              <Card.Header className="d-flex justify-content-between align-items-center">
-                <h5 className="m-0 text-truncate" title={vendor.company_name}>
-                  {vendor.company_name}
-                </h5>
-                <Badge bg={vendor.status === "1" ? "success" : "danger"}>
-                  {vendor.status === "1" ? "Active" : "Inactive"}
-                </Badge>
-              </Card.Header>
-              <Card.Body>
-                <p className="mb-1">
-                  <strong>Contact:</strong>{" "}
-                  {`${vendor.first_name || ''} ${vendor.last_name || ''}`.trim() || 'N/A'}
-                </p>
-                <p className="mb-1">
-                  <strong>Phone:</strong> {vendor.phone || 'N/A'}
-                </p>
-                <p className="mb-1">
-                  <strong>Email:</strong> {vendor.email || 'N/A'}
-                </p>
-                <p className="mb-3">
-                  <strong>Address:</strong>{" "}
-                  <span title={vendor.address}>{vendor.address || 'N/A'}</span>
-                </p>
-
-                <div className="d-flex flex-wrap mb-2">
-                  {vendor.essentials_count > 0 && (
-                    <Badge bg="primary" className="me-1 mb-1">
-                      Essentials: {vendor.essentials_count}
-                    </Badge>
-                  )}
-                  {vendor.non_essentials_count > 0 && (
-                    <Badge bg="info" className="me-1 mb-1">
-                      Non-Essentials: {vendor.non_essentials_count}
-                    </Badge>
-                  )}
-                  {vendor.lifestyles_count > 0 && (
-                    <Badge bg="secondary" className="me-1 mb-1">
-                      Lifestyle: {vendor.lifestyles_count}
-                    </Badge>
-                  )}
-                  {vendor.hotels_count > 0 && (
-                    <Badge bg="warning" text="dark" className="me-1 mb-1">
-                      Hotels: {vendor.hotels_count}
-                    </Badge>
-                  )}
-                  {vendor.education_count > 0 && (
-                    <Badge bg="success" className="me-1 mb-1">
-                      Education: {vendor.education_count}
-                    </Badge>
-                  )}
-                </div>
-              </Card.Body>
-              <Card.Footer className="d-flex justify-content-between">
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={() => showVendorDetails(vendor)}
-                >
-                  View Details
-                </Button>
-                <Button
-                  variant="outline-success"
-                  size="sm"
-                  onClick={() => downloadVendorExcel(vendor)}
-                  disabled={loadingExcel}
-                >
-                  {loadingExcel ? 'Generating...' : 'Download Excel'}
-                </Button>
-              </Card.Footer>
-            </Card>
           </div>
-        ))}
+        ) : (
+          vendors.map(vendor => (
+            <div key={vendor.id} className="col-md-6 col-lg-4 mb-4">
+              <Card className="h-100 shadow-sm">
+                <Card.Header className="d-flex justify-content-between align-items-center">
+                  <h5 className="m-0 text-truncate" title={vendor.company_name}>
+                    {vendor.company_name}
+                  </h5>
+                  <Badge bg={vendor.status === "1" ? "success" : "danger"}>
+                    {vendor.status === "1" ? "Active" : "Inactive"}
+                  </Badge>
+                </Card.Header>
+                <Card.Body>
+                  <p className="mb-1">
+                    <strong>Contact:</strong>{" "}
+                    {`${vendor.first_name || ''} ${vendor.last_name || ''}`.trim() || 'N/A'}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Phone:</strong> {vendor.phone || 'N/A'}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Email:</strong> {vendor.email || 'N/A'}
+                  </p>
+                  <p className="mb-3">
+                    <strong>Address:</strong>{" "}
+                    <span title={vendor.address}>{vendor.address || 'N/A'}</span>
+                  </p>
+  
+                  <div className="d-flex flex-wrap mb-2">
+                    {/* Show product counts */}
+                    {vendor.essentials_count > 0 && (
+                      <Badge bg="primary" className="me-1 mb-1">
+                        Essentials: {vendor.essentials_count}
+                      </Badge>
+                    )}
+                    {vendor.non_essentials_count > 0 && (
+                      <Badge bg="info" className="me-1 mb-1">
+                        Non-Essentials: {vendor.non_essentials_count}
+                      </Badge>
+                    )}
+                    {vendor.lifestyles_count > 0 && (
+                      <Badge bg="secondary" className="me-1 mb-1">
+                        Lifestyle: {vendor.lifestyles_count}
+                      </Badge>
+                    )}
+                    {vendor.hotels_count > 0 && (
+                      <Badge bg="warning" text="dark" className="me-1 mb-1">
+                        Hotels: {vendor.hotels_count}
+                      </Badge>
+                    )}
+                    {vendor.education_count > 0 && (
+                      <Badge bg="success" className="me-1 mb-1">
+                        Education: {vendor.education_count}
+                      </Badge>
+                    )}
+                    
+                    {/* Show country counts only if they exist */}
+                    
+                     {'essentials_country_count' in vendor && vendor.essentials_country_count > 0 && (
+                      <Badge bg="primary" className="me-1 mb-1">
+                        Essentials in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.essentials_country_count}
+                      </Badge>
+                    )}
+                    {'non_essentials_country_count' in vendor && vendor.non_essentials_country_count > 0 && (
+                      <Badge bg="info" className="me-1 mb-1">
+                        Non-Essentials in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.non_essentials_country_count}
+                      </Badge>
+                    )}
+                    {'lifestyles_country_count' in vendor && vendor.lifestyles_country_count > 0 && (
+                      <Badge bg="secondary" className="me-1 mb-1">
+                        Lifestyle in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.lifestyles_country_count}
+                      </Badge>
+                    )}
+                    {'hotels_country_count' in vendor && vendor.hotels_country_count > 0 && (
+                      <Badge bg="warning" text="dark" className="me-1 mb-1">
+                        Hotels in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.hotels_country_count}
+                      </Badge>
+                    )}
+                    {'education_country_count' in vendor && vendor.education_country_count > 0 && (
+                      <Badge bg="success" className="me-1 mb-1">
+                        Education in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.education_country_count}
+                      </Badge>
+                    )}
+                  </div>
+                </Card.Body>
+                <Card.Footer className="d-flex justify-content-between">
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => showVendorDetails(vendor)}
+                  >
+                    View Details
+                  </Button>
+                  <Button
+                    variant="outline-success"
+                    size="sm"
+                    onClick={() => downloadVendorExcel(vendor)}
+                    disabled={loadingExcel}
+                  >
+                    {loadingExcel ? 'Generating...' : 'Download Excel'}
+                  </Button>
+                </Card.Footer>
+              </Card>
+            </div>
+          ))
+        )}
       </div>
     );
   };
