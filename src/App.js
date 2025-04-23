@@ -205,27 +205,73 @@ function App() {
 
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (newChat, chatId) => {
-    const audio = new Audio(ChatAlert);
-    audio.play().catch((error) => {
-      console.log('Audio play failed:', error);
-    });
+  // const addNotification = (newChat, chatId) => {
+  //   const audio = new Audio(ChatAlert);
+  //   audio.play().catch((error) => {
+  //     console.log('Audio play failed:', error);
+  //   });
 
-    const id = Date.now();
-    const newNotification = {
-      id: chatId.toString(),
-      image: newChat?.chat_avatar ?? "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
-      title: 'A New Chat Has Arrived!',
-      description: newChat?.chat_name,
-      user_name: newChat?.last_message?.name,
-      message: newChat?.last_message?.value
-    };
+  //   const id = Date.now();
+  //   const newNotification = {
+  //     id: chatId.toString(),
+  //     // image: newChat?.chat_avatar ?? "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
+  //     image: newChat?.chat_avatar?.trim() ? newChat.chat_avatar : "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
 
-    setNotifications(prev => [...prev, newNotification]);
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== chatId.toString()));
-    }, 5000); // 5 seconds
+  //     title: 'A New Chat Has Arrived!',
+  //     description: newChat?.chat_name,
+  //     user_name: newChat?.last_message?.name,
+  //     message: newChat?.last_message?.value
+  //   };
+
+  //   setNotifications(prev => [...prev, newNotification]);
+  //   setTimeout(() => {
+  //     setNotifications(prev => prev.filter(n => n.id !== chatId.toString()));
+  //   }, 5000); // 5 seconds
+  // };
+
+  // Add a state to track recently notified chats
+const [recentlyNotifiedChats, setRecentlyNotifiedChats] = useState({});
+
+const addNotification = (newChat, chatId) => {
+  // Check if we've recently shown a notification for this chat
+  if (recentlyNotifiedChats[chatId]) {
+    return; // Skip showing another notification
+  }
+  
+  const audio = new Audio(ChatAlert);
+  audio.play().catch((error) => {
+    console.log('Audio play failed:', error);
+  });
+  
+  const id = Date.now();
+  const newNotification = {
+    id: chatId.toString(),
+    image: newChat?.chat_avatar?.trim() ? newChat.chat_avatar : "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
+    title: 'A New Chat Has Arrived!',
+    description: newChat?.chat_name,
+    user_name: newChat?.last_message?.name,
+    message: newChat?.last_message?.value
   };
+  
+  // Mark this chat as recently notified
+  setRecentlyNotifiedChats(prev => ({
+    ...prev,
+    [chatId]: true
+  }));
+  
+  setNotifications(prev => [...prev, newNotification]);
+  
+  setTimeout(() => {
+    setNotifications(prev => prev.filter(n => n.id !== chatId.toString()));
+    
+    // After notification expires, remove from recently notified list
+    setRecentlyNotifiedChats(prev => {
+      const updated = {...prev};
+      delete updated[chatId];
+      return updated;
+    });
+  }, 5000); // 5 seconds
+};
 
   const useChatNotifications = () => {
     const q = query(collection(db, "customer-chat-lists"), orderBy("updatedAt", "desc"));
