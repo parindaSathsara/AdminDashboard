@@ -319,6 +319,7 @@ export default function HotelsOrderView(props) {
   const [basicDetails, setBasicDetails] = useState([])
 
   useEffect(() => {
+
     fetchBookingData(props.productData);
     setBasicDetails(props?.productData)
 
@@ -431,7 +432,7 @@ export default function HotelsOrderView(props) {
             </div>
 
             <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <CImage
+              {/* <CImage
                 src={basicDetails?.product_image}
                 fluid
                 style={{
@@ -440,7 +441,19 @@ export default function HotelsOrderView(props) {
                   objectFit: 'cover',
                   borderRadius: '6px'
                 }}
-              />
+              /> */}
+<CImage
+  src={basicDetails?.product_image?.includes(',')
+    ? basicDetails.product_image.split(',')[0]
+    : basicDetails?.product_image}
+  fluid
+  style={{
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: '6px'
+  }}
+/>
             </div>
           </div>
 
