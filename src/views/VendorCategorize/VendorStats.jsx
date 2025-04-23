@@ -491,13 +491,17 @@ const VendorStats = () => {
   const downloadVendorExcel = async (vendor) => {
     // Show loading indicator
     setLoadingExcel(true);
-
+    // const response = await axios.get('/getVendorDetailsById/'+vendor.id);
+    // console.log("response", response.data);
+    
     // Try to fetch detailed vendor data if available
     let vendorForExcel = vendor;
     try {
       const detailedVendor = await fetchVendorDetails(vendor.id);
       if (detailedVendor) {
         vendorForExcel = detailedVendor;
+        console.log("vendorForExcel",vendorForExcel);
+        
       }
     } catch (error) {
       console.warn('Could not fetch detailed vendor data, using summary data instead:', error);
@@ -530,6 +534,91 @@ const VendorStats = () => {
       }
       data.push([categoryName, count]);
     });
+       // =======================
+    // Detailed Category Section
+    // =======================
+
+     // Essentials Details
+  data.push(['', '']);
+  data.push(['Essentials Details', '']);
+  data.push(['Product Name', 'Description', 'Category 2', 'Category 3', 'Country', 'Status', 'Price']);
+  vendorForExcel.essentials?.forEach(item => {
+    data.push([
+      item.listing_title || 'N/A',
+      item.sub_description || 'N/A',
+      item.product_details?.category2 || 'N/A',
+      item.product_details?.category3 || 'N/A',
+      item.country || 'N/A',
+      item.lisiting_status === "1" ? 'Active' : 'Inactive',
+      item.price || 'N/A'
+    ]);
+  });
+  
+  // Non-Essentials Details
+  data.push(['', '']);
+  data.push(['Non-Essentials Details', '']);
+  data.push(['Product Name', 'Description', 'Category 2', 'Category 3', 'Country', 'Status', 'Price']);
+  vendorForExcel.non_essentials?.forEach(item => {
+    data.push([
+      item.listing_title || 'N/A',
+      item.sub_description || 'N/A',
+      item.product_details?.category2 || 'N/A',
+      item.product_details?.category3 || 'N/A',
+      item.country || 'N/A',
+      item.lisiting_status === "1" ? 'Active' : 'Inactive',
+      item.price || 'N/A'
+    ]);
+  });
+
+    // Lifestyles Details
+    data.push(['', '']);
+    data.push(['Lifestyle Details', '']);
+    data.push(['Name', 'City', 'Attraction Type', 'Preferred', 'Micro Location', 'TripAdvisor Link', 'Status']);
+    vendorForExcel.lifestyles?.forEach(item => {
+      data.push([
+        item.lifestyle_name || 'N/A',
+        item.lifestyle_city || 'N/A',
+        item.lifestyle_attraction_type || 'N/A',
+        item.preferred == 1 ? 'Yes' : 'No',
+        item.micro_location || 'N/A',
+        item.tripadvisor || 'N/A',
+        item.active_status ? 'Active' : 'Inactive'
+      ]);
+    });
+
+    // Education Details
+    data.push(['', '']);
+    data.push(['Education Details', '']);
+    data.push(['Course Name', 'Medium', 'Mode', 'Group Type', 'Free Session', 'Payment Method', 'Status']);
+    vendorForExcel.education?.forEach(item => {
+      data.push([
+        item.course_name || 'N/A',
+        item.medium || 'N/A',
+        item.course_mode || 'N/A',
+        item.group_type || 'N/A',
+        item.free_session || 'N/A',
+        item.payment_method || 'N/A',
+        item.status ? 'Active' : 'Inactive'
+      ]);
+    });
+
+    // Hotel Details
+    data.push(['', '']);
+    data.push(['Hotel Details', '']);
+    data.push(['Hotel Name', 'Star', 'City', 'Address', 'TripAdvisor', 'Start Date', 'End Date', 'Status']);
+    vendorForExcel.hotels?.forEach(item => {
+      data.push([
+        item.hotel_name || 'N/A',
+        item.star_classification || 'N/A',
+        item.city || 'N/A',
+        item.hotel_address || 'N/A',
+        item.trip_advisor_link || 'N/A',
+        item.start_date || 'N/A',
+        item.end_date || 'N/A',
+        item.hotel_status ? 'Active' : 'Inactive'
+      ]);
+    });
+
 
     // Export to Excel 
     const wb = XLSX.utils.book_new();
@@ -935,27 +1024,27 @@ const VendorStats = () => {
                     
                      {'essentials_country_count' in vendor && vendor.essentials_country_count > 0 && (
                       <Badge bg="primary" className="me-1 mb-1">
-                        Essentials in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.essentials_country_count}
+                        Essentials {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.essentials_country_count}
                       </Badge>
                     )}
                     {'non_essentials_country_count' in vendor && vendor.non_essentials_country_count > 0 && (
                       <Badge bg="info" className="me-1 mb-1">
-                        Non-Essentials in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.non_essentials_country_count}
+                        Non-Essentials {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.non_essentials_country_count}
                       </Badge>
                     )}
                     {'lifestyles_country_count' in vendor && vendor.lifestyles_country_count > 0 && (
                       <Badge bg="secondary" className="me-1 mb-1">
-                        Lifestyle in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.lifestyles_country_count}
+                        Lifestyle {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.lifestyles_country_count}
                       </Badge>
                     )}
                     {'hotels_country_count' in vendor && vendor.hotels_country_count > 0 && (
                       <Badge bg="warning" text="dark" className="me-1 mb-1">
-                        Hotels in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.hotels_country_count}
+                        Hotels {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.hotels_country_count}
                       </Badge>
                     )}
                     {'education_country_count' in vendor && vendor.education_country_count > 0 && (
                       <Badge bg="success" className="me-1 mb-1">
-                        Education in {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.education_country_count}
+                        Education {countryCodeToName[selectedCountry] || 'Multiple Countries'} : {vendor.education_country_count}
                       </Badge>
                     )}
                   </div>
