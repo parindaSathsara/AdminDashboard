@@ -40,6 +40,7 @@ axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
 axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
 axios.defaults.data = 'https://staging-admin-api.aahaas.com';
 axios.defaults.url = 'https://dev-gateway.aahaas.com/api';
+axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/';
 
 
 
