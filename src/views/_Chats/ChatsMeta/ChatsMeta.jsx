@@ -807,7 +807,7 @@ function ChatsMeta() {
                           const page = index + 1;
                           // Show only current page and adjacent pages on mobile
                           if (
-                            page === 1 ||
+                            // page === 1 ||
                             // page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
                             (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
                           ) {
@@ -1042,7 +1042,7 @@ function ChatsMeta() {
                   ))}
                 {/* Pagination controls */}
                 {/* Responsive Pagination */}
-                {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
+                {getFilteredChats('Pending').length > pagination.itemsPerPage && (
                   <div className="d-flex justify-content-center mt-3">
                     <Pagination className="flex-wrap justify-content-center">
                       <Pagination.Prev
@@ -1071,12 +1071,12 @@ function ChatsMeta() {
                       )}
 
                       {/* Current page and neighbors */}
-                      {Array.from({ length: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) })
+                      {Array.from({ length: Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage) })
                         .map((_, index) => {
                           const page = index + 1;
                           // Show only current page and adjacent pages on mobile
                           if (
-                            page === 1 ||
+                            // page === 1 ||
                             // page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
                             (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
                           ) {
@@ -1095,21 +1095,21 @@ function ChatsMeta() {
                         })}
 
                       {/* Ellipsis for far pages */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 2 && (
+                      {pagination.currentPage < Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage) - 2 && (
                         <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
                       )}
 
                       {/* Last Page */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 1 && (
+                      {pagination.currentPage < Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage) - 1 && (
                         <Pagination.Item
-                          key={Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
+                          key={Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage)}
                           onClick={() => setPagination(prev => ({
                             ...prev,
-                            currentPage: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
+                            currentPage: Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage)
                           }))}
                           className="mx-1 d-none d-sm-block"
                         >
-                          {Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
+                          {Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage)}
                         </Pagination.Item>
                       )}
 
@@ -1117,13 +1117,13 @@ function ChatsMeta() {
                         onClick={() => setPagination(prev => ({
                           ...prev,
                           currentPage: Math.min(
-                            Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage),
+                            Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage),
                             prev.currentPage + 1
                           )
                         }))}
                         disabled={
                           pagination.currentPage ===
-                          Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
+                          Math.ceil(getFilteredChats('Pending').length / pagination.itemsPerPage)
                         }
                         className="mx-1"
                       />
@@ -1215,7 +1215,7 @@ function ChatsMeta() {
                   ))
                 ))}
                 {/* Responsive Pagination */}
-                {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
+                {getFilteredChats('End').length > pagination.itemsPerPage && (
                   <div className="d-flex justify-content-center mt-3">
                     <Pagination className="flex-wrap justify-content-center">
                       <Pagination.Prev
@@ -1244,12 +1244,12 @@ function ChatsMeta() {
                       )}
 
                       {/* Current page and neighbors */}
-                      {Array.from({ length: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) })
+                      {Array.from({ length: Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) })
                         .map((_, index) => {
                           const page = index + 1;
                           // Show only current page and adjacent pages on mobile
                           if (
-                            page === 1 ||
+                            // page === 1 ||
                             // page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
                             (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
                           ) {
@@ -1268,21 +1268,21 @@ function ChatsMeta() {
                         })}
 
                       {/* Ellipsis for far pages */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 2 && (
+                      {pagination.currentPage < Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) - 2 && (
                         <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
                       )}
 
                       {/* Last Page */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 1 && (
+                      {pagination.currentPage < Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) - 1 && (
                         <Pagination.Item
-                          key={Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
+                          key={Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)}
                           onClick={() => setPagination(prev => ({
                             ...prev,
                             currentPage: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
                           }))}
                           className="mx-1 d-none d-sm-block"
                         >
-                          {Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
+                          {Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)}
                         </Pagination.Item>
                       )}
 
@@ -1290,13 +1290,13 @@ function ChatsMeta() {
                         onClick={() => setPagination(prev => ({
                           ...prev,
                           currentPage: Math.min(
-                            Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage),
+                            Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage),
                             prev.currentPage + 1
                           )
                         }))}
                         disabled={
                           pagination.currentPage ===
-                          Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
+                          Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)
                         }
                         className="mx-1"
                       />

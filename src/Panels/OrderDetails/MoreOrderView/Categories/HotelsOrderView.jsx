@@ -38,7 +38,7 @@ import axios from 'axios';
 export default function HotelsOrderView(props) {
   console.log(props, "Hotel Order View Props");
   // const { bookingData } = props || {};
-  
+
 
   // console.log(props.dataset, "Product Data value issss")
   // console.log(props, "Product Data value issss")
@@ -442,18 +442,18 @@ export default function HotelsOrderView(props) {
                   borderRadius: '6px'
                 }}
               /> */}
-<CImage
-  src={basicDetails?.product_image?.includes(',')
-    ? basicDetails.product_image.split(',')[0]
-    : basicDetails?.product_image}
-  fluid
-  style={{
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    borderRadius: '6px'
-  }}
-/>
+              <CImage
+                src={basicDetails?.product_image?.includes(',')
+                  ? basicDetails.product_image.split(',')[0]
+                  : basicDetails?.product_image}
+                fluid
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '6px'
+                }}
+              />
             </div>
           </div>
 
@@ -610,12 +610,12 @@ export default function HotelsOrderView(props) {
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
                   <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
-                  <span style={{ 
-                    color: bookingData?.BookingStatus ? '#27ae60' : props.productData?.status === 'Approved' ? '#27ae60' : '#e74c3c', 
-                    fontWeight: 'bold', 
+                  <span style={{
+                    color: bookingData?.BookingStatus ? '#27ae60' : props.productData?.status === 'Approved' ? '#27ae60' : '#e74c3c',
+                    fontWeight: 'bold',
                     backgroundColor: bookingData?.BookingStatus ? 'rgba(39, 174, 96, 0.1)' : props.productData?.status === 'Approved' ? 'rgba(39, 174, 96, 0.1)' : 'rgba(231, 76, 60, 0.1)',
-                    padding: '3px 8px', 
-                    borderRadius: '4px' 
+                    padding: '3px 8px',
+                    borderRadius: '4px'
                   }}>
                     {bookingData?.BookingStatus || props.productData?.status}
                   </span>
@@ -626,17 +626,17 @@ export default function HotelsOrderView(props) {
                   )}
                 </p>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span> 
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span>
                   {bookingData?.InvoiceNumber || props.productData?.orderID}
                 </p>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span> 
-                  {bookingData?.BookingDate 
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span>
+                  {bookingData?.BookingDate
                     ? new Date(bookingData.BookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                     : new Date(props.productData.booked_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </p>
                 <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span> 
+                  <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span>
                   {bookingData?.NoOfRooms || props.productData?.decoded_data?.NoOfRooms || 1}
                 </p>
               </div>
@@ -649,12 +649,12 @@ export default function HotelsOrderView(props) {
                   <div style={{ textAlign: 'center', flex: '1' }}>
                     <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
                     <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
-                      {bookingData?.CheckIn 
+                      {bookingData?.CheckIn
                         ? new Date(bookingData.CheckIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                         : new Date(props.productData.checkInDate.split('/').reverse().join('-')).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
-                      {bookingData?.CheckIn 
+                      {bookingData?.CheckIn
                         ? new Date(bookingData.CheckIn).getFullYear()
                         : new Date(props.productData.checkInDate.split('/').reverse().join('-')).getFullYear()}
                     </p>
@@ -663,10 +663,10 @@ export default function HotelsOrderView(props) {
                   <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
                     <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
                     <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>
-                      {bookingData?.CheckIn && bookingData?.CheckOut 
+                      {bookingData?.CheckIn && bookingData?.CheckOut
                         ? Math.ceil((new Date(bookingData.CheckOut) - new Date(bookingData.CheckIn)) / (1000 * 60 * 60 * 24))
-                        : props.productData?.NoOfNights || 1} 
-                      {((bookingData?.CheckIn && bookingData?.CheckOut 
+                        : props.productData?.NoOfNights || 1}
+                      {((bookingData?.CheckIn && bookingData?.CheckOut
                         ? Math.ceil((new Date(bookingData.CheckOut) - new Date(bookingData.CheckIn)) / (1000 * 60 * 60 * 24))
                         : props.productData?.NoOfNights || 1) > 1) ? "Nights" : "Night"}
                     </div>
@@ -708,11 +708,11 @@ export default function HotelsOrderView(props) {
                 </div>
               </div>
               <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> 
+                <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span>
                 {bookingData?.HotelDetails?.AddressLine1 || props.productData?.address}
               </p>
               <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> 
+                <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span>
                 {bookingData?.HotelDetails?.City || props.productData?.decoded_data?.hotelMainRequest?.hotelData?.city}
               </p>
             </div>
@@ -722,7 +722,7 @@ export default function HotelsOrderView(props) {
                 <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
                 <div style={{ fontSize: '14px' }}>Map Coordinates:</div>
                 <div style={{ fontSize: '13px' }}>
-                  {bookingData?.HotelDetails?.Map || 
+                  {bookingData?.HotelDetails?.Map ||
                     `${props.productData?.decoded_data?.hotelMainRequest?.hotelData?.latitude}, ${props.productData?.decoded_data?.hotelMainRequest?.hotelData?.longitude}`}
                 </div>
               </div>
@@ -741,21 +741,21 @@ export default function HotelsOrderView(props) {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
                     <div style={{ flex: '1', minWidth: '200px' }}>
                       <p style={{ margin: '5px 0', fontSize: '15px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> 
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span>
                         <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : room.Status === 'Not Cancelled' ? '#f39c12' : '#e74c3c' }}>
                           {room.Status || 'Confirmed'}
                         </span>
                       </p>
                       <p style={{ margin: '5px 0', fontSize: '15px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> 
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span>
                         {(room.MealType || props.productData?.decoded_data?.preBooking?.[0]?.Inclusions?.[0])?.replace(/_/g, ' ')}
                       </p>
                       <p style={{ margin: '5px 0', fontSize: '15px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span> 
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span>
                         {room.Inclusion || props.productData?.decoded_data?.preBooking?.[0]?.Inclusions?.[0]}
                       </p>
                       <p style={{ margin: '5px 0', fontSize: '15px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span> 
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span>
                         <span style={{ color: room.IsRefundable ? '#27ae60' : '#e74c3c' }}>
                           {room.IsRefundable ? 'Yes' : 'No'}
                         </span>
@@ -836,14 +836,14 @@ export default function HotelsOrderView(props) {
               <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Rate Conditions</h3>
               <ul style={{ margin: '0', paddingLeft: '20px' }}>
                 {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
-                  .filter(condition => condition && 
-                    !condition.includes('CheckIn Time') && 
-                    !condition.includes('CheckOut Time') && 
-                    !condition.includes('CheckIn Instructions') && 
-                    !condition.includes('Special Instructions') && 
-                    !condition.includes('Mandatory Fees') && 
-                    !condition.includes('Optional Fees') && 
-                    !condition.includes('Cards Accepted') && 
+                  .filter(condition => condition &&
+                    !condition.includes('CheckIn Time') &&
+                    !condition.includes('CheckOut Time') &&
+                    !condition.includes('CheckIn Instructions') &&
+                    !condition.includes('Special Instructions') &&
+                    !condition.includes('Mandatory Fees') &&
+                    !condition.includes('Optional Fees') &&
+                    !condition.includes('Cards Accepted') &&
                     !condition.includes('Pets not allowed'))
                   .map((condition, index) => (
                     <li key={index} style={{ margin: '5px 0', color: '#555' }}>{condition}</li>
@@ -854,10 +854,10 @@ export default function HotelsOrderView(props) {
             {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('CheckIn Instructions')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Check-In Instructions</h3>
-                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ 
+                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{
                   __html: (bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
                     .find(condition => condition?.includes('CheckIn Instructions'))
-                    ?.split(': ')[1] || '' 
+                    ?.split(': ')[1] || ''
                 }}></div>
               </div>
             )}
@@ -876,10 +876,10 @@ export default function HotelsOrderView(props) {
             {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Mandatory Fees')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Mandatory Fees</h3>
-                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ 
+                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{
                   __html: (bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
                     .find(condition => condition?.includes('Mandatory Fees'))
-                    ?.split(': ')[1] || '' 
+                    ?.split(': ')[1] || ''
                 }}></div>
               </div>
             )}
@@ -887,10 +887,10 @@ export default function HotelsOrderView(props) {
             {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || []).some(condition => condition?.includes('Optional Fees')) && (
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Optional Fees</h3>
-                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ 
+                <div style={{ color: '#555' }} dangerouslySetInnerHTML={{
                   __html: (bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
                     .find(condition => condition?.includes('Optional Fees'))
-                    ?.split(': ')[1] || '' 
+                    ?.split(': ')[1] || ''
                 }}></div>
               </div>
             )}
@@ -899,7 +899,7 @@ export default function HotelsOrderView(props) {
               <div style={{ marginBottom: '20px' }}>
                 <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Payment Information</h3>
                 <p style={{ margin: '5px 0', color: '#555' }}>
-                  <strong>Accepted Payment Methods:</strong> 
+                  <strong>Accepted Payment Methods:</strong>
                   {(bookingData?.RateConditions || props.productData?.decoded_data?.preBooking?.[0]?.RateConditions || [])
                     .find(condition => condition?.includes('Cards Accepted'))
                     ?.split(': ')[1]?.split(',').join(', ') || ''}
@@ -1062,7 +1062,7 @@ export default function HotelsOrderView(props) {
                       <span style={{ fontWeight: 'bold', color: '#555' }}>Meal Plan:</span>
                       {props.productData?.decoded_data.customerDetails.mealAllocation || 1}
                     </p>
-                  
+
                   </div>
                 </div>
               </div>
