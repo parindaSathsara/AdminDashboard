@@ -132,7 +132,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
           name="emails"
           placeHolder="Enter Email"
           classNames={{
-            tag: 'tag-custom'
+            tag: 'tag-custom-new'
           }}
           style={{
             width: '100%',
@@ -144,7 +144,7 @@ export default function ResendVoucher({ voucherData, orderID }) {
             outline: 'none',
             padding: '5px',
             fontSize: '0.9rem',
-            minWidth: '150px',
+            minWidth: '150px'
           }}
         />
 

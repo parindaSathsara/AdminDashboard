@@ -27,6 +27,19 @@
   font-size: 0.85rem; /* Smaller font for long emails */
   line-height: 1.4;
 }
+.tag-custom-new {
+  background-color: #3399ff;
+  color: rgb(23, 23, 23);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin: 3px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  word-break: break-all;
+  font-size: 0.85rem; /* Smaller font for long emails */
+  line-height: 1.4;
+}
 
 /* Style for the input field */
 .tags-input-custom {
