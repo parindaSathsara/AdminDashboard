@@ -1193,7 +1193,7 @@ export default function HotelsOrderView(props) {
       {props?.productData?.Provider != "hotelAhs" && (
         <>
           <div>
-            Loading ...
+            {/* Loading ... */}
           </div>
         </>
       )}
