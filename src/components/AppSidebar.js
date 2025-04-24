@@ -58,7 +58,7 @@ const AppSidebar = () => {
 
       <div style={{ borderTop: '3px solid rgb(223, 159, 31)' }}>
         {/* <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.54</CCardText> */}
-        <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.63</CCardText>
+        <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.64</CCardText>
       </div>
 
 
