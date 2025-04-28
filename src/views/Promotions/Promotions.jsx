@@ -26,7 +26,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText
+  FormHelperText, LinearProgress
 } from '@mui/material';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState } from 'draft-js';
@@ -85,6 +85,11 @@ const Promotions = () => {
   const [selectedStack, setSelectedStack] = useState('MainNavigatorStack');
   const [selectedScreen, setSelectedScreen] = useState('Home');
   const [availableScreens, setAvailableScreens] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [isBatchSending, setIsBatchSending] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [processedUsers, setProcessedUsers] = useState(0);
+  const [batchResponses, setBatchResponses] = useState([]);
 
   // Update available screens when stack changes
   useEffect(() => {
@@ -142,11 +147,7 @@ const Promotions = () => {
     return true;
   };
 
-  const handleSendNotification = async () => {
-    if (!validateForm()) return;
-
-    setIsSending(true);
-
+  const sendBatchNotifications = async (offset = 0) => {
     const formData = new FormData();
     formData.append('title', notificationTitle);
     formData.append('description', description);
@@ -155,7 +156,7 @@ const Promotions = () => {
     formData.append('mostOrderedCount', mostOrderedCount);
     formData.append('selectedStack', selectedStack);
     formData.append('selectedScreen', selectedScreen);
-    formData.append('receivers', receivers);
+    formData.append('offset', offset);
 
     try {
       const response = await axios.post('/pushNotification', formData, {
@@ -163,32 +164,74 @@ const Promotions = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+      console.log(response.data,"Batch response data");
+      const { current, total, responses } = response.data;
+      
+      setBatchResponses(prev => [...prev, ...responses]);
+      setProcessedUsers(current);
+      setTotalUsers(total);
+      setProgress(Math.round((current / total) * 100));
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'Notification sent successfully!'
-      });
+      if (current < total) {
+        // Continue with next batch
+        // await sendBatchNotifications(current);
+        return await sendBatchNotifications(current);
 
-      // Reset form
-      setNotificationTitle('');
-      setEditorState(EditorState.createEmpty());
-      setDescription('');
-      setRedirectLink('');
-      setImage(null);
-      setImagePreview('');
+
+      } else {
+        // All batches completed
+        setIsBatchSending(false);
+        Swal.fire({
+          icon: 'success',
+          title: 'Completed!',
+          text: `Notifications sent successfully to ${total} users!`
+        });
+        return response.data; // Return the final response
+
+      }
     } catch (error) {
-      console.error('Notification error:', error);
+      setIsBatchSending(false);
+      console.error('Batch notification error:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.response?.data?.message || 'Failed to send notification. Please try again.'
+        text: error.response?.data?.message || 'Failed to send batch notifications. Please try again.'
       });
-    } finally {
-      setIsSending(false);
     }
   };
 
+  const handleSendNotification = async () => {
+    if (!validateForm()) return;
+
+    setIsSending(true);
+    setIsBatchSending(true);
+    setProgress(0);
+    setProcessedUsers(0);
+    setTotalUsers(0);
+    setBatchResponses([]);
+
+    // try {
+    // const response =  await sendBatchNotifications(0); // Start with offset 0
+    // console.log(response,"Response data");
+    // if(response.status != 200){
+    //   setIsSending(false);
+    //   setIsBatchSending(false);
+
+    // }
+    // } catch (error) {
+    //   setIsSending(false);
+    //   setIsBatchSending(false);
+    // }
+    try {
+      const finalResponse = await sendBatchNotifications(0);
+      console.log("Complete notification process finished:", finalResponse);
+    } catch (error) {
+      console.error("Error in notification process:", error);
+    } finally {
+      setIsSending(false);
+      setIsBatchSending(false);
+    }
+  };
   return (
     <CRow>
       <CCol lg={12}>
@@ -328,7 +371,23 @@ const Promotions = () => {
                     ))}
                   </CFormSelect>
                 </div>
-
+                {isBatchSending && (
+              <Box sx={{ mt: 3, mb: 3 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  Sending notifications... {processedUsers} of {totalUsers} users processed
+                </Typography>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={progress} 
+                  sx={{ height: 10, borderRadius: 5 }}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {progress}%
+                  </Typography>
+                </Box>
+              </Box>
+            )}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                   <Button
                     variant="outlined"

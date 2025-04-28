@@ -419,7 +419,7 @@ export default function BookingExperience(props) {
   //     const firstCancellationItem = Object.values(cancellationData)[0];
 
   //     // Get the keys of the cancellation-info object (these are the UUIDs)
-      
+
   //     if (firstCancellationItem) {
   //       const cancellationKeys = Object.keys(cancellationData);
   //       // if (cancellationKeys.length > 0) {
@@ -477,21 +477,21 @@ export default function BookingExperience(props) {
       let url = `/bridgify/order-details/${checkoutID || '14273'}`;
       const response = await axios.get(url);
       console.log(response.data.data, "Booking Response Data is");
-  
+
       // Extract both order details and cancellation info
       const orderDetails = response.data.data.order_details;
       const cancellationData = response.data.data.cancelation_details['cancellation-info'];
-  
+
       // Get the order ID (the key in order_details)
       const orderId = Object.keys(orderDetails)[0];
-      
+
       // Get all order items
       const orderItems = orderDetails[orderId] || [];
       const mainOrderItem = orderItems[0] || {};
-  
+
       // Process tickets information
       const tickets = mainOrderItem.tickets || [];
-      
+
       // Format data including all arrays
       let formattedData = {
         orderId: orderId,
@@ -514,13 +514,13 @@ export default function BookingExperience(props) {
         refundAmount: "N/A",
         cancellationFee: "N/A"
       };
-  
+
       // Add cancellation details if available
       if (cancellationData && Object.keys(cancellationData).length > 0) {
         const cancellationKeys = Object.keys(cancellationData);
         const cancellationUUID = cancellationKeys[0];
         const firstCancellationItem = cancellationData[cancellationUUID];
-        
+
         formattedData = {
           ...formattedData,
           checkoutID: cancellationUUID,
@@ -532,7 +532,7 @@ export default function BookingExperience(props) {
           cancellationAllowed: firstCancellationItem.cancellation_allowed
         };
       }
-  
+
       // Set the details
       setCancellationDetails(formattedData);
     } catch (error) {
@@ -543,7 +543,7 @@ export default function BookingExperience(props) {
         cancellationAllowed: false
       });
     }
-  
+
     // Show the modal
     setCancellationViewModal(true);
   };
@@ -574,7 +574,7 @@ export default function BookingExperience(props) {
   //     }
   //     const response = await axios.get(url);
   //     console.log(response.data, "Booking Response Data is");
-      
+
   //     if (data?.Provider == "hotelTbo") {
   //       if (response.data?.data?.bookingData) {
   //         setHotelProvider('hotelTbo')
@@ -603,7 +603,7 @@ export default function BookingExperience(props) {
   const showBookingDataModal = async (data) => {
     try {
       console.log(data, "Booking Data from props");
-      
+
       // Set the booking data directly from the props
       setBookingData({
         bookingData: {
@@ -632,10 +632,10 @@ export default function BookingExperience(props) {
           currency: data.currency
         }
       });
-      
+
       setHotelProvider('hotelTbo');
       setBookingDataModel(true);
-      
+
     } catch (error) {
       console.error("Error setting booking data:", error);
       setModelDefaultMessage("Error loading booking details");
@@ -1019,129 +1019,129 @@ export default function BookingExperience(props) {
           <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-  {cancellationDetails ? (
-    <div>
-      <h5>{cancellationDetails.title}</h5>
-      
-      <div className="d-flex justify-content-between mb-3">
-        <p><strong>Order ID:</strong> {cancellationDetails.orderId}</p>
-        <p><strong>External Order ID:</strong> {cancellationDetails.externalOrderId}</p>
-      </div>
-
-      <div className="mb-4">
-        <h6 className="fw-bold text-primary">Cancellation Policy</h6>
-        <p>{cancellationDetails.cancellationPolicy}</p>
-      </div>
-
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <h6 className="fw-bold text-primary">Booking Information</h6>
-          <p><strong>Travel Date:</strong> {cancellationDetails.attractionDate}</p>
-          <p><strong>Time:</strong> {cancellationDetails.attractionTime}</p>
-          <p>
-            <strong>Status:</strong>
-            {cancellationDetails.status === "CNL" ? (
-              <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
-                Cancelled
-              </CBadge>
-            ) : cancellationDetails.status === "FAL" ? (
-              <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
-                Failed
-              </CBadge>
-            ) : (
-              <CBadge color="warning" style={{ padding: 8, fontSize: 12 }}>
-                {cancellationDetails.status}
-              </CBadge>
-            )}
-          </p>
-          <p><strong>Price:</strong> {cancellationDetails.currency} {cancellationDetails.merchantTotalPrice}</p>
-          <p><strong>Supplier:</strong> {cancellationDetails.inventorySupplier}</p>
-          <p><strong>Created:</strong> {new Date(cancellationDetails.externalCreatedAt).toLocaleString()}</p>
-        </div>
-        
-        <div className="col-md-6">
-          <h6 className="fw-bold text-primary">Customer Information</h6>
-          <p><strong>Name:</strong> {cancellationDetails.customer.first_name} {cancellationDetails.customer.last_name}</p>
-          <p><strong>Email:</strong> {cancellationDetails.customer.email}</p>
-          <p><strong>Phone:</strong> {cancellationDetails.customer.phone}</p>
-          
-          <h6 className="fw-bold text-primary mt-4">Ticket Information</h6>
-          {cancellationDetails.tickets && cancellationDetails.tickets.length > 0 ? (
+          {cancellationDetails ? (
             <div>
-              {cancellationDetails.tickets.map((ticket, index) => (
-                <div key={index} className="mb-2">
-                  <p><strong>Type:</strong> {ticket.title}</p>
-                  <p><strong>Quantity:</strong> {ticket.quantity}</p>
-                  <p><strong>ID:</strong> {ticket.external_ticket_id}</p>
-                  {ticket.voucher_url && ticket.voucher_url.length > 0 && (
-                    <p><strong>Voucher:</strong> <a href={ticket.voucher_url[0]} target="_blank" rel="noopener noreferrer">View Voucher</a></p>
+              <h5>{cancellationDetails.title}</h5>
+
+              <div className="d-flex justify-content-between mb-3">
+                <p><strong>Order ID:</strong> {cancellationDetails.orderId}</p>
+                <p><strong>External Order ID:</strong> {cancellationDetails.externalOrderId}</p>
+              </div>
+
+              <div className="mb-4">
+                <h6 className="fw-bold text-primary">Cancellation Policy</h6>
+                <p>{cancellationDetails.cancellationPolicy}</p>
+              </div>
+
+              <div className="row mb-4">
+                <div className="col-md-6">
+                  <h6 className="fw-bold text-primary">Booking Information</h6>
+                  <p><strong>Travel Date:</strong> {cancellationDetails.attractionDate}</p>
+                  <p><strong>Time:</strong> {cancellationDetails.attractionTime}</p>
+                  <p>
+                    <strong>Status:</strong>
+                    {cancellationDetails.status === "CNL" ? (
+                      <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
+                        Cancelled
+                      </CBadge>
+                    ) : cancellationDetails.status === "FAL" ? (
+                      <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
+                        Failed
+                      </CBadge>
+                    ) : (
+                      <CBadge color="warning" style={{ padding: 8, fontSize: 12 }}>
+                        {cancellationDetails.status}
+                      </CBadge>
+                    )}
+                  </p>
+                  <p><strong>Price:</strong> {cancellationDetails.currency} {cancellationDetails.merchantTotalPrice}</p>
+                  <p><strong>Supplier:</strong> {cancellationDetails.inventorySupplier}</p>
+                  <p><strong>Created:</strong> {new Date(cancellationDetails.externalCreatedAt).toLocaleString()}</p>
+                </div>
+
+                <div className="col-md-6">
+                  <h6 className="fw-bold text-primary">Customer Information</h6>
+                  <p><strong>Name:</strong> {cancellationDetails.customer.first_name} {cancellationDetails.customer.last_name}</p>
+                  <p><strong>Email:</strong> {cancellationDetails.customer.email}</p>
+                  <p><strong>Phone:</strong> {cancellationDetails.customer.phone}</p>
+
+                  <h6 className="fw-bold text-primary mt-4">Ticket Information</h6>
+                  {cancellationDetails.tickets && cancellationDetails.tickets.length > 0 ? (
+                    <div>
+                      {cancellationDetails.tickets.map((ticket, index) => (
+                        <div key={index} className="mb-2">
+                          <p><strong>Type:</strong> {ticket.title}</p>
+                          <p><strong>Quantity:</strong> {ticket.quantity}</p>
+                          <p><strong>ID:</strong> {ticket.external_ticket_id}</p>
+                          {ticket.voucher_url && ticket.voucher_url.length > 0 && (
+                            <p><strong>Voucher:</strong> <a href={ticket.voucher_url[0]} target="_blank" rel="noopener noreferrer">View Voucher</a></p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No ticket information available</p>
                   )}
                 </div>
-              ))}
+              </div>
+
+              {/* Additional information for multiple order items if available */}
+              {cancellationDetails.allOrderItems && cancellationDetails.allOrderItems.length > 1 && (
+                <div className="mb-4">
+                  <h6 className="fw-bold text-primary">Additional Order Items</h6>
+                  <div className="table-responsive">
+                    <table className="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>Attraction</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Status</th>
+                          <th>Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cancellationDetails.allOrderItems.slice(1).map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.attraction_title}</td>
+                            <td>{item.attraction_date}</td>
+                            <td>{item.attraction_time}</td>
+                            <td>
+                              {item.status === "CNL" ? (
+                                <CBadge color="danger" style={{ padding: 5, fontSize: 10, color: "white" }}>
+                                  Cancelled
+                                </CBadge>
+                              ) : item.status === "FAL" ? (
+                                <CBadge color="danger" style={{ padding: 5, fontSize: 10, color: "white" }}>
+                                  Failed
+                                </CBadge>
+                              ) : (
+                                <CBadge color="warning" style={{ padding: 5, fontSize: 10 }}>
+                                  {item.status}
+                                </CBadge>
+                              )}
+                            </td>
+                            <td>{item.currency} {item.merchant_total_price}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Refund Information */}
+              <div className="mb-4">
+                <h6 className="fw-bold text-primary">Refund Information</h6>
+                <p><strong>Refund Amount:</strong> {cancellationDetails.refundAmount}</p>
+                <p><strong>Cancellation Fee:</strong> {cancellationDetails.cancellationFee}</p>
+                <p><strong>Cancellation Allowed:</strong> {cancellationDetails.cancellationAllowed ? 'Yes' : 'No'}</p>
+              </div>
             </div>
           ) : (
-            <p>No ticket information available</p>
+            <p>Loading booking details...</p>
           )}
-        </div>
-      </div>
-
-      {/* Additional information for multiple order items if available */}
-      {cancellationDetails.allOrderItems && cancellationDetails.allOrderItems.length > 1 && (
-        <div className="mb-4">
-          <h6 className="fw-bold text-primary">Additional Order Items</h6>
-          <div className="table-responsive">
-            <table className="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>Attraction</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Status</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cancellationDetails.allOrderItems.slice(1).map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.attraction_title}</td>
-                    <td>{item.attraction_date}</td>
-                    <td>{item.attraction_time}</td>
-                    <td>
-                      {item.status === "CNL" ? (
-                        <CBadge color="danger" style={{ padding: 5, fontSize: 10, color: "white" }}>
-                          Cancelled
-                        </CBadge>
-                      ) : item.status === "FAL" ? (
-                        <CBadge color="danger" style={{ padding: 5, fontSize: 10, color: "white" }}>
-                          Failed
-                        </CBadge>
-                      ) : (
-                        <CBadge color="warning" style={{ padding: 5, fontSize: 10 }}>
-                          {item.status}
-                        </CBadge>
-                      )}
-                    </td>
-                    <td>{item.currency} {item.merchant_total_price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Refund Information */}
-      <div className="mb-4">
-        <h6 className="fw-bold text-primary">Refund Information</h6>
-        <p><strong>Refund Amount:</strong> {cancellationDetails.refundAmount}</p>
-        <p><strong>Cancellation Fee:</strong> {cancellationDetails.cancellationFee}</p>
-        <p><strong>Cancellation Allowed:</strong> {cancellationDetails.cancellationAllowed ? 'Yes' : 'No'}</p>
-      </div>
-    </div>
-  ) : (
-    <p>Loading booking details...</p>
-  )}
-</Modal.Body>
+        </Modal.Body>
         {/* <Modal.Body>
           {cancellationDetails ? (
             <div>
@@ -1278,381 +1278,492 @@ export default function BookingExperience(props) {
           {/* <CButton color="primary" size='sm' style={{ fontSize: 12, color: 'white', marginLeft: "10%" }} onClick={() => console.log('View Map Clicked')}>View Map</CButton> */}
         </Modal.Header>
         <Modal.Body className="max-h-[80vh] overflow-y-auto">
-          {bookingData == null ? (
+          {console.log(productData, "Booking Data is coming from props")}
+
+          {(!bookingData && (!productData || productData?.length === 0)) ? (
             <div className="p-8 flex flex-col items-center justify-center">
               <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
-            hotelProvider === "hotelTbo" ? (
-              <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
-              {/* Main Booking Info */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
-                <div style={{ flex: '1', minWidth: '250px' }}>
-                  <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                    <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                      <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
-                      <span style={{ 
-                        color: bookingData?.bookingData?.HotelBookingStatus === 'Confirmed' ? '#27ae60' : '#f39c12', 
-                        fontWeight: 'bold', 
-                        backgroundColor: bookingData?.bookingData?.HotelBookingStatus === 'Confirmed' ? 'rgba(39, 174, 96, 0.1)' : 'rgba(243, 156, 18, 0.1)', 
-                        padding: '3px 8px', 
-                        borderRadius: '4px'
-                      }}>
-                        {bookingData?.bookingData?.HotelBookingStatus}
-                      </span>
-                    </p>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                      <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation No:</span> 
-                      {bookingData?.bookingData?.ConfirmationNo}
-                    </p>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                      <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice No:</span> 
-                      {bookingData?.bookingData?.InvoiceNo}
-                    </p>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                      <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Ref:</span> 
-                      {bookingData?.bookingData?.BookingRefNo}
-                    </p>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                      <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Rooms:</span> 
-                      {bookingData?.bookingData?.NoOfRooms}
-                    </p>
-                  </div>
-                </div>
-    
-                <div style={{ flex: '1', minWidth: '250px' }}>
-                  <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                    <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Stay Information</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
-                      <div style={{ textAlign: 'center', flex: '1' }}>
-                        <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
-                        <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
-                          {new Date(bookingData?.bookingData?.CheckInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        </p>
-                        <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
-                          {new Date(bookingData?.bookingData?.CheckInDate).getFullYear()}
-                        </p>
-                      </div>
-    
-                      <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
-                        <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
-                        <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>
-                          {bookingData?.bookingData?.NoOfNights || 1} {bookingData?.bookingData?.NoOfNights > 1 ? 'Nights' : 'Night'}
-                        </div>
-                        <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
-                      </div>
-    
-                      <div style={{ textAlign: 'center', flex: '1' }}>
-                        <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
-                        <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
-                          {new Date(bookingData?.bookingData?.CheckOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        </p>
-                        <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
-                          {new Date(bookingData?.bookingData?.CheckOutDate).getFullYear()}
-                        </p>
-                      </div>
-                    </div>
-                    <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}>
-                      <span style={{ fontWeight: 'bold' }}>Check-in Time:</span> 12:00 PM
-                    </p>
-                    <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}>
-                      <span style={{ fontWeight: 'bold' }}>Check-out Time:</span> 12:00 PM
-                    </p>
-                  </div>
-                </div>
-              </div>
-    
-              {/* Hotel Information */}
-              <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
-              <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
-                <div style={{ flex: '1', minWidth: '300px' }}>
-                  <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>{bookingData?.bookingData?.HotelName}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                    <div style={{ display: 'inline-block' }}>
-                      {Array(Math.floor(bookingData?.bookingData?.StarRating || 3)).fill(0).map((_, i) => (
-                        <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
-                      ))}
-                    </div>
-                    <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>
-                      {bookingData?.bookingData?.StarRating || 3} Star
-                    </span>
-                  </div>
-                  <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> 
-                    {bookingData?.bookingData?.Address}
-                  </p>
-                  <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> 
-                    {bookingData?.bookingData?.City}
-                  </p>
-                  <p style={{ margin: '8px 0', fontSize: '15px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Country:</span> 
-                    {bookingData?.bookingData?.CountryCode}
-                  </p>
-                </div>
-    
-                <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
-                    <div style={{ fontSize: '14px' }}>Location:</div>
-                    <div style={{ fontSize: '13px' }}>{bookingData?.bookingData?.City}, {bookingData?.bookingData?.CountryCode}</div>
-                  </div>
-                </div>
-              </div>
-    
-              {/* Pricing Information */}
-              <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Pricing Information</h2>
-              <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#555' }}>Invoice Amount:</span>
-                  <span style={{ fontWeight: 'bold' }}>₹{bookingData?.bookingData?.InvoiceAmount}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span style={{ color: '#555' }}>Taxes:</span>
-                  <span>Included</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span style={{ color: '#555' }}>Booking Source:</span>
-                  <span>{bookingData?.bookingData?.BookingSource}</span>
-                </div>
-              </div>
-    
-              {/* Guest Information */}
-              <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Guest Information</h2>
-              <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#555' }}>Nationality:</span>
-                  <span>{bookingData?.bookingData?.GuestNationality || 'Not specified'}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#555' }}>Primary Guest:</span>
-                  <span>{bookingData?.bookingData?.PrimaryGuest || 'Not specified'}</span>
-                </div>
-              </div>
-    
-              {/* Hotel Policy */}
-              <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Policy</h2>
-              <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
-                <p style={{ color: '#555' }}>
-                  {bookingData?.bookingData?.HotelPolicyDetail || 'Standard hotel policy applies. Please contact the hotel directly for specific policies.'}
-                </p>
-              </div>
-            </div>
-            ) : (
-              <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
-                {/* <h1 style={{ color: '#2c3e50', borderBottom: '3px solid #3498db', paddingBottom: '10px', marginTop: '0', fontSize: '28px' }}>Booking Confirmation</h1> */}
+            (productData?.length > 0 && productData[0]?.Provider === "hotelTbo") ? (
+              productData.length > 1 ? (
+                <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px', marginBottom: '20px' }}>
+                    {productData.length > 1 ? `${productData.length} Bookings` : 'Booking Details'}
+                  </h2>
 
-                {/* Main Booking Info */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
-                  <div style={{ flex: '1', minWidth: '250px' }}>
-                    <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
-                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
-                        <span style={{ color: '#27ae60', fontWeight: 'bold', backgroundColor: 'rgba(39, 174, 96, 0.1)', padding: '3px 8px', borderRadius: '4px' }}>{bookingData.BookingStatus}</span>
-                        {bookingData.VoucherStatus && <span style={{ marginLeft: '10px', fontSize: '13px', backgroundColor: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '4px' }}>Voucher Available</span>}
+                  {productData.map((product, index) => (
+                    <div key={index} style={{ marginBottom: '30px', borderBottom: '1px solid #eee', paddingBottom: '20px' }}>
+                      <h3 style={{ color: '#3498db', marginBottom: '15px' }}>Booking #{index + 1}</h3>
+
+                      {/* Booking Information */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                        <div style={{ flex: '1', minWidth: '250px' }}>
+                          <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                            <h4 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '16px' }}>Booking Information</h4>
+                            <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                              <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
+                              <span style={{
+                                color: product?.supplier_status === 'Confirmed' ? '#27ae60' : '#f39c12',
+                                fontWeight: 'bold',
+                                backgroundColor: product?.supplier_status === 'Confirmed' ? 'rgba(39, 174, 96, 0.1)' : 'rgba(243, 156, 18, 0.1)',
+                                padding: '3px 8px',
+                                borderRadius: '4px'
+                              }}>
+                                {product?.supplier_status || 'Pending'}
+                              </span>
+                            </p>
+                            <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                              <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation No:</span>
+                              {product?.orderID || 'N/A'}
+                            </p>
+                            <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                              <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Ref:</span>
+                              {product?.checkoutID || 'N/A'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Stay Information */}
+                        <div style={{ flex: '1', minWidth: '250px' }}>
+                          <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                            <h4 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '16px' }}>Stay Information</h4>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+                              <div style={{ textAlign: 'center', flex: '1' }}>
+                                <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
+                                <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                                  {new Date(product?.service_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                </p>
+                              </div>
+
+                              <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
+                                <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                                <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>
+                                  {product?.NoOfNights || 1} {product?.NoOfNights > 1 ? 'Nights' : 'Night'}
+                                </div>
+                                <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                              </div>
+
+                              <div style={{ textAlign: 'center', flex: '1' }}>
+                                <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
+                                <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                                  {new Date(product?.DDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Hotel Information */}
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '15px' }}>
+                        <h4 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '16px' }}>Hotel Information</h4>
+                        <p style={{ margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                          {product?.PName}
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span>
+                          {product?.address}
+                        </p>
+                      </div>
+
+                      {/* Pricing Information */}
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '6px', marginBottom: '15px' }}>
+                        <h4 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '16px' }}>Pricing Information</h4>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555' }}>Amount:</span>
+                          <span style={{ fontWeight: 'bold' }}>₹{product?.paid_amount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Summary Section (if multiple bookings) */}
+                  {productData.length > 1 && (
+                    <div style={{ backgroundColor: '#e8f4fd', padding: '20px', borderRadius: '6px', marginTop: '20px' }}>
+                      <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50' }}>Booking Summary</h3>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Total Bookings:</span>
+                        <span style={{ fontWeight: 'bold' }}>{productData.length}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555' }}>Total Amount:</span>
+                        <span style={{ fontWeight: 'bold' }}>₹{productData.reduce((sum, item) => sum + parseFloat(item.paid_amount || 0), 0)}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+              ) :
+                (<div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
+                  {/* Main Booking Info */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                    <div style={{ flex: '1', minWidth: '250px' }}>
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
+                          <span style={{
+                            color: (bookingData?.bookingData?.HotelBookingStatus || productData[0]?.supplier_status) === 'Confirmed' ? '#27ae60' : '#f39c12',
+                            fontWeight: 'bold',
+                            backgroundColor: (bookingData?.bookingData?.HotelBookingStatus || productData[0]?.supplier_status) === 'Confirmed' ? 'rgba(39, 174, 96, 0.1)' : 'rgba(243, 156, 18, 0.1)',
+                            padding: '3px 8px',
+                            borderRadius: '4px'
+                          }}>
+                            {bookingData?.bookingData?.HotelBookingStatus || productData[0]?.supplier_status || 'Pending'}
+                          </span>
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation No:</span>
+                          {bookingData?.bookingData?.ConfirmationNo || productData[0]?.orderID || 'N/A'}
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice No:</span>
+                          {bookingData?.bookingData?.InvoiceNo || productData[0]?.orderID || 'N/A'}
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Ref:</span>
+                          {bookingData?.bookingData?.BookingRefNo || productData[0]?.checkoutID || 'N/A'}
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Rooms:</span>
+                          {bookingData?.bookingData?.NoOfRooms || productData[0]?.decoded_data?.NoOfRooms || 1}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div style={{ flex: '1', minWidth: '250px' }}>
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Stay Information</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+                          <div style={{ textAlign: 'center', flex: '1' }}>
+                            <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                              {new Date(bookingData?.bookingData?.CheckInDate || productData[0]?.service_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </p>
+                            <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
+                              {new Date(bookingData?.bookingData?.CheckInDate || productData[0]?.service_date).getFullYear()}
+                            </p>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
+                            <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                            <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>
+                              {(bookingData?.bookingData?.NoOfNights || productData[0]?.NoOfNights || 1)} {(bookingData?.bookingData?.NoOfNights || productData[0]?.NoOfNights || 1) > 1 ? 'Nights' : 'Night'}
+                            </div>
+                            <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                          </div>
+
+                          <div style={{ textAlign: 'center', flex: '1' }}>
+                            <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                              {new Date(bookingData?.bookingData?.CheckOutDate || productData[0]?.DDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </p>
+                            <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
+                              {new Date(bookingData?.bookingData?.CheckOutDate || productData[0]?.DDate).getFullYear()}
+                            </p>
+                          </div>
+                        </div>
+                        <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}>
+                          <span style={{ fontWeight: 'bold' }}>Check-in Time:</span> 12:00 PM
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}>
+                          <span style={{ fontWeight: 'bold' }}>Check-out Time:</span> 12:00 PM
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hotel Information */}
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
+                    <div style={{ flex: '1', minWidth: '300px' }}>
+                      <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>
+                        {bookingData?.bookingData?.HotelName || productData[0]?.PName}
                       </p>
-                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation Number:</span> {bookingData.ConfirmationNumber}</p>
-                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span> {bookingData.InvoiceNumber}</p>
-                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span> {new Date(bookingData.BookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span> {bookingData.NoOfRooms}</p>
-                    </div>
-                  </div>
-
-                  <div style={{ flex: '1', minWidth: '250px' }}>
-                    <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Stay Information</h3>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
-                        <div style={{ textAlign: 'center', flex: '1' }}>
-                          <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
-                          <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
-                          <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckIn).getFullYear()}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <div style={{ display: 'inline-block' }}>
+                          {Array(Math.floor(bookingData?.bookingData?.StarRating || 5)).fill(0).map((_, i) => (
+                            <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
+                          ))}
                         </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
-                          <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
-                          <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>1 Night</div>
-                          <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
-                        </div>
-
-                        <div style={{ textAlign: 'center', flex: '1' }}>
-                          <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
-                          <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
-                          <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckOut).getFullYear()}</p>
-                        </div>
+                        <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>
+                          {bookingData?.bookingData?.StarRating || 5} Star
+                        </span>
                       </div>
-                      <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-in Time:</span> 12:00 PM</p>
-                      <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-out Time:</span> 12:00 PM</p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span>
+                        {bookingData?.bookingData?.Address || productData[0]?.address}
+                      </p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span>
+                        {bookingData?.bookingData?.City || 'Kuala Lumpur'}
+                      </p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Country:</span>
+                        {bookingData?.bookingData?.CountryCode || 'Malaysia'}
+                      </p>
                     </div>
-                  </div>
-                </div>
 
-                {/* Hotel Information */}
-                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
-                <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
-                  <div style={{ flex: '1', minWidth: '300px' }}>
-                    <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>{bookingData.HotelDetails.HotelName}</p>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                      <div style={{ display: 'inline-block' }}>
-                        {Array(3).fill(0).map((_, i) => (
-                          <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
-                        ))}
+                    <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
+                        <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
+                        <div style={{ fontSize: '14px' }}>Location:</div>
+                        <div style={{ fontSize: '13px' }}>{bookingData?.bookingData?.City || 'Kuala Lumpur'}, {bookingData?.bookingData?.CountryCode || 'Malaysia'}</div>
                       </div>
-                      <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>Three Star</span>
-                    </div>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> {bookingData.HotelDetails.AddressLine1}</p>
-                    <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> {bookingData.HotelDetails.City}</p>
-                  </div>
-
-                  <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
-                      <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
-                      <div style={{ fontSize: '14px' }}>Map Coordinates:</div>
-                      <div style={{ fontSize: '13px' }}>{bookingData.HotelDetails.Map}</div>
                     </div>
                   </div>
-                </div>
 
-                {/* Room Details */}
-                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Room Details</h2>
-                {bookingData.Rooms.map((room, index) => (
-                  <div key={index} style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px', borderLeft: '4px solid #3498db', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', marginBottom: '20px' }}>
-                      <div style={{ flex: '2', minWidth: '300px' }}>
-                        <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50', fontSize: '18px' }}>{room.Name[0]}</h3>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
-                          <div style={{ flex: '1', minWidth: '200px' }}>
-                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : room.Status === 'Not Cancelled' ? '#f39c12' : '#e74c3c' }}>{room.Status}</span></p>
-                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> {room.MealType.replace(/_/g, ' ')}</p>
-                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span> {room.Inclusion}</p>
-                            <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span> <span style={{ color: room.IsRefundable ? '#27ae60' : '#e74c3c' }}>{room.IsRefundable ? 'Yes' : 'No'}</span></p>
+                  {/* Pricing Information */}
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Pricing Information</h2>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ fontWeight: 'bold', color: '#555' }}>Invoice Amount:</span>
+                      <span style={{ fontWeight: 'bold' }}>₹{bookingData?.bookingData?.InvoiceAmount || productData[0]?.paid_amount}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ color: '#555' }}>Taxes:</span>
+                      <span>Included</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ color: '#555' }}>Booking Source:</span>
+                      <span>{bookingData?.bookingData?.BookingSource || 'Online'}</span>
+                    </div>
+                  </div>
+
+                  {/* Guest Information */}
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Guest Information</h2>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ fontWeight: 'bold', color: '#555' }}>Nationality:</span>
+                      <span>{bookingData?.bookingData?.GuestNationality || 'Not specified'}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ fontWeight: 'bold', color: '#555' }}>Primary Guest:</span>
+                      <span>{bookingData?.bookingData?.PrimaryGuest || productData[0]?.decoded_data?.paxDetails?.[0]?.FirstName + ' ' + productData[0]?.decoded_data?.paxDetails?.[0]?.LastName || 'Not specified'}</span>
+                    </div>
+                  </div>
+
+                  {/* Hotel Policy */}
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Policy</h2>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
+                    <p style={{ color: '#555' }}>
+                      {bookingData?.bookingData?.HotelPolicyDetail || 'Standard hotel policy applies. Please contact the hotel directly for specific policies.'}
+                    </p>
+                  </div>
+                </div>)
+
+            )
+              : (
+                <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
+                    <div style={{ flex: '1', minWidth: '250px' }}>
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Booking Information</h3>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Status:</span>
+                          <span style={{ color: '#27ae60', fontWeight: 'bold', backgroundColor: 'rgba(39, 174, 96, 0.1)', padding: '3px 8px', borderRadius: '4px' }}>{bookingData.BookingStatus}</span>
+                          {bookingData.VoucherStatus && <span style={{ marginLeft: '10px', fontSize: '13px', backgroundColor: '#3498db', color: 'white', padding: '2px 6px', borderRadius: '4px' }}>Voucher Available</span>}
+                        </p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Confirmation Number:</span> {bookingData.ConfirmationNumber}</p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Invoice Number:</span> {bookingData.InvoiceNumber}</p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Booking Date:</span> {new Date(bookingData.BookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>Number of Rooms:</span> {bookingData.NoOfRooms}</p>
+                      </div>
+                    </div>
+
+                    <div style={{ flex: '1', minWidth: '250px' }}>
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Stay Information</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+                          <div style={{ textAlign: 'center', flex: '1' }}>
+                            <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-IN</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                            <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckIn).getFullYear()}</p>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
+                            <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                            <div style={{ margin: '0 10px', color: '#555', fontSize: '14px' }}>1 Night</div>
+                            <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
+                          </div>
+
+                          <div style={{ textAlign: 'center', flex: '1' }}>
+                            <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>{new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                            <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>{new Date(bookingData.CheckOut).getFullYear()}</p>
                           </div>
                         </div>
+                        <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-in Time:</span> 12:00 PM</p>
+                        <p style={{ margin: '8px 0', fontSize: '15px', color: '#555' }}><span style={{ fontWeight: 'bold' }}>Check-out Time:</span> 12:00 PM</p>
                       </div>
+                    </div>
+                  </div>
 
-                      <div style={{ flex: '1', minWidth: '200px', backgroundColor: '#fff', padding: '15px', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                        <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>Price Details ({room.Currency})</h4>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
-                          <span style={{ color: '#555' }}>Room Price:</span>
-                          <span style={{ fontWeight: 'bold' }}>${(room.TotalFare - room.TotalTax).toFixed(2)}</span>
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
+                    <div style={{ flex: '1', minWidth: '300px' }}>
+                      <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>{bookingData.HotelDetails.HotelName}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <div style={{ display: 'inline-block' }}>
+                          {Array(3).fill(0).map((_, i) => (
+                            <span key={i} style={{ color: '#f39c12', fontSize: '16px' }}>★</span>
+                          ))}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
-                          <span style={{ color: '#555' }}>Tax:</span>
-                          <span>${room.TotalTax.toFixed(2)}</span>
+                        <span style={{ marginLeft: '8px', color: '#555', fontSize: '14px' }}>Three Star</span>
+                      </div>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>Address:</span> {bookingData.HotelDetails.AddressLine1}</p>
+                      <p style={{ margin: '8px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555', width: '70px', display: 'inline-block' }}>City:</span> {bookingData.HotelDetails.City}</p>
+                    </div>
+
+                    <div style={{ flex: '1', minWidth: '200px', maxWidth: '250px', height: '150px', backgroundColor: '#e9ecef', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ textAlign: 'center', color: '#7f8c8d' }}>
+                        <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
+                        <div style={{ fontSize: '14px' }}>Map Coordinates:</div>
+                        <div style={{ fontSize: '13px' }}>{bookingData.HotelDetails.Map}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Room Details</h2>
+                  {bookingData.Rooms.map((room, index) => (
+                    <div key={index} style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px', borderLeft: '4px solid #3498db', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', marginBottom: '20px' }}>
+                        <div style={{ flex: '2', minWidth: '300px' }}>
+                          <h3 style={{ margin: '0 0 15px 0', color: '#2c3e50', fontSize: '18px' }}>{room.Name[0]}</h3>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+                            <div style={{ flex: '1', minWidth: '200px' }}>
+                              <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Status:</span> <span style={{ color: room.Status === 'Confirmed' ? '#27ae60' : room.Status === 'Not Cancelled' ? '#f39c12' : '#e74c3c' }}>{room.Status}</span></p>
+                              <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Meal Type:</span> {room.MealType.replace(/_/g, ' ')}</p>
+                              <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Inclusion:</span> {room.Inclusion}</p>
+                              <p style={{ margin: '5px 0', fontSize: '15px' }}><span style={{ fontWeight: 'bold', color: '#555' }}>Refundable:</span> <span style={{ color: room.IsRefundable ? '#27ae60' : '#e74c3c' }}>{room.IsRefundable ? 'Yes' : 'No'}</span></p>
+                            </div>
+                          </div>
                         </div>
-                        {room.Supplements && room.Supplements[0] && (
+
+                        <div style={{ flex: '1', minWidth: '200px', backgroundColor: '#fff', padding: '15px', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                          <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#2c3e50', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>Price Details ({room.Currency})</h4>
                           <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
-                            <span style={{ color: '#555' }}>{room.Supplements[0][0].Description}:</span>
-                            <span>${room.Supplements[0][0].Price.toFixed(2)}</span>
+                            <span style={{ color: '#555' }}>Room Price:</span>
+                            <span style={{ fontWeight: 'bold' }}>${(room.TotalFare - room.TotalTax).toFixed(2)}</span>
                           </div>
-                        )}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '12px 0 0 0', paddingTop: '12px', borderTop: '1px dashed #eee', fontWeight: 'bold' }}>
-                          <span>Total:</span>
-                          <span style={{ color: '#2c3e50', fontSize: '18px' }}>${room.TotalFare.toFixed(2)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px' }}>
-                      <div style={{ flex: '1', minWidth: '250px' }}>
-                        <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Guests:</h4>
-                        <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                          {room.CustomerDetails[0].CustomerNames.map((guest, i) => (
-                            <div key={i} style={{ padding: '8px', borderBottom: i < room.CustomerDetails[0].CustomerNames.length - 1 ? '1px solid #eee' : 'none', display: 'flex', alignItems: 'center' }}>
-                              <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#3498db', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', fontSize: '14px', fontWeight: 'bold' }}>
-                                {guest.FirstName[0]}{guest.LastName[0]}
-                              </div>
-                              <div>
-                                <div style={{ fontWeight: 'bold' }}>{guest.Title} {guest.FirstName} {guest.LastName}</div>
-                                <div style={{ fontSize: '13px', color: '#7f8c8d' }}>{guest.Type}</div>
-                              </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
+                            <span style={{ color: '#555' }}>Tax:</span>
+                            <span>${room.TotalTax.toFixed(2)}</span>
+                          </div>
+                          {room.Supplements && room.Supplements[0] && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '8px 0' }}>
+                              <span style={{ color: '#555' }}>{room.Supplements[0][0].Description}:</span>
+                              <span>${room.Supplements[0][0].Price.toFixed(2)}</span>
                             </div>
-                          ))}
+                          )}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '12px 0 0 0', paddingTop: '12px', borderTop: '1px dashed #eee', fontWeight: 'bold' }}>
+                            <span>Total:</span>
+                            <span style={{ color: '#2c3e50', fontSize: '18px' }}>${room.TotalFare.toFixed(2)}</span>
+                          </div>
                         </div>
                       </div>
 
-                      <div style={{ flex: '1', minWidth: '300px' }}>
-                        <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Cancellation Policy:</h4>
-                        <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '15px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                          {room.CancelPolicies.map((policy, i) => (
-                            <div key={i} style={{ marginBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', paddingBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', borderBottom: i < room.CancelPolicies.length - 1 ? '1px solid #eee' : 'none' }}>
-                              <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
-                                <span style={{ fontWeight: 'bold' }}>From {new Date(policy.FromDate.replace(/-/g, '/')).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}:</span>
-                              </p>
-                              <p style={{ margin: '0', fontSize: '14px', color: policy.CancellationCharge === 0 ? '#27ae60' : '#e74c3c' }}>
-                                {policy.CancellationCharge === 0 ?
-                                  'Free cancellation' :
-                                  `${policy.CancellationCharge}% of total amount will be charged`
-                                }
-                              </p>
-                            </div>
-                          ))}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px' }}>
+                        <div style={{ flex: '1', minWidth: '250px' }}>
+                          <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Guests:</h4>
+                          <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                            {room.CustomerDetails[0].CustomerNames.map((guest, i) => (
+                              <div key={i} style={{ padding: '8px', borderBottom: i < room.CustomerDetails[0].CustomerNames.length - 1 ? '1px solid #eee' : 'none', display: 'flex', alignItems: 'center' }}>
+                                <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#3498db', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', fontSize: '14px', fontWeight: 'bold' }}>
+                                  {guest.FirstName[0]}{guest.LastName[0]}
+                                </div>
+                                <div>
+                                  <div style={{ fontWeight: 'bold' }}>{guest.Title} {guest.FirstName} {guest.LastName}</div>
+                                  <div style={{ fontSize: '13px', color: '#7f8c8d' }}>{guest.Type}</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div style={{ flex: '1', minWidth: '300px' }}>
+                          <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Cancellation Policy:</h4>
+                          <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '15px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                            {room.CancelPolicies.map((policy, i) => (
+                              <div key={i} style={{ marginBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', paddingBottom: i < room.CancelPolicies.length - 1 ? '10px' : '0', borderBottom: i < room.CancelPolicies.length - 1 ? '1px solid #eee' : 'none' }}>
+                                <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
+                                  <span style={{ fontWeight: 'bold' }}>From {new Date(policy.FromDate.replace(/-/g, '/')).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}:</span>
+                                </p>
+                                <p style={{ margin: '0', fontSize: '14px', color: policy.CancellationCharge === 0 ? '#27ae60' : '#e74c3c' }}>
+                                  {policy.CancellationCharge === 0 ?
+                                    'Free cancellation' :
+                                    `${policy.CancellationCharge}% of total amount will be charged`
+                                  }
+                                </p>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                {/* Additional Information */}
-                <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Additional Information</h2>
-                <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
-                  <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Rate Conditions</h3>
-                    <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                      {bookingData.RateConditions.filter(condition => !condition.includes('CheckIn Time') && !condition.includes('CheckOut Time') && !condition.includes('CheckIn Instructions') && !condition.includes('Special Instructions') && !condition.includes('Mandatory Fees') && !condition.includes('Optional Fees') && !condition.includes('Cards Accepted') && !condition.includes('Pets not allowed')).map((condition, index) => (
-                        <li key={index} style={{ margin: '5px 0', color: '#555' }}>{condition}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {bookingData.RateConditions.some(condition => condition.includes('CheckIn Instructions')) && (
+                  {/* Additional Information */}
+                  <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Additional Information</h2>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '20px' }}>
                     <div style={{ marginBottom: '20px' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Check-In Instructions</h3>
-                      <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('CheckIn Instructions')).split(': ')[1] }}></div>
-                    </div>
-                  )}
-
-                  {bookingData.RateConditions.some(condition => condition.includes('Special Instructions')) && (
-                    <div style={{ marginBottom: '20px' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Special Instructions</h3>
-                      <p style={{ margin: '5px 0', color: '#555' }}>{bookingData.RateConditions.find(condition => condition.includes('Special Instructions')).split(': ')[1]}</p>
-                    </div>
-                  )}
-
-                  {bookingData.RateConditions.some(condition => condition.includes('Mandatory Fees')) && (
-                    <div style={{ marginBottom: '20px' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Mandatory Fees</h3>
-                      <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Mandatory Fees')).split(': ')[1] }}></div>
-                    </div>
-                  )}
-
-                  {bookingData.RateConditions.some(condition => condition.includes('Optional Fees')) && (
-                    <div style={{ marginBottom: '20px' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Optional Fees</h3>
-                      <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Optional Fees')).split(': ')[1] }}></div>
-                    </div>
-                  )}
-
-                  {bookingData.RateConditions.some(condition => condition.includes('Cards Accepted')) && (
-                    <div style={{ marginBottom: '20px' }}>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Payment Information</h3>
-                      <p style={{ margin: '5px 0', color: '#555' }}><strong>Accepted Payment Methods:</strong> {bookingData.RateConditions.find(condition => condition.includes('Cards Accepted')).split(': ')[1].split(',').join(', ')}</p>
-                    </div>
-                  )}
-
-                  {bookingData.RateConditions.some(condition => condition.includes('Pets not allowed')) && (
-                    <div>
-                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Property Policies</h3>
+                      <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Rate Conditions</h3>
                       <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                        {bookingData.RateConditions.find(condition => condition.includes('Pets not allowed')).split(',').map((policy, index) => (
-                          <li key={index} style={{ margin: '5px 0', color: '#555' }}>{policy.trim()}</li>
+                        {bookingData.RateConditions.filter(condition => !condition.includes('CheckIn Time') && !condition.includes('CheckOut Time') && !condition.includes('CheckIn Instructions') && !condition.includes('Special Instructions') && !condition.includes('Mandatory Fees') && !condition.includes('Optional Fees') && !condition.includes('Cards Accepted') && !condition.includes('Pets not allowed')).map((condition, index) => (
+                          <li key={index} style={{ margin: '5px 0', color: '#555' }}>{condition}</li>
                         ))}
                       </ul>
                     </div>
-                  )}
+
+                    {bookingData.RateConditions.some(condition => condition.includes('CheckIn Instructions')) && (
+                      <div style={{ marginBottom: '20px' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Check-In Instructions</h3>
+                        <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('CheckIn Instructions')).split(': ')[1] }}></div>
+                      </div>
+                    )}
+
+                    {bookingData.RateConditions.some(condition => condition.includes('Special Instructions')) && (
+                      <div style={{ marginBottom: '20px' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Special Instructions</h3>
+                        <p style={{ margin: '5px 0', color: '#555' }}>{bookingData.RateConditions.find(condition => condition.includes('Special Instructions')).split(': ')[1]}</p>
+                      </div>
+                    )}
+
+                    {bookingData.RateConditions.some(condition => condition.includes('Mandatory Fees')) && (
+                      <div style={{ marginBottom: '20px' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Mandatory Fees</h3>
+                        <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Mandatory Fees')).split(': ')[1] }}></div>
+                      </div>
+                    )}
+
+                    {bookingData.RateConditions.some(condition => condition.includes('Optional Fees')) && (
+                      <div style={{ marginBottom: '20px' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Optional Fees</h3>
+                        <div style={{ color: '#555' }} dangerouslySetInnerHTML={{ __html: bookingData.RateConditions.find(condition => condition.includes('Optional Fees')).split(': ')[1] }}></div>
+                      </div>
+                    )}
+
+                    {bookingData.RateConditions.some(condition => condition.includes('Cards Accepted')) && (
+                      <div style={{ marginBottom: '20px' }}>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Payment Information</h3>
+                        <p style={{ margin: '5px 0', color: '#555' }}><strong>Accepted Payment Methods:</strong> {bookingData.RateConditions.find(condition => condition.includes('Cards Accepted')).split(': ')[1].split(',').join(', ')}</p>
+                      </div>
+                    )}
+
+                    {bookingData.RateConditions.some(condition => condition.includes('Pets not allowed')) && (
+                      <div>
+                        <h3 style={{ margin: '0 0 12px 0', color: '#2c3e50', fontSize: '18px' }}>Property Policies</h3>
+                        <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                          {bookingData.RateConditions.find(condition => condition.includes('Pets not allowed')).split(',').map((policy, index) => (
+                            <li key={index} style={{ margin: '5px 0', color: '#555' }}>{policy.trim()}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )
+              )
           )}
         </Modal.Body>
       </Modal>

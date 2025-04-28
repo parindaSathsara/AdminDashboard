@@ -1031,7 +1031,8 @@ export default function HotelsOrderView(props) {
                 }}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/300x150?text=Hotel+Image";
+                  // e.target.src = "https://via.placeholder.com/300x150?text=Hotel+Image";
+                  e.target.src = "https://cdn.pixabay.com/photo/2021/12/11/07/59/hotel-6862159_1280.jpg";
                 }}
               />
             </div>

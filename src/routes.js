@@ -131,7 +131,7 @@ const routes = [
 
   { path: '/emails/generate', name: 'Email Generate', element: EmailGeneration },
   { path: '/emails/all', name: 'Email Resend', element: EmailDashboard },
-  { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
+  { path: '/emails', name: '', element: EmailDashboard, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
 
