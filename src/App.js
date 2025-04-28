@@ -234,6 +234,7 @@ function App() {
 const [recentlyNotifiedChats, setRecentlyNotifiedChats] = useState({});
 
 const addNotification = (newChat, chatId) => {
+  console.log(newChat, "New Chat Data");
   // Check if we've recently shown a notification for this chat
   if (recentlyNotifiedChats[chatId]) {
     return; // Skip showing another notification
@@ -247,7 +248,7 @@ const addNotification = (newChat, chatId) => {
   const id = Date.now();
   const newNotification = {
     id: chatId.toString(),
-    image: newChat?.chat_avatar?.trim() ? newChat.chat_avatar : "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
+    image: newChat?.chat_avatar?.trim() ? (newChat.chat_avatar.includes(',') ? newChat.chat_avatar.split(',')[0] : newChat.chat_avatar): "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
     title: 'A New Chat Has Arrived!',
     description: newChat?.chat_name,
     user_name: newChat?.last_message?.name,
