@@ -621,7 +621,8 @@ export default function BookingExperience(props) {
           ConfirmationNo: data.checkoutID.toString(),
           BookingRefNo: data.orderID.toString(),
           HotelPolicyDetail: "Standard hotel policy applies",
-          StarRating: "3" // Assuming 3 stars since it's not in your data
+          StarRating: "3",// Assuming 3 stars since it's not in your data
+          currency: data.currency
         },
         basicInfo: {
           checkIn: data.checkInDate,
@@ -1157,13 +1158,13 @@ export default function BookingExperience(props) {
                 <div className="col-md-6">
                   <h6 className="fw-bold text-primary">Booking Information</h6>
                   <p><strong>Travel Date:</strong> {cancellationDetails.travelDate}</p>
-                  <p><strong>Status:</strong> 
+                  <p><strong>Status:</strong>
                   {cancellationDetails.status == "CNL" ?  <CBadge color="danger" style={{ padding: 8, fontSize: 12, color: "white" }}>
                   {cancellationDetails.status}
                       </CBadge>: <CBadge color="warning" style={{ padding: 8, fontSize: 12 }}>
                   {cancellationDetails.status}
-                      </CBadge>} 
-                 
+                      </CBadge>}
+
                   </p>
                   <p><strong>Passengers:</strong> {cancellationDetails.paxes ?
                     Object.entries(cancellationDetails.paxes).map(([type, count]) =>
@@ -1177,7 +1178,7 @@ export default function BookingExperience(props) {
                 </div>
               </div>
 
-             
+
             </div>
           ) : (
             <p>Loading cancellation details...</p>
@@ -1285,6 +1286,7 @@ export default function BookingExperience(props) {
               <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
+
             (productData?.length > 0 && productData[0]?.Provider === "hotelTbo") ? (
               productData.length > 1 ? (
                 <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
@@ -1541,6 +1543,7 @@ export default function BookingExperience(props) {
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                       <span style={{ fontWeight: 'bold', color: '#555' }}>Primary Guest:</span>
                       <span>{bookingData?.bookingData?.PrimaryGuest || productData[0]?.decoded_data?.paxDetails?.[0]?.FirstName + ' ' + productData[0]?.decoded_data?.paxDetails?.[0]?.LastName || 'Not specified'}</span>
+
                     </div>
                   </div>
 

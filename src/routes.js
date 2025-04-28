@@ -163,8 +163,8 @@ const routes = [
 
   // vendor categorize
 
-  {path:'/vendors/categorize',name:'Vendor Categorize',element:VendorCategorize},
-  {path:'/vendors/stats',name:'Vendor Stats',element:VendorStats},
+  { path: '/vendors/categorize', name: 'Vendor Categorize', element: VendorCategorize },
+  { path: '/vendor-analytics', name: 'Vendor Analytics', element: VendorStats },
 
 
   // prmotions
