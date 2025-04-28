@@ -1287,7 +1287,6 @@ export default function BookingExperience(props) {
               <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
-
             ((productData?.length > 0 && productData[0]?.Provider === "hotelTbo")||productData[0]?.Provider === "aahaas" || productData[0]?.Provider === "hotelAhs" || productData[0]?.Provider === "hotelTboH") ? (
 
               productData.length > 1 ? (
