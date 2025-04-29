@@ -184,7 +184,7 @@ const Promotions = () => {
         Swal.fire({
           icon: 'success',
           title: 'Completed!',
-          text: `Notifications sent successfully to ${total} users!`
+          text: `Notifications sent successfully!`
         });
         return response.data; // Return the final response
 
