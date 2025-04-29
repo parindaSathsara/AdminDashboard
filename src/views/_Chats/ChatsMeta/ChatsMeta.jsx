@@ -559,12 +559,12 @@ function ChatsMeta() {
                   {value?.assign_employee_name ? `( handle by ${value?.assign_employee_name})` : ''}
                 </h6>
 
-                <p className="chat-created-date">
+                {/* <p className="chat-created-date">
                   Initiate at {formatDate(value.createdAt)} -{' '}
                   {value?.admin_included?.length === undefined
                     ? 'No active admins'
                     : `Active admins x ${value?.admin_included?.length}`}
-                </p>
+                </p> */}
                 <div className="reading-admins">
                   {value?.admin_included === undefined || value?.admin_included?.length == 0 ? (
                     <span className="chat-admin">Yet to be replied</span>
@@ -724,12 +724,12 @@ function ChatsMeta() {
                           : ''}
                       </h6>
 
-                      <p className="chat-created-date">
+                      {/* <p className="chat-created-date">
                         Initiate at {formatDate(value.createdAt)} -{' '}
                         {value?.admin_included?.length === undefined
                           ? 'No active admins'
                           : `Active admins x ${value?.admin_included?.length}`}
-                      </p>
+                      </p> */}
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
@@ -907,12 +907,12 @@ function ChatsMeta() {
                             : ''}
                         </h6>
 
-                        <p className="chat-created-date">
+                        {/* <p className="chat-created-date">
                           Initiate at {formatDate(value.createdAt)} -{' '}
                           {value?.admin_included?.length === undefined
                             ? 'No active admins'
                             : `Active admins x ${value?.admin_included?.length}`}
-                        </p>
+                        </p> */}
 
                         <div className="reading-admins">
                           {value?.admin_included === undefined ||
@@ -993,12 +993,12 @@ function ChatsMeta() {
                           : ''}
                       </h6>
 
-                      <p className="chat-created-date">
+                      {/* <p className="chat-created-date">
                         Initiate at {formatDate(value.createdAt)} -{' '}
                         {value?.admin_included?.length === undefined
                           ? 'No active admins'
                           : `Active admins x ${value?.admin_included?.length}`}
-                      </p>
+                      </p> */}
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
@@ -1167,12 +1167,12 @@ function ChatsMeta() {
                           : ''}
                       </h6>
 
-                      <p className="chat-created-date">
+                      {/* <p className="chat-created-date">
                         Initiate at {formatDate(value.createdAt)} -{' '}
                         {value?.admin_included?.length === undefined
                           ? 'No active admins'
                           : `Active admins x ${value?.admin_included?.length}`}
-                      </p>
+                      </p> */}
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
@@ -1215,7 +1215,7 @@ function ChatsMeta() {
                   ))
                 ))}
                 {/* Responsive Pagination */}
-                {getFilteredChats('End').length > pagination.itemsPerPage && (
+                {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
                   <div className="d-flex justify-content-center mt-3">
                     <Pagination className="flex-wrap justify-content-center">
                       <Pagination.Prev
@@ -1244,7 +1244,7 @@ function ChatsMeta() {
                       )}
 
                       {/* Current page and neighbors */}
-                      {Array.from({ length: Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) })
+                      {Array.from({ length: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) })
                         .map((_, index) => {
                           const page = index + 1;
                           // Show only current page and adjacent pages on mobile
@@ -1268,21 +1268,21 @@ function ChatsMeta() {
                         })}
 
                       {/* Ellipsis for far pages */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) - 2 && (
+                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 2 && (
                         <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
                       )}
 
                       {/* Last Page */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) - 1 && (
+                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 1 && (
                         <Pagination.Item
-                          key={Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)}
+                          key={Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
                           onClick={() => setPagination(prev => ({
                             ...prev,
                             currentPage: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
                           }))}
                           className="mx-1 d-none d-sm-block"
                         >
-                          {Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)}
+                          {Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
                         </Pagination.Item>
                       )}
 
@@ -1290,13 +1290,13 @@ function ChatsMeta() {
                         onClick={() => setPagination(prev => ({
                           ...prev,
                           currentPage: Math.min(
-                            Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage),
+                            Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage),
                             prev.currentPage + 1
                           )
                         }))}
                         disabled={
                           pagination.currentPage ===
-                          Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)
+                          Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
                         }
                         className="mx-1"
                       />

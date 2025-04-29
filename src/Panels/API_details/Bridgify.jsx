@@ -43,13 +43,13 @@ const Bridgify = () => {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'paid':
+            case "paid":
                 return <CBadge color="success">Paid</CBadge>
-            case 'pending':
+            case "pending":
                 return <CBadge color="warning">Pending</CBadge>
-            case 'cancelled':
+            case "cancelled":
                 return <CBadge color="danger">Cancelled</CBadge>
-            case 'FAL':
+            case "FAL":
                 return <CBadge color="danger">Failed</CBadge>
             default:
                 return <CBadge color="info">{status}</CBadge>
@@ -66,16 +66,17 @@ const Bridgify = () => {
             { title: 'Ticket Details', field: 'tickets', align: 'left' },
             { title: 'Customer Name', field: 'customer', align: 'left' },
             { title: 'Email & Phone', field: 'email_phone', align: 'left' },
-            { title: 'View More', field: 'actions', align: 'left' }
+            // { title: 'View More', field: 'actions', align: 'left' }
         ],
         rows: cartItems.map((item) => {
+            console.log('Item:', item)
             const productDetails = item?.data?.product_details?.title || 'N/A'
             const seletedTimeslot = item?.data?.requires?.timeslots?.selected_value || 'N/A'
             const customerDetails = item?.data?.requires?.['customer-info']?.selected_value || []
 
             return {
                 cart_short_uuid: item?.cart_short_uuid,
-                status: getStatusBadge(item.status),
+                status: item.status,
                 transaction_amount: item?.data?.save_cart?.selected_value?.transaction_amount,
                 product_details: productDetails,
                 timeslots: seletedTimeslot,
@@ -83,18 +84,24 @@ const Bridgify = () => {
                     item?.data?.requires?.tickets?.selected_value
                         ?.map((ticket) => `${ticket.product_id}: ${ticket.quantity}`)
                         .join(', ') || 'N/A',
-                customer:
-                    customerDetails.length > 0
-                        ? customerDetails.map((customer, index) => (
-                            <div key={index}>{`${customer.FirstName || ''} ${customer.LastName || ''}`}</div>
-                        ))
-                        : 'N/A',
-                email_phone:
-                    customerDetails.length > 0
-                        ? customerDetails.map((customer, index) => (
-                            <div key={index}>{`${customer.Email || ''} ${customer.Phoneno || ''}`}</div>
-                        ))
-                        : 'N/A',
+                // customer:
+                //     customerDetails.length > 0
+                //         ? customerDetails.map((customer, index) => (
+                //             <div key={index}>{`${customer.FirstName || ''} ${customer.LastName || ''}`}</div>
+                //         ))
+                //         : 'N/A',
+                // email_phone:
+                //     customerDetails.length > 0
+                //         ? customerDetails.map((customer, index) => (
+                //             <div key={index}>{`${customer.Email || ''} ${customer.Phoneno || ''}`}</div>
+                //         ))
+                //         : 'N/A',
+                customer: customerDetails.length > 0
+                    ? customerDetails.map((customer) => `${customer.FirstName || ''} ${customer.LastName || ''}`).join(', ')
+                    : 'N/A',
+                email_phone: customerDetails.length > 0
+                    ? customerDetails.map((customer) => `${customer.Email || ''} ${customer.Phoneno || ''}`).join(', ')
+                    : 'N/A',
                 actions: <CButton color="primary" onClick={() => handleRowClick(item?.cart_short_uuid)}>View More</CButton>
             }
         }),
@@ -127,7 +134,7 @@ const Bridgify = () => {
         try {
             setModalLoading(true)
             const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
-            
+
             if (response.data.success && response.data.data) {
                 setSelectedCart(response.data.data)
                 setShowModal(true)
@@ -157,9 +164,9 @@ const Bridgify = () => {
                 ...prevState,
                 [index]: true
             }))
-            
+
             const response = await axios.get(`/bridgify/carts/cancelation/${shortUuid}`)
-            
+
             if (response.data.success && response.data.data) {
                 setCancellationInfo(prevState => ({
                     ...prevState,
@@ -208,10 +215,10 @@ const Bridgify = () => {
                                 Swal.showLoading()
                             }
                         })
-                        
+
                         // Make cancellation request
                         const response = await axios.post(`/bridgify/carts/cancelation/${shortUuid}/${cartItemUuid}`)
-                        
+
                         if (response.data.success) {
                             Swal.fire(
                                 'Cancellation Requested!',
@@ -246,7 +253,7 @@ const Bridgify = () => {
         if (collapseElement) {
             const isShowing = collapseElement.classList.contains('show')
             collapseElement.classList.toggle('show')
-            
+
             // Fetch cancellation info if opening and haven't fetched it yet
             if (!isShowing && !cancellationInfo[shortUuid]) {
                 fetchCancellationInfo(shortUuid, index)
@@ -264,17 +271,17 @@ const Bridgify = () => {
     const getMockCancellationInfo = (item) => {
         // This is just example data - in reality, this would come from the API
         if (!item) return null;
-        
+
         return {
             cancellation_eligible: item.status === 'paid',
-            cancellation_deadline: item.attraction_date 
+            cancellation_deadline: item.attraction_date
                 ? new Date(new Date(item.attraction_date).getTime() - 48 * 60 * 60 * 1000).toISOString().split('T')[0]
                 : 'N/A',
-            refund_amount: item.merchant_total_price 
+            refund_amount: item.merchant_total_price
                 ? (parseFloat(item.merchant_total_price) * 0.75).toFixed(2)
                 : 'N/A',
             refund_percentage: '75%',
-            cancellation_fee: item.merchant_total_price 
+            cancellation_fee: item.merchant_total_price
                 ? (parseFloat(item.merchant_total_price) * 0.25).toFixed(2)
                 : 'N/A',
             cancellation_fee_percentage: '25%',
@@ -435,7 +442,7 @@ const Bridgify = () => {
                                                     </CCol>
                                                 </CRow>
                                             )}
-                                            
+
                                             {/* Cancellation Information Dropdown */}
                                             <CRow className="mt-3">
                                                 <CCol>
@@ -452,7 +459,7 @@ const Bridgify = () => {
                                                             color="danger"
                                                             size="sm"
                                                             onClick={() => handleCancellationRequest(orderId, item.order_item_uuid)}
-                                                            // disabled={item.status !== 'paid'}
+                                                        // disabled={item.status !== 'paid'}
                                                         >
                                                             Request Cancellation
                                                         </CButton>

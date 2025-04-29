@@ -1280,14 +1280,15 @@ export default function BookingExperience(props) {
         </Modal.Header>
         <Modal.Body className="max-h-[80vh] overflow-y-auto">
           {console.log(productData, "Booking Data is coming from props")}
+          {console.log(bookingData, "Booking Data is coming from props2")}
 
           {(!bookingData && (!productData || productData?.length === 0)) ? (
             <div className="p-8 flex flex-col items-center justify-center">
               <p className="text-gray-500">{modelDefaultMessage}</p>
             </div>
           ) : (
+            ((productData?.length > 0 && productData[0]?.Provider === "hotelTbo")||productData[0]?.Provider === "aahaas" || productData[0]?.Provider === "hotelAhs" || productData[0]?.Provider === "hotelTboH") ? (
 
-            (productData?.length > 0 && productData[0]?.Provider === "hotelTbo") ? (
               productData.length > 1 ? (
                 <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '850px', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
                   <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px', marginBottom: '20px' }}>
