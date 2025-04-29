@@ -195,15 +195,70 @@ const AccessManagement = () => {
   };
 
   // Submit form
+  // const handleSubmit = async () => {
+  //   if(!selectedEmployee?.value || !selectedRole){
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Fill all fields',
+  //       text: 'Please fill all fields before submitting',
+  //   });
+  //   return
+  //   }
+  //   const confirmation = await Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: 'Do you want to assign these permissions?',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes',
+  //     cancelButtonText: 'No'
+  // });
+
+  // if (confirmation.isConfirmed) {
+  //    try{
+
+  //     const data ={
+  //       userId : selectedEmployee?.value,
+  //       role: selectedRole,
+  //       permissions: selectedPermissions
+  //   }
+  //   console.log("Data", data, selectedRole,selectedPermissions);
+  //   const result = await assignPermissionToEmp(data);
+  //   console.log("Result: ", result);
+  //   if(result[0] !== 200){
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Error!',
+  //       text: 'Error assigning permissions',
+  //   });
+  // }else{
+  //   Swal.fire({
+  //     icon: 'success',
+  //     title: 'Success!',
+  //     text: 'Permissions assigned successfully',
+  //   });
+  //   // console.log("Data: ", data);
+  //   setSelectedEmployee(null);
+  //   setSelectedRole('');
+  //   setSelectedPermissions([]);
+  //   monitorAvailability();
+    
+  //    }
+  //   }catch(error){
+  //     console.error("Error available employee: ", error);
+  // }
+  // }
+  
+  // };
   const handleSubmit = async () => {
-    if(!selectedEmployee?.value || !selectedRole){
+    if (!selectedEmployee?.value || !selectedRole) {
       Swal.fire({
         icon: 'error',
         title: 'Fill all fields',
         text: 'Please fill all fields before submitting',
-    });
-    return
+      });
+      return;
     }
+  
     const confirmation = await Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to assign these permissions?',
@@ -211,44 +266,62 @@ const AccessManagement = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No'
-  });
-
-  if (confirmation.isConfirmed) {
-     try{
-
-      const data ={
-        userId : selectedEmployee?.value,
-        role: selectedRole,
-        permissions: selectedPermissions
-    }
-    console.log("Data", data, selectedRole,selectedPermissions);
-    const result = await assignPermissionToEmp(data);
-    console.log("Result: ", result);
-    if(result[0] !== 200){
-      Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Error assigning permissions',
     });
-  }else{
-    Swal.fire({
-      icon: 'success',
-      title: 'Success!',
-      text: 'Permissions assigned successfully',
-    });
-    // console.log("Data: ", data);
-    setSelectedEmployee(null);
-    setSelectedRole('');
-    setSelectedPermissions([]);
-    monitorAvailability();
-    
-     }
-    }catch(error){
-      console.error("Error available employee: ", error);
-  }
-  }
   
+    if (confirmation.isConfirmed) {
+      try {
+        // Show loading spinner
+        Swal.fire({
+          title: 'Assigning Permissions...',
+          text: 'Please wait...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+  
+        const data = {
+          userId: selectedEmployee?.value,
+          role: selectedRole,
+          permissions: selectedPermissions
+        };
+        console.log("Data", data, selectedRole, selectedPermissions);
+  
+        const result = await assignPermissionToEmp(data);
+        console.log("Result: ", result);
+  
+        // Close loading and show result
+        Swal.close(); 
+  
+        if (result[0] !== 200) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Error assigning permissions',
+          });
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Permissions assigned successfully',
+          });
+          setSelectedEmployee(null);
+          setSelectedRole('');
+          setSelectedPermissions([]);
+          monitorAvailability();
+        }
+      } catch (error) {
+        console.error("Error assigning permissions: ", error);
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'An unexpected error occurred.',
+        });
+      }
+    }
   };
+  
 
   const [allUsers, setAllUser] = useState([]);
 
