@@ -188,6 +188,7 @@ function App() {
     }
 
     useChatNotifications();
+    useOrderNotifications();
   }, []);
 
 
@@ -247,7 +248,7 @@ const addNotification = (newChat, chatId) => {
   
   const id = Date.now();
   const newNotification = {
-    id: chatId.toString(),
+    id: chatId?.toString(),
     image: newChat?.chat_avatar?.trim() ? (newChat.chat_avatar.includes(',') ? newChat.chat_avatar.split(',')[0] : newChat.chat_avatar): "https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png",
     title: 'A New Chat Has Arrived!',
     description: newChat?.chat_name,
@@ -277,6 +278,25 @@ const addNotification = (newChat, chatId) => {
 
   const useChatNotifications = () => {
     const q = query(collection(db, "customer-chat-lists"), orderBy("updatedAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          const newChat = change.doc.data();
+          const chatId = change.doc.id;
+          if (newChat.admin_unreads != 0) {
+            addNotification(newChat, chatId);
+          }
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  };
+  const useOrderNotifications = () => {
+    const q = query(collection(db, "order_ids"), orderBy("updatedAt", "desc"));
+    console.log(q, "Order Notification Query");
+    
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
