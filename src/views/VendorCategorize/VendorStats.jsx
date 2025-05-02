@@ -347,23 +347,31 @@ const VendorStats = () => {
 
   const fetchVendors = async (page = 1) => {
     setLoading(true);
-
     setError(null);
-
+  
     const cacheKey = activeTab;
     const cache = vendorCache[cacheKey];
-
-    // Check cache first
-    if (cache && cache.data.length > 0 && page === 1 && !searchTerm && !selectedCountry && !selectedCategory) {
+  
+    // Only use cache when no filters are applied
+    const useCache = page === 1 && !searchTerm && !selectedCountry && !selectedCategory;
+    
+    if (useCache && cache && cache.data.length > 0) {
       setVendors(cache.data);
       setPagination(cache.pagination);
       setLoading(false);
       return;
     }
-
+  
     try {
       const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
-      console.log("category", selectedCategory);
+      console.log("Fetching vendors with parameters:", {
+        search_term: searchTerm,
+        page,
+        per_page: pagination.perPage,
+        vendor_type: vendorType,
+        country: selectedCountry,
+        category: selectedCategory || 'all'
+      });
       
       const requestData = {
         search_term: searchTerm,
@@ -373,12 +381,11 @@ const VendorStats = () => {
         country: selectedCountry,
         category: selectedCategory || 'all'
       }
+      
       const response = await axios.get('/get-vendors', {
         params: requestData
       });
-      console.log("response", requestData,response.data);
       
-
       if (response.data && response.data.data) {
         const newData = response.data.data.data;
         const newPagination = {
@@ -387,14 +394,12 @@ const VendorStats = () => {
           total: response.data.data.total,
           perPage: response.data.data.per_page
         };
-
+  
         setVendors(newData);
         setPagination(newPagination);
-
-        setLoading(false);
-
-        // Update cache if no filters applied
-        if (!searchTerm && !selectedCountry && !selectedCategory && page === 1) {
+  
+        // Update cache only when no filters are applied
+        if (useCache) {
           setVendorCache(prev => ({
             ...prev,
             [cacheKey]: {
@@ -403,8 +408,6 @@ const VendorStats = () => {
             }
           }));
         }
-        console.log("newData", response);
-        
       }
     } catch (err) {
       console.error('Error fetching vendors:', err);
@@ -413,7 +416,7 @@ const VendorStats = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
   // Function to fetch vendor data
   // const fetchVendors = useCallback(async (page = 1) => {
   //   setLoading(true);
@@ -644,26 +647,117 @@ const VendorStats = () => {
   // Debounced search function
   const debouncedSearch = useCallback(
     debounce((term) => {
-      setSearchTerm(term);
-      fetchVendors(1);
+      const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
+      
+      setLoading(true);
+      axios.get('/get-vendors', {
+        params: {
+          search_term: term,
+          page: 1,
+          per_page: pagination.perPage,
+          vendor_type: vendorType,
+          country: selectedCountry,
+          category: selectedCategory || 'all'
+        }
+      })
+      .then(response => {
+        if (response.data && response.data.data) {
+          const newData = response.data.data.data;
+          const newPagination = {
+            currentPage: response.data.data.current_page,
+            totalPages: response.data.data.last_page,
+            total: response.data.data.total,
+            perPage: response.data.data.per_page
+          };
+          
+          setVendors(newData);
+          setPagination(newPagination);
+        }
+      })
+      .catch(err => {
+        console.error('Error during search:', err);
+        setError('Failed to load vendors. Please try again later.');
+        setVendors([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
     }, 300),
-    [fetchVendors]
+    [activeTab, selectedCountry, selectedCategory, pagination.perPage]
   );
-
   // Handle search input change
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchLoading(true);
-    setSearchTerm(term); // Update immediately for responsive UI
-
-    // Show loading for at least 500ms to prevent flickering
-    setTimeout(() => {
-      setSearchLoading(false);
-    }, 500);
-
-    debouncedSearch(term);
+    
+    // Always update the UI immediately
+    setSearchTerm(term);
+    
+    // Cancel any pending debounced searches
+    debouncedSearch.cancel();
+    
+    // If the search field is cleared, immediately fetch all vendors
+    if (term === '') {
+      console.log("Search cleared - fetching all vendors");
+      // Force a fresh fetch by directly calling the API
+      const vendorType = activeTab === 'all' ? 'All' : activeTab === 'direct' ? 'Direct' : 'DMC';
+      
+      setLoading(true);
+      axios.get('/get-vendors', {
+        params: {
+          search_term: '',  // Explicitly set empty search term
+          page: 1,
+          per_page: pagination.perPage,
+          vendor_type: vendorType,
+          country: selectedCountry,
+          category: selectedCategory || 'all'
+        }
+      })
+      .then(response => {
+        if (response.data && response.data.data) {
+          const newData = response.data.data.data;
+          const newPagination = {
+            currentPage: response.data.data.current_page,
+            totalPages: response.data.data.last_page,
+            total: response.data.data.total,
+            perPage: response.data.data.per_page
+          };
+          
+          // Update state with fresh data
+          setVendors(newData);
+          setPagination(newPagination);
+          
+          // Update cache if no other filters
+          if (!selectedCountry && !selectedCategory) {
+            setVendorCache(prev => ({
+              ...prev,
+              [activeTab]: {
+                data: newData,
+                pagination: newPagination
+              }
+            }));
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching vendors after clearing search:', err);
+        setError('Failed to load vendors. Please try again later.');
+        setVendors([]);
+      })
+      .finally(() => {
+        setLoading(false);
+        setSearchLoading(false);
+      });
+    } else {
+      // For non-empty searches, use the debounced search
+      debouncedSearch(term);
+      
+      // Show loading for at least 500ms to prevent flickering
+      setTimeout(() => {
+        setSearchLoading(false);
+      }, 500);
+    }
   };
-
   // Handle API search
   const handleApiSearchChange = (e) => {
     const term = e.target.value.toLowerCase();
