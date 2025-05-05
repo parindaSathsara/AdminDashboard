@@ -202,6 +202,22 @@ function ChatsMeta() {
   }
 
   const handleOpenChat = async (chatData) => {
+    const chatDocRef = doc(db, 'customer-chat-lists/', chatData.id)
+    let admin_included = chatData.admin_included ?? []
+
+    if (!admin_included.includes(userData.id)) {
+      admin_included.push(userData.id);
+      const chatDocSnap = await getDoc(chatDocRef)
+      if (chatDocSnap.exists()) {
+        const updateData = {
+          admin_included: admin_included,
+        }
+        await updateDoc(chatDocRef, updateData)
+      }
+    }
+
+
+
     console.log('handleOpenChat function calledopened', chatData)
     setChatOpened(true)
     setChatOpenDetails(chatData)
@@ -559,12 +575,12 @@ function ChatsMeta() {
                   {value?.assign_employee_name ? `( handle by ${value?.assign_employee_name})` : ''}
                 </h6>
 
-                {/* <p className="chat-created-date">
+                <p className="chat-created-date">
                   Initiate at {formatDate(value.createdAt)} -{' '}
                   {value?.admin_included?.length === undefined
                     ? 'No active admins'
                     : `Active admins x ${value?.admin_included?.length}`}
-                </p> */}
+                </p>
                 <div className="reading-admins">
                   {value?.admin_included === undefined || value?.admin_included?.length == 0 ? (
                     <span className="chat-admin">Yet to be replied</span>
@@ -589,93 +605,93 @@ function ChatsMeta() {
 
             {/* Responsive Pagination */}
             {getFilteredChats('pinned').length > pagination.itemsPerPage && (
-                  <div className="d-flex justify-content-center mt-3">
-                    <Pagination className="flex-wrap justify-content-center">
-                      <Pagination.Prev
-                        onClick={() => setPagination(prev => ({
-                          ...prev,
-                          currentPage: Math.max(1, prev.currentPage - 1)
-                        }))}
-                        disabled={pagination.currentPage === 1}
-                        className="mx-1"
-                      />
+              <div className="d-flex justify-content-center mt-3">
+                <Pagination className="flex-wrap justify-content-center">
+                  <Pagination.Prev
+                    onClick={() => setPagination(prev => ({
+                      ...prev,
+                      currentPage: Math.max(1, prev.currentPage - 1)
+                    }))}
+                    disabled={pagination.currentPage === 1}
+                    className="mx-1"
+                  />
 
-                      {/* First Page */}
-                      {pagination.currentPage > 2 && (
-                        <Pagination.Item
-                          key={1}
-                          onClick={() => setPagination(prev => ({ ...prev, currentPage: 1 }))}
-                          className="mx-1 d-none d-sm-block"
-                        >
-                          1
-                        </Pagination.Item>
-                      )}
+                  {/* First Page */}
+                  {pagination.currentPage > 2 && (
+                    <Pagination.Item
+                      key={1}
+                      onClick={() => setPagination(prev => ({ ...prev, currentPage: 1 }))}
+                      className="mx-1 d-none d-sm-block"
+                    >
+                      1
+                    </Pagination.Item>
+                  )}
 
-                      {/* Ellipsis for far pages */}
-                      {pagination.currentPage > 3 && (
-                        <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
-                      )}
+                  {/* Ellipsis for far pages */}
+                  {pagination.currentPage > 3 && (
+                    <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
+                  )}
 
-                      {/* Current page and neighbors */}
-                      {Array.from({ length: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) })
-                        .map((_, index) => {
-                          const page = index + 1;
-                          // Show only current page and adjacent pages on mobile
-                          if (
-                            page === 1 ||
-                            page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
-                            (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
-                          ) {
-                            return (
-                              <Pagination.Item
-                                key={page}
-                                active={page === pagination.currentPage}
-                                onClick={() => setPagination(prev => ({ ...prev, currentPage: page }))}
-                                className="mx-1"
-                              >
-                                {page}
-                              </Pagination.Item>
-                            );
-                          }
-                          return null;
-                        })}
+                  {/* Current page and neighbors */}
+                  {Array.from({ length: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) })
+                    .map((_, index) => {
+                      const page = index + 1;
+                      // Show only current page and adjacent pages on mobile
+                      if (
+                        page === 1 ||
+                        page === Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) ||
+                        (page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)
+                      ) {
+                        return (
+                          <Pagination.Item
+                            key={page}
+                            active={page === pagination.currentPage}
+                            onClick={() => setPagination(prev => ({ ...prev, currentPage: page }))}
+                            className="mx-1"
+                          >
+                            {page}
+                          </Pagination.Item>
+                        );
+                      }
+                      return null;
+                    })}
 
-                      {/* Ellipsis for far pages */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 2 && (
-                        <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
-                      )}
+                  {/* Ellipsis for far pages */}
+                  {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 2 && (
+                    <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
+                  )}
 
-                      {/* Last Page */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 1 && (
-                        <Pagination.Item
-                          key={Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
-                          onClick={() => setPagination(prev => ({
-                            ...prev,
-                            currentPage: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
-                          }))}
-                          className="mx-1 d-none d-sm-block"
-                        >
-                          {Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
-                        </Pagination.Item>
-                      )}
+                  {/* Last Page */}
+                  {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 1 && (
+                    <Pagination.Item
+                      key={Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
+                      onClick={() => setPagination(prev => ({
+                        ...prev,
+                        currentPage: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
+                      }))}
+                      className="mx-1 d-none d-sm-block"
+                    >
+                      {Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
+                    </Pagination.Item>
+                  )}
 
-                      <Pagination.Next
-                        onClick={() => setPagination(prev => ({
-                          ...prev,
-                          currentPage: Math.min(
-                            Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage),
-                            prev.currentPage + 1
-                          )
-                        }))}
-                        disabled={
-                          pagination.currentPage ===
-                          Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
-                        }
-                        className="mx-1"
-                      />
-                    </Pagination>
-                  </div>
-                )}
+                  <Pagination.Next
+                    onClick={() => setPagination(prev => ({
+                      ...prev,
+                      currentPage: Math.min(
+                        Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage),
+                        prev.currentPage + 1
+                      )
+                    }))}
+                    disabled={
+                      pagination.currentPage ===
+                      Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
+                    }
+                    className="mx-1"
+                  />
+                </Pagination>
+              </div>
+            )}
             <Tabs
               defaultActiveKey="All"
               id="uncontrolled-tab-example"
@@ -724,12 +740,12 @@ function ChatsMeta() {
                           : ''}
                       </h6>
 
-                      {/* <p className="chat-created-date">
+                      <p className="chat-created-date">
                         Initiate at {formatDate(value.createdAt)} -{' '}
                         {value?.admin_included?.length === undefined
                           ? 'No active admins'
                           : `Active admins x ${value?.admin_included?.length}`}
-                      </p> */}
+                      </p>
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
@@ -907,12 +923,12 @@ function ChatsMeta() {
                             : ''}
                         </h6>
 
-                        {/* <p className="chat-created-date">
+                        <p className="chat-created-date">
                           Initiate at {formatDate(value.createdAt)} -{' '}
                           {value?.admin_included?.length === undefined
                             ? 'No active admins'
                             : `Active admins x ${value?.admin_included?.length}`}
-                        </p> */}
+                        </p>
 
                         <div className="reading-admins">
                           {value?.admin_included === undefined ||
@@ -993,12 +1009,12 @@ function ChatsMeta() {
                           : ''}
                       </h6>
 
-                      {/* <p className="chat-created-date">
+                      <p className="chat-created-date">
                         Initiate at {formatDate(value.createdAt)} -{' '}
                         {value?.admin_included?.length === undefined
                           ? 'No active admins'
                           : `Active admins x ${value?.admin_included?.length}`}
-                      </p> */}
+                      </p>
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
@@ -1167,12 +1183,12 @@ function ChatsMeta() {
                           : ''}
                       </h6>
 
-                      {/* <p className="chat-created-date">
+                      <p className="chat-created-date">
                         Initiate at {formatDate(value.createdAt)} -{' '}
                         {value?.admin_included?.length === undefined
                           ? 'No active admins'
                           : `Active admins x ${value?.admin_included?.length}`}
-                      </p> */}
+                      </p>
 
                       <div className="reading-admins">
                         {value?.admin_included === undefined ||
@@ -1213,7 +1229,7 @@ function ChatsMeta() {
                       </div>
                     </div>
                   ))
-                ))}
+                  ))}
                 {/* Responsive Pagination */}
                 {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
                   <div className="d-flex justify-content-center mt-3">
