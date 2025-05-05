@@ -28,11 +28,7 @@ import {
   MenuItem,
   FormHelperText, LinearProgress
 } from '@mui/material';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import { convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { BellFill, Send, Image as ImageIcon } from 'react-bootstrap-icons';
@@ -46,8 +42,8 @@ const stackScreenData = {
     {
       name: "LoginNavigator",
       screens: [
-        "LoginMainPage", "LoginPage", "SignInUsingPassword", "MobileLogin", 
-        "OneTimePass", "MobileNumberLogin", "ForgotPassword", "VerifyCodeAndResetPass", 
+        "LoginMainPage", "LoginPage", "SignInUsingPassword", "MobileLogin",
+        "OneTimePass", "MobileNumberLogin", "ForgotPassword", "VerifyCodeAndResetPass",
         "ProfileLogin", "OnboardingScreen"
       ]
     },
@@ -74,8 +70,10 @@ const stackScreenData = {
 
 const Promotions = () => {
   const [notificationTitle, setNotificationTitle] = useState('');
+  const [notificationContent, setNotificationContent] = useState('');
+
   const [description, setDescription] = useState('');
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  // const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [isSending, setIsSending] = useState(false);
   const [redirectLink, setRedirectLink] = useState('');
   const [image, setImage] = useState(null);
@@ -102,10 +100,12 @@ const Promotions = () => {
     }
   }, [selectedStack]);
 
-  const handleEditorChange = (state) => {
-    setEditorState(state);
-    setDescription(draftToHtml(convertToRaw(state.getCurrentContent())));
+  const handleContentChange = (e) => {
+    setNotificationContent(e.target.value);
+    // For preview, you can use the same value or format it if needed
+    setDescription(e.target.value);
   };
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -114,7 +114,6 @@ const Promotions = () => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
-
   const validateForm = () => {
     if (!notificationTitle.trim() || notificationTitle.length < 5) {
       Swal.fire({
@@ -125,8 +124,8 @@ const Promotions = () => {
       return false;
     }
 
-    const contentText = editorState.getCurrentContent().getPlainText();
-    if (!contentText.trim() || contentText.length < 5) {
+    // Check notificationContent instead of editorState
+    if (!notificationContent.trim() || notificationContent.length < 5) {
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
@@ -150,7 +149,9 @@ const Promotions = () => {
   const sendBatchNotifications = async (offset = 0) => {
     const formData = new FormData();
     formData.append('title', notificationTitle);
-    formData.append('description', description);
+    formData.append('description', notificationContent); // Use notificationContent here
+
+    // formData.append('description', description);
     formData.append('redirectLink', redirectLink);
     if (image) formData.append('image', image);
     formData.append('mostOrderedCount', mostOrderedCount);
@@ -164,9 +165,9 @@ const Promotions = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response.data,"Batch response data");
+      console.log(response.data, "Batch response data");
       const { current, total, responses } = response.data;
-      
+
       setBatchResponses(prev => [...prev, ...responses]);
       setProcessedUsers(current);
       setTotalUsers(total);
@@ -200,6 +201,24 @@ const Promotions = () => {
     }
   };
 
+  const resetForm = () => {
+    setNotificationTitle('');
+    // setEditorState(EditorState.createEmpty());
+    setNotificationContent(''); // Reset the content
+    setRedirectLink('');
+    setImage(null);
+    setImagePreview('');
+    setReceivers('1'); // Reset to default "All Users"
+    setMostOrderedCount(10); // Reset to default count
+    setSelectedStack('MainNavigatorStack'); // Reset to default stack
+    setSelectedScreen('Home'); // Reset to default screen
+    setProgress(0);
+    setProcessedUsers(0);
+    setTotalUsers(0);
+    setBatchResponses([]);
+    setNotificationContent('');
+  };
+
   const handleSendNotification = async () => {
     if (!validateForm()) return;
 
@@ -225,6 +244,7 @@ const Promotions = () => {
     try {
       const finalResponse = await sendBatchNotifications(0);
       console.log("Complete notification process finished:", finalResponse);
+      resetForm(); // Reset all form fields
     } catch (error) {
       console.error("Error in notification process:", error);
     } finally {
@@ -255,7 +275,7 @@ const Promotions = () => {
                       <i className="bi bi-card-heading"></i>
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Enter notification title (min 5 characters)"
+                      placeholder="Enter notification title.."
                       value={notificationTitle}
                       onChange={(e) => setNotificationTitle(e.target.value)}
                       disabled={isSending}
@@ -270,13 +290,23 @@ const Promotions = () => {
 
                 <div className="mb-3">
                   <CFormLabel className="fw-bold">Notification Content*</CFormLabel>
-                  <Editor
+                  {/* <Editor
                     editorState={editorState}
                     onEditorStateChange={handleEditorChange}
                     wrapperClassName="border rounded"
                     editorClassName="px-3 min-h-[200px]"
                     placeholder="Write your notification content here (min 5 characters)..."
                     toolbarHidden
+                  /> */}
+                  <CFormInput
+                    as="textarea"
+                    rows={5} // Adjust rows as needed
+                    placeholder="Write your notification content here..."
+                    value={notificationContent}
+                    onChange={handleContentChange}
+                    disabled={isSending}
+                    // minLength={5}
+                    required
                   />
                 </div>
 
@@ -372,34 +402,27 @@ const Promotions = () => {
                   </CFormSelect>
                 </div>
                 {isBatchSending && (
-              <Box sx={{ mt: 3, mb: 3 }}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Sending notifications... {processedUsers} of {totalUsers} users processed
-                </Typography>
-                <LinearProgress 
-                  variant="determinate" 
-                  value={progress} 
-                  sx={{ height: 10, borderRadius: 5 }}
-                />
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    {progress}%
-                  </Typography>
-                </Box>
-              </Box>
-            )}
+                  <Box sx={{ mt: 3, mb: 3 }}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Sending notifications... {processedUsers} of {totalUsers} users processed
+                    </Typography>
+                    <LinearProgress
+                      variant="determinate"
+                      value={progress}
+                      sx={{ height: 10, borderRadius: 5 }}
+                    />
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {progress}%
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                   <Button
                     variant="outlined"
                     color="secondary"
-                    onClick={() => {
-                      setNotificationTitle('');
-                      setEditorState(EditorState.createEmpty());
-                      setDescription('');
-                      setRedirectLink('');
-                      setImage(null);
-                      setImagePreview('');
-                    }}
+                    onClick={resetForm} // Use the reset function
                     disabled={isSending}
                   >
                     Clear
@@ -428,7 +451,7 @@ const Promotions = () => {
               <Typography variant="subtitle1" fontWeight="bold">
                 Preview:
               </Typography>
-              <Paper elevation={2} sx={{ p: 2, mt: 1, border: '1px dashed #ccc' }}>
+              <Paper elevation={2} sx={{ p: 2, mt: 1, border: '1px dashed #ccc', whiteSpace: 'pre-line' }}>
                 <Typography variant="h6" fontWeight="bold">
                   {notificationTitle || 'Notification Title'}
                 </Typography>
@@ -441,12 +464,9 @@ const Promotions = () => {
                     />
                   </Box>
                 )}
-                <Box
-                  sx={{ mt: 1 }}
-                  dangerouslySetInnerHTML={{
-                    __html: description || '<em>Notification content will appear here...</em>'
-                  }}
-                />
+                <Typography>
+                  {notificationContent || <em>Notification content will appear here...</em>}
+                </Typography>
               </Paper>
             </Box>
           </CCardBody>
