@@ -574,7 +574,7 @@ async function candelOrder(data) {
     else {
       Swal.fire({
         title: "Oops!",
-        text: "Swomthing went wrong",
+        text: "Something went wrong",
         icon: "error"
       });
     }
@@ -583,7 +583,7 @@ async function candelOrder(data) {
   }).catch((error) => {
     Swal.fire({
       title: "Oops!",
-      text: "Swomthing went wrong",
+      text: "Something went wrong",
       icon: "error"
     });
     throw new Error(error);

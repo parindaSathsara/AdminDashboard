@@ -577,7 +577,8 @@ function OrderDetails(props) {
     rows: hotelData?.map((value) => ({
       id: value.checkoutID,
       hotelName: value.hotelName,
-      Provider: value.Provider == 'hotelAhs' ? 'Aahaas' : 'TBO',
+      // Provider: value.Provider == 'hotelAhs' ? 'Aahaas' : 'TBO',
+      Provider: value.Provider === "hotelAhs" ? "Aahaas" : value.Provider === "ratehawk" ? "Rate Hawk" : "TBO",
       NoOfNights: value.NoOfNights,
       NoOfAdults: value.NoOfAdults,
       checkInDate: moment(value.checkInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),

@@ -558,7 +558,7 @@ function ProductDetails(props) {
         //     cancelButtonColor: "#d33",
         //     confirmButtonText: "Yes"
         // }).then((result) => {
-            // console.log(result, "IS Confirmed")
+        // console.log(result, "IS Confirmed")
 
         //     if (result.isConfirmed) {
 
@@ -630,7 +630,9 @@ function ProductDetails(props) {
         rows: hotelData?.map(value => ({
             id: value.checkoutID,
             hotelName: value.hotelName,
-            Provider: value.Provider == "hotelAhs" ? "Aahaas" : "TBO",
+            // Provider: value.Provider == "hotelAhs" ? "Aahaas" : "TBO",
+            Provider: value.Provider === "hotelAhs" ? "Aahaas" : value.Provider === "ratehawk" ? "RateHawk" : "TBO",
+           
             NoOfNights: value.NoOfNights,
             NoOfAdults: value.NoOfAdults,
             checkInDate: value.checkInDate,
