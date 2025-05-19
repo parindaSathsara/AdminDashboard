@@ -289,26 +289,50 @@ export default function BookingExperience(props) {
                 Swal.showLoading()
               },
             })
+// console.log("Show Loading")
+updateDeliveryStatus(e.checkoutID, targetvalue, '')
+  .then((result) => {
+    console.log('resulttt', result);
+
+    props.reload();
+    setSelectedStatusCheckout('Approved');
+  })
+  .catch((error) => {
+    console.log(error, 'Error Value is 1234');
+    if (error.response && error.response.status === 422) {
+      Swal.fire({
+        title: "Cannot Approve Order",
+        text: error.response.data.message || "Something went wrong.",
+        icon: "error",
+      });
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: "An unexpected error occurred. Please try again.",
+        icon: "error",
+      });
+    }
+  });
 
             // console.log("Show Loading")
-            updateDeliveryStatus(e.checkoutID, targetvalue, '')
-              .then((result) => {
-                console.log('resulttt', result)
+            // updateDeliveryStatus(e.checkoutID, targetvalue, '')
+            //   .then((result) => {
+            //     console.log('resulttt', result)
+                
+            //     props.reload()
 
-                props.reload()
+            //     setSelectedStatusCheckout('Approved')
 
-                setSelectedStatusCheckout('Approved')
-
-                // Swal.close(); // Close the loading spinner
-              })
-              .catch((error) => {
-                console.log(error, 'Error Value is 1234')
-                Swal.fire({
-                  title: 'Error!',
-                  text: 'Failed to update order',
-                  icon: 'error',
-                })
-              })
+            //     // Swal.close(); // Close the loading spinner
+            //   })
+            //   .catch((error) => {
+            //     console.log(error, 'Error Value is 1234')
+            //     Swal.fire({
+            //       title: 'Error!',
+            //       text: 'Failed to update order',
+            //       icon: 'error',
+            //     })
+            //   })
           }
         })
       } else if (val.target.value === 'Cancel') {
@@ -578,7 +602,7 @@ export default function BookingExperience(props) {
   const handleModelShow = async (checkoutID) => {
     console.log('Request for checkout ID:', checkoutID)
     try {
-      let url = `/bridgify/order-details/${checkoutID || '14273'}`
+      let url = `/bridgify/order-details/${checkoutID}`
       const response = await axios.get(url)
       console.log(response.data.data, 'Booking Response Data is')
 
