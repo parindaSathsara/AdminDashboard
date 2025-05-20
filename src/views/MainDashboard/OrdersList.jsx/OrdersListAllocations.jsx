@@ -369,19 +369,71 @@ const OrderAllocate = ({ normalUser = false }) => {
                 visibleInShowHideMenu: false,
                 size: 200 // Adjust the size as needed
             },
+            // {
+            //     accessorKey: 'product_image',
+            //     header: 'Product Image',
+            //     enableSorting: false,
+            //     enableColumnFilter: false, // Disable filtering for this column
+            //     Cell: ({ cell }) => (
+            //         <div style={{ width: "120px", height: "100px", borderRadius: "10px", overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            //             <CCardImage
+            //                 src={cell.row.original.product_image?.split(",")[0]?.includes("http") ? cell.row.original.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + cell.row.original.product_image?.split(",")[0]}
+            //                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            //             />
+            //         </div>
+            //     ),
+            //     size: 150, // Fixed size for the Product Image column
+            // },
             {
                 accessorKey: 'product_image',
                 header: 'Product Image',
                 enableSorting: false,
                 enableColumnFilter: false, // Disable filtering for this column
-                Cell: ({ cell }) => (
-                    <div style={{ width: "120px", height: "100px", borderRadius: "10px", overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <CCardImage
-                            src={cell.row.original.product_image?.split(",")[0]?.includes("http") ? cell.row.original.product_image?.split(",")[0] : "https://supplier.aahaas.com/" + cell.row.original.product_image?.split(",")[0]}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                    </div>
-                ),
+                Cell: ({ cell }) => {
+                    // Check if product_image exists and has content
+                    const hasProductImage = cell.row.original.product_image && 
+                                           cell.row.original.product_image.trim() !== "";
+                    
+                    // Set default image path
+                    const defaultImagePath = "https://play-lh.googleusercontent.com/qoEowqafsAPLEHj5pj-Tfgoj3XuehDt2cEBBe9vvRwyfaaMv3S2SzggQnbAmHx3eB6no=w240-h480-rw";
+                    
+                    // Determine which image to show
+                    let imageUrl;
+                    if (hasProductImage) {
+                        // Use the product image if available
+                        imageUrl = cell.row.original.product_image?.split(",")[0]?.includes("http") 
+                            ? cell.row.original.product_image?.split(",")[0] 
+                            : "https://supplier.aahaas.com/" + cell.row.original.product_image?.split(",")[0];
+                    } else {
+                        // Use the default image
+                        imageUrl = defaultImagePath;
+                    }
+                    
+                    return (
+                        <div style={{ 
+                            width: "120px", 
+                            height: "100px", 
+                            borderRadius: "10px", 
+                            overflow: 'hidden', 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center' 
+                        }}>
+                            <CCardImage
+                                src={imageUrl}
+                                style={{ 
+                                    width: "100%", 
+                                    height: "100%", 
+                                    objectFit: "cover" 
+                                }}
+                                onError={(e) => {
+                                    // Fallback if the image fails to load
+                                    e.target.src = defaultImagePath;
+                                }}
+                            />
+                        </div>
+                    );
+                },
                 size: 150, // Fixed size for the Product Image column
             },
             { accessorKey: 'product_id', header: 'Product ID', size: 100 }, // Example of fixed size

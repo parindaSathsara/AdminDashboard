@@ -334,7 +334,7 @@ export default function HotelsOrderView(props) {
 
   return (
     <CContainer style={{ backgroundColor: 'white', padding: 20, borderRadius: 20, paddingRight: 60, paddingLeft: 60 }} fluid>
-      {props?.productData?.Provider == "hotelAhs" && (
+      {(props?.productData?.Provider == "hotelAhs" || props?.productData?.Provider === "ratehawk") && (
         <div style={{ fontFamily: 'Arial, sans-serif', margin: '0 auto', padding: '25px', borderRadius: '8px', boxShadow: '0 3px 15px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
           {/* Main Booking Info */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '25px' }}>
