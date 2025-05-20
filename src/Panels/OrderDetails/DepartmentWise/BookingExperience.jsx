@@ -458,14 +458,18 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
   }
 
   const handleOrderCancellation = async (data) => {
-    cancellationData['reason'] = data
-
-    Swal.showLoading()
-    await candelOrder(cancellationData)
-    Swal.hideLoading()
-    props?.reload()
-
-    setSelectedStatusCheckout('Cancel')
+    cancellationData['reason'] = data;
+    
+    try {
+      Swal.showLoading();
+      await candelOrder(cancellationData);
+    } catch (error) {
+      console.error("Order cancellation failed:", error);
+    } finally {
+      Swal.hideLoading();
+      props?.reload();
+      setSelectedStatusCheckout('Cancel');
+    }
   }
 
   const [clickedStatus, setClickedStatus] = useState('')

@@ -543,6 +543,56 @@ async function updateDeliveryStatus(id, value, type) {
 }
 
 async function candelOrder(data) {
+  try {
+    const res = await axios.post("cancel_order", data);
+    
+    console.log("Cancel response:", res.data); // Add this for debugging
+    
+    if (res.data.status === 200) {
+      Swal.fire({
+        title: "Canceled!",
+        text: "Order has been canceled.",
+        icon: "success"
+      });
+    } else if (res.data.status === 201) {
+      Swal.fire({
+        title: "Order is on Editing mode",
+        text: "Order is Editing by Customer and Supplier.",
+        icon: "error"
+      });
+    } else if (res.data.status === 202) {
+      Swal.fire({
+        title: "Order is Already Updated",
+        icon: "error"
+      });
+    } else {
+      // More detailed error message
+      const errorMessage = "Something went wrong";
+      // const errorMessage = res.data.message || "Something went wrong";
+      Swal.fire({
+        title: "Cancellation Failed",
+        text: errorMessage,
+        icon: "error"
+      });
+    }
+    
+    return res.data;
+  } catch (error) {
+    console.error("Cancel order error:", error.response?.data || error);
+    
+    // Show a more informative error message
+    const errorMessage = error.response?.data?.message || "Server error occurred";
+    Swal.fire({
+      title: "Cancellation Error",
+      // text: errorMessage,
+      icon: "error"
+    });
+    
+    throw error;
+  }
+}
+
+async function candelOrder1(data) {
 
 
 
