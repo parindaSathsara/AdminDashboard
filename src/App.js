@@ -36,6 +36,7 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 //
 
 
+
 axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
 axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
 axios.defaults.data = 'https://staging-admin-api.aahaas.com';
@@ -43,16 +44,26 @@ axios.defaults.url = 'https://dev-gateway.aahaas.com/api';
 axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/';
 axios.defaults.ratehawk = "https://api.worldota.net/api"
 
+// axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
+// axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
+// axios.defaults.data = 'https://staging-admin-api.aahaas.com';
+// axios.defaults.url = 'https://dev-gateway.aahaas.com/api';
+// axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/';
+
+
+
+
 // axios.defaults.imageUrl = 'http://192.16.26.54:8000/';
 // axios.defaults.baseURL = 'http://192.16.26.54:8000/api';
 // axios.defaults.data = 'http://192.16.26.54:8000';
 // axios.defaults.url = 'http://192.16.26.54:8000/api';
 
 
-// axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
-// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-// axios.defaults.data = 'https://admin-api.aahaas.com'
-// axios.defaults.url = 'https://gateway.aahaas.com/api';
+//axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
+//axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+//axios.defaults.data = 'https://admin-api.aahaas.com'
+//axios.defaults.url = 'https://gateway.aahaas.com/api';
+//axios.defaults.supplierUrl = 'https://supplier.aahaas.com/';
 
 // axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
 // axios.defaults.data = 'http://172.16.26.67:8000'
