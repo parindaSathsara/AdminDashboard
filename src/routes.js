@@ -95,6 +95,7 @@ import UserCountStats from './Panels/UserCount/UserCountStats'
 import VendorCategorize from './views/VendorCategorize/VendorCategorize'
 import Promotions from './views/Promotions/Promotions'
 import VendorStats from './views/VendorCategorize/VendorStats'
+import RateHawk from './Panels/API_details/RateHawk'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -159,6 +160,7 @@ const routes = [
   // services
   { path: '/services/bridgyfy', name: 'Bridgify', element: Bridgify },
   { path: '/services/tbo', name: 'TBO', element: TBO },
+  { path: '/services/ratehawk', name: 'RateHawk', element: RateHawk },
   { path: '/users/stats', name: 'User Stats', element: UserCountStats },
 
   // vendor categorize
