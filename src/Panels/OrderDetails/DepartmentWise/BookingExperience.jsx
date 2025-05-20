@@ -340,7 +340,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
 
         let data = {
           reason: '',
-          id: e.checkoutID,
+          id: e.orderID,
           value: val.target.value,
         }
 
