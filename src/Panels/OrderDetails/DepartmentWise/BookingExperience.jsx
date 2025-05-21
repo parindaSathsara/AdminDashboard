@@ -259,7 +259,7 @@ export default function BookingExperience(props) {
 
   const handleDelStatusChange = async (e, val) => {
     console.log(val, 'Value Data set is 123')
-    console.log(e.checkoutID, 'Target Value is')
+    console.log(e, 'Target Value is')
 
     var title = ''
 
@@ -340,7 +340,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
 
         let data = {
           reason: '',
-          id: e.orderID,
+          id: e.data.orderID,
           value: val.target.value,
         }
 

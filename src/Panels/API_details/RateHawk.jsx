@@ -63,7 +63,8 @@ const RateHawk = () => {
 
     const data = {
         columns: [
-            { title: 'Order ID', field: 'order_id', align: 'left' },
+            { title: 'Ratehawk Order ID', field: 'order_id', align: 'left' },
+            { title: 'Partner Order ID', field: 'partner_order_id', align: 'left' },
             { title: 'Agreement Number', field: 'agreement_number', align: 'left' },
             { title: 'Status', field: 'status', align: 'left' },
             { title: 'Hotel', field: 'hotel_name', align: 'left' },
@@ -75,6 +76,7 @@ const RateHawk = () => {
         ],
         rows: orders.map((order) => ({
             order_id: order.order_id,
+            partner_order_id: order.partner_data.order_id,
             agreement_number: order.agreement_number,
             status: order.status,
             hotel_name: order.hotel_data?.id || 'N/A',
