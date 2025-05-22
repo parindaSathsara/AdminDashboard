@@ -675,15 +675,15 @@ export default function HotelsOrderView(props) {
 
                   <div style={{ textAlign: 'center', flex: '1' }}>
                     <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
-                    {/* <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
+                    <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
                       {bookingData?.CheckOut 
                         ? new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                         : new Date(props.productData.checkOutDate.split('/').reverse().join('-')).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </p> */}
+                    </p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
-                      {/* {bookingData?.CheckOut 
+                      {bookingData?.CheckOut 
                         ? new Date(bookingData.CheckOut).getFullYear()
-                        : new Date(props.productData.checkOutDate.split('/').reverse().join('-')).getFullYear()} */}
+                        : new Date(props.productData.checkOutDate.split('/').reverse().join('-')).getFullYear()}
                     </p>
                   </div>
                 </div>
@@ -694,7 +694,7 @@ export default function HotelsOrderView(props) {
           </div>
 
           {/* Hotel Information */}
-          <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information</h2>
+          <h2 style={{ color: '#2c3e50', borderBottom: '2px solid #eaeaea', paddingBottom: '8px', fontSize: '22px' }}>Hotel Information3</h2>
           <div style={{ backgroundColor: '#f8f9fa', padding: '18px', borderRadius: '6px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
             <div style={{ flex: '1', minWidth: '300px' }}>
               <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>
