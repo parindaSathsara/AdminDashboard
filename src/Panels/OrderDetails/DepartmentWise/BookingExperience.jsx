@@ -338,9 +338,10 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
       } else if (val.target.value === 'Cancel') {
         title = 'Do You Want to Cancel'
 
+
         let data = {
           reason: '',
-          id: e.data.orderID,
+          id: e.data.checkoutID,
           value: val.target.value,
         }
 
