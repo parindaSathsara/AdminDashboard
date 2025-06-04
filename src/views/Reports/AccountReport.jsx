@@ -139,15 +139,38 @@ const ReportGenerationPage = () => {
     { value: 'payable', label: 'Payable Report' },
     { value: 'receivable', label: 'Receivable Report' },
     { value: 'cashflow', label: 'CashFlow' },
+    { value: 'api', label: 'API' },
   ]
 
+  const [providerOptions, setProviderOptions] = useState([
+  { value: 'TBO', label: 'TBO' },
+  { value: 'TBOH', label: 'TBOH' },
+  { value: 'Ratehawk', label: 'Ratehawk' }
+]);
+
   const [dataEmptyState, setDataEmptyState] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [providerShow, setProviderShow] = useState(null);
+
+  useEffect(() => {
+  if (reportType?.value === 'api') {
+    setProviderShow(true);
+  } else {
+    setProviderShow(false);
+    setSelectedProvider(null); // Reset provider when changing report type
+  }
+}, [reportType]);
+
 
   const handleGenerateReport = async () => {
     setReportLoading(true); // Start loading
 
     const errors = {}
     console.log('currency', currency);
+     if (reportType?.value === 'api' && !selectedProvider) {
+    errors.provider = 'Provider is required for API reports';
+  }
+  
     if (!reportType) {
       console.log('No report type selected');
       errors.reportType = 'Report type is required';
@@ -214,6 +237,8 @@ const ReportGenerationPage = () => {
       currencyValue: currency?.value,
       currencyType: currencyType?.value,
       dateType: typeDate?.value,
+      provider: selectedProvider?.value, // Add this line
+
     }
 
     console.log(dataSet, 'Data set value is data')
@@ -264,6 +289,10 @@ const ReportGenerationPage = () => {
       url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
     } else if (data.reportType === 'cashflow') {
+      url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
+    }
+    else if (data.reportType === 'api') {
       url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
     }
@@ -440,6 +469,8 @@ const ReportGenerationPage = () => {
                     // setCurrency(null)
                     setCurrencyType(null)
                     setTypeDate(null)
+                    setSelectedProvider(null) // Add this line
+
                   }}
                   placeholder="Select a Report Type"
                   id="report-type"
@@ -473,6 +504,24 @@ const ReportGenerationPage = () => {
                   <div className="text-danger">{validationErrors.category}</div>
                 )}
               </CCol>
+              {reportType?.value === 'api' ? (
+  <CCol xs={12} sm={6} lg={2}>
+    <CFormLabel htmlFor="provider">Provider</CFormLabel>
+    <br />
+    <Select
+      options={providerOptions}
+      value={selectedProvider}
+      onChange={(selectedOption) => {
+        setSelectedProvider(selectedOption)
+      }}
+      placeholder="Select a Provider"
+      id="provider"
+    />
+    {validationErrors.provider && (
+      <div className="text-danger">{validationErrors.provider}</div>
+    )}
+  </CCol>
+) : null}
               {/* <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Order Id</CFormLabel>
                                 <br />
