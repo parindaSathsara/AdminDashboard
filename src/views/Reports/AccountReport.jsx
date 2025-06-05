@@ -295,7 +295,7 @@ const ReportGenerationPage = () => {
         }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
     }
     else if (data.reportType === 'api') {
-      url = `reports/api/html${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+      url = `reports/api${dataType ? dataType : "/html"}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}&provider=${data.provider}`;
     }
 
@@ -481,7 +481,7 @@ const ReportGenerationPage = () => {
                   <div className="text-danger">{validationErrors.reportType}</div>
                 )}
               </CCol>
-              <CCol xs={12} sm={6} lg={2}>
+             {reportType?.value === 'api' ? null : <CCol xs={12} sm={6} lg={2}>
                 <CFormLabel htmlFor="category">Category</CFormLabel>
                 <br />
                 <Select
@@ -505,7 +505,7 @@ const ReportGenerationPage = () => {
                 {validationErrors.category && (
                   <div className="text-danger">{validationErrors.category}</div>
                 )}
-              </CCol>
+              </CCol>}
               {reportType?.value === 'api' ? (
   <CCol xs={12} sm={6} lg={2}>
     <CFormLabel htmlFor="provider">Provider</CFormLabel>
