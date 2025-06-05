@@ -143,9 +143,11 @@ const ReportGenerationPage = () => {
   ]
 
   const [providerOptions, setProviderOptions] = useState([
-  { value: 'TBO', label: 'TBO' },
-  { value: 'TBOH', label: 'TBOH' },
-  { value: 'Ratehawk', label: 'Ratehawk' }
+  { value: 'tbo_holidays', label: 'TBO Holidays' },
+  { value: 'tbo_india', label: 'TBO India' },
+  { value: 'ratehawk', label: 'Ratehawk' },
+  { value: 'aahaas', label: 'Aahaas' },
+  { value: 'bridify', label: 'Bridify' },
 ]);
 
   const [dataEmptyState, setDataEmptyState] = useState(false)
@@ -293,8 +295,8 @@ const ReportGenerationPage = () => {
         }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
     }
     else if (data.reportType === 'api') {
-      url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
+      url = `reports/api/html${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+        }&dateType=${data.dateType}&provider=${data.provider}`;
     }
 
     return url
