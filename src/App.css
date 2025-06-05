@@ -16,5 +16,10 @@
 }
 
 .MuiTooltip-popper {
-  display: none;
+  /* display: none; */
+  position: relative !important;
+  z-index: 1300 !important;     /* Ensures it stays above other elements */
+  pointer-events: none !important;         /* Optional: prevents blocking mouse events */
+  margin-left: 10px !important;            /* Optional: adjust space when on the right */
+  width: 100px !important;            /* Optional: adjust width */
 }

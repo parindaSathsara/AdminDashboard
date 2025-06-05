@@ -126,7 +126,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     }
   }
 
-  const handleCloseChat = () => { }
+  const handleCloseChat = () => {}
 
   // const getDateAndtime = (data) => {
   //     console.log("Input",data);
@@ -142,7 +142,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     return null
   }
 
-  const handleScrollToMessage = () => { }
+  const handleScrollToMessage = () => {}
 
   const { userData } = useContext(UserLoginContext)
 
@@ -153,8 +153,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     } else {
       setAdminMessage('')
 
-      const adminMsg = messages?.filter(data => data?.role == "Admin")
-
+      const adminMsg = messages?.filter((data) => data?.role == 'Admin')
 
       await addDoc(collection(db, 'chat-updated/chats/' + chatOpenDetails.id), {
         text: value,
@@ -174,7 +173,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
           status: 'Unread',
           readAt: '',
         },
-        adminJoined: adminMsg?.length == 0 ? true : false
+        adminJoined: adminMsg?.length == 0 ? true : false,
       })
 
       const docRef = doc(db, 'customer-chat-lists', chatOpenDetails.id)
@@ -232,8 +231,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         text: message.text,
       }))
 
-
-
       setLastMessageContent(messageContent)
 
       await batch.commit()
@@ -244,7 +241,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       const docRef = doc(db, 'customer-chat-lists', chatId.id)
       await updateDoc(docRef, { admin_unreads: 0 })
     })
-
 
     // Working new code
 
@@ -763,7 +759,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
           // const updatedDoc = await getDoc(docRef)
           // check the updatedoc
           const updatedDoc = await checkUpdateDoc(db, data, newStatus)
-          console.log(updatedDoc);
+          console.log(updatedDoc)
 
           if (updatedDoc) {
             setChatStatus(updatedDoc.status)
@@ -853,8 +849,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   //   }
 
   const handleOnClick = (data) => {
-    // console.log(data, "chamod")
+    console.log(data, 'chamod')
     // console.log(data)
+    let product_id = data.product_id
 
     const categories = [
       { value: '1', name: 'Essentials' },
@@ -870,6 +867,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         data.category = category.name
       }
     }
+
+    
     // console.log(data, 'chamod')
     setMoreProductModal(true)
     // // setMoreData({
@@ -883,22 +882,40 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     // //         "id": 0
     // //     }
     // // })
+    // let data1 = {
+    //   category: 'Hotels',
+    //   product_id: '1467876',
+    //   provider:'hoteltbo'
+    // }
 
+    // if(data.provider == "bridgify"){
+
+    // }else if(data.provider == "hotelTbo"){
+
+    // }else{
+
+    // }
     setMoreData(data)
+    
   }
-
 
   async function getRecommendations() {
     setLoadingRecommendations(true)
-    setRecommendations([]);
+    setRecommendations([])
     try {
       const response = await axios.post('/getRecommendations', {
         chats: lastMessageContent,
       })
       setRecommendations(response.data)
-      console.log('Recommendations:--------------------------------------------------', response.data)
+      console.log(
+        'Recommendations:--------------------------------------------------',
+        response.data,
+      )
     } catch (error) {
-      console.error('Error fetching recommendations:--------------------------------------------------------', error)
+      console.error(
+        'Error fetching recommendations:--------------------------------------------------------',
+        error,
+      )
       Swal.fire({
         icon: 'error',
         title: 'Aiyooo...',
@@ -922,7 +939,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     setRecommenderModalOpen(true)
     getRecommendations()
   }
-
 
   const [viewChatAnalytics, setViewChatAnalytics] = useState(false)
 
@@ -991,11 +1007,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   )}
                   {/* the end chat icon */}
                   {
-
                     <CTooltip
                       content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
-                      placement="auto">
-
+                      placement="auto"
+                    >
                       <FontAwesomeIcon
                         icon={chatStatus === 'End' ? faStop : faPause}
                         onClick={() => {
@@ -1022,19 +1037,16 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                     'remove employer from chat',
                     'view assign employer chat',
                   ].some((permission) => userData?.permissions?.includes(permission)) && (
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        className="icon-style"
-                        onClick={() => {
-                          handleAssignEmployee('Employee Asaign')
-                        }}
-                        style={{ color: '#03e5fd' }}
-                      />
-                    )}
-                  <CTooltip
-                    content={'Chat Analytics'}
-                    placement="auto">
-
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="icon-style"
+                      onClick={() => {
+                        handleAssignEmployee('Employee Asaign')
+                      }}
+                      style={{ color: '#03e5fd' }}
+                    />
+                  )}
+                  <CTooltip content={'Chat Analytics'} placement="auto">
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       onClick={() => {
@@ -1080,10 +1092,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                             <div
                               ref={(el) => (chatRefs.current[index] = el)}
                               key={index}
-                              className={` ${value.role === 'Admin'
-                                ? 'chat-content-admin'
-                                : 'chat-content-customer'
-                                } `}
+                              className={` ${
+                                value.role === 'Admin'
+                                  ? 'chat-content-admin'
+                                  : 'chat-content-customer'
+                              } `}
                               style={{
                                 backgroundColor: clickedMssage === value.id ? 'lightgray' : '',
                               }}
@@ -1105,7 +1118,12 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                 )}
                               </p>
                               {console.log(value)}
-                              <p className="chat-content-time">by {value?.name != "" ? value.name.slice(0, 7) : value?.role.toLowerCase()} </p>
+                              <p className="chat-content-time">
+                                by{' '}
+                                {value?.name != ''
+                                  ? value.name.slice(0, 7)
+                                  : value?.role.toLowerCase()}{' '}
+                              </p>
                             </div>
                           </div>
                         ))
@@ -1142,7 +1160,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       style={{ color: 'black' }}
                       onClick={() => handleAutoSuggestionModal()}
                     />
-
 
                     {/* <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} /> */}
 
@@ -1233,16 +1250,16 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       {['delete assign employee order'].some((permission) =>
                         userData?.permissions?.includes(permission),
                       ) && (
-                          <CButton
-                            color="danger"
-                            onClick={() => {
-                              handleDeleteEmployee(assignedEmployee.chatId)
-                            }}
-                            style={{ color: 'white', fontSize: 14 }}
-                          >
-                            Delete <CIcon icon={cilTrash} />
-                          </CButton>
-                        )}
+                        <CButton
+                          color="danger"
+                          onClick={() => {
+                            handleDeleteEmployee(assignedEmployee.chatId)
+                          }}
+                          style={{ color: 'white', fontSize: 14 }}
+                        >
+                          Delete <CIcon icon={cilTrash} />
+                        </CButton>
+                      )}
                     </CTableDataCell>
                   </CTableRow>
                   {/* ))} */}
@@ -1268,8 +1285,19 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         productData={moreData}
       ></MoreProductView>
 
-      <ChatAnalyticsModal show={viewChatAnalytics} message={messages} onHide={() => setViewChatAnalytics(false)} />
-      <AiSuggestionModal show={recommenderModalOpen} loadingRecommendations={loadingRecommendations} getRecommendations={getRecommendations} setRecommendations={setRecommendations} recommendations={recommendations} onHide={() => setRecommenderModalOpen(false)} />
+      <ChatAnalyticsModal
+        show={viewChatAnalytics}
+        message={messages}
+        onHide={() => setViewChatAnalytics(false)}
+      />
+      <AiSuggestionModal
+        show={recommenderModalOpen}
+        loadingRecommendations={loadingRecommendations}
+        getRecommendations={getRecommendations}
+        setRecommendations={setRecommendations}
+        recommendations={recommendations}
+        onHide={() => setRecommenderModalOpen(false)}
+      />
     </>
   )
 }

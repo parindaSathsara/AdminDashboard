@@ -320,6 +320,11 @@ function getNavigationHook(permissions) {
           component: CNavItem,
           name: 'TBO',
           to: '/services/tbo',
+        },
+        {
+          component: CNavItem,
+          name: 'RateHawk',
+          to: '/services/ratehawk',
         }
       ],
     },
