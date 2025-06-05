@@ -8,7 +8,7 @@ import HotelProductView from './Categories/HotelProductView';
 import { getProductData, getBridgifyProductData } from './functions/getProductData';
 
 export default function MoreProductView(props) {
-    console.log(props.productData, "Props Value is")
+    console.log(props, "Props Value is")
     var category = props.productData.category
     var productData = props.productData
 

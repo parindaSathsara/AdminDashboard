@@ -341,7 +341,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
 
         let data = {
           reason: '',
-          id: e.data.checkoutID,
+          id: e.checkoutID,
           value: val.target.value,
         }
 
@@ -383,95 +383,97 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
         //     },
         //     allowOutsideClick: () => !Swal.isLoading()
         // });
-      } else if (val.target.value === 'CancelRate') {
-        title = 'Do You Want to Cancel'
+      } 
+      // else if (val.target.value === 'CancelRate') {
+      //   title = 'Do You Want to Cancel'
 
-        let data = {
-          reason: '',
-          id: e.checkoutID,
-          value: val.target.value,
-        }
+      //   let data = {
+      //     reason: '',
+      //     id: e.checkoutID,
+      //     value: val.target.value,
+      //   }
 
-        handleCancellationData(data)
-        // title = "Do You Want to Cancel This Hotel Order?";
+      //   handleCancellationData(data)
+      //   // title = "Do You Want to Cancel This Hotel Order?";
 
-        // Swal.fire({
-        //   title: "Are you sure?",
-        //   text: title,
-        //   icon: "question",
-        //   showCancelButton: true,
-        //   confirmButtonColor: "#2eb85c",
-        //   cancelButtonColor: "#d33",
-        //   confirmButtonText: "Yes"
-        // }).then((result) => {
-        //   if (result.isConfirmed) {
-        //     Swal.fire({
-        //       title: "Hold On!",
-        //       html: "Cancelling Hotel Order...",
-        //       allowOutsideClick: false,
-        //       showConfirmButton: false,
-        //       onBeforeOpen: () => {
-        //         Swal.showLoading();
-        //       }
-        //     });
+      //   // Swal.fire({
+      //   //   title: "Are you sure?",
+      //   //   text: title,
+      //   //   icon: "question",
+      //   //   showCancelButton: true,
+      //   //   confirmButtonColor: "#2eb85c",
+      //   //   cancelButtonColor: "#d33",
+      //   //   confirmButtonText: "Yes"
+      //   // }).then((result) => {
+      //   //   if (result.isConfirmed) {
+      //   //     Swal.fire({
+      //   //       title: "Hold On!",
+      //   //       html: "Cancelling Hotel Order...",
+      //   //       allowOutsideClick: false,
+      //   //       showConfirmButton: false,
+      //   //       onBeforeOpen: () => {
+      //   //         Swal.showLoading();
+      //   //       }
+      //   //     });
 
-        //     // Prepare request data
-        //     const requestData = {
-        //       partner_order_id: e.checkoutID
-        //     };
+      //   //     // Prepare request data
+      //   //     const requestData = {
+      //   //       partner_order_id: e.checkoutID
+      //   //     };
 
-        //     // Set up authentication for RateHawk API
-        //     const auth = {
-        //       username: RATEHAWK_KEY_ID, // "12221"
-        //       password: RATEHAWK_PASSWORD // "d20a3366-9071-4f4e-9d2d-4bbd2cdeb7b9"
-        //     };
+      //   //     // Set up authentication for RateHawk API
+      //   //     const auth = {
+      //   //       username: RATEHAWK_KEY_ID, // "12221"
+      //   //       password: RATEHAWK_PASSWORD // "d20a3366-9071-4f4e-9d2d-4bbd2cdeb7b9"
+      //   //     };
 
-        //     // Make API call to cancel hotel order
-        //     axios.post(
-        //       axios.defaults.ratehawk + 'b2b/v3/hotel/order/cancel/',
-        //       requestData,
-        //       { auth: auth }
-        //     )
-        //     .then(response => {
-        //       console.log("RateHawk cancellation response:", response.data);
-        //       props.reload();
-        //       setSelectedStatusCheckout("Cancelled");
+      //   //     // Make API call to cancel hotel order
+      //   //     axios.post(
+      //   //       axios.defaults.ratehawk + 'b2b/v3/hotel/order/cancel/',
+      //   //       requestData,
+      //   //       { auth: auth }
+      //   //     )
+      //   //     .then(response => {
+      //   //       console.log("RateHawk cancellation response:", response.data);
+      //   //       props.reload();
+      //   //       setSelectedStatusCheckout("Cancelled");
 
-        //       Swal.fire({
-        //         title: "Success!",
-        //         text: "Hotel order has been cancelled successfully",
-        //         icon: "success"
-        //       });
-        //     })
-        //     .catch(error => {
-        //       console.error("RateHawk cancellation error:", error);
+      //   //       Swal.fire({
+      //   //         title: "Success!",
+      //   //         text: "Hotel order has been cancelled successfully",
+      //   //         icon: "success"
+      //   //       });
+      //   //     })
+      //   //     .catch(error => {
+      //   //       console.error("RateHawk cancellation error:", error);
 
-        //       Swal.fire({
-        //         title: "Error!",
-        //         text: "Failed to cancel hotel order. " + (error.response?.data?.error || error.message),
-        //         icon: "error"
-        //       });
-        //     });
-        //   }
-        // });
-      }
+      //   //       Swal.fire({
+      //   //         title: "Error!",
+      //   //         text: "Failed to cancel hotel order. " + (error.response?.data?.error || error.message),
+      //   //         icon: "error"
+      //   //       });
+      //   //     });
+      //   //   }
+      //   // });
+      // }
     }
   }
 
   const handleOrderCancellation = async (data) => {
-    cancellationData['reason'] = data;
-    
-    try {
-      Swal.showLoading();
-      await candelOrder(cancellationData);
-    } catch (error) {
-      console.error("Order cancellation failed:", error);
-    } finally {
-      Swal.hideLoading();
-      props?.reload();
-      setSelectedStatusCheckout('Cancel');
-    }
+
+    cancellationData["reason"] = data
+
+
+    Swal.showLoading()
+    await candelOrder(cancellationData)
+    Swal.hideLoading()
+    props?.reload();
+
+    setSelectedStatusCheckout("Cancel")
+
+
   }
+
 
   const [clickedStatus, setClickedStatus] = useState('')
 

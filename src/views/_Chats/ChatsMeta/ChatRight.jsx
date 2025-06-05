@@ -868,7 +868,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       }
     }
 
-    
+    console.log("chamod2",data)
     // console.log(data, 'chamod')
     setMoreProductModal(true)
     // // setMoreData({

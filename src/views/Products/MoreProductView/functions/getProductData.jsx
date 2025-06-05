@@ -8,7 +8,7 @@ const getProductData = async (dataSet) => {
     // console.log("Request data is", dataSet)
 
     await axios.post('/fetch_more_product_data', dataSet).then((res) => {
-        // console.log(res)
+        console.log(res)
         if (res.data.status === 200) {
             returnData = res.data
         }
