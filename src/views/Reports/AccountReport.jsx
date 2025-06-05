@@ -295,7 +295,9 @@ const ReportGenerationPage = () => {
         }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
     }
     else if (data.reportType === 'api') {
-      url = `reports/api/html${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+      // url = `reports/api/html${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
+      //   }&dateType=${data.dateType}&provider=${data.provider}`;
+      url = `reports/api${dataType ? dataType : "/html"}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
         }&dateType=${data.dateType}&provider=${data.provider}`;
     }
 
