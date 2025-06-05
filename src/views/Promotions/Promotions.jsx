@@ -106,7 +106,7 @@ const Promotions = () => {
   const [totalUsers, setTotalUsers] = useState(0)
   const [processedUsers, setProcessedUsers] = useState(0)
   const [batchResponses, setBatchResponses] = useState([])
-
+  const [selectedEmails, setSelectedEmails] = useState("");
   // Update available screens when stack changes
   useEffect(() => {
     const navigator = stackScreenData.navigators.find((nav) => nav.name === selectedStack)
@@ -410,12 +410,24 @@ const Promotions = () => {
                     disabled={isSending}
                   >
                     <option value="1">All Users</option>
-                    <option value="2">New Users (Last 1 Month)</option>
+                    {/* <option value="2">New Users (Last 1 Month)</option>
                     <option value="3">New Users (Last 3 Months)</option>
-                    <option value="4">Top Ordering Users</option>
+                    <option value="4">Top Ordering Users</option> */}
+                    <option value="5">Selected User</option>
                   </CFormSelect>
                 </div>
-
+{receivers === "5" && (
+        <div className="mb-3">
+          <CFormLabel className="fw-bold">Enter Email(s) of Selected User(s)</CFormLabel>
+          <CFormInput
+            type="text"
+            placeholder="e.g. user1@example.com, user2@example.com"
+            value={selectedEmails}
+            onChange={(e) => setSelectedEmails(e.target.value)}
+            disabled={isSending}
+          />
+        </div>
+      )}
                 {receivers === '4' && (
                   <div className="mb-3">
                     <CFormLabel className="fw-bold">Number of Top Users</CFormLabel>
@@ -429,7 +441,7 @@ const Promotions = () => {
                   </div>
                 )}
 
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <CFormLabel className="fw-bold">Navigation Stack*</CFormLabel>
                   <CFormSelect
                     value={selectedStack}
@@ -457,7 +469,7 @@ const Promotions = () => {
                       </option>
                     ))}
                   </CFormSelect>
-                </div>
+                </div> */}
                 {isBatchSending && (
                   <Box sx={{ mt: 3, mb: 3 }}>
                     <Typography variant="body2" color="text.secondary" gutterBottom>

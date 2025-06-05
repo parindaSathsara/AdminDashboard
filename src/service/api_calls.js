@@ -319,9 +319,9 @@ async function getDashboardProductOrderDetails(id) {
   try {
 
     var dataArray = [];
+    console.log("ID is", id)
 
-
-    // console.log(`/fetch_order_details_by_pid/${id}`, "Fetch Orders ID is")
+    console.log(`/fetch_order_details_by_pid/${id}`, "FetchXXXXXXXXXXXXXXX Orders ID is")
 
     await axios.get(`/fetch_order_details_by_pid/${id}`).then((res) => {
 

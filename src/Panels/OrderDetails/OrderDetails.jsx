@@ -211,7 +211,7 @@ function OrderDetails(props) {
     } else {
       getDashboardOrdersIdWise(props.orderid).then((res) => {
         // setDetailsLoading(false)
-        // console.log("Hotellll", res)
+        console.log("Hotellll", res)
         setLifestylesData(res.lifestyleData)
         setEssNEssData(res.essNEssData)
         setEducationData(res.educationData)
@@ -435,8 +435,8 @@ function OrderDetails(props) {
       preffered_date: value.preffered_date,
       address: value.location,
       balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),
-      paid_amount: CurrencyConverter(value.currency, value.paid_amount, currencyData),
-      total_amount: CurrencyConverter(value.currency, value.total_amount, currencyData),
+      paid_amount: CurrencyConverter(value.currency, value.paid_amount*0.85, currencyData),
+      total_amount: CurrencyConverter(value.currency, value.total_amount*0.85, currencyData),
       features: renderVariations(value), // Render variations
       supplier_order: value.supplier_status,
       status: value.status, // Default value

@@ -18,6 +18,8 @@ export default function MoreOrderViewFlights({ revalidationData, customerSearchD
         var originArray = [];
 
 
+        console.log(type,"xxRevalid data set value isssss")
+
         //console.log("Trip type is data ddddd", type)
 
         if (type == "One Way") {
@@ -72,10 +74,10 @@ export default function MoreOrderViewFlights({ revalidationData, customerSearchD
         else if (type == "Round Trip" || type == "Multi City") {
 
 
-            //console.log(type, "Trip type data is")
+            console.log(revalidateData, "Trip type data is")
             originArray = revalidateData
 
-            //console.log(originArray.scheduleDescs?.[index], "Schedule descs data is22222")
+            // console.log(originArray.scheduleDescs?.[index], "Schedule descs data is22222")
 
             // //console.log(originArray.scheduleDescs[0], "Origin Array ARRDEP")
             originArray.scheduleDescs?.[index].map(schedule => {

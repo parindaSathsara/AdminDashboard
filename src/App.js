@@ -54,8 +54,8 @@ axios.defaults.ratehawk = "https://api.worldota.net/api"
 
 
 // axios.defaults.imageUrl = 'http://192.16.26.54:8000/';
-// axios.defaults.baseURL = 'http://192.16.26.54:8000/api';
-// axios.defaults.data = 'http://192.16.26.54:8000';
+// axios.defaults.baseURL = 'http://192.16.26.92:8000/api';
+// axios.defaults.data = 'http://192.16.26.92:8000';
 // axios.defaults.url = 'http://192.16.26.54:8000/api';
 
 
