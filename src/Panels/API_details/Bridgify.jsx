@@ -58,15 +58,19 @@ const Bridgify = () => {
 
     const data = {
         columns: [
-            { title: 'Short UUID', field: 'cart_short_uuid', align: 'left' },
-            { title: 'Payment Status', field: 'status', align: 'left' },
-            { title: 'Transaction Amount', field: 'transaction_amount', align: 'left' },
+            { title: 'View More', field: 'actions', align: 'left' },
+            { title: 'Order ID', field: 'order_id', align: 'left' },
+            // { title: 'Short UUID', field: 'cart_short_uuid', align: 'left' },
+            // { title: 'Payment Status', field: 'status', align: 'left' },
+            // { title: 'Transaction Amount', field: 'transaction_amount', align: 'left' },
+            { title: 'Total Amount', field: 'total_amount', align: 'left' },
+            { title: 'Paid Amount', field: 'paid_amount', align: 'left' },
+            { title: 'Balance Amount', field: 'balance_amount', align: 'left' },
             { title: 'Product Title', field: 'product_details', align: 'left' },
             { title: 'Selected Timeslot', field: 'timeslots', align: 'left' },
             { title: 'Ticket Details', field: 'tickets', align: 'left' },
             { title: 'Customer Name', field: 'customer', align: 'left' },
             { title: 'Email & Phone', field: 'email_phone', align: 'left' },
-            // { title: 'View More', field: 'actions', align: 'left' }
         ],
         rows: cartItems.map((item) => {
             console.log('Item:', item)
@@ -75,8 +79,11 @@ const Bridgify = () => {
             const customerDetails = item?.data?.requires?.['customer-info']?.selected_value || []
 
             return {
-                cart_short_uuid: item?.cart_short_uuid,
-                status: item.status,
+                order_id: item?.order_id,
+                status: item?.status,
+                balance_amount: item?.balance_amount,
+                paid_amount: item?.paid_amount,
+                total_amount: item?.total_amount,
                 transaction_amount: item?.data?.save_cart?.selected_value?.transaction_amount,
                 product_details: productDetails,
                 timeslots: seletedTimeslot,
