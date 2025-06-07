@@ -297,8 +297,7 @@ const ReportGenerationPage = () => {
     else if (data.reportType === 'api') {
       // url = `reports/api/html${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
       //   }&dateType=${data.dateType}&provider=${data.provider}`;
-      url = `reports/api${dataType ? dataType : "/html"}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}&provider=${data.provider}`;
+      url = `reports/api${dataType ? dataType : "/html"}?start=${data.start}&end=${data.end}&dateType=${data.dateType}&provider=${data.provider}`;
     }
 
     return url
@@ -551,7 +550,7 @@ const ReportGenerationPage = () => {
                 </CCol>
               ) : null}
 
-              {reportType?.value === 'payable' && currencyType?.value === 'all' ? (
+              {(reportType?.value === 'payable' && currencyType?.value === 'all') || reportType?.value === 'api'  ? (
                 null
               ) : (reportType?.value != 'pnl' ? (
                 <CCol xs={12} sm={6} lg={2}>
