@@ -918,7 +918,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       )
       Swal.fire({
         icon: 'error',
-        title: 'Aiyooo...',
+        title: 'Error',
         text: 'Failed to fetch recommendations. Please try again later.',
       })
     } finally {
