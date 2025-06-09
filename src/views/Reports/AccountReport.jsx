@@ -147,7 +147,7 @@ const ReportGenerationPage = () => {
   { value: 'tbo_india', label: 'TBO India' },
   { value: 'ratehawk', label: 'Ratehawk' },
   { value: 'aahaas', label: 'Aahaas' },
-  { value: 'bridify', label: 'Bridify' },
+  { value: 'bridgify', label: 'Bridgify' },
 ]);
 
   const [dataEmptyState, setDataEmptyState] = useState(false)
