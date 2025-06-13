@@ -677,8 +677,8 @@ export default function HotelsOrderView(props) {
                     <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
                     <p style={{ margin: '5px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#2c3e50' }}>
                       {bookingData?.CheckOut 
-                        ? new Date(bookingData.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                        : new Date(props.productData.checkOutDate.split('/').reverse().join('-')).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        ? new Date(bookingData?.CheckOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                        : new Date(props?.productData?.checkOutDate?.split('/').reverse().join('-')).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
                     <p style={{ margin: '3px 0 0 0', fontSize: '14px' }}>
                       {bookingData?.CheckOut 

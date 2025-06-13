@@ -15,7 +15,7 @@
   z-index: 1500 !important;
 }
 
-.MuiTooltip-popper {
+.MuiTooltip-popperc {
   /* display: none; */
   position: relative !important;
   z-index: 1300 !important;     /* Ensures it stays above other elements */
