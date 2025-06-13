@@ -66,7 +66,7 @@ import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { CurrencyContext } from 'src/Context/CurrencyContext'
 
 function OrderDetails(props) {
-  // console.log("Props Data isSSSSSSSSSS",props )
+  console.log("Props Data isSSSSSSSSSS",props )
   const { userData } = useContext(UserLoginContext)
 
   // console.log(props.orderid)
@@ -163,7 +163,7 @@ function OrderDetails(props) {
       // console.log(props?.orderData?.info?.checkoutID, "Checkout ID")
 
       getDashboardProductOrderDetails(props?.orderData?.info?.checkoutID).then((res) => {
-        console.log('Hotellll', res)
+        console.log('Hotellllo', res)
         setDetailsLoading(false)
         setLifestylesData(res.lifestyleData)
         setEssNEssData(res.essNEssData)
@@ -567,6 +567,7 @@ function OrderDetails(props) {
       { field: 'Provider', title: 'Provider', align: 'left' },
       { field: 'NoOfNights', title: 'No of Nights', align: 'left' },
       { field: 'NoOfAdults', title: 'No of Adults', align: 'left' },
+      { field: 'NoOfChild', title: 'No of Child', align: 'left' },
       { field: 'checkInDate', title: 'Check In Date', align: 'left' },
       { field: 'checkOutDate', title: 'Check Out Date', align: 'left' },
       { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
@@ -581,6 +582,7 @@ function OrderDetails(props) {
       Provider: value.Provider === "hotelAhs" ? "Aahaas" : value.Provider === "ratehawk" ? "Rate Hawk" : "TBO",
       NoOfNights: value.NoOfNights,
       NoOfAdults: value.NoOfAdults,
+      NoOfChild: value?.NoOfChild ? value.NoOfChild : 0,
       checkInDate: moment(value.checkInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       checkOutDate: moment(value.checkOutDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),

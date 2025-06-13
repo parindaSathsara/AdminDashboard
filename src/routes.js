@@ -27,6 +27,7 @@ import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
 
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
+// const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
 
 const AccountsRefunds = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsRefund'))
