@@ -125,7 +125,10 @@ function AiSuggestionModal(props) {
                       { 
                         title: 'Description', 
                         field: 'sub_description', 
-                        render: rowData => rowData.sub_description.substring(0, 100)+'...'
+                        // render: rowData => rowData?.sub_description?.substring(0, 100)+'...'
+                        render: rowData => rowData?.sub_description 
+    ? rowData.sub_description.substring(0, 100) + '...' 
+    : 'No description'
                       },
                       { title: 'Key Words', field: 'selling_points' },
                     ]}
