@@ -916,11 +916,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         'Error fetching recommendations:--------------------------------------------------------',
         error,
       )
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to fetch recommendations. Please try again later.',
-      })
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'Failed to fetch recommendations. Please try again later.',
+      // })
     } finally {
       setLoadingRecommendations(false)
     }
