@@ -154,10 +154,12 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       setAdminMessage('')
 
       const adminMsg = messages?.filter((data) => data?.role == 'Admin')
-
+      console.log(userData, 'User Data is');
+      
       await addDoc(collection(db, 'chat-updated/chats/' + chatOpenDetails.id), {
         text: value,
         name: userData.name,
+        email: userData.email,
         createdAt: new Date(),
         role: 'Admin',
         uid: '12',
@@ -366,6 +368,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     setChatOpened(true)
     setChatOpenDetails(chatData)
     console.log('chatData', chatData)
+      console.log(userData, 'User Data is');
 
     setLoader(true)
     await getChatContent({ chatId: chatData, updateState: false })

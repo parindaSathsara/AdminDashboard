@@ -462,14 +462,14 @@ const Bridgify = () => {
                                                         >
                                                             Cancellation Information
                                                         </CButton>
-                                                        <CButton
+                                                        {/* <CButton
                                                             color="danger"
                                                             size="sm"
                                                             onClick={() => handleCancellationRequest(orderId, item.order_item_uuid)}
-                                                        // disabled={item.status !== 'paid'}
+                                                        disabled={item.status !== 'paid'}
                                                         >
                                                             Request Cancellation
-                                                        </CButton>
+                                                        </CButton> */}
                                                     </div>
 
                                                     <div className="collapse mt-2" id={`cancellationInfo${index}`}>
