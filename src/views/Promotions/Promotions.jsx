@@ -330,7 +330,7 @@ const Promotions = () => {
                   />
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 d-none">
                   <CFormLabel className="fw-bold">Redirect Link</CFormLabel>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -344,7 +344,7 @@ const Promotions = () => {
                     />
                   </CInputGroup>
                 </div>
-                <div className="mb-3">
+                <div className="mb-3 d-none">
                   <CFormLabel className="fw-bold">Notification Image</CFormLabel>
                   <div className="d-flex align-items-center">
                     <CFormInput
@@ -410,9 +410,9 @@ const Promotions = () => {
                     disabled={isSending}
                   >
                     <option value="1">All Users</option>
-                    <option value="2">New Users (Last 1 Month)</option>
-                    <option value="3">New Users (Last 3 Months)</option>
-                    <option value="4">Top Ordering Users</option>
+                    <option value="2">Order Placed Users</option>
+                    <option value="3">Order Not Placed Users</option>
+                    {/* <option value="4">Top Ordering Users</option> */}
                   </CFormSelect>
                 </div>
 
@@ -429,7 +429,7 @@ const Promotions = () => {
                   </div>
                 )}
 
-                <div className="mb-3">
+                <div className="mb-3 d-none" >
                   <CFormLabel className="fw-bold">Navigation Stack*</CFormLabel>
                   <CFormSelect
                     value={selectedStack}
@@ -444,7 +444,7 @@ const Promotions = () => {
                   </CFormSelect>
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 d-none">
                   <CFormLabel className="fw-bold">Target Screen*</CFormLabel>
                   <CFormSelect
                     value={selectedScreen}
