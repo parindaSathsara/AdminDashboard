@@ -290,7 +290,7 @@ const RateHawk = () => {
             //     })
             //   }}
             // />
-            <MaterialTable
+<MaterialTable
   title="Hotel Bookings"
   columns={data.columns}
   data={data.rows}
@@ -299,14 +299,8 @@ const RateHawk = () => {
     cellStyle: { fontSize: '14px' },
     paging: true,
     pageSize: pagination.page_size,
-    // Dynamically set pageSizeOptions based on your data length
-    pageSizeOptions: data.rows.length > 10 
-      ? (data.rows.length > 20 
-        ? (data.rows.length > 50 
-          ? [10, 20, 50, 100] 
-          : [10, 20, 50])
-        : [10, 20])
-      : [10],
+    pageSizeOptions: data.rows.length <= 10 ? [] : [10, 20, 50, 100],
+    emptyRowsWhenPaging: false,
     search: false,
     columnsButton: true,
     exportButton: true,
@@ -314,26 +308,15 @@ const RateHawk = () => {
     rowStyle: {
       backgroundColor: '#f5f5f5',
     },
-    // This will remove empty rows by setting a fixed table height
-    maxBodyHeight: 'auto',
-    padding: 'dense'
   }}
   onChangePage={(page, pageSize) => {
     setPagination({
       page_number: page + 1,
       page_size: pageSize,
-    })
-  }}
-  // This will prevent showing empty rows
-  components={{
-    Row: props => {
-      if (props.data.tableData.id > data.rows.length - 1) {
-        return null;
-      }
-      return <MTableBodyRow {...props} />;
-    }
+    });
   }}
 />
+
           )}
         </CCardBody>
       </CCard>
