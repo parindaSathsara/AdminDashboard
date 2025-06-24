@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
+import axios from 'axios'
 import { CCardText, CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
@@ -24,6 +24,17 @@ const AppSidebar = () => {
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const { userData } = useContext(UserLoginContext);
+  const [version, setVersion] = useState('');
+
+  useEffect(() => {
+    axios.get('/version')
+      .then(response => {
+        setVersion(response.data.version);
+      })
+      .catch(error => {
+        console.error('Failed to fetch version:', error);
+      });
+  }, []);
 
   return (
     <CSidebar
@@ -58,7 +69,10 @@ const AppSidebar = () => {
 
       <div style={{ borderTop: '3px solid rgb(223, 159, 31)' }}>
         {/* <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.54</CCardText> */}
-        <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>V1.1.75</CCardText>
+        <CCardText style={{ textAlign: 'center', padding: 10, color: '#64635a' }}>
+          {/* V1.1.75 */}
+          {version}
+          </CCardText>
       </div>
 
 
