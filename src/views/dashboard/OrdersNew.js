@@ -4,10 +4,13 @@ import {
   CCardBody,
   CCol,
   CRow,
-  CWidgetStatsB,
   CPagination,
   CPaginationItem,
-  CBadge
+  CBadge,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CButton
 } from '@coreui/react';
 import axios from 'axios';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
@@ -16,7 +19,7 @@ import CurrencyConverter from 'src/Context/CurrencyConverter';
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import LoaderPanel from 'src/Panels/LoaderPanel';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import { Fullscreen } from '@material-ui/icons';
+import { Fullscreen, Search , Clear} from '@material-ui/icons';
 import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
 
 const OrdersNew = () => {
@@ -25,6 +28,7 @@ const OrdersNew = () => {
   const [loading, setLoading] = useState(true);
   const [detailExpander, setDetailExpander] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [pagination, setPagination] = useState({
     currentPage: 1,
     perPage: 10,
@@ -37,18 +41,17 @@ const OrdersNew = () => {
     setDetailExpander(true);
   };
 
-  // Fetch orders data with pagination
-  const fetchOrders = async (page = 1, perPage = 10) => {
+  // Fetch orders data with pagination and search
+  const fetchOrders = async (page = 1, perPage = 10, search = '') => {
     try {
       setLoading(true);
       const response = await axios.get('fetch_all_orders_userwise_products', {
         params: {
           page,
-          per_page: perPage
+          per_page: perPage,
+          search
         }
       });
-
-      console.log('Fetched Orders:', response.data);
       
       if (response.data.success) {
         setOrderData(response.data.data);
@@ -63,6 +66,29 @@ const OrdersNew = () => {
       console.error('Error fetching orders:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle search submission
+   const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      // If search term is empty, fetch all orders
+      fetchOrders();
+    } else {
+      // If search term exists, fetch with search
+      fetchOrders(1, pagination.perPage, searchTerm);
+    }
+  };
+
+    // Handle clear search
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    fetchOrders(); // Fetch all orders when clearing search
+  };
+  // Handle Enter key press in search input
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -86,32 +112,22 @@ const OrdersNew = () => {
         </span>
       )
     },
-     {
-            accessorKey: 'refundableAmount', header: 'Refunding Amount', align: 'left', Cell: ({ cell }) => {
-                console.log("Refund Amount Cell:", cell.getValue());
-                console.log("Refund Amount Original:", CurrencyConverter(cell?.original?.currency, cell?.original?.refundableAmount, currencyData));
-              if (cell?.getValue() > 0) {
-                return (
-                  <>
-    
-                    <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-                      Refunding {CurrencyConverter(cell?.original?.currency, cell?.original?.refundableAmount, currencyData)}
-                    </CBadge>
-    
-                  </>
-                )
-    
-              }
-              else {
-                return (
-                  <p>No Refund Request</p>
-                )
-              }
-    
-    
-            }
-    
-          },
+    {
+      accessorKey: 'refundableAmount', 
+      header: 'Refunding Amount', 
+      align: 'left', 
+      Cell: ({ cell }) => {
+        if (cell?.getValue() > 0) {
+          return (
+            <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
+              Refunding {CurrencyConverter(cell?.original?.currency, cell?.original?.refundableAmount, currencyData)}
+            </CBadge>
+          )
+        } else {
+          return <p>No Refund Request</p>
+        }
+      }
+    },
     { 
       accessorKey: 'total_amount', 
       header: 'Total Amount',
@@ -195,7 +211,7 @@ const OrdersNew = () => {
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= pagination.lastPage) {
-      fetchOrders(newPage, pagination.perPage);
+      fetchOrders(newPage, pagination.perPage, searchTerm);
     }
   };
 
@@ -209,7 +225,33 @@ const OrdersNew = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardBody>
-              <h4>Customer Orders</h4>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h4 className="mb-0">Customer Orders</h4>
+                <CInputGroup style={{ width: '300px' }}>
+                  <CFormInput
+                    placeholder="Search by Order ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                  />
+                     {searchTerm && (
+                    <CButton 
+                      color="secondary" 
+                      onClick={handleClearSearch}
+                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                    >
+                      <Clear />
+                    </CButton>
+                  )}
+                  <CButton 
+                    color="primary" 
+                    onClick={handleSearch}
+                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                  >
+                    <Search />
+                  </CButton>
+                </CInputGroup>
+              </div>
               
               {orderData.length > 0 ? (
                 <>
@@ -276,7 +318,7 @@ const OrdersNew = () => {
                 </>
               ) : (
                 <div className="text-center py-5">
-                  No orders found
+                  {searchTerm ? 'No orders found matching your search' : 'No orders found'}
                 </div>
               )}
             </CCardBody>
@@ -288,7 +330,7 @@ const OrdersNew = () => {
         <DetailExpander
           show={detailExpander}
           onHide={() => setDetailExpander(false)}
-          orderid={selectedOrderDetails.OrderId}  // Changed from oid to OrderId
+          orderid={selectedOrderDetails.OrderId}
           component={
             <OrderDetails 
               pageType="orders" 
