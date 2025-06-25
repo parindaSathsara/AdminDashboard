@@ -26,6 +26,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
+  console.log(currencyData, "Currency Data in OrdersNew");
    const [activeTab, setActiveTab] = useState('group');
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -105,6 +106,23 @@ const OrdersNew = () => {
   const columns = [
     { accessorKey: 'OrderId', header: 'Order ID' },
     { accessorKey: 'checkout_date', header: 'Booking Date' },
+    {
+      accessorKey: 'refundableAmount', 
+      header: 'Refunding Amount', 
+      align: 'left', 
+      Cell: ({ cell }) => {
+        if (cell?.getValue() > 0) {
+          console.log(cell, "Refundable Amount");
+          return (
+            <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
+              Refunding {CurrencyConverter(currencyData.base, cell.getValue(), currencyData)}
+            </CBadge>
+          )
+        } else {
+          return <p>No Refund Request</p>
+        }
+      }
+    },
     { accessorKey: 'min_service_date', header: 'Service Date' },
     { 
       accessorKey: 'payment_type', 
@@ -118,22 +136,7 @@ const OrdersNew = () => {
         </span>
       )
     },
-    {
-      accessorKey: 'refundableAmount', 
-      header: 'Refunding Amount', 
-      align: 'left', 
-      Cell: ({ cell }) => {
-        if (cell?.getValue() > 0) {
-          return (
-            <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-              Refunding {CurrencyConverter(cell?.original?.currency, cell?.original?.refundableAmount, currencyData)}
-            </CBadge>
-          )
-        } else {
-          return <p>No Refund Request</p>
-        }
-      }
-    },
+
     { 
       accessorKey: 'total_amount', 
       header: 'Total Amount',
