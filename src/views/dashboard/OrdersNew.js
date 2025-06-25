@@ -21,9 +21,12 @@ import LoaderPanel from 'src/Panels/LoaderPanel';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { Fullscreen, Search , Clear} from '@material-ui/icons';
 import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
+import ProductWiseOrders from './MainComponents/ProductWiseOrders';
+import { Tab, Tabs } from 'react-bootstrap';
 
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
+   const [activeTab, setActiveTab] = useState('product');
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [detailExpander, setDetailExpander] = useState(false);
@@ -69,6 +72,9 @@ const OrdersNew = () => {
     }
   };
 
+  const handleTabSelect = (key) => {
+    setActiveTab(key);
+  };
   // Handle search submission
    const handleSearch = () => {
     if (searchTerm.trim() === '') {
@@ -227,8 +233,8 @@ const OrdersNew = () => {
             <CCardBody>
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <h4 className="mb-0">Customer Orders</h4>
-                <CInputGroup style={{ width: '300px' }}>
-                  <CFormInput
+               {activeTab === "group" &&  <CInputGroup style={{ width: '300px' }}>
+                 <CFormInput
                     placeholder="Search by Order ID..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -250,9 +256,17 @@ const OrdersNew = () => {
                   >
                     <Search />
                   </CButton>
-                </CInputGroup>
+                </CInputGroup>}
               </div>
-              
+               <Tabs 
+                defaultActiveKey="group" 
+                id="orders-view-tabs" 
+                className="mt-4" 
+                style={{ fontSize: 16 }}
+                activeKey={activeTab} onSelect={handleTabSelect}
+              >
+                <Tab eventKey="group" title="Group Wise">
+
               {orderData.length > 0 ? (
                 <>
                   <MaterialReactTable table={table} />
@@ -262,6 +276,11 @@ const OrdersNew = () => {
                       Showing {((pagination.currentPage - 1) * pagination.perPage) + 1} to{' '}
                       {Math.min(pagination.currentPage * pagination.perPage, pagination.total)} of{' '}
                       {pagination.total} entries
+                        {searchTerm && (
+                            <span className="ms-2 text-muted">
+                              (Filtered by: "{searchTerm}")
+                            </span>
+                          )}
                     </div>
                     
                     <CPagination aria-label="Page navigation">
@@ -321,6 +340,11 @@ const OrdersNew = () => {
                   {searchTerm ? 'No orders found matching your search' : 'No orders found'}
                 </div>
               )}
+                </Tab>
+                 <Tab eventKey="product" title="Product Wise">
+                  <ProductWiseOrders />
+                </Tab>
+                </Tabs>
             </CCardBody>
           </CCard>
         </CCol>
