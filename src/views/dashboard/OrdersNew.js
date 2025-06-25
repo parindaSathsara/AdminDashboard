@@ -26,7 +26,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
-   const [activeTab, setActiveTab] = useState('product');
+   const [activeTab, setActiveTab] = useState('group');
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [detailExpander, setDetailExpander] = useState(false);
@@ -341,9 +341,9 @@ const OrdersNew = () => {
                 </div>
               )}
                 </Tab>
-                 <Tab eventKey="product" title="Product Wise">
+                 {/* <Tab eventKey="product" title="Product Wise">
                   <ProductWiseOrders />
-                </Tab>
+                </Tab> */}
                 </Tabs>
             </CCardBody>
           </CCard>
