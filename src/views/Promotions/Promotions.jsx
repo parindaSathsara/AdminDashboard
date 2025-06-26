@@ -97,6 +97,7 @@ const Promotions = () => {
   const [image, setImage] = useState(null)
   const [imagePreview, setImagePreview] = useState('')
   const [receivers, setReceivers] = useState('1') // Default to all users
+  const [useremail, setUserEmail] = useState('') // For user-specific notifications
   const [mostOrderedCount, setMostOrderedCount] = useState(10)
   const [selectedStack, setSelectedStack] = useState('MainNavigatorStack')
   const [selectedScreen, setSelectedScreen] = useState('Home')
@@ -175,6 +176,7 @@ const Promotions = () => {
     formData.append('selectedStack', selectedStack)
     formData.append('selectedScreen', selectedScreen)
     formData.append('offset', offset)
+    formData.append('useremail', useremail)
 
     try {
       const response = await axios.post('/pushNotification', formData, {
@@ -232,6 +234,7 @@ const Promotions = () => {
     setTotalUsers(0)
     setBatchResponses([])
     setNotificationContent('')
+    setUserEmail('') // Reset user email
   }
 
   const handleSendNotification = async () => {
@@ -412,11 +415,24 @@ const Promotions = () => {
                     <option value="1">All Users</option>
                     <option value="2">Order Placed Users</option>
                     <option value="3">Order Not Placed Users</option>
+                    <option value="4">User Specific</option>
                     {/* <option value="4">Top Ordering Users</option> */}
                   </CFormSelect>
                 </div>
 
                 {receivers === '4' && (
+                  <div className="mb-3">
+                    <CFormLabel className="fw-bold">User</CFormLabel>
+                    <CFormInput
+                      placeholder="Enter Email of the user"
+                      value={useremail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                      disabled={isSending}
+                    />
+                  </div>
+                )}
+
+                {receivers === '5' && (
                   <div className="mb-3">
                     <CFormLabel className="fw-bold">Number of Top Users</CFormLabel>
                     <CFormInput
