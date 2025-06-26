@@ -421,6 +421,39 @@ export default function LifestylesOrderView(props) {
                             </CCardBody>
                         </div>
                     </CCol>
+                    <CCol xs="12" lg="6">
+  <div style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '10px', backgroundColor: '#f8f9fa' }}>
+    <CCardBody>
+      <CCardTitle className="productTitle mb-3">Travel Buddies</CCardTitle>
+
+      {bookData?.passenger_details?.length > 0 ? (
+        <>
+          {bookData.passenger_details.map((data, index) => (
+            <div
+              key={index}
+              style={{
+                border: '1px solid #dee2e6',
+                borderRadius: '8px',
+                padding: '10px',
+                backgroundColor: '#ffffff',
+                marginTop: 10
+              }}
+            >
+              <h5 className="travelerTitle" style={{ marginBottom: 6 }}>
+                {data.passenger_title} {data.passenger_first_name} {data.passenger_last_name}
+              </h5>
+              {data.passenger_email && <p style={{ margin: 0 }}>📧 {data.passenger_email}</p>}
+              {data.passenger_tele && <p style={{ margin: 0 }}>📞 {data.passenger_tele}</p>}
+            </div>
+          ))}
+        </>
+      ) : (
+        <h5 className="travelerTitle">No Travel Buddies Available</h5>
+      )}
+    </CCardBody>
+  </div>
+</CCol>
+
 
                 </CRow>
             </CCol>

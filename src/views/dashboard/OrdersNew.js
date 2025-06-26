@@ -23,6 +23,7 @@ import { Fullscreen, Search , Clear} from '@material-ui/icons';
 import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
 import ProductWiseOrders from './MainComponents/ProductWiseOrders';
 import { Tab, Tabs } from 'react-bootstrap';
+import ProductWiseOrdersPaginate from './MainComponents/ProductWiseOrdersPaginate';
 
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
@@ -344,9 +345,9 @@ const OrdersNew = () => {
                 </div>
               )}
                 </Tab>
-                 {/* <Tab eventKey="product" title="Product Wise">
-                  <ProductWiseOrders />
-                </Tab> */}
+                 <Tab eventKey="product" title="Product Wise">
+                  <ProductWiseOrdersPaginate />
+                </Tab>
                 </Tabs>
             </CCardBody>
           </CCard>
