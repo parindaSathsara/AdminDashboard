@@ -425,7 +425,7 @@ const Promotions = () => {
                 </div>
 
                 <div className="mb-3">
-                  <CFormLabel className="fw-bold">Notification Content*</CFormLabel>
+                  <CFormLabel className="fw-bold">Notification Content</CFormLabel>
                   <CFormInput
                     as="textarea"
                     rows={5}
@@ -433,7 +433,7 @@ const Promotions = () => {
                     value={notificationContent}
                     onChange={(e) => setNotificationContent(e.target.value)}
                     disabled={isSending}
-                    required
+                    // required
                   />
                 </div>
 
@@ -501,6 +501,7 @@ const Promotions = () => {
                     <option value="2">Order Placed Users</option>
                     <option value="3">Order Not Placed Users</option>
                     <option value="4">User Specific</option>
+                    <option value="5">Users with products in cart</option>
                   </CFormSelect>
                 </div>
 
