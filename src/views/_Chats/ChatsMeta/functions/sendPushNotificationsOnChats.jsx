@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 async function sendPushNotificationsOnChats(notificationData, value) {
     try {
@@ -9,7 +11,7 @@ async function sendPushNotificationsOnChats(notificationData, value) {
             dataNotify: notificationData,
             message: value
         }).then(response => {
-
+            toast.success('✅ Chat notification sent!');
         })
 
         console.log('Notification sent successfully:', response.data);
