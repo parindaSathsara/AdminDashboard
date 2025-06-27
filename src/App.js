@@ -23,7 +23,8 @@ import {
   updateDoc,
   writeBatch,
 } from 'firebase/firestore'
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.post['Accept'] = 'application/json'
@@ -518,6 +519,8 @@ const addNotification1 = (newChat, chatId) => {
   return (
     <CurrencyContext.Provider value={{ currencyData, setCurrencyData }}>
       <UserLoginContext.Provider value={{ userLogin, setUserLogin, userData, setUserData }}>
+        {/* ✅ Toast Container for chat notification and others */}
+      <ToastContainer position="bottom-right" />
         <NotificationContainer notifications={notifications} />
         <HashRouter>
           <Suspense fallback={loading}>

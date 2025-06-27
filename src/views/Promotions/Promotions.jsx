@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   CButton,
   CCard,
@@ -14,7 +14,7 @@ import {
   CFormSelect,
   CFormLabel,
   CImage,
-} from '@coreui/react'
+} from '@coreui/react';
 import {
   TextField,
   Button,
@@ -22,17 +22,15 @@ import {
   Box,
   Paper,
   Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
   LinearProgress,
-} from '@mui/material'
-
-import Swal from 'sweetalert2'
-import axios from 'axios'
-import { BellFill, Send, Image as ImageIcon } from 'react-bootstrap-icons'
+  Autocomplete,
+  Chip,
+  MenuItem
+} from '@mui/material';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import { BellFill, Send } from 'react-bootstrap-icons';
+import debounce from 'lodash/debounce';
 
 const stackScreenData = {
   navigators: [
@@ -75,7 +73,6 @@ const stackScreenData = {
         'HotelRoomAllocation',
         'ItineraryPage',
         'EssentialDetailsMeta',
-        // ... (all other screens from your backend)
         'Flights',
       ],
     },
@@ -84,192 +81,308 @@ const stackScreenData = {
       screens: ['My Carts'],
     },
   ],
-}
+};
 
 const Promotions = () => {
-  const [notificationTitle, setNotificationTitle] = useState('')
-  const [notificationContent, setNotificationContent] = useState('')
+  // Notification content states
+  const [notificationTitle, setNotificationTitle] = useState('');
+  const [notificationContent, setNotificationContent] = useState('');
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [redirectLink, setRedirectLink] = useState('');
 
-  const [description, setDescription] = useState('')
-  // const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [isSending, setIsSending] = useState(false)
-  const [redirectLink, setRedirectLink] = useState('')
-  const [image, setImage] = useState(null)
-  const [imagePreview, setImagePreview] = useState('')
-  const [receivers, setReceivers] = useState('1') // Default to all users
-  const [useremail, setUserEmail] = useState('') // For user-specific notifications
-  const [mostOrderedCount, setMostOrderedCount] = useState(10)
-  const [selectedStack, setSelectedStack] = useState('MainNavigatorStack')
-  const [selectedScreen, setSelectedScreen] = useState('Home')
-  const [availableScreens, setAvailableScreens] = useState([])
-  const [progress, setProgress] = useState(0)
-  const [isBatchSending, setIsBatchSending] = useState(false)
-  const [totalUsers, setTotalUsers] = useState(0)
-  const [processedUsers, setProcessedUsers] = useState(0)
-  const [batchResponses, setBatchResponses] = useState([])
+  // Target audience states
+  const [receivers, setReceivers] = useState('1');
+  const [mostOrderedCount, setMostOrderedCount] = useState(10);
+  const [selectedStack, setSelectedStack] = useState('MainNavigatorStack');
+  const [selectedScreen, setSelectedScreen] = useState('Home');
+  const [availableScreens, setAvailableScreens] = useState([]);
+
+  // User search and selection states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  // Notification sending states
+  const [isSending, setIsSending] = useState(false);
+  const [isBatchSending, setIsBatchSending] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [processedUsers, setProcessedUsers] = useState(0);
 
   // Update available screens when stack changes
   useEffect(() => {
-    const navigator = stackScreenData.navigators.find((nav) => nav.name === selectedStack)
+    const navigator = stackScreenData.navigators.find((nav) => nav.name === selectedStack);
     if (navigator) {
-      setAvailableScreens(navigator.screens)
+      setAvailableScreens(navigator.screens);
       if (!navigator.screens.includes(selectedScreen)) {
-        setSelectedScreen(navigator.screens[0] || '')
+        setSelectedScreen(navigator.screens[0] || '');
       }
     }
-  }, [selectedStack])
+  }, [selectedStack]);
 
-  const handleContentChange = (e) => {
-    setNotificationContent(e.target.value)
-    // For preview, you can use the same value or format it if needed
-    setDescription(e.target.value)
-  }
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce(async (searchValue) => {
+      if (searchValue.length < 3) {
+        setSearchResults([]);
+        return;
+      }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setImage(file)
-      setImagePreview(URL.createObjectURL(file))
+      try {
+        setIsSearching(true);
+        const response = await axios.post('/getUserByEmail', {
+          searchTerm: searchValue
+        });
+        
+        if (response.data.status === 200) {
+          const filteredResults = response.data.users.filter(user => 
+            !selectedUsers.some(selected => selected.email === user.email)
+          );
+          setSearchResults(filteredResults);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error('Error searching users:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 500),
+    [selectedUsers]
+  );
+
+  // Handle search term changes
+  const handleSearchChange = (event, value) => {
+    setSearchTerm(value);
+    if (value) {
+      debouncedSearch(value);
+    } else {
+      setSearchResults([]);
     }
-  }
+  };
+
+  // Handle user selection from dropdown
+  const handleUserSelect = (event, value) => {
+    if (value && !selectedUsers.some(user => user.email === value.email)) {
+      setSelectedUsers([...selectedUsers, value]);
+      setSearchTerm('');
+      setSearchResults([]);
+    }
+  };
+
+  // Handle Enter key press for exact search
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && searchTerm) {
+      event.preventDefault();
+      debouncedSearch.cancel();
+      
+      // Check if search term matches any existing result
+      const exactMatch = searchResults.find(
+        user => user.email.toLowerCase() === searchTerm.toLowerCase()
+      );
+      
+      if (exactMatch) {
+        handleUserSelect(null, exactMatch);
+      } else if (searchTerm.includes('@')) {
+        // Add as new user if it looks like an email
+        handleUserSelect(null, { email: searchTerm });
+      }
+    }
+  };
+
+  // Remove a selected user
+  const handleRemoveUser = (emailToRemove) => {
+    setSelectedUsers(selectedUsers.filter(user => user.email !== emailToRemove));
+  };
+
+  // Render user search component
+  const renderUserSearch = () => (
+    <div className="mb-3">
+      <CFormLabel className="fw-bold">Search and Select Users by Email</CFormLabel>
+      
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
+        {selectedUsers.map((user) => (
+          <Chip
+            key={user.email}
+            label={user.email}
+            onDelete={() => handleRemoveUser(user.email)}
+            color="primary"
+            variant="outlined"
+          />
+        ))}
+      </Box>
+      
+      <Autocomplete
+        freeSolo
+        options={searchResults}
+        getOptionLabel={(option) => option.email}
+        inputValue={searchTerm}
+        onInputChange={handleSearchChange}
+        onChange={handleUserSelect}
+        onKeyDown={handleKeyDown}
+        loading={isSearching}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            placeholder="Type email and press Enter"
+            variant="outlined"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {isSearching ? <CSpinner size="sm" /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
+        renderOption={(props, option) => (
+          <MenuItem {...props} key={option.email}>
+            {option.email}
+          </MenuItem>
+        )}
+        filterOptions={(options) => options}
+      />
+      
+      <Typography variant="caption" color="textSecondary">
+        {selectedUsers.length} user(s) selected
+      </Typography>
+    </div>
+  );
+
+  // Handle image upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  // Validate form before submission
   const validateForm = () => {
     if (!notificationTitle.trim() || notificationTitle.length < 5) {
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
         text: 'Please enter a valid notification title (min 5 characters)',
-      })
-      return false
+      });
+      return false;
     }
 
-    // Check notificationContent instead of editorState
     if (!notificationContent.trim() || notificationContent.length < 5) {
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
         text: 'Please enter valid notification content (min 5 characters)',
-      })
-      return false
+      });
+      return false;
     }
 
-    if (!selectedStack) {
+    if (receivers === '4' && selectedUsers.length === 0) {
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
-        text: 'Please select a stack',
-      })
-      return false
+        text: 'Please select at least one user',
+      });
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
-  const sendBatchNotifications = async (offset = 0) => {
-    const formData = new FormData()
-    formData.append('title', notificationTitle)
-    formData.append('description', notificationContent) // Use notificationContent here
+  // Send notifications
+  const handleSendNotification = async () => {
+    if (!validateForm()) return;
 
-    // formData.append('description', description);
-    formData.append('redirectLink', redirectLink)
-    if (image) formData.append('image', image)
-    formData.append('mostOrderedCount', mostOrderedCount)
-    formData.append('selectedStack', selectedStack)
-    formData.append('selectedScreen', selectedScreen)
-    formData.append('offset', offset)
-    formData.append('useremail', useremail)
+    setIsSending(true);
+    setIsBatchSending(true);
+    setProgress(0);
+    setProcessedUsers(0);
+    setTotalUsers(0);
 
     try {
-      const response = await axios.post('/pushNotification', formData, {
+      const formData = new FormData();
+      formData.append('title', notificationTitle);
+      formData.append('description', notificationContent);
+      formData.append('redirectLink', redirectLink);
+      formData.append('receivers', receivers);
+      formData.append('mostOrderedCount', mostOrderedCount);
+      formData.append('selectedStack', selectedStack);
+      formData.append('selectedScreen', selectedScreen);
+      
+      if (image) formData.append('image', image);
+      
+      if (receivers === '4') {
+        selectedUsers.forEach((user, index) => {
+          formData.append(`userEmails[${index}]`, user.email);
+        });
+      }
+
+      const response = await axios.post('/send_global_notifications', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      })
-      console.log(response.data, 'Batch response data')
-      const { current, total, responses } = response.data
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        },
+      });
 
-      setBatchResponses((prev) => [...prev, ...responses])
-      setProcessedUsers(current)
-      setTotalUsers(total)
-      setProgress(Math.round((current / total) * 100))
-
-      if (current < total) {
-        // Continue with next batch
-        // await sendBatchNotifications(current);
-        return await sendBatchNotifications(current)
-      } else {
-        // All batches completed
-        setIsBatchSending(false)
-        Swal.fire({
-          icon: 'success',
-          title: 'Completed!',
-          text: `Notifications sent successfully!`,
-        })
-        return response.data // Return the final response
-      }
-    } catch (error) {
-      setIsBatchSending(false)
-      console.error('Batch notification error:', error)
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text:
-          error.response?.data?.message || 'Failed to send batch notifications. Please try again.',
-      })
-    }
-  }
-
-  const resetForm = () => {
-    setNotificationTitle('')
-    // setEditorState(EditorState.createEmpty());
-    setNotificationContent('') // Reset the content
-    setRedirectLink('')
-    setImage(null)
-    setImagePreview('')
-    setReceivers('1') // Reset to default "All Users"
-    setMostOrderedCount(10) // Reset to default count
-    setSelectedStack('MainNavigatorStack') // Reset to default stack
-    setSelectedScreen('Home') // Reset to default screen
-    setProgress(0)
-    setProcessedUsers(0)
-    setTotalUsers(0)
-    setBatchResponses([])
-    setNotificationContent('')
-    setUserEmail('') // Reset user email
-  }
-
-  const handleSendNotification = async () => {
-    if (!validateForm()) return
-
-    setIsSending(true)
-    setIsBatchSending(true)
-    setProgress(0)
-    setProcessedUsers(0)
-    setTotalUsers(0)
-    setBatchResponses([])
-
-    // try {
-    // const response =  await sendBatchNotifications(0); // Start with offset 0
-    // console.log(response,"Response data");
-    // if(response.status != 200){
-    //   setIsSending(false);
-    //   setIsBatchSending(false);
-
-    // }
-    // } catch (error) {
-    //   setIsSending(false);
-    //   setIsBatchSending(false);
-    // }
-    try {
-      const finalResponse = await sendBatchNotifications(0)
-      console.log('Complete notification process finished:', finalResponse)
-      resetForm() // Reset all form fields
+        icon: 'success',
+        title: 'Success',
+        text: `Notifications sent to ${response.data.user_count} users`,
+      });
+      resetForm();
     } catch (error) {
-      console.error('Error in notification process:', error)
+      const errorMsg = error.response?.data?.error || 'Failed to send notifications';
+      const missingEmails = error.response?.data?.missing_emails || [];
+      
+      if (missingEmails.length > 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Some users not found',
+          html: `These emails were not found: <br>${missingEmails.join('<br>')}`,
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMsg,
+        });
+      }
     } finally {
-      setIsSending(false)
-      setIsBatchSending(false)
+      setIsSending(false);
+      setIsBatchSending(false);
     }
-  }
+  };
+
+  // Reset form to initial state
+  const resetForm = () => {
+    setNotificationTitle('');
+    setNotificationContent('');
+    setRedirectLink('');
+    setImage(null);
+    setImagePreview('');
+    setReceivers('1');
+    setMostOrderedCount(10);
+    setSelectedStack('MainNavigatorStack');
+    setSelectedScreen('Home');
+    setProgress(0);
+    setProcessedUsers(0);
+    setTotalUsers(0);
+    setSelectedUsers([]);
+    setSearchTerm('');
+    setSearchResults([]);
+  };
+
   return (
     <CRow>
       <CCol lg={12}>
@@ -313,22 +426,13 @@ const Promotions = () => {
 
                 <div className="mb-3">
                   <CFormLabel className="fw-bold">Notification Content*</CFormLabel>
-                  {/* <Editor
-                    editorState={editorState}
-                    onEditorStateChange={handleEditorChange}
-                    wrapperClassName="border rounded"
-                    editorClassName="px-3 min-h-[200px]"
-                    placeholder="Write your notification content here (min 5 characters)..."
-                    toolbarHidden
-                  /> */}
                   <CFormInput
                     as="textarea"
-                    rows={5} // Adjust rows as needed
+                    rows={5}
                     placeholder="Write your notification content here..."
                     value={notificationContent}
-                    onChange={handleContentChange}
+                    onChange={(e) => setNotificationContent(e.target.value)}
                     disabled={isSending}
-                    // minLength={5}
                     required
                   />
                 </div>
@@ -347,6 +451,7 @@ const Promotions = () => {
                     />
                   </CInputGroup>
                 </div>
+
                 <div className="mb-3 d-none">
                   <CFormLabel className="fw-bold">Notification Image</CFormLabel>
                   <div className="d-flex align-items-center">
@@ -363,10 +468,9 @@ const Promotions = () => {
                         color="danger"
                         variant="outline"
                         onClick={() => {
-                          setImage(null)
-                          setImagePreview('')
-                          // Clear the file input value
-                          document.querySelector('input[type="file"]').value = ''
+                          setImage(null);
+                          setImagePreview('');
+                          document.querySelector('input[type="file"]').value = '';
                         }}
                         disabled={isSending}
                       >
@@ -385,25 +489,6 @@ const Promotions = () => {
                     </Box>
                   )}
                 </div>
-                {/* <div className="mb-3">
-                  <CFormLabel className="fw-bold">Notification Image</CFormLabel>
-                  <CFormInput
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    disabled={isSending}
-                  />
-                  {imagePreview && (
-                    <Box mt={2}>
-                      <CImage
-                        thumbnail
-                        src={imagePreview}
-                        alt="Preview"
-                        style={{ maxHeight: '200px' }}
-                      />
-                    </Box>
-                  )}
-                </div> */}
 
                 <div className="mb-3">
                   <CFormLabel className="fw-bold">Target Audience*</CFormLabel>
@@ -416,21 +501,10 @@ const Promotions = () => {
                     <option value="2">Order Placed Users</option>
                     <option value="3">Order Not Placed Users</option>
                     <option value="4">User Specific</option>
-                    {/* <option value="4">Top Ordering Users</option> */}
                   </CFormSelect>
                 </div>
 
-                {receivers === '4' && (
-                  <div className="mb-3">
-                    <CFormLabel className="fw-bold">User</CFormLabel>
-                    <CFormInput
-                      placeholder="Enter Email of the user"
-                      value={useremail}
-                      onChange={(e) => setUserEmail(e.target.value)}
-                      disabled={isSending}
-                    />
-                  </div>
-                )}
+                {receivers === '4' && renderUserSearch()}
 
                 {receivers === '5' && (
                   <div className="mb-3">
@@ -445,7 +519,7 @@ const Promotions = () => {
                   </div>
                 )}
 
-                <div className="mb-3 d-none" >
+                <div className="mb-3 d-none">
                   <CFormLabel className="fw-bold">Navigation Stack*</CFormLabel>
                   <CFormSelect
                     value={selectedStack}
@@ -474,6 +548,7 @@ const Promotions = () => {
                     ))}
                   </CFormSelect>
                 </div>
+
                 {isBatchSending && (
                   <Box sx={{ mt: 3, mb: 3 }}>
                     <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -491,11 +566,12 @@ const Promotions = () => {
                     </Box>
                   </Box>
                 )}
+
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                   <Button
                     variant="outlined"
                     color="secondary"
-                    onClick={resetForm} // Use the reset function
+                    onClick={resetForm}
                     disabled={isSending}
                   >
                     Clear
@@ -545,7 +621,7 @@ const Promotions = () => {
         </CCard>
       </CCol>
     </CRow>
-  )
-}
+  );
+};
 
-export default Promotions
+export default Promotions;
