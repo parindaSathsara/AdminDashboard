@@ -323,7 +323,7 @@ const Promotions = () => {
         });
       }
 
-      const response = await axios.post('/send_global_notifications', formData, {
+      const response = await axios.post('/pushNotification', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
