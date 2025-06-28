@@ -507,7 +507,7 @@ const Promotions = () => {
 
                 {receivers === '4' && renderUserSearch()}
 
-                {receivers === '5' && (
+                {/* {receivers === '5' && (
                   <div className="mb-3">
                     <CFormLabel className="fw-bold">Number of Top Users</CFormLabel>
                     <CFormInput
@@ -518,7 +518,7 @@ const Promotions = () => {
                       disabled={isSending}
                     />
                   </div>
-                )}
+                )} */}
 
                 <div className="mb-3 d-none">
                   <CFormLabel className="fw-bold">Navigation Stack*</CFormLabel>
