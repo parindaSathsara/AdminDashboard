@@ -404,10 +404,10 @@ export default function LifestylesOrderView(props) {
                                 <CCardTitle className="productTitle mb-3">Child Details</CCardTitle>
 
 
-                                {bookData?.lifestyle_child_details?.length > 0 ?
+                                {bookData?.lifestyle_children_details?.length > 0 ?
 
                                     <>
-                                        {bookData?.lifestyle_child_details?.split(",").map(data => (
+                                        {bookData?.lifestyle_children_details?.split(",").map(data => (
                                             <div style={{ border: '1px solid #dee2e6', borderRadius: '8px', padding: '10px', backgroundColor: '#f8f9fa', marginTop: 10 }}>
                                                 <h5 className="travelerTitle">{data}</h5>
                                             </div>
