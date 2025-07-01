@@ -274,14 +274,14 @@ const Promotions = () => {
       return false;
     }
 
-    if (!notificationContent.trim() || notificationContent.length < 5) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Please enter valid notification content (min 5 characters)',
-      });
-      return false;
-    }
+    // if (!notificationContent.trim() || notificationContent.length < 5) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Validation Error',
+    //     text: 'Please enter valid notification content (min 5 characters)',
+    //   });
+    //   return false;
+    // }
 
     if (receivers === '4' && selectedUsers.length === 0) {
       Swal.fire({
