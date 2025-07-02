@@ -405,7 +405,7 @@ const Dashboard = () => {
                 searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
                 filtering: false, paging: true, pageSizeOptions: [10, 20, 25, 50, 100], pageSize: 10,
                 paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                exportAllData: true, exportFileName: "Customer_Orders", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                 grouping: true, columnsButton: true,
                 headerStyle: { background: '#626f75', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },

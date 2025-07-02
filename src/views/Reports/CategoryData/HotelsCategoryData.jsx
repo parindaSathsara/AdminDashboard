@@ -66,15 +66,21 @@ const HotelsCategoryData = ({ data }) => {
     []
   );
 
-  const csvConfig = useMemo(
-    () =>
-      mkConfig({
-        fieldSeparator: ",",
-        decimalSeparator: ".",
-        useKeysAsHeaders: true,
-      }),
-    []
-  );
+  // const csvConfig = useMemo(
+  //   () =>
+  //     mkConfig({
+  //       fieldSeparator: ",",
+  //       decimalSeparator: ".",
+  //       useKeysAsHeaders: true,
+  //     }),
+  //   []
+  // );
+      const csvConfig = useMemo(() => mkConfig({
+    fieldSeparator: ',',
+    decimalSeparator: '.',
+    useKeysAsHeaders: true,
+    filename: `${"Hotel"}_Products_Report`
+  }), [category]);
 
   const handleExportRows = useCallback(
     (rows, columns) => {

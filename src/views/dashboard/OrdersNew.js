@@ -224,6 +224,8 @@ const OrdersNew = () => {
     if (newPage >= 1 && newPage <= pagination.lastPage) {
       fetchOrders(newPage, pagination.perPage, searchTerm);
     }
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (loading) {

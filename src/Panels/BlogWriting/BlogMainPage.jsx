@@ -265,13 +265,14 @@ const BlogMainPage = () => {
 
                         <div className="mb-3">
                           <label style={styles.formLabel} className="form-label">
-                            Images
+                            Images*
                           </label>
                           <CFormInput
                             type="file"
                             accept="image/*"
                             multiple
                             onChange={handleImageChange}
+                            required
                           />
                         </div>
 
