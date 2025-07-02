@@ -33,6 +33,7 @@ import {
   query,
   updateDoc,
   writeBatch,
+  where
 } from 'firebase/firestore'
 
 import { db } from 'src/firebase'
@@ -89,86 +90,89 @@ const UserCountStats = () => {
 
 
 
-  const getChatlists = async () => {
-    const q = query(collection(db, 'customer-chat-lists'), orderBy('updatedAt', 'desc'),limit(10));
+ const getChatlists = async () => {
+  // Get today's date at midnight
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const q = query(
+    collection(db, 'customer-chat-lists'),
+    orderBy('updatedAt', 'desc'),
+    where('updatedAt', '>=', today)
+  );
 
-    const getmessages = onSnapshot(q, async (QuerySnapshot) => {
-      const fetchedMessages = [];
-      const newMessages = [];
+  const getmessages = onSnapshot(q, async (QuerySnapshot) => {
+    const fetchedMessages = [];
+    const newMessages = [];
 
-      const messagePromises = QuerySnapshot.docs.map(async (chatDoc) => {
-        const chatData = { ...chatDoc.data(), id: chatDoc.id };
+    const messagePromises = QuerySnapshot.docs.map(async (chatDoc) => {
+      const chatData = { ...chatDoc.data(), id: chatDoc.id };
 
-        try {
-          const messagesRef = collection(db, 'customer-chat-lists', chatDoc.id, 'messages');
-          const messagesQuery = query(
-            messagesRef,
-            orderBy('timestamp', 'desc'),
-            limit(10)
-          );
+      try {
+        const messagesRef = collection(db, 'customer-chat-lists', chatDoc.id, 'messages');
+        const messagesQuery = query(
+          messagesRef,
+          orderBy('timestamp', 'desc'),
+          where('timestamp', '>=', today)
+        );
 
-          const messagesSnapshot = await getDocs(messagesQuery);
+        const messagesSnapshot = await getDocs(messagesQuery);
+        
+        const lastMessages = messagesSnapshot.docs.map(msgDoc => ({
+          ...msgDoc.data(),
+          id: msgDoc.id
+        })).reverse();
 
-          console.log("hdewrhdfih",messagesSnapshot?.docs);
-          
-          const lastMessages = messagesSnapshot.docs.map(msgDoc => ({
-            ...msgDoc.data(),
-            id: msgDoc.id
-          })).reverse(); 
-          console.log(lastMessages);
+        chatData.lastMessages = lastMessages;
 
-          chatData.lastMessages = lastMessages;
-
-          if (lastMessages.length > 0) {
-            const lastMessage = lastMessages[lastMessages.length - 1];
-            chatData.last_message = {
-              value: lastMessage.text || lastMessage.type || 'No message',
-              timestamp: lastMessage.timestamp
-            };
-          }
-        } catch (error) {
-          console.error(`Error fetching messages for chat ${chatDoc.id}:`, error);
-          chatData.lastMessages = [];
+        if (lastMessages.length > 0) {
+          const lastMessage = lastMessages[lastMessages.length - 1];
+          chatData.last_message = {
+            value: lastMessage.text || lastMessage.type || 'No message',
+            timestamp: lastMessage.timestamp
+          };
         }
-
-        fetchedMessages.push(chatData);
-
-        if (!processedChatIds.current.has(chatData.id)) {
-          newMessages.push(chatData);
-          processedChatIds.current.add(chatData.id);
-
-          if (beepSoundRef.current) {
-            beepSoundRef.current.currentTime = 0;
-            beepSoundRef.current.play().catch(e => {
-              console.error('Chat sound play failed:', e);
-            });
-          }
-        }
-
-        return chatData;
-      });
-
-      // Wait for all message fetching to complete
-      await Promise.all(messagePromises);
-
-      if (newMessages.length > 0) {
-        setNewChatMessages(prevNewMessages => {
-          // Ensure no duplicates
-          const uniqueNewMessages = [...prevNewMessages, ...newMessages]
-            .filter((chat, index, self) =>
-              index === self.findIndex(t => t.id === chat.id)
-            );
-          return uniqueNewMessages;
-        });
+      } catch (error) {
+        console.error(`Error fetching messages for chat ${chatDoc.id}:`, error);
+        chatData.lastMessages = [];
       }
 
-      if (JSON.stringify(fetchedMessages) !== JSON.stringify(chatList)) {
-        setChatList(fetchedMessages);
+      fetchedMessages.push(chatData);
+
+      if (!processedChatIds.current.has(chatData.id)) {
+        newMessages.push(chatData);
+        processedChatIds.current.add(chatData.id);
+
+        if (beepSoundRef.current) {
+          beepSoundRef.current.currentTime = 0;
+          beepSoundRef.current.play().catch(e => {
+            console.error('Chat sound play failed:', e);
+          });
+        }
       }
+
+      return chatData;
     });
 
-    return () => getmessages();
-  };
+    await Promise.all(messagePromises);
+
+    if (newMessages.length > 0) {
+      setNewChatMessages(prevNewMessages => {
+        const uniqueNewMessages = [...prevNewMessages, ...newMessages]
+          .filter((chat, index, self) =>
+            index === self.findIndex(t => t.id === chat.id)
+          );
+        return uniqueNewMessages;
+      });
+    }
+
+    if (JSON.stringify(fetchedMessages) !== JSON.stringify(chatList)) {
+      setChatList(fetchedMessages);
+    }
+  });
+
+  return () => getmessages();
+};
 
 
   const fetchUserStats = async () => {

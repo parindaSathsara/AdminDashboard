@@ -1035,7 +1035,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                     // <FontAwesomeIcon icon={faStop} onClick={() => handleStopChat(chatOpenDetails)} style={{ color: '#2bfd3c' }} />
                   }
 
-                  {[
+                  {/* {[
                     'assign employer to chat',
                     'remove employer from chat',
                     'view assign employer chat',
@@ -1048,7 +1048,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       }}
                       style={{ color: '#03e5fd' }}
                     />
-                  )}
+                  )} */}
                   <CTooltip content={'Chat Analytics'} placement="auto">
                     <FontAwesomeIcon
                       icon={faInfoCircle}
@@ -1180,7 +1180,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                         borderColor: '#ccc',
                         resize: 'vertical',
                         overflowY: 'auto',
-                        minHeight: '80px',
+                        minHeight: '64px',
                         maxHeight: '200px',
                         fontSize: 15,
                       }}
@@ -1190,9 +1190,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       className="chat-message-input-icon-send"
                       onClick={() => handleSendMessage(adminMessage)}
                     />
-                    <Tooltip title={'Under developement'}>
+                    {/* <Tooltip title={'Under developement'}>
                       <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
-                    </Tooltip>
+                    </Tooltip> */}
                   </div>
                 ) : null}
               </div>
