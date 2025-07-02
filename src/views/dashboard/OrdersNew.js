@@ -188,6 +188,7 @@ const OrdersNew = () => {
     enableRowSelection: false,
     enableColumnActions: true,
     enableColumnFilters: false,
+    enableGlobalFilter: false,
     enableSorting: true,
     initialState: {
       density: 'compact'
