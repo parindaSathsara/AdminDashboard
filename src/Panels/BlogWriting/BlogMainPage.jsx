@@ -248,7 +248,7 @@ const BlogMainPage = () => {
                       <Form>
                         <div className="mb-3">
                           <label htmlFor="title" style={styles.formLabel} className="form-label">
-                            Title
+                            Title*
                           </label>
                           <Field
                             id="title"
@@ -257,6 +257,7 @@ const BlogMainPage = () => {
                               }`}
                             placeholder="Enter your blog title"
                             disabled={submitting}
+                            required
                           />
                           {errors.title && touched.title && (
                             <div className="invalid-feedback">{errors.title}</div>
@@ -305,7 +306,7 @@ const BlogMainPage = () => {
 
                         <div className="mb-3">
                           <label style={styles.formLabel} className="form-label">
-                            Content
+                            Content*
                           </label>
                           <Editor
                         editorState={editorState}
@@ -316,6 +317,7 @@ const BlogMainPage = () => {
                           options: ['inline', 'blockType', 'list', 'emoji'],
                         }}
                         placeholder="Write your blog content here..."
+                        required
                       />
                           {/* <Editor
                             editorState={editorState}
@@ -334,7 +336,7 @@ const BlogMainPage = () => {
                         <div className="mb-3">
                           <div className="d-flex justify-content-between align-items-center mb-2">
                             <label style={styles.formLabel} htmlFor="summary" className="form-label mb-0">
-                              Summary
+                              Summary*
                             </label>
                             <button
                               type="button"
@@ -361,6 +363,7 @@ const BlogMainPage = () => {
                             placeholder="Enter a brief summary of your blog"
                             rows="3"
                             disabled={submitting}
+                            required
                           />
                           {errors.summary && touched.summary && (
                             <div className="invalid-feedback">{errors.summary}</div>
