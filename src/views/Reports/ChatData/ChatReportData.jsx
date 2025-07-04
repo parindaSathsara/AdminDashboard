@@ -13,7 +13,7 @@ const getDateAndtime = (value) => {
 };
 
 const ChatReportData = ({ dataSet, category }) => {
-
+    console.log(dataSet,category, "Data Set Value is");
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -37,11 +37,29 @@ const ChatReportData = ({ dataSet, category }) => {
         { accessorKey: 'Admin_includes_count', header: 'Admin includes count', size: 120 }
     ], [category]);
 
-    const csvConfig = useMemo(() => mkConfig({
-        fieldSeparator: ',',
-        decimalSeparator: '.',
-        useKeysAsHeaders: true,
-    }), []);
+    // const csvConfig = useMemo(() => mkConfig({
+    //     fieldSeparator: ',',
+    //     decimalSeparator: '.',
+    //     useKeysAsHeaders: true,
+    // }), []);
+
+        const csvConfig = useMemo(() => {
+  const filenamePrefix =
+    category == 0 ? 'All Chat Report' :
+    category == 1 ? 'Active Chat Report' :
+    category == 2 ? 'Deactive Chat Report' :
+    'Chat Report';
+    console.log(category, "Filename Prefix is");
+    console.log(filenamePrefix, "Filename Prefix is");
+
+  return mkConfig({
+    fieldSeparator: ',',
+    decimalSeparator: '.',
+    useKeysAsHeaders: true,
+    filename: filenamePrefix
+  });
+}, [category]);
+
 
     const handleExportRows = useCallback((rows, columns) => {
         const rowData = rows.map(row => {

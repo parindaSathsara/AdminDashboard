@@ -15,7 +15,7 @@ const EducationCategoryData = ({ data }) => {
         const transformedData = data.map(item => ({
             education_id: item.education_id,
             course_name: item.course_name,
-            course_description: item.course_description?.slice(0, 50),
+            course_description: item.course_description?.replace(/<[^>]*>/g, '').slice(0, 100) + '...',
             education_type: item.education_type,
             medium: item.medium,
             course_mode: item.course_mode,

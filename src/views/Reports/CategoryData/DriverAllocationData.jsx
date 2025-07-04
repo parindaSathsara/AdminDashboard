@@ -5,7 +5,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
 
-const DriverAllocationData = ({ dataSet }) => {
+const DriverAllocationData = ({ dataSet, category }) => {
     const [tableData, setTableData] = useState([]);
 
     console.log(dataSet,"Data set value data is")
@@ -47,7 +47,8 @@ const DriverAllocationData = ({ dataSet }) => {
         fieldSeparator: ',',
         decimalSeparator: '.',
         useKeysAsHeaders: true,
-    }), []);
+        filename: `${category} Driver Reports`
+    }));
 
     const handleExportRows = useCallback((rows, columns) => {
         const rowData = rows.map(row => {

@@ -549,7 +549,7 @@ function ChatsMeta() {
             </div>
           </div>
           <div className="chat-lists">
-            <p className="chatWise-heading">My pinned chats</p>
+            {/* <p className="chatWise-heading">My pinned chats</p> */}
             {getPaginatedChats(getFilteredChats('pinned').map((value, key) => (
               <div
                 key={key}

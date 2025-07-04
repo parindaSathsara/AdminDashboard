@@ -306,9 +306,9 @@ const ReportGenerationPage = () => {
         <LoaderPanel message="Report Data Fetching" />
       ) : reportDataSet.length > 0 ? (
         reportType?.value === 'main_orders_report' ? (
-          <MainOrderReport dataSet={reportDataSet} />
+          <MainOrderReport dataSet={reportDataSet} category={dateType} />
         ) : reportType?.value === 'driver_allocation' ? (
-          <DriverAllocationData dataSet={reportDataSet} />
+          <DriverAllocationData dataSet={reportDataSet} category={dateType} />
         ) : // <p>Test</p>
         reportType?.value === 'products_report' ? (
           category.value == 3 ? (

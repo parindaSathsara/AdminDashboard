@@ -56,11 +56,17 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
     { accessorKey: 'checkout_date', header: 'Checkout Date', size: 120 },
   ], [category]);
 
-  const csvConfig = useMemo(() => mkConfig({
-    fieldSeparator: ',',
-    decimalSeparator: '.',
-    useKeysAsHeaders: true,
-  }), []);
+  // const csvConfig = useMemo(() => mkConfig({
+  //   fieldSeparator: ',',
+  //   decimalSeparator: '.',
+  //   useKeysAsHeaders: true,
+  // }), []);
+         const csvConfig = useMemo(() => mkConfig({
+        fieldSeparator: ',',
+        decimalSeparator: '.',
+        useKeysAsHeaders: true,
+        filename: `${dateType}-Orders Group Wise Reports`
+      }), [category]);
 
   const handleExportRows = useCallback((rows, columns) => {
     const rowData = rows.map(row => {

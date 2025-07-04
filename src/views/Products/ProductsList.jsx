@@ -118,6 +118,12 @@ function ProductList() {
         return tempDiv.textContent || tempDiv.innerText || "";
     }
 
+    const createdDateLookup = {};
+[...new Set(productList.map(product => moment(product.dateCreated).format("YYYY-MM-DD")))].forEach(date => {
+  createdDateLookup[date] = date;
+});
+
+
     const data = {
         columns: [
             {
@@ -184,6 +190,7 @@ function ProductList() {
                 field: 'created_date',
                 align: 'left',
                 editable: 'never',
+                lookup: createdDateLookup
             }
         ],
         rows: productList.map(product => ({

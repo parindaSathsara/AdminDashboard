@@ -68,6 +68,8 @@ const Typography = () => {
           cellStyle: {
             fontSize: '14px', // Adjust the column font size here
         },
+            onChangePage: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+
             sorting: true,
             search: true,
 
@@ -104,6 +106,8 @@ const Typography = () => {
           cellStyle: {
             fontSize: '14px', // Adjust the column font size here
         },
+            onChangePage: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+
           }}
         />
       </ThemeProvider>
