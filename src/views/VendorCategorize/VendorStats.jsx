@@ -852,6 +852,8 @@ const VendorStats = () => {
   // Handle pagination
   const handlePageChange = (page) => {
     fetchVendors(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll to top
+
   };
 
   // Show details modal

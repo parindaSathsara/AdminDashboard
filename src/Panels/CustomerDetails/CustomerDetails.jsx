@@ -85,6 +85,30 @@ function CustomerDetails(props) {
             }
         ]
     };
+    const options = [
+  {
+    value: '',
+    label: 'Select Option',
+  },
+  {
+    value: 'email',
+    label: (
+      <>
+        For uninterrupted communication, <br />
+        kindly update your email address.
+      </>
+    )
+  },
+  {
+    value: 'mobile',
+    label: (
+      <>
+        To receive timely updates, <br />
+        kindly update your mobile number.
+      </>
+    )
+  }
+];
 
     return (
         <div>
@@ -96,15 +120,29 @@ function CustomerDetails(props) {
                 <COffcanvasBody>
                     <CFormSelect
                         aria-label="Select Option"
-                        options={[
-                            { label: 'Select Option', value: '' },
-                            { label: 'For uninterrupted communication, kindly update your email address in your account preferences.', value: 'For uninterrupted communication, kindly update your email address in your account preferences.' },
-                            { label: 'To receive timely updates, kindly update your mobile number in your account settings.', value: 'To receive timely updates, kindly update your mobile number in your account settings.' }
-                        ]}
+                        // options={[
+                        //     { label: 'Select Option', value: '' },
+                        //     { label: 'For uninterrupted communication, kindly update your email address in your account preferences.', value: 'For uninterrupted communication, kindly update your email address in your account preferences.' },
+                        //     { label: 'To receive timely updates, kindly update your mobile number in your account settings.', value: 'To receive timely updates, kindly update your mobile number in your account settings.' }
+                        // ]}
+                       options={[
+    { label: 'Select Option', value: '' },
+    {
+      label: 'For uninterrupted communication...',
+      value: 'For uninterrupted communication, kindly update your email address in your account preferences.',
+      title: 'For uninterrupted communication,\nkindly update your email address in your account preferences.'
+    },
+    {
+      label: 'To receive timely updates...',
+      value: 'To receive timely updates, kindly update your mobile number in your account settings.',
+      title: 'To receive timely updates,\nkindly update your mobile number in your account settings.'
+    }
+  ]}
                         label="Add Some Suggestions"
                         name='suggestion'
                         onChange={handleOnSelect}
                         value={contactDetails.suggestion}
+                       
                     />
                     <br />
                     <CFormTextarea

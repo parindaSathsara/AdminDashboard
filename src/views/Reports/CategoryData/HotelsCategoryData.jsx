@@ -6,6 +6,8 @@ import { mkConfig, generateCsv, download } from "export-to-csv";
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from "@coreui/react";
 
 const HotelsCategoryData = ({ data }) => {
+  console.log(data, "Hotels Data");
+  
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {

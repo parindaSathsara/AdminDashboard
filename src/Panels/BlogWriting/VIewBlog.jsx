@@ -83,7 +83,7 @@ function ViewBlog() {
       {data && (
         <>
           <div className="title" style={{ display: 'flex', justifyContent: 'center' }}>
-            <h1>{data.title}</h1>
+            <h4>{data.title}</h4>
           </div>
           <br />
           <BlogCarousel images={data.images} />

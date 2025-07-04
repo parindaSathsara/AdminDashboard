@@ -505,11 +505,12 @@ const EmailGeneration = () => {
                                 <strong>Additional Attachments</strong>
 
                             </CCardHeader>
-                            <CCardBody>
-                                <CRow className="mb-3">
+                            <CCardBody style={{ marginRight: "20px" }}  >
+                                <CRow className="mb-3" >
                                     <Editor
                                         editorState={editorState}
-                                        onEditorStateChange={handleEditorChange} />
+                                        onEditorStateChange={handleEditorChange}
+                                        style={{ marginRight: "20px" }} />
                                 </CRow>
 
                                 <CRow className="mb-3">

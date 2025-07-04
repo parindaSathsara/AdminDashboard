@@ -48,16 +48,24 @@ export default function ShowReqDetails(props) {
       {...props}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
-      centered
+      // centered
       backdrop="static"
       keyboard={false}
       title=""
     >
-      <Modal.Header closeButton>
+      {/* <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           {title || 'Request Details'}
         </Modal.Title>
-      </Modal.Header>
+      </Modal.Header> */}
+      <Modal.Header 
+  closeButton 
+  style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+>
+  <Modal.Title id="contained-modal-title-vcenter">
+    {title || 'Request Details'}
+  </Modal.Title>
+</Modal.Header>
       <Modal.Body>
         <Row className="mb-3">
           <Col md={4}><strong>Title:</strong></Col>

@@ -19,7 +19,7 @@ import CurrencyConverter from 'src/Context/CurrencyConverter';
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import LoaderPanel from 'src/Panels/LoaderPanel';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import { Fullscreen, Search , Clear} from '@material-ui/icons';
+import { Fullscreen, FullscreenExit, Search, Clear } from '@material-ui/icons';
 import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
 import ProductWiseOrders from './MainComponents/ProductWiseOrders';
 import { Tab, Tabs } from 'react-bootstrap';
@@ -28,12 +28,13 @@ import ProductWiseOrdersPaginate from './MainComponents/ProductWiseOrdersPaginat
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
   console.log(currencyData, "Currency Data in OrdersNew");
-   const [activeTab, setActiveTab] = useState('group');
+  const [activeTab, setActiveTab] = useState('group');
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [detailExpander, setDetailExpander] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isTableFullscreen, setIsTableFullscreen] = useState(false); // Added fullscreen state
   const [pagination, setPagination] = useState({
     currentPage: 1,
     perPage: 10,
@@ -44,6 +45,11 @@ const OrdersNew = () => {
   const handleFullScreen = (rowData) => {
     setSelectedOrderDetails(rowData);
     setDetailExpander(true);
+  };
+
+  // Toggle table fullscreen
+  const toggleTableFullscreen = () => {
+    setIsTableFullscreen(!isTableFullscreen);
   };
 
   // Fetch orders data with pagination and search
@@ -77,8 +83,9 @@ const OrdersNew = () => {
   const handleTabSelect = (key) => {
     setActiveTab(key);
   };
+
   // Handle search submission
-   const handleSearch = () => {
+  const handleSearch = () => {
     if (searchTerm.trim() === '') {
       // If search term is empty, fetch all orders
       fetchOrders();
@@ -88,11 +95,12 @@ const OrdersNew = () => {
     }
   };
 
-    // Handle clear search
+  // Handle clear search
   const handleClearSearch = () => {
     setSearchTerm('');
     fetchOrders(); // Fetch all orders when clearing search
   };
+
   // Handle Enter key press in search input
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -137,7 +145,6 @@ const OrdersNew = () => {
         </span>
       )
     },
-
     { 
       accessorKey: 'total_amount', 
       header: 'Total Amount',
@@ -184,6 +191,7 @@ const OrdersNew = () => {
   const table = useMaterialReactTable({
     columns,
     data: orderData,
+    enableFullScreenToggle:false, // if this prop is present
     enablePagination: false,
     enableRowSelection: false,
     enableColumnActions: true,
@@ -205,10 +213,11 @@ const OrdersNew = () => {
     ),
     muiTableContainerProps: {
       sx: {
-        maxHeight: '500px'
+        maxHeight: isTableFullscreen ? '100vh' : '500px' // Dynamic height based on fullscreen state
       }
     },
-    enableRowActions: true,
+    // Removed row actions since you don't want fullscreen in action column
+     enableRowActions: true,
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Full Screen">
@@ -224,136 +233,170 @@ const OrdersNew = () => {
     if (newPage >= 1 && newPage <= pagination.lastPage) {
       fetchOrders(newPage, pagination.perPage, searchTerm);
     }
-    // Scroll to top smoothly
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (loading) {
     return <LoaderPanel message="Loading orders..." />;
   }
 
+  // Fullscreen container styles
+  const containerStyle = isTableFullscreen ? {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+    backgroundColor: 'white',
+    padding: '20px',
+    overflow: 'auto'
+  } : {};
+
   return (
     <>
       <CRow>
         <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardBody>
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h4 className="mb-0">Customer Orders</h4>
-               {activeTab === "group" &&  <CInputGroup style={{ width: '300px' }}>
-                 <CFormInput
-                    placeholder="Search by Order ID..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                  />
-                     {searchTerm && (
-                    <CButton 
-                      color="secondary" 
-                      onClick={handleClearSearch}
-                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                    >
-                      <Clear />
-                    </CButton>
-                  )}
-                  <CButton 
-                    color="primary" 
-                    onClick={handleSearch}
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                  >
-                    <Search />
-                  </CButton>
-                </CInputGroup>}
-              </div>
-               <Tabs 
-                defaultActiveKey="group" 
-                id="orders-view-tabs" 
-                className="mt-4" 
-                style={{ fontSize: 16 }}
-                activeKey={activeTab} onSelect={handleTabSelect}
-              >
-                <Tab eventKey="group" title="Group Wise">
-
-              {orderData.length > 0 ? (
-                <>
-                  <MaterialReactTable table={table} />
-                  
-                  <div className="mt-3 d-flex justify-content-between align-items-center">
-                    <div>
-                      Showing {((pagination.currentPage - 1) * pagination.perPage) + 1} to{' '}
-                      {Math.min(pagination.currentPage * pagination.perPage, pagination.total)} of{' '}
-                      {pagination.total} entries
-                        {searchTerm && (
-                            <span className="ms-2 text-muted">
-                              (Filtered by: "{searchTerm}")
-                            </span>
+          <div style={containerStyle}>
+            <CCard className="mb-4">
+              <CCardBody>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <h4 className="mb-0">Customer Orders</h4>
+                  <div className="d-flex align-items-center gap-3">
+                    {activeTab === "group" && (
+                      <>
+                        <CInputGroup style={{ width: '300px' }}>
+                          <CFormInput
+                            placeholder="Search by Order ID..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                          />
+                          {searchTerm && (
+                            <CButton 
+                              color="secondary" 
+                              onClick={handleClearSearch}
+                              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                            >
+                              <Clear />
+                            </CButton>
                           )}
-                    </div>
-                    
-                    <CPagination aria-label="Page navigation">
-                      <CPaginationItem 
-                        disabled={pagination.currentPage === 1}
-                        onClick={() => handlePageChange(1)}
-                      >
-                        First
-                      </CPaginationItem>
-                      <CPaginationItem 
-                        disabled={pagination.currentPage === 1}
-                        onClick={() => handlePageChange(pagination.currentPage - 1)}
-                      >
-                        Previous
-                      </CPaginationItem>
-                      
-                      {Array.from({ length: Math.min(5, pagination.lastPage) }, (_, i) => {
-                        let pageNum;
-                        if (pagination.lastPage <= 5) {
-                          pageNum = i + 1;
-                        } else if (pagination.currentPage <= 3) {
-                          pageNum = i + 1;
-                        } else if (pagination.currentPage >= pagination.lastPage - 2) {
-                          pageNum = pagination.lastPage - 4 + i;
-                        } else {
-                          pageNum = pagination.currentPage - 2 + i;
-                        }
-                        
-                        return (
-                          <CPaginationItem
-                            key={pageNum}
-                            active={pageNum === pagination.currentPage}
-                            onClick={() => handlePageChange(pageNum)}
+                          <CButton 
+                            color="primary" 
+                            onClick={handleSearch}
+                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                           >
-                            {pageNum}
-                          </CPaginationItem>
-                        );
-                      })}
-                      
-                      <CPaginationItem 
-                        disabled={pagination.currentPage === pagination.lastPage}
-                        onClick={() => handlePageChange(pagination.currentPage + 1)}
-                      >
-                        Next
-                      </CPaginationItem>
-                      <CPaginationItem 
-                        disabled={pagination.currentPage === pagination.lastPage}
-                        onClick={() => handlePageChange(pagination.lastPage)}
-                      >
-                        Last
-                      </CPaginationItem>
-                    </CPagination>
+                            <Search />
+                          </CButton>
+                        </CInputGroup>
+                        
+                        {/* Table Fullscreen Toggle Button */}
+                        <Tooltip title={isTableFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}>
+                          <IconButton 
+                            onClick={toggleTableFullscreen}
+                            color="primary"
+                            size="large"
+                          >
+                            {isTableFullscreen ? <FullscreenExit /> : <Fullscreen />}
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
                   </div>
-                </>
-              ) : (
-                <div className="text-center py-5">
-                  {searchTerm ? 'No orders found matching your search' : 'No orders found'}
                 </div>
-              )}
-                </Tab>
-                 <Tab eventKey="product" title="Product Wise">
-                  <ProductWiseOrdersPaginate />
-                </Tab>
+                
+                <Tabs 
+                  defaultActiveKey="group" 
+                  id="orders-view-tabs" 
+                  className="mt-4" 
+                  style={{ fontSize: 16 }}
+                  activeKey={activeTab} 
+                  onSelect={handleTabSelect}
+                >
+                  <Tab eventKey="group" title="Group Wise">
+                    {orderData.length > 0 ? (
+                      <>
+                        <MaterialReactTable table={table} />
+                        
+                        {/* Hide pagination when in fullscreen mode */}
+                        {
+                          <div className="mt-3 d-flex justify-content-between align-items-center">
+                            <div>
+                              Showing {((pagination.currentPage - 1) * pagination.perPage) + 1} to{' '}
+                              {Math.min(pagination.currentPage * pagination.perPage, pagination.total)} of{' '}
+                              {pagination.total} entries
+                              {searchTerm && (
+                                <span className="ms-2 text-muted">
+                                  (Filtered by: "{searchTerm}")
+                                </span>
+                              )}
+                            </div>
+                            
+                            <CPagination aria-label="Page navigation">
+                              <CPaginationItem 
+                                disabled={pagination.currentPage === 1}
+                                onClick={() => handlePageChange(1)}
+                              >
+                                First
+                              </CPaginationItem>
+                              <CPaginationItem 
+                                disabled={pagination.currentPage === 1}
+                                onClick={() => handlePageChange(pagination.currentPage - 1)}
+                              >
+                                Previous
+                              </CPaginationItem>
+                              
+                              {Array.from({ length: Math.min(5, pagination.lastPage) }, (_, i) => {
+                                let pageNum;
+                                if (pagination.lastPage <= 5) {
+                                  pageNum = i + 1;
+                                } else if (pagination.currentPage <= 3) {
+                                  pageNum = i + 1;
+                                } else if (pagination.currentPage >= pagination.lastPage - 2) {
+                                  pageNum = pagination.lastPage - 4 + i;
+                                } else {
+                                  pageNum = pagination.currentPage - 2 + i;
+                                }
+                                
+                                return (
+                                  <CPaginationItem
+                                    key={pageNum}
+                                    active={pageNum === pagination.currentPage}
+                                    onClick={() => handlePageChange(pageNum)}
+                                  >
+                                    {pageNum}
+                                  </CPaginationItem>
+                                );
+                              })}
+                              
+                              <CPaginationItem 
+                                disabled={pagination.currentPage === pagination.lastPage}
+                                onClick={() => handlePageChange(pagination.currentPage + 1)}
+                              >
+                                Next
+                              </CPaginationItem>
+                              <CPaginationItem 
+                                disabled={pagination.currentPage === pagination.lastPage}
+                                onClick={() => handlePageChange(pagination.lastPage)}
+                              >
+                                Last
+                              </CPaginationItem>
+                            </CPagination>
+                          </div>
+                        }
+                      </>
+                    ) : (
+                      <div className="text-center py-5">
+                        {searchTerm ? 'No orders found matching your search' : 'No orders found'}
+                      </div>
+                    )}
+                  </Tab>
+                  <Tab eventKey="product" title="Product Wise">
+                    <ProductWiseOrdersPaginate />
+                  </Tab>
                 </Tabs>
-            </CCardBody>
-          </CCard>
+              </CCardBody>
+            </CCard>
+          </div>
         </CCol>
       </CRow>
 

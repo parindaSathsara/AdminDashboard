@@ -301,6 +301,7 @@ function OrderDetails(props) {
       },
 
       { field: 'pid', title: 'Product ID' },
+      { field: 'provider', title: 'Provider' },
       { field: 'product_title', title: 'Product Title' },
       { field: 'adultCount', title: 'Adult Count', align: 'left' },
       { field: 'childCount', title: 'Child Count', align: 'left' },
@@ -315,6 +316,7 @@ function OrderDetails(props) {
     rows: lifestylesData?.map((value) => ({
       id: value.checkoutID,
       pid: value.PID,
+      provider: value.provider,
       product_title: value.product_title,
       childCount: value.childCount,
       adultCount: value.adultCount,

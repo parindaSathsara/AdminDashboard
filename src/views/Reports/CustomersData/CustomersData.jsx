@@ -31,11 +31,17 @@ const CustomersData = ({ dataSet, category }) => {
 
     ], [category]);
 
-    const csvConfig = useMemo(() => mkConfig({
-        fieldSeparator: ',',
-        decimalSeparator: '.',
-        useKeysAsHeaders: true,
-    }), []);
+    // const csvConfig = useMemo(() => mkConfig({
+    //     fieldSeparator: ',',
+    //     decimalSeparator: '.',
+    //     useKeysAsHeaders: true,
+    // }), []);
+            const csvConfig = useMemo(() => mkConfig({
+            fieldSeparator: ',',
+            decimalSeparator: '.',
+            useKeysAsHeaders: true,
+            filename: `Customer Reports`
+          }), [category]);
 
     const handleExportRows = useCallback((rows, columns) => {
         const rowData = rows.map(row => {

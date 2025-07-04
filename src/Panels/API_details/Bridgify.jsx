@@ -564,28 +564,60 @@ const Bridgify = () => {
                                     }
                                 },
                                 exportCsv: (columns, data) => {
-                                    // Custom CSV export with consistent formatting
-                                    const csvContent = [
-                                        columns.map(col => col.title).join(','),
-                                        ...data.map(row => 
-                                            columns.map(col => {
-                                                const value = row[col.field] || '';
-                                                // Clean data for CSV export
-                                                return typeof value === 'string' 
-                                                    ? `"${value.replace(/"/g, '""')}"` 
-                                                    : value;
-                                            }).join(',')
-                                        )
-                                    ].join('\n');
-                                    
-                                    const blob = new Blob([csvContent], { type: 'text/csv' });
-                                    const url = window.URL.createObjectURL(blob);
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
-                                    a.click();
-                                    window.URL.revokeObjectURL(url);
-                                },
+    try {
+        // Create a workbook
+        const wb = XLSX.utils.book_new();
+        
+        // Prepare the data
+        const wsData = [
+            columns.map(col => col.title), // Header row
+            ...data.map(row => columns.map(col => {
+                const value = row[col.field] || '';
+                return typeof value === 'string' ? value.replace(/"/g, '""') : value;
+            }))
+        ];
+        
+        // Create worksheet
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        
+        // Style the header row (bold)
+        if (!ws['!cols']) ws['!cols'] = [];
+        for (let i = 0; i < columns.length; i++) {
+            ws['!cols'][i] = { width: 15 }; // Set column width
+            const cellRef = XLSX.utils.encode_cell({ r: 0, c: i });
+            if (!ws[cellRef]) continue;
+            ws[cellRef].s = { font: { bold: true } }; // Make header bold
+        }
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Cart Items");
+        
+        // Generate file and download
+        XLSX.writeFile(wb, `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (error) {
+        console.error('Error generating Excel file:', error);
+        // Fallback to CSV if XLSX fails
+        const csvContent = [
+            columns.map(col => col.title).join(','),
+            ...data.map(row => 
+                columns.map(col => {
+                    const value = row[col.field] || '';
+                    return typeof value === 'string' 
+                        ? `"${value.replace(/"/g, '""')}"` 
+                        : value;
+                }).join(',')
+            )
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+},
                                 // Enhanced PDF export options
                                 exportPdf: (columns, data) => {
                                     import('jspdf').then(({ jsPDF }) => {
