@@ -65,7 +65,7 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
         fieldSeparator: ',',
         decimalSeparator: '.',
         useKeysAsHeaders: true,
-        filename: `${dateType}-Orders Group Wise Reports`
+        filename: `${dataSet.dateType}-Orders Group Wise Reports`
       }), [category]);
 
   const handleExportRows = useCallback((rows, columns) => {
