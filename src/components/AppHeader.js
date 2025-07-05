@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   CContainer,
@@ -79,7 +80,14 @@ const AppHeader = () => {
 
 
 
+  const location = useLocation();
   useEffect(() => {
+  
+  console.log('xwnwekCurrent pathname:', location.pathname);
+  console.log('xwnwekSearch params:', location.search);
+  console.log('xwnwekHash:', location.hash);
+  console.log('xwnwekState:', location.state);
+
     const userActive = JSON.parse(localStorage.getItem('userActive'));
     setSwitchState(userActive);
   }, []);
@@ -232,7 +240,7 @@ const AppHeader = () => {
 
 
               <CCol className="d-flex align-items-center justify-content-center currency-col">
-                <CurrencyController />
+                {location.pathname !== '/dashboard' && <CurrencyController />}
               </CCol>
 
               {/* <CCol className="d-flex align-items-center justify-content-center currency-col">

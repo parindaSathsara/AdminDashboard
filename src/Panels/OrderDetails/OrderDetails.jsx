@@ -316,7 +316,7 @@ function OrderDetails(props) {
     rows: lifestylesData?.map((value) => ({
       id: value.checkoutID,
       pid: value.PID,
-      provider: value.provider,
+      provider: value.Provider,
       product_title: value.product_title,
       childCount: value.childCount,
       adultCount: value.adultCount,

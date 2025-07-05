@@ -14,7 +14,7 @@ const HotelsCategoryData = ({ data }) => {
     const transformedData = data.map((item) => ({
       id: item.id,
       hotel_name: item.hotel_name,
-      hotel_description: item.hotel_description,
+      hotel_description: item.hotel_description?.replace(/<[^>]*>/g, '').slice(0, 200) + '...',
       star_classification: item.star_classification,
       auto_confirmation: item.auto_confirmation,
       triggers: item.triggers,

@@ -25,7 +25,8 @@ import {
   LinearProgress,
   Autocomplete,
   Chip,
-  MenuItem
+  MenuItem,
+  Popper 
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -110,6 +111,19 @@ const Promotions = () => {
   const [progress, setProgress] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [processedUsers, setProcessedUsers] = useState(0);
+
+  // Add this to your component's style or CSS file
+const styles = {
+  autocompletePopper: {
+    zIndex: 1300, // Make sure it's above other elements
+    position: 'relative',
+  },
+  autocompletePaper: {
+    marginTop: '8px', // Add some spacing from the input
+    maxHeight: '200px', // Limit height
+    overflow: 'auto', // Add scroll if needed
+  },
+};
 
   // Update available screens when stack changes
   useEffect(() => {
@@ -201,6 +215,7 @@ const Promotions = () => {
   // Render user search component
   const renderUserSearch = () => (
     <div className="mb-3">
+      <Box sx={{ position: 'relative', mb: 3 }}>
       <CFormLabel className="fw-bold">Search and Select Users by Email</CFormLabel>
       
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
@@ -215,7 +230,7 @@ const Promotions = () => {
         ))}
       </Box>
       
-      <Autocomplete
+      {/* <Autocomplete
         freeSolo
         options={searchResults}
         getOptionLabel={(option) => option.email}
@@ -246,7 +261,79 @@ const Promotions = () => {
           </MenuItem>
         )}
         filterOptions={(options) => options}
-      />
+      /> */}
+      <Autocomplete
+  freeSolo
+  options={searchResults}
+  getOptionLabel={(option) => option.email}
+  inputValue={searchTerm}
+  onInputChange={handleSearchChange}
+  onChange={handleUserSelect}
+  onKeyDown={handleKeyDown}
+  loading={isSearching}
+  componentsProps={{
+    popper: {
+      modifiers: [
+        {
+          name: 'flip',
+          enabled: false,
+        },
+        {
+          name: 'preventOverflow',
+          enabled: false,
+        },
+      ],
+    },
+  }}
+  // PopperComponent={(props) => (
+  //   <div style={{ position: 'relative', zIndex: 1300 }}>
+  //     <Popper {...props} placement="bottom-start" />
+  //   </div>
+  // )}
+  PopperComponent={(props) => (
+  <div style={styles.autocompletePopper}>
+    <Popper 
+      {...props} 
+      placement="bottom-start"
+      style={styles.autocompletePaper}
+      modifiers={[
+        {
+          name: 'flip',
+          enabled: false,
+        },
+        {
+          name: 'preventOverflow',
+          enabled: false,
+        },
+      ]}
+    />
+  </div>
+)}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      placeholder="Type email and press Enter"
+      variant="outlined"
+      fullWidth
+      InputProps={{
+        ...params.InputProps,
+        endAdornment: (
+          <>
+            {isSearching ? <CSpinner size="sm" /> : null}
+            {params.InputProps.endAdornment}
+          </>
+        ),
+      }}
+    />
+  )}
+  renderOption={(props, option) => (
+    <MenuItem {...props} key={option.email}>
+      {option.email}
+    </MenuItem>
+  )}
+  filterOptions={(options) => options}
+/>
+</Box>
       
       <Typography variant="caption" color="textSecondary">
         {selectedUsers.length} user(s) selected
