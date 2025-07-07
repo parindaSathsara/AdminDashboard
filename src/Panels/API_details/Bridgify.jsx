@@ -272,11 +272,11 @@ const Bridgify = () => {
                 title: 'Phone', 
                 field: 'phone', 
                 align: 'left',
-                width: '10%',
+                width: '40%',
                 cellStyle: {
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    // whiteSpace: 'nowrap',
+                    // overflow: 'hidden',
+                    // textOverflow: 'ellipsis',
                     maxWidth: '100px',
                     padding: '8px',
                     fontSize: '12px'
@@ -563,30 +563,90 @@ const Bridgify = () => {
                                         backgroundColor: '#f5f5f5'
                                     }
                                 },
-                                exportCsv: (columns, data) => {
-                                    // Custom CSV export with consistent formatting
-                                    const csvContent = [
-                                        columns.map(col => col.title).join(','),
-                                        ...data.map(row => 
-                                            columns.map(col => {
-                                                const value = row[col.field] || '';
-                                                // Clean data for CSV export
-                                                return typeof value === 'string' 
-                                                    ? `"${value.replace(/"/g, '""')}"` 
-                                                    : value;
-                                            }).join(',')
-                                        )
-                                    ].join('\n');
+                                // exportCsv: (columns, data) => {
+                                //     // Custom CSV export with consistent formatting
+                                //     const csvContent = [
+                                //         columns.map(col => col.title).join(','),
+                                //         ...data.map(row => 
+                                //             columns.map(col => {
+                                //                 const value = row[col.field] || '';
+                                //                 // Clean data for CSV export
+                                //                 return typeof value === 'string' 
+                                //                     ? `"${value.replace(/"/g, '""')}"` 
+                                //                     : value;
+                                //             }).join(',')
+                                //         )
+                                //     ].join('\n');
                                     
-                                    const blob = new Blob([csvContent], { type: 'text/csv' });
-                                    const url = window.URL.createObjectURL(blob);
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
-                                    a.click();
-                                    window.URL.revokeObjectURL(url);
-                                },
+                                //     const blob = new Blob([csvContent], { type: 'text/csv' });
+                                //     const url = window.URL.createObjectURL(blob);
+                                //     const a = document.createElement('a');
+                                //     a.href = url;
+                                //     a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
+                                //     a.click();
+                                //     window.URL.revokeObjectURL(url);
+                                // },
                                 // Enhanced PDF export options
+                                exportCsv: (columns, data) => {
+    // Filter out columns that should not be exported (like View More)
+    const exportableColumns = columns.filter(col => col.export !== false && col.field !== 'actions');
+    
+    // Unicode bold characters mapping for A-Z, a-z, 0-9
+    const boldMap = {
+        'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 
+        'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 
+        'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 
+        'Y': '𝗬', 'Z': '𝗭',
+        'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 
+        'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 
+        'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 
+        'y': '𝘆', 'z': '𝘇',
+        '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', 
+        '8': '𝟴', '9': '𝟵'
+    };
+    
+    // Create header row with bold formatting
+    const headerRow = exportableColumns.map(col => {
+        const boldTitle = col.title.split('').map(char => boldMap[char] || char).join('');
+        return `"${boldTitle}"`;
+    }).join(',');
+    
+    // Create data rows
+    const dataRows = data.map(row => 
+        exportableColumns.map(col => {
+            let value = row[col.field] || '';
+            
+            // Handle phone number formatting to prevent scientific notation
+            if (col.field === 'phone' && value && value !== 'N/A') {
+                // Add a tab character before the phone number to force text format
+                value = `\t${value}`;
+            }
+            
+            // Clean data for CSV export
+            if (typeof value === 'string') {
+                // Remove HTML tags and escape quotes
+                value = value.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+                return `"${value}"`;
+            }
+            
+            return value;
+        }).join(',')
+    );
+    
+    // Combine header and data
+    const csvContent = [headerRow, ...dataRows].join('\n');
+    
+    // Add BOM for proper UTF-8 encoding (helps with special characters)
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+},
                                 exportPdf: (columns, data) => {
                                     import('jspdf').then(({ jsPDF }) => {
                                         import('jspdf-autotable').then(() => {
