@@ -4,20 +4,12 @@ import { DocsLink } from 'src/components'
 import { Icon, ThemeProvider, createTheme } from '@mui/material'
 import MaterialTable from 'material-table'
 import { useState, useEffect } from 'react'
-// import loogo from '../../../assets/brand/aahaas.png';
 import axios from 'axios'
 import {getAllHelps} from './service/SupplierService'
 
-
-
 const SupplierSupport = () => {
-
   const defaultMaterialTheme = createTheme();
-
-  // const [orderData, setOrderData] = useState([])
-
   const [data, setData] = useState({ rows: [] });
-
   const [dataRows, setDataRows] = useState({ rows: [] });
 
   useEffect(() => {
@@ -29,67 +21,74 @@ const SupplierSupport = () => {
       })
       .then(data => {
         setData({ rows: data });
-        // // console.log("response", data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-
-
-    // axios.get("new_customer_joined").then(res => {
-    //   if (res.status == 200) {
-    //     setDataRows({ rows: res.data })
-    //   }
-    // })
-
   }, []);
-
 
   return (
     <>
-
       <ThemeProvider theme={defaultMaterialTheme}>
         <MaterialTable
           title="Supplier Queries"
           data={data.rows}
           columns={[
-            { title: 'Id', field: 'id' },
-            { title: 'Name', field: 'user_name' },
-            { title: 'Email', field: 'user_email' },
+            { title: 'Id', field: 'id', width: '5%' },
+            { title: 'Name', field: 'user_name', width: '10%' },
+            { title: 'Email', field: 'user_email', width: '15%' },
             {
                 title: 'Status',
                 field: 'status',
+                width: '10%',
                 render: rowData => rowData?.status === "1" ? 'Seen' : 'Pending',
                 customFilterAndSearch: (term, rowData) => {
                   const value = rowData.status === "1" ? 'Seen' : 'Pending'
                   return value.toLowerCase().includes(term.toLowerCase())
                 }
             },
-            { title: 'User Type', field: 'user_type' },
-            { title: 'Title', field: 'title' },
-            { title: 'reason', field: 'reason' },
-
+            { title: 'User Type', field: 'user_type', width: '10%' },
+            { title: 'Title', field: 'title', width: '15%',    cellStyle: {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: 400
+              },
+              headerStyle: {
+                width: '35%'
+              } },
+            { 
+              title: 'Reason', 
+              field: 'reason', 
+              width: '35%',
+              cellStyle: {
+                // whiteSpace: 'nowrap',
+                // overflow: 'hidden',
+                // textOverflow: 'ellipsis',
+                maxWidth: 600
+              },
+              headerStyle: {
+                width: '65%'
+              }
+            },
           ]}
-
           options={{
             sorting: true,
             search: true,
             headerStyle: {
-              fontSize: '15px', // Adjust the header font size here
-                 backgroundColor: '#626f75',
-                 color: '#FFF'
-          },
-          cellStyle: {
-              fontSize: '14px', // Adjust the column font size here
-
-          },
+              fontSize: '15px',
+              backgroundColor: '#626f75',
+              color: '#FFF'
+            },
+            cellStyle: {
+              fontSize: '14px',
+            },
           }}
         />
       </ThemeProvider>
 
       <br></br>
       <br></br>
-
     </>
   )
 }

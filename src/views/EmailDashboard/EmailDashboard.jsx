@@ -96,17 +96,29 @@ const EmailDashboard = () => {
 
 
 
+  // useEffect(() => {
+  //   getOrderIDs().then(response => {
+
+  //     var dataSet = response.map(res => ({
+  //       value: res?.id,
+  //       label: `AHS_ORD${res.id}`
+  //     }));
+
+  //     setOrderIds(dataSet)
+  //   })
+  // }, [])
   useEffect(() => {
-    getOrderIDs().then(response => {
+  getOrderIDs().then(response => {
+    const sorted = response.sort((a, b) => b.id - a.id); // descending sort
 
-      var dataSet = response.map(res => ({
-        value: res?.id,
-        label: `AHS_ORD${res.id}`
-      }));
+    const dataSet = sorted.map(res => ({
+      value: res?.id,
+      label: `AHS_ORD${res.id}`
+    }));
 
-      setOrderIds(dataSet)
-    })
-  }, [])
+    setOrderIds(dataSet);
+  });
+}, []);
 
 
   //
