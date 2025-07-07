@@ -41,6 +41,7 @@ const ReportGenerationPage = () => {
   const [endDate, setEndDate] = useState(null)
   const [category, setCategory] = useState({ value: 0 })
   const [reportType, setReportType] = useState(null)
+  const [dataSets, setDataSets] = useState(null)
 
   const [reportDataSet, setReportDataSet] = useState([])
   const [loading, setLoading] = useState(false)
@@ -106,6 +107,8 @@ const ReportGenerationPage = () => {
       dateType: dateType,
     }
 
+
+    setDataSets(dataSet)
     console.log(dataSet, 'Data set value is data')
 
     setLoading(true)
@@ -325,7 +328,7 @@ const ReportGenerationPage = () => {
         ) : reportType?.value === 'chats_report' ? (
           <ChatReportData dataSet={reportDataSet} category={category.value} />
         ) : (
-          <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} />
+          <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} dateType={dataSets.dateType} />
         )
       ) : dataEmptyState ? (
         <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>

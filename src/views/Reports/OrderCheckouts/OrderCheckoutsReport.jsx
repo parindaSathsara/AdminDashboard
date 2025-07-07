@@ -7,7 +7,7 @@ import { mkConfig, generateCsv, download } from 'export-to-csv';
 
 import './OrderCheckoutsReport.css'
 
-const OrderCheckoutsReport = ({ dataSet, category }) => {
+const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
   const [data, setData] = useState([]);
   console.log(dataSet, category, "Data Set Value is")
   useEffect(() => {
@@ -65,7 +65,7 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
         fieldSeparator: ',',
         decimalSeparator: '.',
         useKeysAsHeaders: true,
-        filename: `${dataSet.dateType}-Orders Group Wise Reports`
+        filename: `${dateType}-Orders Group Wise Reports`
       }), [category]);
 
   const handleExportRows = useCallback((rows, columns) => {
