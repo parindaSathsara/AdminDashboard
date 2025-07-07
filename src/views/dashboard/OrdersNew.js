@@ -55,7 +55,7 @@ const OrdersNew = () => {
   // Fetch orders data with pagination and search
   const fetchOrders = async (page = 1, perPage = 10, search = '') => {
     try {
-      setLoading(true);
+      !isTableFullscreen && setLoading(true);
       const response = await axios.get('fetch_all_orders_userwise_products', {
         params: {
           page,
