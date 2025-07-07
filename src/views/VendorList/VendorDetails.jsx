@@ -227,7 +227,7 @@ function VendorDetails(props) {
                                 }
                             </CCol>
 
-                            <CCol md={6}>
+                            {/* <CCol md={6}>
 
 
                                 <CFormLabel>NIC Copy</CFormLabel><br></br>
@@ -238,7 +238,7 @@ function VendorDetails(props) {
                                     <a href={"https://supplier.aahaas.com/" + vendorDetails.nic_image} target='_blank'>Get NIC Copy</a>
                                 }
 
-                            </CCol>
+                            </CCol> */}
 
                         </CRow>
 
