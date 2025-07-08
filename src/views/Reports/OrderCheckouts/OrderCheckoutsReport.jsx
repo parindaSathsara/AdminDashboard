@@ -84,7 +84,7 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
     fieldSeparator: ',',
     decimalSeparator: '.',
     useKeysAsHeaders: true,
-    filename: `${dateType}-${categoryName}-Orders Group Wise Reports`
+    filename: `${dateType}-${categoryName}-Orders checkout Reports`
   });
 }, [category, dateType]);
 
