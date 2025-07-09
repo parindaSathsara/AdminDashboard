@@ -6,6 +6,8 @@ import MaterialTable from 'material-table'
 import { useState, useEffect } from 'react'
 import loogo from '../../../assets/brand/aahaas.png';
 import axios from 'axios'
+import { Button, Modal } from 'react-bootstrap';
+import CartDetailsModal from './CartDetailsModal';
 
 
 
@@ -18,6 +20,35 @@ const Typography = () => {
   const [data, setData] = useState({ rows: [] });
 
   const [dataRows, setDataRows] = useState({ rows: [] });
+
+  const [showModal, setShowModal] = useState(false);
+const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+ const [cartData, setCartData] = useState(null);
+
+  const handleShowModal = (rowData) => {
+    console.log("Selected Customer Data:", rowData);
+    axios.post("getCartByCustomerId", {
+      // customer_id: rowData.customer_id || 608
+      customer_id:608
+    })
+    .then(res => {
+      if (res.status === 200) {
+        console.log("Cart Data:", res.data);
+        setCartData(res.data);
+        setSelectedCustomer(rowData);
+        setShowModal(true);
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching cart data:", error);
+    });
+  };
+
+const handleCloseModal = () => {
+  setShowModal(false);
+  setSelectedCustomer(null);
+};
 
   useEffect(() => {
 
@@ -93,6 +124,18 @@ const Typography = () => {
             { title: 'Created Date|Time', field: 'created_at' },
             { title: 'Logged Using', field: 'user_type' },
             { title: 'Customer Nationality', field: 'customer_nationality' },
+              {
+    title: 'Cart Details',
+    render: rowData => (
+      <Button
+        size="sm"
+        variant="primary"
+        onClick={() => handleShowModal(rowData)}
+      >
+        View Cart
+      </Button>
+    )
+  }
           ]}
 
           options={{
@@ -111,6 +154,28 @@ const Typography = () => {
           }}
         />
       </ThemeProvider>
+
+       <CartDetailsModal 
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        selectedCustomer={selectedCustomer}
+        cartData={cartData}
+      />
+
+      {/* <Modal show={showModal} onHide={handleCloseModal} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Cart Details</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+  
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleCloseModal}>
+      Close
+    </Button>
+  </Modal.Footer>
+</Modal> */}
+
 
     </>
   )
