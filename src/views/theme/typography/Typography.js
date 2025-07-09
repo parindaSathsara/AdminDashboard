@@ -30,7 +30,8 @@ const [selectedCustomer, setSelectedCustomer] = useState(null);
     console.log("Selected Customer Data:", rowData);
     axios.post("getCartByCustomerId", {
       // customer_id: rowData.customer_id || 608
-      customer_id:608
+      customer_id: rowData.customer_id
+      // customer_id:608
     })
     .then(res => {
       if (res.status === 200) {

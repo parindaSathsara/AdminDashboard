@@ -48,8 +48,8 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
     setSuccess(null)
 
     const payload = {
-      // cartIds: selectedCarts.map((cart) => cart.cart_id),
-      cartIds: [675],
+      cartIds: selectedCarts.map((cart) => cart.cart_id),
+      // cartIds: [675],
       shipping: shipping,
       price_discount: discount,
       currency: cartCurrency,
@@ -107,7 +107,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
         .finally(() => {
           setLoading(false)
         })
-} else {
+} else if (type === 'pdf') {
       axios
         .post('getCartByCustomerId_pdf', payload, {
           responseType: 'blob', 
@@ -168,6 +168,81 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           setLoading(false)
         })
     }
+   else if (type === 'quotation') {
+    setLoading(true);
+    axios.post('summary-quatation', payload, {
+        responseType: 'blob',
+    })
+    .then((response) => {
+      console.log(response, "Response from quotation API");
+        // First check if this is actually a PDF
+        const contentType = response.headers['content-type'];
+        
+        if (contentType.includes('application/json')) {
+            // Handle JSON error response
+            return response.data.text().then(text => {
+                try {
+                    const json = JSON.parse(text);
+                    throw new Error(json.message || 'Error generating quotation');
+                } catch {
+                    throw new Error('Invalid response format');
+                }
+            });
+        }
+
+        if (!contentType.includes('application/pdf')) {
+            throw new Error('Invalid PDF content type');
+        }
+
+        // Extract filename
+        let filename = 'quotation_summary.pdf';
+        const contentDisposition = response.headers['content-disposition'];
+        
+        if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename\*?=['"]?(?:UTF-\d['"]*)?([^;\r\n"']*)['"]?;?/i);
+            if (filenameMatch && filenameMatch[1]) {
+                filename = decodeURIComponent(filenameMatch[1]);
+            }
+        }
+
+        // Create blob URL
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+
+        setSuccess(`Quotation downloaded successfully!`);
+        resetModal();
+    })
+    .catch((error) => {
+        if (error.response && error.response.data instanceof Blob) {
+            error.response.data.text().then(text => {
+                try {
+                    const json = JSON.parse(text);
+                    setError(json.message || 'Failed to generate quotation');
+                } catch {
+                    setError('Failed to process error response');
+                }
+            });
+        } else {
+            setError(error.message || 'Failed to download quotation');
+        }
+    })
+    .finally(() => {
+        setLoading(false);
+    });
+}
   }
 
   const resetModal = () => {
@@ -328,6 +403,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           </Button>
           <Button
             variant="primary"
+            className="me-2"
             onClick={() => handleDownload('word')}
             disabled={loading || selectedCarts.length === 0 || !cartCurrency}
           >
@@ -336,6 +412,19 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             ) : (
               <>
                 <FaFileWord className="me-1" /> Download Word
+              </>
+            )}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => handleDownload('quotation')}
+            disabled={loading || selectedCarts.length === 0 || !cartCurrency}
+          >
+            {loading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              <>
+                <FaFileWord className="me-1" /> Quotation PDF(New)
               </>
             )}
           </Button>
