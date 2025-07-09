@@ -48,15 +48,31 @@ const SupplierSupport = () => {
                 }
             },
             { title: 'User Type', field: 'user_type', width: '10%' },
-            { title: 'Title', field: 'title', width: '15%',    cellStyle: {
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: 400
-              },
-              headerStyle: {
-                width: '35%'
-              } },
+            // { title: 'Title', field: 'title', width: '15%',    cellStyle: {
+            //     whiteSpace: 'nowrap',
+            //     overflow: 'hidden',
+            //     textOverflow: 'ellipsis',
+            //     maxWidth: 400
+            //   },
+            //   headerStyle: {
+            //     width: '35%'
+            //   } },
+            {
+  title: 'Title',
+  field: 'title',
+  width: '10%',
+  cellStyle: {
+    whiteSpace: 'normal',      // ✅ allows wrapping
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: 150,
+    wordBreak: 'break-word'    // ✅ breaks long words if needed
+  },
+  headerStyle: {
+    width: '35%'
+  }
+},
+
             { 
               title: 'Reason', 
               field: 'reason', 

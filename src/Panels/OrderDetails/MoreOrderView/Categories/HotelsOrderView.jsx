@@ -511,7 +511,7 @@ export default function HotelsOrderView(props) {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               {/* Adult Guests */}
               <div style={{ flex: '1', minWidth: '250px' }}>
-                <h5 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#2c3e50' }}>Adultsp ({basicDetails?.decoded_data?.NoOfAdults || 0})</h5>
+                <h5 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#2c3e50' }}>Adults ({basicDetails?.decoded_data?.NoOfAdults || 0})</h5>
                 <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '10px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                   {basicDetails?.decoded_data?.paxDetails?.filter(data => data?.PaxType == "1").length > 0 ? (
                     basicDetails?.decoded_data?.paxDetails?.filter(data => data?.PaxType == "1").map((guest, i) => (
@@ -557,7 +557,7 @@ export default function HotelsOrderView(props) {
             </div>
 
             {/* Meal Plan Details */}
-            {basicDetails?.decoded_data?.customerDetails?.mealAllocation && (
+            {/* {basicDetails?.decoded_data?.customerDetails?.mealAllocation && (
               <>
                 <h4 style={{ margin: '20px 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>Meal Plan Details</h4>
                 <div style={{ backgroundColor: '#fff', borderRadius: '6px', padding: '15px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
@@ -579,7 +579,38 @@ export default function HotelsOrderView(props) {
                   </table>
                 </div>
               </>
-            )}
+            )} */}
+            {basicDetails?.decoded_data?.customerDetails?.mealAllocation && (
+  <>
+    <h4 style={{ margin: '20px 0 10px 0', fontSize: '16px', color: '#2c3e50' }}>
+      Meal Plan Details
+    </h4>
+    <div
+      style={{
+        backgroundColor: '#fff',
+        borderRadius: '6px',
+        padding: '15px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      }}
+    >
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ borderBottom: '1px solid #eee' }}>
+            <th style={{ textAlign: 'left', padding: '8px', color: '#555' }}>Check-in Date</th>
+            <th style={{ textAlign: 'left', padding: '8px', color: '#555' }}>Meal Plan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={{ padding: '8px' }}>{basicDetails?.decoded_data?.customerDetails?.check_in}</td>
+            <td style={{ padding: '8px' }}>{basicDetails?.decoded_data?.customerDetails?.mealAllocation}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </>
+)}
+
           </div>
 
           {/* Contact Information */}

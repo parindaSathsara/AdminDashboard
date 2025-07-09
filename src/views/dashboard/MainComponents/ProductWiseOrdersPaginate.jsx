@@ -360,6 +360,7 @@ export default function ProductWiseOrdersPaginate() {
           />
         }
         hotelsOrderView={hotelDataSet}
+        style={{ zIndex: 10000 }} // Add this
       />
 
       <Tabs
@@ -374,7 +375,7 @@ export default function ProductWiseOrdersPaginate() {
           eventKey="All" 
           title={
             <span className="custom-tab-all">
-              All Orders <CBadge color="light" shape="rounded-pill">{statusCounts.All}</CBadge>
+              All Orders <CBadge color="primary" shape="rounded-pill">{statusCounts.All}</CBadge>
             </span>
           } 
         />

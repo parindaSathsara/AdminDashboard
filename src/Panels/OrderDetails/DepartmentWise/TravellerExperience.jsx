@@ -168,7 +168,18 @@ export default function TravellerExperience(props) {
     }
 
     try {
-      Swal.showLoading()
+    Swal.fire({
+  title: 'Please wait...',
+  text: 'Submitting traveller experience...',
+  allowOutsideClick: false,
+  didOpen: () => {
+    Swal.showLoading();
+  },
+});
+
+setTimeout(() => {
+  Swal.close(); // or Swal.hideLoading() if you want to keep modal open
+}, 5000);
       const response = await axios.post(`/create_traveller`, data)
       if (response.data.status == 200) {
         await axios
