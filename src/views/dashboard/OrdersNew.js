@@ -415,6 +415,7 @@ const OrdersNew = () => {
               updatedData={() => console.log("Updated")} 
             />
           }
+           style={{ zIndex: 10000 }} // Add this
         />
       )}
     </>
