@@ -70,9 +70,10 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             reader.onload = () => {
               try {
                 const jsonResponse = JSON.parse(reader.result)
-                setError(jsonResponse.message || 'No cart data available for download')
+                // setError(jsonResponse.message || 'No cart data available for download')
+                setError('Please check the cart-The cart may be empty')
               } catch (e) {
-                setError('Failed to process response')
+                setError('Please check the cart-The cart may be empty')
               }
             }
             reader.readAsText(response.data)
@@ -94,14 +95,15 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             reader.onload = () => {
               try {
                 const errorResponse = JSON.parse(reader.result)
-                setError(errorResponse.message || 'Failed to generate document')
+                setError('Please check the cart-The cart may be empty')
               } catch (e) {
-                setError('Failed to process error response')
+                setError('Please check the cart-The cart may be empty')
               }
             }
             reader.readAsText(error.response.data)
           } else {
-            setError(error.message || 'Failed to download file')
+            // setError(error.message || 'Failed to download file')
+            setError('Please check the cart-The cart may be empty')
           }
         })
         .finally(() => {
@@ -120,9 +122,9 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
       reader.onload = () => {
         try {
           const jsonResponse = JSON.parse(reader.result);
-          setError(jsonResponse.message || 'No cart data available for download');
+          setError('Please check the cart-The cart may be empty');
         } catch (e) {
-          setError('Failed to process response');
+          setError('Please check the cart-The cart may be empty');
         }
       };
       reader.readAsText(response.data);
@@ -154,14 +156,16 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             reader.onload = () => {
               try {
                 const errorResponse = JSON.parse(reader.result)
-                setError(errorResponse.message || 'Failed to generate document')
+                // setError(errorResponse.message || 'Please check the cart-The cart may be empty')
+                setError('Please check the cart-The cart may be empty')
               } catch (e) {
-                setError('Failed to process error response')
+                setError('Please check the cart-The cart may be empty')
               }
             }
             reader.readAsText(error.response.data)
           } else {
-            setError(error.message || 'Failed to download file')
+            // setError(error.message || 'Failed to download file')
+            setError('Please check the cart-The cart may be empty')
           }
         })
         .finally(() => {
@@ -230,13 +234,15 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             error.response.data.text().then(text => {
                 try {
                     const json = JSON.parse(text);
-                    setError(json.message || 'Failed to generate quotation');
+                    // setError(json.message || 'Failed to generate quotation');
+                    setError('Please check the cart-The cart may be empty');
                 } catch {
-                    setError('Failed to process error response');
+                    setError('Please check the cart-The cart may be empty');
                 }
             });
         } else {
-            setError(error.message || 'Failed to download quotation');
+            // setError(error.message || 'Failed to download quotation');
+            setError('Please check the cart-The cart may be empty');
         }
     })
     .finally(() => {

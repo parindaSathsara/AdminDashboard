@@ -290,7 +290,7 @@ const OrdersNew = () => {
                         </CInputGroup>
                         
                         {/* Table Fullscreen Toggle Button */}
-                        <Tooltip title={isTableFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}>
+                        <Tooltip title={isTableFullscreen ? "Exit Fullscreen" : "Click Fullscreen"}>
                           <IconButton 
                             onClick={toggleTableFullscreen}
                             color="primary"
@@ -415,8 +415,8 @@ const OrdersNew = () => {
               updatedData={() => console.log("Updated")} 
             />
           }
-           style={{ zIndex: 10000 }} // Add this
-        />
+          style={isTableFullscreen ? { zIndex: 100000 } : {}}
+        /> 
       )}
     </>
   );

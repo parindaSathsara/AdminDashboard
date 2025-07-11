@@ -360,7 +360,7 @@ export default function ProductWiseOrdersPaginate() {
           />
         }
         hotelsOrderView={hotelDataSet}
-        style={{ zIndex: 10000 }} // Add this
+        // style={{ zIndex: 10000 }} // Add this
       />
 
       <Tabs
