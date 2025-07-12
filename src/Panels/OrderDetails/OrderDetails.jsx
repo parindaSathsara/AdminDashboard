@@ -755,7 +755,8 @@ function OrderDetails(props) {
         preID={moreOrderDetails}
         category={moreOrderModalCategory}
         hotelsOrderView={hotelDataSet}
-      ></MoreOrderView>
+        // style={props.isTableFullscreen ? { zIndex: 100000000 } : {}}
+      />
 
       {props?.accounts ? null : (
         <>
