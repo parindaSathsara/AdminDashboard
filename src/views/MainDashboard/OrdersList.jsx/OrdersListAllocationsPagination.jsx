@@ -472,7 +472,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 productViewData
                 hotelsOrderView={hotelDataSet}
                 productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e=>console.log(e)}/>}
-                    style={{ zIndex: 10000 }} // Add this
+                    // style={{ zIndex: 10000 }} // Add this
             />
 
             <Modal
