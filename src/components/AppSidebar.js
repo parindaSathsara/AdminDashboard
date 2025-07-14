@@ -73,6 +73,7 @@ const AppSidebar = () => {
           {/* V1.1.75 */}
           {version}
           </CCardText>
+
       </div>
 
 
