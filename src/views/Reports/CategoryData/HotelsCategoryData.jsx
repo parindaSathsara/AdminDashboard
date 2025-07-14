@@ -6,13 +6,15 @@ import { mkConfig, generateCsv, download } from "export-to-csv";
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from "@coreui/react";
 
 const HotelsCategoryData = ({ data }) => {
+  console.log(data, "Hotels Data");
+  
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     const transformedData = data.map((item) => ({
       id: item.id,
       hotel_name: item.hotel_name,
-      hotel_description: item.hotel_description,
+      hotel_description: item.hotel_description?.replace(/<[^>]*>/g, '').slice(0, 200) + '...',
       star_classification: item.star_classification,
       auto_confirmation: item.auto_confirmation,
       triggers: item.triggers,
@@ -66,15 +68,21 @@ const HotelsCategoryData = ({ data }) => {
     []
   );
 
-  const csvConfig = useMemo(
-    () =>
-      mkConfig({
-        fieldSeparator: ",",
-        decimalSeparator: ".",
-        useKeysAsHeaders: true,
-      }),
-    []
-  );
+  // const csvConfig = useMemo(
+  //   () =>
+  //     mkConfig({
+  //       fieldSeparator: ",",
+  //       decimalSeparator: ".",
+  //       useKeysAsHeaders: true,
+  //     }),
+  //   []
+  // );
+      const csvConfig = useMemo(() => mkConfig({
+    fieldSeparator: ',',
+    decimalSeparator: '.',
+    useKeysAsHeaders: true,
+    filename: `${"Hotel"}_Products_Report`
+  }), [category]);
 
   const handleExportRows = useCallback(
     (rows, columns) => {

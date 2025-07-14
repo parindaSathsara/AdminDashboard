@@ -7,7 +7,7 @@ import { mkConfig, generateCsv, download } from 'export-to-csv';
 
 import './OrderCheckoutsReport.css'
 
-const OrderCheckoutsReport = ({ dataSet, category }) => {
+const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
   const [data, setData] = useState([]);
   console.log(dataSet, category, "Data Set Value is")
   useEffect(() => {
@@ -56,11 +56,37 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
     { accessorKey: 'checkout_date', header: 'Checkout Date', size: 120 },
   ], [category]);
 
-  const csvConfig = useMemo(() => mkConfig({
+  // const csvConfig = useMemo(() => mkConfig({
+  //   fieldSeparator: ',',
+  //   decimalSeparator: '.',
+  //   useKeysAsHeaders: true,
+  // }), []);
+      //    const csvConfig = useMemo(() => mkConfig({
+      //   fieldSeparator: ',',
+      //   decimalSeparator: '.',
+      //   useKeysAsHeaders: true,
+      //   filename: `${dateType}-Orders Group Wise Reports`
+      // }), [category]);
+
+      const csvConfig = useMemo(() => {
+  const categoryMap = {
+    0: 'all',
+    1: 'essential',
+    2: 'non-essential',
+    3: 'lifestyle',
+    4: 'hotel',
+    5: 'education'
+  };
+
+  const categoryName = categoryMap[category] || 'unknown';
+
+  return mkConfig({
     fieldSeparator: ',',
     decimalSeparator: '.',
     useKeysAsHeaders: true,
-  }), []);
+    filename: `${dateType}-${categoryName}-Orders checkout Reports`
+  });
+}, [category, dateType]);
 
   const handleExportRows = useCallback((rows, columns) => {
     const rowData = rows.map(row => {

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState,useRef } from 'react';
 import {
     CCard,
     CCardBody,
@@ -31,6 +31,8 @@ import draftToHtml from "draftjs-to-html";
 import { convertToRaw } from "draft-js";
 
 const EmailGeneration = () => {
+    const fileInputRef = useRef(null);
+
     const { userData } = useContext(UserLoginContext);
     const [emailType, setEmailType] = useState({})
     const [selectedOrderID, setSelectedOrderID] = useState({})
@@ -355,6 +357,9 @@ const EmailGeneration = () => {
 
     const clearFiles = () => {
         setFiles([]);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // clear the input field
+          }
     };
 
     return (
@@ -500,11 +505,12 @@ const EmailGeneration = () => {
                                 <strong>Additional Attachments</strong>
 
                             </CCardHeader>
-                            <CCardBody>
-                                <CRow className="mb-3">
+                            <CCardBody style={{ marginRight: "20px" }}  >
+                                <CRow className="mb-3" >
                                     <Editor
                                         editorState={editorState}
-                                        onEditorStateChange={handleEditorChange} />
+                                        onEditorStateChange={handleEditorChange}
+                                        style={{ marginRight: "20px" }} />
                                 </CRow>
 
                                 <CRow className="mb-3">
@@ -515,10 +521,11 @@ const EmailGeneration = () => {
                                             multiple
                                             onChange={handleChange}
                                             accept="image/*,application/pdf"
+                                            ref={fileInputRef}
                                         />
                                     </CCol>
                                     <CCol xs={12} sm={4} lg={2}>
-                                        <CButton color="info" style={{ color: "white" }} onClick={clearFiles}>
+                                        <CButton color="info" style={{ color: "white" }} onClick={clearFiles} >
                                             Clear All Files
                                         </CButton>
 

@@ -89,11 +89,18 @@ const LifestylesCategoryData = ({ data }) => {
         { accessorKey: 'triggers', header: 'Triggers', size: 120 }
     ], []);
 
-    const csvConfig = useMemo(() => mkConfig({
-        fieldSeparator: ',',
-        decimalSeparator: '.',
-        useKeysAsHeaders: true,
-    }), []);
+    // const csvConfig = useMemo(() => mkConfig({
+    //     fieldSeparator: ',',
+    //     decimalSeparator: '.',
+    //     useKeysAsHeaders: true,
+    // }), []);
+
+        const csvConfig = useMemo(() => mkConfig({
+      fieldSeparator: ',',
+      decimalSeparator: '.',
+      useKeysAsHeaders: true,
+      filename: `${"LifeStyle"}_Products_Report`
+    }), [category]);
 
     const handleExportRows = useCallback((rows, columns) => {
         const rowData = rows.map(row => {

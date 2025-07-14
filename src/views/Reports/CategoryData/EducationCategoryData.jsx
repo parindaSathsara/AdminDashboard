@@ -15,7 +15,7 @@ const EducationCategoryData = ({ data }) => {
         const transformedData = data.map(item => ({
             education_id: item.education_id,
             course_name: item.course_name,
-            course_description: item.course_description?.slice(0, 50),
+            course_description: item.course_description?.replace(/<[^>]*>/g, '').slice(0, 100) + '...',
             education_type: item.education_type,
             medium: item.medium,
             course_mode: item.course_mode,
@@ -83,11 +83,17 @@ const EducationCategoryData = ({ data }) => {
         { accessorKey: 'triggers', header: 'Triggers', size: 120 }
     ], []);
 
+    // const csvConfig = useMemo(() => mkConfig({
+    //     fieldSeparator: ',',
+    //     decimalSeparator: '.',
+    //     useKeysAsHeaders: true,
+    // }), []);
     const csvConfig = useMemo(() => mkConfig({
-        fieldSeparator: ',',
-        decimalSeparator: '.',
-        useKeysAsHeaders: true,
-    }), []);
+  fieldSeparator: ',',
+  decimalSeparator: '.',
+  useKeysAsHeaders: true,
+  filename: `${"Education"}_Products_Report`
+}), [category]);
 
     const handleExportRows = useCallback((rows, columns) => {
         const rowData = rows.map(row => {

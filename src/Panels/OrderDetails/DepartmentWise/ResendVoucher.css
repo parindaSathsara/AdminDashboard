@@ -1,3 +1,66 @@
 .rti--input{
     width: 100% !important;
   }
+
+ /* Style for the tags container */
+.react-tagsinput {
+  border: 1px solid #d8dbe0;
+  border-radius: 4px;
+  padding: 5px;
+  min-height: 44px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Style for individual tags */
+.tag-custom {
+  background-color: #3399ff;
+  color: white;
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin: 3px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  word-break: break-all;
+  font-size: 0.85rem; /* Smaller font for long emails */
+  line-height: 1.4;
+}
+.tag-custom-new {
+  background-color: #3399ff;
+  color: rgb(23, 23, 23);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin: 3px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  word-break: break-all;
+  font-size: 0.85rem; /* Smaller font for long emails */
+  line-height: 1.4;
+}
+
+/* Style for the input field */
+.tags-input-custom {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  font-size: 0.9rem;
+  min-width: 150px;
+}
+
+/* Style for the remove button */
+.react-tagsinput-remove {
+  margin-left: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .tag-custom {
+    font-size: 0.75rem;
+  }
+}

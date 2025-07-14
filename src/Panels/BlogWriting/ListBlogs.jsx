@@ -52,7 +52,7 @@ const ListBlogs = () => {
                           : 'https://as2.ftcdn.net/jpg/04/99/93/31/1000_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg'
                       }
                     />
-                    <CCardBody style={{ height: '14rem' }}>
+                    <CCardBody style={{ height: "14rem" }}>
                       <CCardTitle>{blog.title || 'Title not available...'}</CCardTitle>
                       <CCardText>
                         {blog.summary

@@ -31,6 +31,26 @@ export default function ProductWiseOrders() {
   const [moreOrderDetails, setMoreOrderDetails] = useState("");
   const [mainDataSet, setMainDataSet] = useState([]);
 
+  // const getAllProductsOrders = async (val) => {
+  //   if (val !== "realtime") {
+  //     setLoading(true);
+  //   }
+
+  //   await axios.get("fetch_all_orders_product_wise").then(res => {
+  //     if (res.data.status === 200) {
+  //       setAllOrdersProducts(res.data.productData);
+  //       setStatusProducts(res.data.productData);
+  //       setAllOrdersProductsStatic(res.data.productData)
+
+  //       setCustomerData(res.data.customerData);
+  //       // console.log(res.data);
+  //       setLoading(false);
+  //     }
+  //   }).catch(() => {
+  //     setLoading(false);
+  //   });
+  // };
+
   const getAllProductsOrders = async (val) => {
     if (val !== "realtime") {
       setLoading(true);
@@ -40,10 +60,8 @@ export default function ProductWiseOrders() {
       if (res.data.status === 200) {
         setAllOrdersProducts(res.data.productData);
         setStatusProducts(res.data.productData);
-        setAllOrdersProductsStatic(res.data.productData)
-
+        setAllOrdersProductsStatic(res.data.productData);
         setCustomerData(res.data.customerData);
-        // console.log(res.data);
         setLoading(false);
       }
     }).catch(() => {
@@ -300,7 +318,7 @@ export default function ProductWiseOrders() {
 
   return (
     <>
-      <MoreOrderView
+    <MoreOrderView
         show={moreOrderModal}
         onHide={() => onHideModal()}
         preID={moreOrderDetails}
@@ -316,7 +334,6 @@ export default function ProductWiseOrders() {
         className="mt-4"
         style={{ fontSize: 16 }}
         onSelect={handleSelect}
-
       >
         <Tab eventKey="All" title={<span className="custom-tab-all">All Orders <span class="badge text-bg-light">{statusProducts.length}</span></span>} />
         <Tab eventKey="CustomerOrdered" title={<span className="custom-tab-pending">Pending <span class=" text-white badge text-bg-secondary">{statusProducts.filter(filterData => filterData?.status == "CustomerOrdered").length}</span></span>} />
@@ -325,12 +342,10 @@ export default function ProductWiseOrders() {
         <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{statusProducts.filter(filterData => filterData?.status == "Cancel").length}</span></span>} />
       </Tabs>
 
-      {loading ? (
-        <LoaderPanel message={"All orders are being fetched"} />
+      {loading || allOrdersProducts.length === 0 ? (
+        <LoaderPanel message={"Loading product data..."} />
       ) : (
-
         <MaterialReactTable table={table} />
-
       )}
     </>
   );

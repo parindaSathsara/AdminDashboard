@@ -43,59 +43,292 @@ const Bridgify = () => {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'paid':
+            case "paid":
                 return <CBadge color="success">Paid</CBadge>
-            case 'pending':
+            case "pending":
                 return <CBadge color="warning">Pending</CBadge>
-            case 'cancelled':
+            case "cancelled":
                 return <CBadge color="danger">Cancelled</CBadge>
-            case 'FAL':
+            case "FAL":
                 return <CBadge color="danger">Failed</CBadge>
             default:
                 return <CBadge color="info">{status}</CBadge>
         }
     }
 
+    // Function to truncate text for better display and export
+    const truncateText = (text, maxLength = 50) => {
+        if (!text) return 'N/A';
+        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    }
+
+    // Function to format currency values consistently
+    const formatCurrency = (amount, currency = '') => {
+        if (!amount) return 'N/A';
+        return `${currency} ${parseFloat(amount).toFixed(2)}`;
+    }
+
     const data = {
         columns: [
-            { title: 'Short UUID', field: 'cart_short_uuid', align: 'left' },
-            { title: 'Payment Status', field: 'status', align: 'left' },
-            { title: 'Transaction Amount', field: 'transaction_amount', align: 'left' },
-            { title: 'Product Title', field: 'product_details', align: 'left' },
-            { title: 'Selected Timeslot', field: 'timeslots', align: 'left' },
-            { title: 'Ticket Details', field: 'tickets', align: 'left' },
-            { title: 'Customer Name', field: 'customer', align: 'left' },
-            { title: 'Email & Phone', field: 'email_phone', align: 'left' },
-            { title: 'View More', field: 'actions', align: 'left' }
+            { 
+                title: 'View More', 
+                field: 'actions', 
+                align: 'center',
+                export: false,
+                width: '10%',
+                cellStyle: {
+                    textAlign: 'center',
+                    padding: '8px',
+                    minWidth: '100px'
+                },
+                headerStyle: {
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '100px'
+                }
+            },
+            { 
+                title: 'Order ID', 
+                field: 'order_id', 
+                align: 'left',
+                width: '12%',
+                cellStyle: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '120px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '120px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Total Amount', 
+                field: 'total_amount', 
+                align: 'right',
+                width: '10%',
+                cellStyle: {
+                    textAlign: 'right',
+                    padding: '8px',
+                    fontWeight: '500',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    textAlign: 'right',
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Paid Amount', 
+                field: 'paid_amount', 
+                align: 'right',
+                width: '10%',
+                cellStyle: {
+                    textAlign: 'right',
+                    padding: '8px',
+                    fontWeight: '500',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    textAlign: 'right',
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Balance Amount', 
+                field: 'balance_amount', 
+                align: 'right',
+                width: '10%',
+                cellStyle: {
+                    textAlign: 'right',
+                    padding: '8px',
+                    fontWeight: '500',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    textAlign: 'right',
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Product Title', 
+                field: 'product_details', 
+                align: 'left',
+                width: '15%',
+                cellStyle: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '150px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '150px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Selected Timeslot', 
+                field: 'timeslots', 
+                align: 'left',
+                width: '12%',
+                cellStyle: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '120px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '120px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Ticket Details', 
+                field: 'tickets', 
+                align: 'left',
+                width: '15%',
+                cellStyle: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '150px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '150px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Customer Name', 
+                field: 'customer',
+                align: 'left',
+                width: '12%',
+                cellStyle: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '120px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '120px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Email', 
+                field: 'email', 
+                align: 'left',
+                width: '15%',
+                cellStyle: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '150px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '150px',
+                    fontSize: '12px'
+                }
+            },
+            { 
+                title: 'Phone', 
+                field: 'phone', 
+                align: 'left',
+                width: '40%',
+                cellStyle: {
+                    // whiteSpace: 'nowrap',
+                    // overflow: 'hidden',
+                    // textOverflow: 'ellipsis',
+                    maxWidth: '100px',
+                    padding: '8px',
+                    fontSize: '12px'
+                },
+                headerStyle: {
+                    fontWeight: 'bold',
+                    backgroundColor: '#f8f9fa',
+                    minWidth: '100px',
+                    fontSize: '12px'
+                }
+            }
         ],
         rows: cartItems.map((item) => {
+            console.log('Item:', item)
             const productDetails = item?.data?.product_details?.title || 'N/A'
-            const seletedTimeslot = item?.data?.requires?.timeslots?.selected_value || 'N/A'
+            const selectedTimeslot = item?.data?.requires?.timeslots?.selected_value || 'N/A'
             const customerDetails = item?.data?.requires?.['customer-info']?.selected_value || []
 
             return {
-                cart_short_uuid: item?.cart_short_uuid,
-                status: getStatusBadge(item.status),
-                transaction_amount: item?.data?.save_cart?.selected_value?.transaction_amount,
-                product_details: productDetails,
-                timeslots: seletedTimeslot,
-                tickets:
+                order_id: item?.order_id || 'N/A',
+                status: item?.status || 'N/A',
+                balance_amount: formatCurrency(item?.balance_amount),
+                paid_amount: formatCurrency(item?.paid_amount),
+                total_amount: formatCurrency(item?.total_amount),
+                transaction_amount: formatCurrency(item?.data?.save_cart?.selected_value?.transaction_amount),
+                product_details: truncateText(productDetails, 40),
+                timeslots: truncateText(selectedTimeslot, 30),
+                tickets: truncateText(
                     item?.data?.requires?.tickets?.selected_value
                         ?.map((ticket) => `${ticket.product_id}: ${ticket.quantity}`)
                         .join(', ') || 'N/A',
-                customer:
+                    40
+                ),
+                customer: truncateText(
                     customerDetails.length > 0
-                        ? customerDetails.map((customer, index) => (
-                            <div key={index}>{`${customer.FirstName || ''} ${customer.LastName || ''}`}</div>
-                        ))
+                        ? customerDetails.map((customer) => `${customer.FirstName || ''} ${customer.LastName || ''}`).join(', ')
                         : 'N/A',
-                email_phone:
+                    30
+                ),
+                email: truncateText(
                     customerDetails.length > 0
-                        ? customerDetails.map((customer, index) => (
-                            <div key={index}>{`${customer.Email || ''} ${customer.Phoneno || ''}`}</div>
-                        ))
+                        ? customerDetails.map((customer) => `${customer.Email || ''}`).join(', ')
                         : 'N/A',
-                actions: <CButton color="primary" onClick={() => handleRowClick(item?.cart_short_uuid)}>View More</CButton>
+                    35
+                ),
+                phone: truncateText(
+                    customerDetails.length > 0
+                        ? customerDetails.map((customer) => `${customer.Phoneno || ''}`).join(', ')
+                        : 'N/A',
+                    20
+                ),
+                actions: <CButton color="primary" size="sm" onClick={() => handleRowClick(item?.cart_short_uuid)}>View More</CButton>
             }
         }),
     }
@@ -127,7 +360,7 @@ const Bridgify = () => {
         try {
             setModalLoading(true)
             const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
-            
+
             if (response.data.success && response.data.data) {
                 setSelectedCart(response.data.data)
                 setShowModal(true)
@@ -157,9 +390,9 @@ const Bridgify = () => {
                 ...prevState,
                 [index]: true
             }))
-            
+
             const response = await axios.get(`/bridgify/carts/cancelation/${shortUuid}`)
-            
+
             if (response.data.success && response.data.data) {
                 setCancellationInfo(prevState => ({
                     ...prevState,
@@ -208,10 +441,10 @@ const Bridgify = () => {
                                 Swal.showLoading()
                             }
                         })
-                        
+
                         // Make cancellation request
                         const response = await axios.post(`/bridgify/carts/cancelation/${shortUuid}/${cartItemUuid}`)
-                        
+
                         if (response.data.success) {
                             Swal.fire(
                                 'Cancellation Requested!',
@@ -246,7 +479,7 @@ const Bridgify = () => {
         if (collapseElement) {
             const isShowing = collapseElement.classList.contains('show')
             collapseElement.classList.toggle('show')
-            
+
             // Fetch cancellation info if opening and haven't fetched it yet
             if (!isShowing && !cancellationInfo[shortUuid]) {
                 fetchCancellationInfo(shortUuid, index)
@@ -264,17 +497,17 @@ const Bridgify = () => {
     const getMockCancellationInfo = (item) => {
         // This is just example data - in reality, this would come from the API
         if (!item) return null;
-        
+
         return {
             cancellation_eligible: item.status === 'paid',
-            cancellation_deadline: item.attraction_date 
+            cancellation_deadline: item.attraction_date
                 ? new Date(new Date(item.attraction_date).getTime() - 48 * 60 * 60 * 1000).toISOString().split('T')[0]
                 : 'N/A',
-            refund_amount: item.merchant_total_price 
+            refund_amount: item.merchant_total_price
                 ? (parseFloat(item.merchant_total_price) * 0.75).toFixed(2)
                 : 'N/A',
             refund_percentage: '75%',
-            cancellation_fee: item.merchant_total_price 
+            cancellation_fee: item.merchant_total_price
                 ? (parseFloat(item.merchant_total_price) * 0.25).toFixed(2)
                 : 'N/A',
             cancellation_fee_percentage: '25%',
@@ -301,16 +534,187 @@ const Bridgify = () => {
                             columns={data.columns}
                             data={data.rows}
                             options={{
-                                headerStyle: { fontSize: '14px' },
-                                cellStyle: { fontSize: '14px' },
-                                paging: false,
-                                search: false,
+                                headerStyle: { 
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                    backgroundColor: '#f8f9fa',
+                                    color: '#333',
+                                    padding: '8px',
+                                    textAlign: 'center'
+                                },
+                                cellStyle: { 
+                                    fontSize: '12px',
+                                    padding: '8px',
+                                    borderBottom: '1px solid #dee2e6'
+                                },
+                                paging: true,
+                                pageSize: 10,
+                                pageSizeOptions: [],
+                                search: true,
                                 columnsButton: true,
                                 exportButton: true,
+                                exportAllData: true,
                                 grouping: true,
+                                filtering: true,
+                                sorting: true,
                                 rowStyle: {
-                                    backgroundColor: '#f5f5f5',
+                                    backgroundColor: '#fff',
+                                    '&:hover': {
+                                        backgroundColor: '#f5f5f5'
+                                    }
                                 },
+                                // exportCsv: (columns, data) => {
+                                //     // Custom CSV export with consistent formatting
+                                //     const csvContent = [
+                                //         columns.map(col => col.title).join(','),
+                                //         ...data.map(row => 
+                                //             columns.map(col => {
+                                //                 const value = row[col.field] || '';
+                                //                 // Clean data for CSV export
+                                //                 return typeof value === 'string' 
+                                //                     ? `"${value.replace(/"/g, '""')}"` 
+                                //                     : value;
+                                //             }).join(',')
+                                //         )
+                                //     ].join('\n');
+                                    
+                                //     const blob = new Blob([csvContent], { type: 'text/csv' });
+                                //     const url = window.URL.createObjectURL(blob);
+                                //     const a = document.createElement('a');
+                                //     a.href = url;
+                                //     a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
+                                //     a.click();
+                                //     window.URL.revokeObjectURL(url);
+                                // },
+                                // Enhanced PDF export options
+                                exportCsv: (columns, data) => {
+    // Filter out columns that should not be exported (like View More)
+    const exportableColumns = columns.filter(col => col.export !== false && col.field !== 'actions');
+    
+    // Unicode bold characters mapping for A-Z, a-z, 0-9
+    const boldMap = {
+        'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 
+        'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 
+        'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 
+        'Y': '𝗬', 'Z': '𝗭',
+        'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 
+        'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 
+        'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 
+        'y': '𝘆', 'z': '𝘇',
+        '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', 
+        '8': '𝟴', '9': '𝟵'
+    };
+    
+    // Create header row with bold formatting
+    const headerRow = exportableColumns.map(col => {
+        const boldTitle = col.title.split('').map(char => boldMap[char] || char).join('');
+        return `"${boldTitle}"`;
+    }).join(',');
+    
+    // Create data rows
+    const dataRows = data.map(row => 
+        exportableColumns.map(col => {
+            let value = row[col.field] || '';
+            
+            // Handle phone number formatting to prevent scientific notation
+            if (col.field === 'phone' && value && value !== 'N/A') {
+                // Add a tab character before the phone number to force text format
+                value = `\t${value}`;
+            }
+            
+            // Clean data for CSV export
+            if (typeof value === 'string') {
+                // Remove HTML tags and escape quotes
+                value = value.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+                return `"${value}"`;
+            }
+            
+            return value;
+        }).join(',')
+    );
+    
+    // Combine header and data
+    const csvContent = [headerRow, ...dataRows].join('\n');
+    
+    // Add BOM for proper UTF-8 encoding (helps with special characters)
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+},
+                                exportPdf: (columns, data) => {
+                                    import('jspdf').then(({ jsPDF }) => {
+                                        import('jspdf-autotable').then(() => {
+                                            const doc = new jsPDF('landscape');
+                                            
+                                            // Title
+                                            doc.setFontSize(16);
+                                            doc.text('Bridgify Cart Items Report', 20, 20);
+                                            
+                                            // Date
+                                            doc.setFontSize(10);
+                                            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 30);
+                                            
+                                            // Table
+                                            doc.autoTable({
+                                                head: [columns.filter(col => col.export !== false).map(col => col.title)],
+                                                body: data.map(row => 
+                                                    columns
+                                                        .filter(col => col.export !== false)
+                                                        .map(col => {
+                                                            const value = row[col.field] || 'N/A';
+                                                            return typeof value === 'string' 
+                                                                ? value.replace(/<[^>]*>/g, '') // Remove HTML tags
+                                                                : value;
+                                                        })
+                                                ),
+                                                startY: 40,
+                                                styles: {
+                                                    fontSize: 8,
+                                                    cellPadding: 3,
+                                                    overflow: 'linebreak',
+                                                    cellWidth: 'wrap'
+                                                },
+                                                headStyles: {
+                                                    fillColor: [66, 139, 202],
+                                                    textColor: 255,
+                                                    fontSize: 9,
+                                                    fontStyle: 'bold',
+                                                    halign: 'center'
+                                                },
+                                                bodyStyles: {
+                                                    textColor: 50,
+                                                    fontSize: 8,
+                                                    cellPadding: 3
+                                                },
+                                                alternateRowStyles: {
+                                                    fillColor: [245, 245, 245]
+                                                },
+                                                columnStyles: {
+                                                    0: { cellWidth: 25 }, // Order ID
+                                                    1: { cellWidth: 20, halign: 'right' }, // Total Amount
+                                                    2: { cellWidth: 20, halign: 'right' }, // Paid Amount
+                                                    3: { cellWidth: 20, halign: 'right' }, // Balance Amount
+                                                    4: { cellWidth: 35 }, // Product Title
+                                                    5: { cellWidth: 25 }, // Timeslot
+                                                    6: { cellWidth: 30 }, // Tickets
+                                                    7: { cellWidth: 25 }, // Customer
+                                                    8: { cellWidth: 35 }, // Email
+                                                    9: { cellWidth: 20 } // Phone
+                                                },
+                                                margin: { top: 10, right: 10, bottom: 10, left: 10 },
+                                                tableWidth: 'auto'
+                                            });
+                                            
+                                            doc.save(`bridgify-cart-items-${new Date().toISOString().split('T')[0]}.pdf`);
+                                        });
+                                    });
+                                }
                             }}
                         />
                     )}
@@ -435,7 +839,7 @@ const Bridgify = () => {
                                                     </CCol>
                                                 </CRow>
                                             )}
-                                            
+
                                             {/* Cancellation Information Dropdown */}
                                             <CRow className="mt-3">
                                                 <CCol>
@@ -447,14 +851,6 @@ const Bridgify = () => {
                                                             onClick={() => toggleCancellationInfo(orderId, index)}
                                                         >
                                                             Cancellation Information
-                                                        </CButton>
-                                                        <CButton
-                                                            color="danger"
-                                                            size="sm"
-                                                            onClick={() => handleCancellationRequest(orderId, item.order_item_uuid)}
-                                                            // disabled={item.status !== 'paid'}
-                                                        >
-                                                            Request Cancellation
                                                         </CButton>
                                                     </div>
 

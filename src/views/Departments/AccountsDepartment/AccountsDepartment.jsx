@@ -62,6 +62,7 @@ import { UserLoginContext } from 'src/Context/UserLoginContext';
 import LoadingBar from 'react-top-loading-bar'
 
 const Dashboard = () => {
+  const [loading, setLoading] = useState(true);
   const { userData } = useContext(UserLoginContext);
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
@@ -95,27 +96,44 @@ const Dashboard = () => {
   })
   const [orderDataIDWise, setOrderDataIdWise] = useState([])
 
+  // useEffect(() => {
+  //   getAllDataUserWise().then(res => {
+  //     console.log(res)
+  //     setOrderData(res)
+  //   })
+
+  //   getAllCardData().then(res => {
+  //     // console.log(res)
+  //     setCardData(res)
+  //   })
+  //   // setOrderData(getAllDataUserWise());
+
+  // }, []);
   useEffect(() => {
-    getAllDataUserWise().then(res => {
-      console.log(res)
-      setOrderData(res)
+    setLoading(true);
+    Promise.all([
+      getAllDataUserWise(),
+      getAllCardData()
+    ])
+    .then(([orderRes, cardRes]) => {
+      setOrderData(orderRes);
+      setCardData(cardRes);
     })
-
-    getAllCardData().then(res => {
-      // console.log(res)
-      setCardData(res)
+    .catch(error => {
+      console.error("Error fetching data:", error);
     })
-    // setOrderData(getAllDataUserWise());
-
+    .finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const pagePermission = ["all accounts access",
-      "view customer orders",
-      "approve customer orders",
-      "reject customer orders",
-      "view customer order pnl",
-      "download order long itinerary",
-      "download order short itinerary"]
+    "view customer orders",
+    "approve customer orders",
+    "reject customer orders",
+    "view customer order pnl",
+    "download order long itinerary",
+    "download order short itinerary"]
 
   const data = {
     columns: [
@@ -161,14 +179,14 @@ const Dashboard = () => {
         title: 'Delivery Charge', field: 'delivery_charge', align: 'right', editable: 'never',
       },
       {
-        title: 'Actions', field: 'actions', align: 'center', editable: 'never',
+        title: 'Actions', field: 'actions', align: 'center', editable: 'never', export: false
       },
 
     ],
     rows: orderData?.map((value, idx) => {
 
 
-      console.log(value,"data set value refund is")
+      console.log(value, "data set value refund is")
       return {
         // id: value.MainTId,
         data: value,
@@ -180,15 +198,15 @@ const Dashboard = () => {
         paid_amount: value.ItemCurrency + " " + (value.paid_amount?.toFixed(2) || "0.00"), // Check for null or undefined
         discount_amount: value.ItemCurrency + " " + (value.discount_price?.toFixed(2) || "0.00"), // Check for null or undefined
         delivery_charge: value.ItemCurrency + " " + (value.delivery_charge?.toFixed(2) || "0.00"), // Check for null or undefined
-        refunding_amount:value.ItemCurrency + " " + (value.refundableAmount?.toFixed(2) || "0.00"), // Check for null or undefined
+        refunding_amount: value.ItemCurrency + " " + (value.refundableAmount?.toFixed(2) || "0.00"), // Check for null or undefined
         actions:
           <div className='actions_box'>
             {/* <NavLink to={"/api/view_order_voucher/" + value.OrderId} target='_blank'><i className='bi bi-printer-fill'></i></NavLink> */}
             {
-            (pagePermission.some(permission => userData?.permissions?.includes(permission))) &&
-            <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.OrderId, value) }}>View Order</button>
+              (pagePermission.some(permission => userData?.permissions?.includes(permission))) &&
+              <button className="btn btn_actions btnViewAction" onClick={(e) => { handleModalOpen(value.OrderId, value) }}>View Order</button>
             }
-            </div>
+          </div>
       }
     })
   }
@@ -234,7 +252,7 @@ const Dashboard = () => {
           .then(res => {
             setProgress(100);
             setPaymentDataSet({ ...paymentDataSet, MainPayStatus: "Approved" })
-            const updatedOrderData = orderData.map(order => 
+            const updatedOrderData = orderData.map(order =>
               order.OrderId === orderid ? { ...order, MainPayStatus: "Approved" } : order
             );
             setOrderData(updatedOrderData);
@@ -279,10 +297,10 @@ const Dashboard = () => {
   }
 
 
-  const handleRejectionSuccess = () =>{
+  const handleRejectionSuccess = () => {
     setPaymentRejection(false)
     setPaymentDataSet({ ...paymentDataSet, MainPayStatus: "Rejected" })
-    const updatedOrderData = orderData.map(order => 
+    const updatedOrderData = orderData.map(order =>
       order.OrderId === orderid ? { ...order, MainPayStatus: "Rejected" } : order
     );
     setOrderData(updatedOrderData);
@@ -291,6 +309,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <WidgetsDropdown /> */}
+      {/* <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} /> */}
       <LoadingBar color="#58c67d" progress={progress} onLoaderFinished={() => setProgress(0)} height={5} />
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered size="fullscreen"
@@ -299,30 +318,30 @@ const Dashboard = () => {
 
           <Modal.Title>Order Details - {orderid}</Modal.Title>
           {
-          paymentDataSet?.pay_category === "Card Payment"?(
-            null
-          ):(
-            paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
-              <div className="radioGroup" style={{ marginLeft: "30px" }}>
-                 {(["all accounts access","approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
-                <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
-                 }
-                 {(["all accounts access","reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
-                <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
-                }
+            paymentDataSet?.pay_category === "Card Payment" ? (
+              null
+            ) : (
+              paymentDataSet.MainPayStatus !== "Approved" && paymentDataSet.MainPayStatus !== "Rejected" ? (
+                <div className="radioGroup" style={{ marginLeft: "30px" }}>
+                  {(["all accounts access", "approve customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
+                    <CFormCheck button={{ color: 'success', variant: 'outline' }} type="radio" name="options-outlined" id="success-outlined" autoComplete="off" label="Approve Payment" defaultChecked onClick={handleApprovePayment} />
+                  }
+                  {(["all accounts access", "reject customer orders"].some(permission => userData?.permissions?.includes(permission))) &&
+                    <CFormCheck button={{ color: 'danger', variant: 'outline' }} type="radio" name="options-outlined" id="danger-outlined" autoComplete="off" label="Reject Payment" onClick={handleRejectPayment} />
+                  }
                 </div>
-            ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
-            <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
-              Payment Rejected
-            </div>
-            
-            ): (
-              <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
-                Payment Approved
-              </div>
+              ) : (paymentDataSet.MainPayStatus && paymentDataSet.MainPayStatus === "Rejected") ? (
+                <div className="status" style={{ marginLeft: "30px", color: "red", fontWeight: "bold" }}>
+                  Payment Rejected
+                </div>
+
+              ) : (
+                <div className="status" style={{ marginLeft: "30px", color: "green", fontWeight: "bold" }}>
+                  Payment Approved
+                </div>
+              )
             )
-          )
-          
+
           }
 
 
@@ -357,55 +376,46 @@ const Dashboard = () => {
 
 
       <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Customer Orders
-              </h4>
-              {/* <div className="small text-medium-emphasis">January - July 2021</div> */}
-            </CCol>
+      <CCardBody>
+        <CRow>
+          <CCol sm={5}>
+            <h4 id="traffic" className="card-title mb-0">
+              Customer Orders
+            </h4>
+          </CCol>
+        </CRow>
 
-          </CRow>
-
-
-
-
-
-
-
+        {loading ? (
+          <div className="text-center p-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-2">Loading orders data...</p>
+          </div>
+        ) : (
           <ThemeProvider theme={defaultMaterialTheme}>
             <MaterialTable
               title=""
-              // tableRef={tableRef}
               data={data.rows}
               columns={data.columns}
-
-
               options={{
+
 
                 sorting: true, search: true,
                 searchFieldAlignment: "right", searchAutoFocus: true, searchFieldVariant: "standard",
-                filtering: false, paging: true, pageSizeOptions: [20, 25, 50, 100], pageSize: 10,
+                filtering: false, paging: true, pageSizeOptions: [10, 20, 25, 50, 100], pageSize: 10,
                 paginationType: "stepped", showFirstLastPageButtons: false, paginationPosition: "both", exportButton: true,
-                exportAllData: true, exportFileName: "TableData", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
+                exportAllData: true, exportFileName: "Customer_Orders", addRowPosition: "first", actionsColumnIndex: -1, selection: false,
                 showSelectAllCheckbox: false, showTextRowsSelected: false,
                 grouping: true, columnsButton: true,
                 headerStyle: { background: '#626f75', color: "#fff", padding: "15px", fontSize: "17px", fontWeight: '500' },
                 rowStyle: { fontSize: "15px", width: "100%", color: "#000" },
-
-                // fixedColumns: {
-                //     left: 6
-                // }
               }}
-
-
             />
           </ThemeProvider>
-
-        </CCardBody>
-
-      </CCard>
+        )}
+      </CCardBody>
+    </CCard>
 
 
 

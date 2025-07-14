@@ -96,7 +96,7 @@ function CustomerSearch({ setSelectedUser, setIsLoading, handleRemoveKeyword }) 
         {searchResults.map((item) => (
           <CListGroupItem
             key={item.id}
-            // style={{width:"30%"}}
+            style={{width:"50%"}}
             onClick={() => handleCustomerSelection(item)}
             onMouseOver={(e) => {
               e.currentTarget.style.cursor = 'pointer'

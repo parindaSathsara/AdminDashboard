@@ -26,7 +26,8 @@ import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
 
 
 
-const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
+// const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
+const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
 
 const AccountsRefunds = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsRefund'))
@@ -93,6 +94,9 @@ import Bridgify from './Panels/API_details/Bridgify'
 import TBO from './Panels/API_details/TBO'
 import UserCountStats from './Panels/UserCount/UserCountStats'
 import VendorCategorize from './views/VendorCategorize/VendorCategorize'
+import Promotions from './views/Promotions/Promotions'
+import VendorStats from './views/VendorCategorize/VendorStats'
+import RateHawk from './Panels/API_details/RateHawk'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -113,7 +117,7 @@ const routes = [
   { path: '/orders', name: 'Orders', element: Dashboard, exact: true },
 
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
-  { path: '/accounts/customerorders', name: 'Sales', element: AccountsDepartment },
+  { path: '/accounts/customerorders', name: 'Customer orders', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
 
   { path: '/products', name: 'Products', element: ProductList },
@@ -125,11 +129,11 @@ const routes = [
 
   { path: '/reporting/accounts', name: 'Accounts Report', element: AccountReport },
   { path: '/reporting/all', name: 'All Report', element: ReportsMain },
-  { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
+  // { path: '/reporting', name: 'All Reports', element: ReportsMain, exact: true },
 
   { path: '/emails/generate', name: 'Email Generate', element: EmailGeneration },
   { path: '/emails/all', name: 'Email Resend', element: EmailDashboard },
-  { path: '/emails', name: 'Email Dashboard', element: EmailDashboard, exact: true },
+  { path: '/emails', name: '', element: EmailDashboard, exact: true },
 
   { path: '/delivery', name: 'Delivery', element: DeliveryDepartment, exact: true },
 
@@ -147,20 +151,29 @@ const routes = [
   // driver and vechicle allocation
   { path: '/allocation', name: 'Orders Allocations', element: AllocationsHomepage, exact: true },
 
-  {path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
-  {path:'/analytics',name:'Analytics',element:UserAnalytics,exact:true},
-  {path:'/kpidashboard',name:'KPI Dashboard',element:KpiDashboard,exact:true},
-  {path:'/kpidashboard/team',name:'Team KPI',element:KpiDashboard},
-  {path:'/kpidashboard/globaltarget',name:'Global Target',element:GlobalTarget},
-  {path:'/kpidashboard/chat',name:'Chat Analytics',element:ChatAnalytics},
+  { path: '/order-calendar', name: 'Orders calendar', element: OrderCalenderhomepage, exact: true },
+  { path: '/analytics', name: 'Analytics', element: UserAnalytics, exact: true },
+  { path: '/kpidashboard', name: 'KPI Dashboard', element: KpiDashboard, exact: true },
+  { path: '/kpidashboard/team', name: 'Team KPI', element: KpiDashboard },
+  { path: '/kpidashboard/globaltarget', name: 'Global Target', element: GlobalTarget },
+  { path: '/kpidashboard/chat', name: 'Chat Analytics', element: ChatAnalytics },
 
-  // services 
-  {path:'/services/bridgyfy',name:'Bridgify',element:Bridgify},
-  {path:'/services/tbo',name:'TBO',element:TBO},
-  {path:'/users/stats',name:'User Stats',element:UserCountStats},
-  
+  // services
+  { path: '/services/bridgyfy', name: 'Bridgify', element: Bridgify },
+  { path: '/services/tbo', name: 'TBO', element: TBO },
+  { path: '/services/ratehawk', name: 'RateHawk', element: RateHawk },
+  { path: '/users/stats', name: 'User Stats', element: UserCountStats },
+
   // vendor categorize
-  {path:'/vendors/categorize',name:'Vendor Categorize',element:VendorCategorize},
+
+  { path: '/vendors/categorize', name: 'Vendor Categorize', element: VendorCategorize },
+  { path: '/vendor-analytics', name: 'Vendor Analytics', element: VendorStats },
+
+
+  // prmotions
+  { path: '/promotions', name: 'Promotions', element: Promotions },
+
+
 
 
 ]

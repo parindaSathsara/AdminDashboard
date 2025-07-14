@@ -11,14 +11,16 @@ import { Modal, Tab, Tabs } from 'react-bootstrap'
 
 
 function VendorDetails(props) {
-
+    console.log("Vendor Details Props", props);
+    
     const [vendorDetails, setVendorDetails] = useState([])
 
     useEffect(() => {
         setVendorDetails(props.vendorData)
     }, [props.vendorData])
 
-
+    console.log("Vendor Details", vendorDetails);
+    
     const [showModal, setShowModal] = useState(false)
 
 
@@ -219,12 +221,13 @@ function VendorDetails(props) {
                                     <h6 style={{ color: 'red' }}>Not Uploaded</h6>
 
                                     :
-                                    <a href={"https://supplier.aahaas.com/" + vendorDetails.br_copy} target='_blank'>Get BR Copy</a>
+                                    // <a href={"https://staging-supplier.aahaas.com/" + vendorDetails.br_copy} target='_blank'>Get BR Copy</a>
+                                    <a href={axios.defaults.supplierUrl + vendorDetails.br_copy} target='_blank'>Get BR Copy</a>
 
                                 }
                             </CCol>
 
-                            <CCol md={6}>
+                            {/* <CCol md={6}>
 
 
                                 <CFormLabel>NIC Copy</CFormLabel><br></br>
@@ -235,7 +238,7 @@ function VendorDetails(props) {
                                     <a href={"https://supplier.aahaas.com/" + vendorDetails.nic_image} target='_blank'>Get NIC Copy</a>
                                 }
 
-                            </CCol>
+                            </CCol> */}
 
                         </CRow>
 

@@ -17,6 +17,7 @@ import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { CurrencyContext } from 'src/Context/CurrencyContext'
 import { DocsExample } from 'src/components'
 import OrderAllocate from './OrdersList.jsx/OrdersListAllocations'
+import OrderAllocatePagination from './OrdersList.jsx/OrdersListAllocationsPagination'
 import axios from 'axios'
 
 const MainDashboard = () => {
@@ -66,9 +67,11 @@ const MainDashboard = () => {
 
               {userData.user_role == "super_admin"|| userData.roles.includes("Sales") || userData.roles.includes("Booking")  ?
                 // <OrderAllocate normalUser={false}></OrderAllocate>
-                <OrderAllocate normalUser={false}></OrderAllocate>
+                // <OrderAllocate normalUser={false}></OrderAllocate>
+                <OrderAllocatePagination normalUser={false}></OrderAllocatePagination>
                 : 
-                <OrderAllocate normalUser={true}></OrderAllocate> 
+                // <OrderAllocate normalUser={true}></OrderAllocate> 
+                <OrderAllocatePagination normalUser={true}></OrderAllocatePagination> 
                }
 
 

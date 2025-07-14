@@ -87,14 +87,20 @@ function AiSuggestionModal(props) {
           <div style={{ textAlign: 'center', minHeight: '5rem' }}>
             <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-blue"></i>
             <br />
-            <h3>Loading...</h3>
+            <h3>Analyzing Chat And Getting Recommendations....</h3>
           </div>
         ) : (
           <>
-            {/* Display keywords */}
-            <b>Key Words:</b> {props.recommendations.keywords?.join(', ')}
-            <hr />
-            {/* Tabs for displaying different content */}
+           <b>Key Words:</b> {props.recommendations.keywords?.join(', ')}
+           <hr />
+          { (data?.length === 0) ? (
+    <div className="text-center py-5" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+      <h5>Chat history is not enough to analyze and get recommendations</h5>
+      <p className="text-muted">Please continue chatting to generate more recommendations</p>
+    </div>
+  ) 
+           : 
+          (
             <Tabs
               id="controlled-tab-example"
               activeKey={key}
@@ -125,7 +131,10 @@ function AiSuggestionModal(props) {
                       { 
                         title: 'Description', 
                         field: 'sub_description', 
-                        render: rowData => rowData.sub_description.substring(0, 100)+'...'
+                        // render: rowData => rowData?.sub_description?.substring(0, 100)+'...'
+                        render: rowData => rowData?.sub_description 
+    ? rowData.sub_description.substring(0, 100) + '...' 
+    : 'No description'
                       },
                       { title: 'Key Words', field: 'selling_points' },
                     ]}
@@ -259,7 +268,8 @@ function AiSuggestionModal(props) {
                   />
                 </ThemeProvider>
               </Tab>
-            </Tabs>
+            </Tabs>)
+           }
           </>
         )}
       </Modal.Body>

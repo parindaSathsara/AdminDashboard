@@ -104,6 +104,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       status: status,
     })
   }
+  const [showChatModal, setShowChatModal] = useState(false);
+const [orderData, setOrderData] = useState(null);
+
 
   const handleChatSearch = (keyword) => {
     if (keyword == '') {
@@ -126,7 +129,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     }
   }
 
-  const handleCloseChat = () => { }
+  const handleCloseChat = () => {}
 
   // const getDateAndtime = (data) => {
   //     console.log("Input",data);
@@ -142,7 +145,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     return null
   }
 
-  const handleScrollToMessage = () => { }
+  const handleScrollToMessage = () => {}
 
   const { userData } = useContext(UserLoginContext)
 
@@ -153,12 +156,13 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     } else {
       setAdminMessage('')
 
-      const adminMsg = messages?.filter(data => data?.role == "Admin")
-
-
+      const adminMsg = messages?.filter((data) => data?.role == 'Admin')
+      console.log(userData, 'User Data is');
+      
       await addDoc(collection(db, 'chat-updated/chats/' + chatOpenDetails.id), {
         text: value,
         name: userData.name,
+        email: userData.email,
         createdAt: new Date(),
         role: 'Admin',
         uid: '12',
@@ -174,7 +178,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
           status: 'Unread',
           readAt: '',
         },
-        adminJoined: adminMsg?.length == 0 ? true : false
+        adminJoined: adminMsg?.length == 0 ? true : false,
       })
 
       const docRef = doc(db, 'customer-chat-lists', chatOpenDetails.id)
@@ -232,8 +236,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         text: message.text,
       }))
 
-
-
       setLastMessageContent(messageContent)
 
       await batch.commit()
@@ -244,7 +246,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
       const docRef = doc(db, 'customer-chat-lists', chatId.id)
       await updateDoc(docRef, { admin_unreads: 0 })
     })
-
 
     // Working new code
 
@@ -370,6 +371,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     setChatOpened(true)
     setChatOpenDetails(chatData)
     console.log('chatData', chatData)
+      console.log(userData, 'User Data is');
 
     setLoader(true)
     await getChatContent({ chatId: chatData, updateState: false })
@@ -763,7 +765,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
           // const updatedDoc = await getDoc(docRef)
           // check the updatedoc
           const updatedDoc = await checkUpdateDoc(db, data, newStatus)
-          console.log(updatedDoc);
+          console.log(updatedDoc)
 
           if (updatedDoc) {
             setChatStatus(updatedDoc.status)
@@ -853,8 +855,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
   //   }
 
   const handleOnClick = (data) => {
-    // console.log(data, "chamod")
+    console.log(data, 'chamod')
     // console.log(data)
+    let product_id = data.product_id
 
     const categories = [
       { value: '1', name: 'Essentials' },
@@ -870,6 +873,8 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         data.category = category.name
       }
     }
+
+    
     // console.log(data, 'chamod')
     setMoreProductModal(true)
     // // setMoreData({
@@ -883,27 +888,45 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     // //         "id": 0
     // //     }
     // // })
+    // let data1 = {
+    //   category: 'Hotels',
+    //   product_id: '1467876',
+    //   provider:'hoteltbo'
+    // }
 
+    // if(data.provider == "bridgify"){
+
+    // }else if(data.provider == "hotelTbo"){
+
+    // }else{
+
+    // }
     setMoreData(data)
+    
   }
-
 
   async function getRecommendations() {
     setLoadingRecommendations(true)
-    setRecommendations([]);
+    setRecommendations([])
     try {
       const response = await axios.post('/getRecommendations', {
         chats: lastMessageContent,
       })
       setRecommendations(response.data)
-      console.log('Recommendations:--------------------------------------------------', response.data)
+      console.log(
+        'Recommendations:--------------------------------------------------',
+        response.data,
+      )
     } catch (error) {
-      console.error('Error fetching recommendations:--------------------------------------------------------', error)
-      Swal.fire({
-        icon: 'error',
-        title: 'Aiyooo...',
-        text: 'Failed to fetch recommendations. Please try again later.',
-      })
+      console.error(
+        'Error fetching recommendations:--------------------------------------------------------',
+        error,
+      )
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'Failed to fetch recommendations. Please try again later.',
+      // })
     } finally {
       setLoadingRecommendations(false)
     }
@@ -923,12 +946,28 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
     getRecommendations()
   }
 
-
   const [viewChatAnalytics, setViewChatAnalytics] = useState(false)
 
   const handleChatAnalytics = () => {
     setViewChatAnalytics(true)
   }
+
+  const handleCustomerDataModal = (customerId) => {
+  console.log('Customer Data Modal Data:', customerId);
+
+  axios.post('getChatOrderDetails', { customer_id: customerId })
+    .then(res => {
+      console.log('Order Details Response:', res.data);
+      if (res.data.status === 'success') {
+        setOrderData(res.data);
+        setShowChatModal(true);
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching order details:', err);
+    });
+};
+
 
   return (
     <>
@@ -991,11 +1030,10 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                   )}
                   {/* the end chat icon */}
                   {
-
                     <CTooltip
                       content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
-                      placement="auto">
-
+                      placement="auto"
+                    >
                       <FontAwesomeIcon
                         icon={chatStatus === 'End' ? faStop : faPause}
                         onClick={() => {
@@ -1017,24 +1055,21 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                     // <FontAwesomeIcon icon={faStop} onClick={() => handleStopChat(chatOpenDetails)} style={{ color: '#2bfd3c' }} />
                   }
 
-                  {[
+                  {/* {[
                     'assign employer to chat',
                     'remove employer from chat',
                     'view assign employer chat',
                   ].some((permission) => userData?.permissions?.includes(permission)) && (
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        className="icon-style"
-                        onClick={() => {
-                          handleAssignEmployee('Employee Asaign')
-                        }}
-                        style={{ color: '#03e5fd' }}
-                      />
-                    )}
-                  <CTooltip
-                    content={'Chat Analytics'}
-                    placement="auto">
-
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="icon-style"
+                      onClick={() => {
+                        handleAssignEmployee('Employee Asaign')
+                      }}
+                      style={{ color: '#03e5fd' }}
+                    />
+                  )} */}
+                  <CTooltip content={'Chat Analytics'} placement="auto">
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       onClick={() => {
@@ -1080,10 +1115,11 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                             <div
                               ref={(el) => (chatRefs.current[index] = el)}
                               key={index}
-                              className={` ${value.role === 'Admin'
-                                ? 'chat-content-admin'
-                                : 'chat-content-customer'
-                                } `}
+                              className={` ${
+                                value.role === 'Admin'
+                                  ? 'chat-content-admin'
+                                  : 'chat-content-customer'
+                              } `}
                               style={{
                                 backgroundColor: clickedMssage === value.id ? 'lightgray' : '',
                               }}
@@ -1105,7 +1141,88 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                                 )}
                               </p>
                               {console.log(value)}
-                              <p className="chat-content-time">by {value?.name != "" ? value.name.slice(0, 7) : value?.role.toLowerCase()} </p>
+                              {/* <p className="chat-content-time">
+                                by{' '}
+                                {value?.name != ''
+                                  ? value.name.slice(0, 7)
+                                  : value?.role.toLowerCase()}{' '}
+                              </p> */}
+{value.role === 'Customer' ? (
+  <button
+    className="chat-content-time customer-button"
+    onClick={() => handleCustomerDataModal(value.uid)}
+    style={{
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      border: 'none',
+      borderRadius: '15px',
+      color: 'white',
+      padding: '4px 10px',
+      fontSize: '11px',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 2px 6px rgba(102, 126, 234, 0.25)',
+      outline: 'none',
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '3px',
+      textTransform: 'none',
+      letterSpacing: '0.2px',
+      minWidth: 'auto',
+      width: 'auto',
+      whiteSpace: 'nowrap'
+    }}
+    onMouseEnter={(e) => {
+      e.target.style.transform = 'translateY(-1px)';
+      e.target.style.boxShadow = '0 3px 12px rgba(102, 126, 234, 0.35)';
+      e.target.style.background = 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)';
+    }}
+    onMouseLeave={(e) => {
+      e.target.style.transform = 'translateY(0)';
+      e.target.style.boxShadow = '0 2px 6px rgba(102, 126, 234, 0.25)';
+      e.target.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    }}
+    onMouseDown={(e) => {
+      e.target.style.transform = 'translateY(0) scale(0.98)';
+    }}
+    onMouseUp={(e) => {
+      e.target.style.transform = 'translateY(-1px) scale(1)';
+    }}
+  >
+    <svg 
+      width="10" 
+      height="10" 
+      viewBox="0 0 24 24" 
+      fill="currentColor"
+      style={{ flexShrink: 0 }}
+    >
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+    </svg>
+    <span style={{ 
+      overflow: 'hidden', 
+      textOverflow: 'ellipsis',
+      maxWidth: '130px'
+    }}>
+      by {value?.name !== '' ? value.name.slice(0, 20) : 'customer'}
+    </span>
+  </button>
+) : (
+  <p
+    className="chat-content-time"
+    style={{
+      cursor: 'default',
+      backgroundColor: 'transparent',
+      color: '#6c757d',
+      fontSize: '11px',
+      fontStyle: 'italic',
+      margin: 0,
+      padding: '4px 0'
+    }}
+  >
+    by {value?.name !== '' ? value.name.slice(0, 20) : value?.role.toLowerCase()}
+  </p>
+)}
+
                             </div>
                           </div>
                         ))
@@ -1143,7 +1260,6 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       onClick={() => handleAutoSuggestionModal()}
                     />
 
-
                     {/* <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} /> */}
 
                     <textarea
@@ -1160,7 +1276,7 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                         borderColor: '#ccc',
                         resize: 'vertical',
                         overflowY: 'auto',
-                        minHeight: '80px',
+                        minHeight: '64px',
                         maxHeight: '200px',
                         fontSize: 15,
                       }}
@@ -1170,9 +1286,9 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       className="chat-message-input-icon-send"
                       onClick={() => handleSendMessage(adminMessage)}
                     />
-                    <Tooltip title={'Under developement'}>
+                    {/* <Tooltip title={'Under developement'}>
                       <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
-                    </Tooltip>
+                    </Tooltip> */}
                   </div>
                 ) : null}
               </div>
@@ -1233,16 +1349,16 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
                       {['delete assign employee order'].some((permission) =>
                         userData?.permissions?.includes(permission),
                       ) && (
-                          <CButton
-                            color="danger"
-                            onClick={() => {
-                              handleDeleteEmployee(assignedEmployee.chatId)
-                            }}
-                            style={{ color: 'white', fontSize: 14 }}
-                          >
-                            Delete <CIcon icon={cilTrash} />
-                          </CButton>
-                        )}
+                        <CButton
+                          color="danger"
+                          onClick={() => {
+                            handleDeleteEmployee(assignedEmployee.chatId)
+                          }}
+                          style={{ color: 'white', fontSize: 14 }}
+                        >
+                          Delete <CIcon icon={cilTrash} />
+                        </CButton>
+                      )}
                     </CTableDataCell>
                   </CTableRow>
                   {/* ))} */}
@@ -1262,14 +1378,433 @@ export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
         </Modal.Footer>
       </Modal>
 
+<Modal 
+  show={showChatModal} 
+  onHide={() => setShowChatModal(false)} 
+  size="lg" 
+  centered
+  style={{ fontFamily: 'Arial, sans-serif' }}
+>
+  <Modal.Header 
+    closeButton 
+    style={{ 
+      backgroundColor: '#f8f9fa', 
+      borderBottom: '2px solid #e9ecef',
+      padding: '20px 30px'
+    }}
+  >
+    <Modal.Title style={{ 
+      color: '#343a40', 
+      fontSize: '1.5rem', 
+      fontWeight: '600',
+      margin: 0
+    }}>
+      Customer Order Summary
+    </Modal.Title>
+  </Modal.Header>
+  
+  <Modal.Body style={{ padding: '30px', backgroundColor: '#ffffff' }}>
+    {orderData ? (
+      <div style={{ color: '#495057' }}>
+        {/* Customer Information Section */}
+        <div style={{ 
+          backgroundColor: '#f8f9fa', 
+          padding: '20px', 
+          borderRadius: '8px',
+          marginBottom: '25px',
+          border: '1px solid #e9ecef'
+        }}>
+          <h5 style={{ 
+            color: '#495057', 
+            marginBottom: '15px', 
+            fontSize: '1.1rem',
+            fontWeight: '600'
+          }}>
+            Customer Information
+          </h5>
+          
+          <CRow className="g-3">
+            <CCol md={4}>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={{ 
+                  fontWeight: '500', 
+                  color: '#6c757d',
+                  fontSize: '0.9rem',
+                  display: 'block',
+                  marginBottom: '4px'
+                }}>
+                  Customer ID
+                </span>
+                <span style={{ 
+                  fontWeight: '600', 
+                  color: '#343a40',
+                  fontSize: '1rem'
+                }}>
+                  {orderData.customer_id}
+                </span>
+              </div>
+            </CCol>
+            
+            <CCol md={4}>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={{ 
+                  fontWeight: '500', 
+                  color: '#6c757d',
+                  fontSize: '0.9rem',
+                  display: 'block',
+                  marginBottom: '4px'
+                }}>
+                  Email Address
+                </span>
+                <span style={{ 
+                  fontWeight: '600', 
+                  color: '#343a40',
+                  fontSize: '1rem',
+                  wordBreak: 'break-word'
+                }}>
+                  {orderData.email || 'Not provided'}
+                </span>
+              </div>
+            </CCol>
+            
+            <CCol md={4}>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={{ 
+                  fontWeight: '500', 
+                  color: '#6c757d',
+                  fontSize: '0.9rem',
+                  display: 'block',
+                  marginBottom: '4px'
+                }}>
+                  Phone Number
+                </span>
+                <span style={{ 
+                  fontWeight: '600', 
+                  color: '#343a40',
+                  fontSize: '1rem'
+                }}>
+                  {orderData.passenger_tele || 'Not provided'}
+                </span>
+              </div>
+            </CCol>
+          </CRow>
+        </div>
+
+        {/* Order Summary Section */}
+        <div style={{ 
+          backgroundColor: '#fff', 
+          padding: '20px', 
+          borderRadius: '8px',
+          border: '1px solid #e9ecef'
+        }}>
+          <h5 style={{ 
+            color: '#495057', 
+            marginBottom: '20px', 
+            fontSize: '1.1rem',
+            fontWeight: '600'
+          }}>
+            Order Summary
+          </h5>
+          
+          <CRow className="g-4">
+            <CCol md={6}>
+              <div style={{
+                textAlign: 'center',
+                padding: '20px',
+                backgroundColor: '#e3f2fd',
+                borderRadius: '8px',
+                border: '1px solid #bbdefb'
+              }}>
+                <div style={{ 
+                  fontSize: '2rem', 
+                  fontWeight: '700', 
+                  color: '#1976d2',
+                  marginBottom: '8px'
+                }}>
+                  {orderData.total_orders}
+                </div>
+                <div style={{ 
+                  fontSize: '0.9rem', 
+                  color: '#546e7a',
+                  fontWeight: '500'
+                }}>
+                  Total Orders
+                </div>
+              </div>
+            </CCol>
+            
+            <CCol md={6}>
+              <div style={{
+                textAlign: 'center',
+                padding: '20px',
+                backgroundColor: '#e8f5e8',
+                borderRadius: '8px',
+                border: '1px solid #c8e6c9'
+              }}>
+                <div style={{ 
+                  fontSize: '2rem', 
+                  fontWeight: '700', 
+                  color: '#388e3c',
+                  marginBottom: '8px'
+                }}>
+                  Rs.  {orderData.total_amount?.toFixed(2)}
+                </div>
+                <div style={{ 
+                  fontSize: '0.9rem', 
+                  color: '#546e7a',
+                  fontWeight: '500'
+                }}>
+                  Total Amount
+                </div>
+              </div>
+            </CCol>
+          </CRow>
+        </div>
+
+        {/* Optional: Orders List Section (if you want to show individual orders) */}
+        {/* {orderData.orders && orderData.orders.length > 0 && (
+          <div style={{ 
+            marginTop: '25px',
+            backgroundColor: '#fff', 
+            padding: '20px', 
+            borderRadius: '8px',
+            border: '1px solid #e9ecef'
+          }}>
+            <h5 style={{ 
+              color: '#495057', 
+              marginBottom: '15px', 
+              fontSize: '1.1rem',
+              fontWeight: '600'
+            }}>
+              Order Details
+            </h5>
+            
+            <div style={{ 
+              backgroundColor: '#f8f9fa',
+              borderRadius: '6px',
+              padding: '12px 15px',
+              marginBottom: '10px',
+              fontWeight: '600',
+              fontSize: '0.9rem',
+              color: '#495057'
+            }}>
+              <CRow>
+                <CCol md={4}>Order ID</CCol>
+                <CCol md={4}>Item Count</CCol>
+                <CCol md={4}>Amount</CCol>
+              </CRow>
+            </div>
+            
+            {orderData.orders.map((order, index) => (
+              <div 
+                key={index} 
+                style={{ 
+                  padding: '12px 15px',
+                  borderBottom: index < orderData.orders.length - 1 ? '1px solid #e9ecef' : 'none',
+                  fontSize: '0.95rem'
+                }}
+              >
+                <CRow>
+                  <CCol md={4} style={{ color: '#495057', fontWeight: '500' }}>
+                    {order.checkout_id}
+                  </CCol>
+                  <CCol md={4} style={{ color: '#6c757d' }}>
+                    {order.item_count} items
+                  </CCol>
+                  <CCol md={4} style={{ color: '#388e3c', fontWeight: '600' }}>
+                    Rs. {order.total_order_amount}
+                  </CCol>
+                </CRow>
+              </div>
+            ))}
+          </div>
+        )} */}
+         {/* Order IDs Section - Horizontal Layout */}
+        {orderData.orders && orderData.orders.length > 0 && (
+          <div style={{ 
+            marginTop: '25px',
+            backgroundColor: '#fff', 
+            padding: '20px', 
+            borderRadius: '8px',
+            border: '1px solid #e9ecef'
+          }}>
+            {/* <h5 style={{ 
+              color: '#495057', 
+              marginBottom: '15px', 
+              fontSize: '1.1rem',
+              fontWeight: '600'
+            }}>
+              Order IDs
+            </h5>
+            
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              marginBottom: '20px'
+            }}>
+              {orderData.orders.map((order, index) => (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: '#e3f2fd',
+                    color: '#1565c0',
+                    padding: '8px 15px',
+                    borderRadius: '20px',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    border: '1px solid #bbdefb',
+                    display: 'inline-block',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {order.checkout_id}
+                </div>
+              ))}
+            </div> */}
+
+            {/* Order Details Table */}
+            <h6 style={{ 
+              color: '#495057', 
+              marginBottom: '12px', 
+              fontSize: '1rem',
+              fontWeight: '600'
+            }}>
+              Order Details
+            </h6>
+            
+            <div style={{ 
+              backgroundColor: '#f8f9fa',
+              borderRadius: '6px',
+              padding: '12px 15px',
+              marginBottom: '10px',
+              fontWeight: '600',
+              fontSize: '0.9rem',
+              color: '#495057'
+            }}>
+              <CRow>
+                <CCol md={4}>Order ID</CCol>
+                <CCol md={4}>Item Count</CCol>
+                <CCol md={4}>Amount</CCol>
+              </CRow>
+            </div>
+            
+            <div style={{
+              maxHeight: '200px',
+              overflowY: 'auto',
+              border: '1px solid #e9ecef',
+              borderRadius: '6px'
+            }}>
+              {orderData.orders.map((order, index) => (
+                <div 
+                  key={index} 
+                  style={{ 
+                    padding: '12px 15px',
+                    borderBottom: index < orderData.orders.length - 1 ? '1px solid #e9ecef' : 'none',
+                    fontSize: '0.95rem',
+                    backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa'
+                  }}
+                >
+                  <CRow>
+                    <CCol md={4} style={{ color: '#495057', fontWeight: '500' }}>
+                      {order.checkout_id}
+                    </CCol>
+                    <CCol md={4} style={{ color: '#6c757d' }}>
+                      {order.item_count} items
+                    </CCol>
+                    <CCol md={4} style={{ color: '#388e3c', fontWeight: '600' }}>
+                      Rs. {order.total_order_amount}
+                    </CCol>
+                  </CRow>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+    
+      </div>
+    ) : (
+      <div style={{ 
+        textAlign: 'center', 
+        padding: '40px 20px',
+        color: '#6c757d'
+      }}>
+        <div style={{ 
+          marginBottom: '15px',
+          fontSize: '1.1rem'
+        }}>
+          Loading customer information...
+        </div>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '4px solid #f3f3f3',
+          borderTop: '4px solid #007bff',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto'
+        }}></div>
+      </div>
+    )}
+  </Modal.Body>
+  
+  <Modal.Footer style={{ 
+    backgroundColor: '#f8f9fa', 
+    borderTop: '1px solid #e9ecef',
+    padding: '15px 30px'
+  }}>
+    <CButton 
+      color="light" 
+      onClick={() => setShowChatModal(false)}
+      style={{
+        padding: '10px 25px',
+        fontWeight: '500',
+        border: '1px solid #ced4da',
+        borderRadius: '6px',
+        transition: 'all 0.2s ease'
+      }}
+      onMouseOver={(e) => {
+        e.target.style.backgroundColor = '#e2e6ea';
+        e.target.style.borderColor = '#adb5bd';
+      }}
+      onMouseOut={(e) => {
+        e.target.style.backgroundColor = '#f8f9fa';
+        e.target.style.borderColor = '#ced4da';
+      }}
+    >
+      Close
+    </CButton>
+  </Modal.Footer>
+  
+  <style jsx>{`
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `}</style>
+</Modal>
+
+
+
       <MoreProductView
         show={moreProductsModal}
         onHide={() => setMoreProductModal(false)}
         productData={moreData}
       ></MoreProductView>
 
-      <ChatAnalyticsModal show={viewChatAnalytics} message={messages} onHide={() => setViewChatAnalytics(false)} />
-      <AiSuggestionModal show={recommenderModalOpen} loadingRecommendations={loadingRecommendations} getRecommendations={getRecommendations} setRecommendations={setRecommendations} recommendations={recommendations} onHide={() => setRecommenderModalOpen(false)} />
+      <ChatAnalyticsModal
+        show={viewChatAnalytics}
+        message={messages}
+        onHide={() => setViewChatAnalytics(false)}
+      />
+      <AiSuggestionModal
+        show={recommenderModalOpen}
+        loadingRecommendations={loadingRecommendations}
+        getRecommendations={getRecommendations}
+        setRecommendations={setRecommendations}
+        recommendations={recommendations}
+        onHide={() => setRecommenderModalOpen(false)}
+      />
     </>
   )
 }

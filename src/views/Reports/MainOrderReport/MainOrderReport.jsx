@@ -6,7 +6,7 @@ import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
 
 
-const OrderCheckoutsReport = ({ dataSet }) => {
+const OrderCheckoutsReport = ({ dataSet, category }) => {
   const columns = [
     { accessorKey: 'order_id', header: 'Order ID' },
     { accessorKey: 'product_count', header: 'Product Count' },
@@ -21,7 +21,7 @@ const OrderCheckoutsReport = ({ dataSet }) => {
   const handleExportData = () => {
     const csvConfig = mkConfig({
       fieldSeparator: ',',
-      filename: 'order_checkouts_report',
+      filename: `${category} Order Checkouts Report`,
       useKeysAsHeaders: true,
     });
 

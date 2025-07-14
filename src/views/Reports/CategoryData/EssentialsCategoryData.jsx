@@ -13,7 +13,7 @@ const EssentialsCategoryData = ({ data, category }) => {
         const transformedData = data.map(item => ({
             id: item.id,
             listing_title: item.listing_title,
-            listing_description: item.listing_description?.slice(0, 50),
+            listing_description: item.listing_description?.replace(/<[^>]*>/g, '').slice(0, 100)+"...",
             sub_description: item.sub_description,
             cash_onDelivery: item.cash_onDelivery,
             discount_status: item.discount_status,
@@ -83,11 +83,17 @@ const EssentialsCategoryData = ({ data, category }) => {
         { accessorKey: 'triggers', header: 'Triggers', size: 120 }
     ], []);
 
+    // const csvConfig = useMemo(() => mkConfig({
+    //     fieldSeparator: ',',
+    //     decimalSeparator: '.',
+    //     useKeysAsHeaders: true,
+    // }), []);
     const csvConfig = useMemo(() => mkConfig({
-        fieldSeparator: ',',
-        decimalSeparator: '.',
-        useKeysAsHeaders: true,
-    }), []);
+  fieldSeparator: ',',
+  decimalSeparator: '.',
+  useKeysAsHeaders: true,
+  filename: `${category == 1 ? "Essentials" : "Non_Essentials"}_Products_Report`
+}), [category]);
 
     const handleExportRows = useCallback((rows, columns) => {
         const rowData = rows.map(row => {

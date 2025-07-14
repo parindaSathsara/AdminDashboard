@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
 import CIcon from '@coreui/icons-react'
 
-import { cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX, 
-  cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings, cilBarChart, 
-  cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper, 
-  cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact, 
-  cilBellExclamation, cilShieldAlt  } from '@coreui/icons'
+import {
+  cilSpeedometer, cilUser, cilAddressBook, cilUserPlus, cilGrain, cilUserX,
+  cilCart, cilGarage, cilBook, cilEnvelopeLetter, cilChatBubble, cilSettings, cilBarChart,
+  cilCommentSquare, cilAlbum, cilReportSlash, cilCloudDownload, cilCloudUpload, cilNewspaper,
+  cilVolumeLow, cilPuzzle, cilChart, cilChartLine, cibBuzzfeed, cilEnvelopeOpen, cilContact,
+  cilBellExclamation, cilShieldAlt
+} from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 
@@ -110,10 +112,15 @@ function getNavigationHook(permissions) {
           name: 'Vendors',
           to: '/vendors',
         },
+        // {
+        //   component: CNavItem,
+        //   name: 'Vendor Analytics',
+        //   to: '/vendors/categorize',
+        // },
         {
           component: CNavItem,
           name: 'Vendor Analytics',
-          to: '/vendors/categorize',
+          to: '/vendor-analytics',
         },
 
       ],
@@ -148,6 +155,12 @@ function getNavigationHook(permissions) {
       component: CNavItem,
       name: 'Sales Analytics',
       to: '/sales',
+      icon: <CIcon icon={cilChartLine} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavItem,
+      name: 'Promotions',
+      to: '/promotions',
       icon: <CIcon icon={cilChartLine} customClassName="nav-icon" />,
     },
     {
@@ -296,17 +309,22 @@ function getNavigationHook(permissions) {
       component: CNavGroup,
       name: 'Services',
       to: '/services',
-      icon: <CIcon icon={cilShieldAlt} customClassName="nav-icon" /> ,
+      icon: <CIcon icon={cilShieldAlt} customClassName="nav-icon" />,
       items: [
         {
           component: CNavItem,
-          name: 'Bridgify India',
+          name: 'Bridgify',
           to: '/services/bridgyfy',
         },
         {
           component: CNavItem,
           name: 'TBO',
           to: '/services/tbo',
+        },
+        {
+          component: CNavItem,
+          name: 'RateHawk',
+          to: '/services/ratehawk',
         }
       ],
     },

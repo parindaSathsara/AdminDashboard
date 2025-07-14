@@ -127,6 +127,8 @@ const Orders = () => {
 
 
     getAllDataUserWise().then(res => {
+      console.log(res, "All data user wise");
+
       setOrderData(res);
       setLoading(false);
     });
@@ -500,7 +502,12 @@ const Orders = () => {
             <Tabs defaultActiveKey="group" id="uncontrolled-tab-example" className="mt-4" style={{ fontSize: 16 }} >
               <Tab eventKey="group" title="Group Wise">
                 {/* <Scrollbar style={{ width: '100%', height: '40vh' }}> */}
-                <MaterialReactTable table={table} />
+                {/* <MaterialReactTable table={table} /> */}
+                {orderData.length > 0 ? (
+                  <MaterialReactTable table={table} />
+                ) : (
+                  <LoaderPanel message={"Loading order data..."} />
+                )}
                 {/* </Scrollbar> */}
 
               </Tab>
