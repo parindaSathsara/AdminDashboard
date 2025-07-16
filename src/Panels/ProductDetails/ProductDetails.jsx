@@ -631,7 +631,9 @@ function ProductDetails(props) {
             id: value.checkoutID,
             hotelName: value.hotelName,
             // Provider: value.Provider == "hotelAhs" ? "Aahaas" : "TBO",
-            Provider: value.Provider === "hotelAhs" ? "Aahaas" : value.Provider === "ratehawk" ? "RateHawk" : "TBO",
+            // Provider: value.Provider === "hotelAhs" ? "Aahaas" : value.Provider === "ratehawk" ? "RateHawk" : "TBO",
+            Provider: value.Provider === "hotelAhs" ? "Aahaas"  : value.Provider === "ratehawk" ? "RateHawk"  : value.Provider === "hotelTbo"  ? "TBO"  : " ",
+
            
             NoOfNights: value.NoOfNights,
             NoOfAdults: value.NoOfAdults,
