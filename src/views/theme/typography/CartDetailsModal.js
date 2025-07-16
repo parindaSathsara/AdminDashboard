@@ -1,7 +1,7 @@
 import axios from 'axios'
-import React, { useState } from 'react'
-import { Button, Modal, Form, Card, ListGroup, Badge, Alert, Spinner } from 'react-bootstrap'
-import { FaFilePdf, FaFileWord, FaShoppingCart, FaDownload } from 'react-icons/fa'
+import React, { useState, useMemo } from 'react'
+import { Button, Modal, Form, Card, ListGroup, Badge, Alert, Spinner, InputGroup } from 'react-bootstrap'
+import { FaFilePdf, FaFileWord, FaShoppingCart, FaDownload, FaSearch } from 'react-icons/fa'
 import { saveAs } from 'file-saver'
 
 const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartData }) => {
@@ -9,9 +9,20 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
   const [shippingCharges, setShippingCharges] = useState('')
   const [cartDiscount, setCartDiscount] = useState('')
   const [cartCurrency, setCartCurrency] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState({ pdf: false, word: false, quotation: false })
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  // Filter carts based on search term
+  const filteredCarts = useMemo(() => {
+  if (!cartData?.cart_titles) return [];
+  return cartData.cart_titles.filter(cart =>
+    cart.cart_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cart.cart_id.toString().includes(searchTerm)
+  );
+}, [cartData, searchTerm]);
+
 
   const handleCartSelection = (cart) => {
     if (selectedCarts.some((c) => c.cart_id === cart.cart_id)) {
@@ -43,212 +54,71 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
       return
     }
 
-    setLoading(true)
+    setLoading(prev => ({ ...prev, [type]: true }))
     setError(null)
     setSuccess(null)
 
     const payload = {
       cartIds: selectedCarts.map((cart) => cart.cart_id),
-      // cartIds: [675],
       shipping: shipping,
       price_discount: discount,
       currency: cartCurrency,
-      // document_type: type, // 'pdf' or 'word'
     }
-  if (type === 'word') {
-   axios
-        .post('getCartByCustomerId_word', payload, {
-          responseType: 'blob', 
-        })
-        .then((response) => {
-          
-          const contentType = response.headers['content-type']
 
-          if (contentType.includes('application/json')) {
-           
-            const reader = new FileReader()
-            reader.onload = () => {
-              try {
-                const jsonResponse = JSON.parse(reader.result)
-                // setError(jsonResponse.message || 'No cart data available for download')
-                setError('Please check the cart-The cart may be empty')
-              } catch (e) {
-                setError('Please check the cart-The cart may be empty')
-              }
-            }
-            reader.readAsText(response.data)
-          } else {
-            
-            const filename = response.headers['content-disposition']
-              ? response.headers['content-disposition'].split('filename=')[1]
-              : `cart_details.${type}`
+    let endpoint = ''
+    if (type === 'word') {
+      endpoint = 'getCartByCustomerId_word'
+    } else if (type === 'pdf') {
+      endpoint = 'getCartByCustomerId_pdf'
+    } else if (type === 'quotation') {
+      endpoint = 'summary-quatation'
+    }
 
-            saveAs(response.data, filename)
-            setSuccess(`File downloaded successfully!`)
-            resetModal()
-          }
-        })
-        .catch((error) => {
-          if (error.response && error.response.data instanceof Blob) {
-            // Handle JSON error responses sent as Blob
-            const reader = new FileReader()
-            reader.onload = () => {
-              try {
-                const errorResponse = JSON.parse(reader.result)
-                setError('Please check the cart-The cart may be empty')
-              } catch (e) {
-                setError('Please check the cart-The cart may be empty')
-              }
-            }
-            reader.readAsText(error.response.data)
-          } else {
-            // setError(error.message || 'Failed to download file')
-            setError('Please check the cart-The cart may be empty')
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-} else if (type === 'pdf') {
-      axios
-        .post('getCartByCustomerId_pdf', payload, {
-          responseType: 'blob', 
-        })
-        .then((response) => {
-    const contentType = response.headers['content-type'];
+    try {
+      const response = await axios.post(endpoint, payload, {
+        responseType: 'blob',
+      })
 
-    if (contentType.includes('application/json')) {
-      const reader = new FileReader();
-      reader.onload = () => {
+      const contentType = response.headers['content-type']
+
+      if (contentType.includes('application/json')) {
+        const text = await new Response(response.data).text()
         try {
-          const jsonResponse = JSON.parse(reader.result);
-          setError('Please check the cart-The cart may be empty');
+          const jsonResponse = JSON.parse(text)
+          throw new Error(jsonResponse.message || 'Please check the cart - The cart may be empty')
         } catch (e) {
-          setError('Please check the cart-The cart may be empty');
-        }
-      };
-      reader.readAsText(response.data);
-    } else {
-      // ✅ Extract filename properly
-      let filename = 'cart_details.pdf';
-      console.log(response.headers.get(),"headersssssxxxxx");
-      const contentDisposition = response.headers['content-disposition'];
-      
-      console.log('Content-Disposition:', contentDisposition);
-      
-
-      if (contentDisposition) {
-        const match = contentDisposition.match(/filename[^;=\n]*=["']?([^"';\n]+)["']?/);
-        if (match && match[1]) {
-          filename = decodeURIComponent(match[1]);
+          throw new Error('Please check the cart - The cart may be empty')
         }
       }
 
-      saveAs(response.data, filename);
-      setSuccess(`File downloaded successfully!`);
-      resetModal();
+      let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
+      const contentDisposition = response.headers['content-disposition']
+      
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename[^;=\n]*=["']?([^"';\n]+)["']?/i)
+        if (match && match[1]) {
+          filename = decodeURIComponent(match[1])
+        }
+      }
+
+      saveAs(response.data, filename)
+      setSuccess(`File downloaded successfully!`)
+      resetModal()
+    } catch (error) {
+      if (error.response && error.response.data instanceof Blob) {
+        const text = await new Response(error.response.data).text()
+        try {
+          const errorResponse = JSON.parse(text)
+          setError(errorResponse.message || 'Please check the cart - The cart may be empty')
+        } catch (e) {
+          setError('Please check the cart - The cart may be empty')
+        }
+      } else {
+        setError(error.message || 'Please check the cart - The cart may be empty')
+      }
+    } finally {
+      setLoading(prev => ({ ...prev, [type]: false }))
     }
-  })
-        .catch((error) => {
-          if (error.response && error.response.data instanceof Blob) {
-            // Handle JSON error responses sent as Blob
-            const reader = new FileReader()
-            reader.onload = () => {
-              try {
-                const errorResponse = JSON.parse(reader.result)
-                // setError(errorResponse.message || 'Please check the cart-The cart may be empty')
-                setError('Please check the cart-The cart may be empty')
-              } catch (e) {
-                setError('Please check the cart-The cart may be empty')
-              }
-            }
-            reader.readAsText(error.response.data)
-          } else {
-            // setError(error.message || 'Failed to download file')
-            setError('Please check the cart-The cart may be empty')
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-   else if (type === 'quotation') {
-    setLoading(true);
-    axios.post('summary-quatation', payload, {
-        responseType: 'blob',
-    })
-    .then((response) => {
-      console.log(response, "Response from quotation API");
-        // First check if this is actually a PDF
-        const contentType = response.headers['content-type'];
-        
-        if (contentType.includes('application/json')) {
-            // Handle JSON error response
-            return response.data.text().then(text => {
-                try {
-                    const json = JSON.parse(text);
-                    throw new Error(json.message || 'Error generating quotation');
-                } catch {
-                    throw new Error('Invalid response format');
-                }
-            });
-        }
-
-        if (!contentType.includes('application/pdf')) {
-            throw new Error('Invalid PDF content type');
-        }
-
-        // Extract filename
-        let filename = 'quotation_summary.pdf';
-        const contentDisposition = response.headers['content-disposition'];
-        
-        if (contentDisposition) {
-            const filenameMatch = contentDisposition.match(/filename\*?=['"]?(?:UTF-\d['"]*)?([^;\r\n"']*)['"]?;?/i);
-            if (filenameMatch && filenameMatch[1]) {
-                filename = decodeURIComponent(filenameMatch[1]);
-            }
-        }
-
-        // Create blob URL
-        const blob = new Blob([response.data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        
-        // Create download link
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        
-        // Cleanup
-        setTimeout(() => {
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        }, 100);
-
-        setSuccess(`Quotation downloaded successfully!`);
-        resetModal();
-    })
-    .catch((error) => {
-        if (error.response && error.response.data instanceof Blob) {
-            error.response.data.text().then(text => {
-                try {
-                    const json = JSON.parse(text);
-                    // setError(json.message || 'Failed to generate quotation');
-                    setError('Please check the cart-The cart may be empty');
-                } catch {
-                    setError('Please check the cart-The cart may be empty');
-                }
-            });
-        } else {
-            // setError(error.message || 'Failed to download quotation');
-            setError('Please check the cart-The cart may be empty');
-        }
-    })
-    .finally(() => {
-        setLoading(false);
-    });
-}
   }
 
   const resetModal = () => {
@@ -258,7 +128,8 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
     setCartCurrency('')
     setError(null)
     setSuccess(null)
-    setLoading(false)
+    setLoading({ pdf: false, word: false, quotation: false })
+    setSearchTerm('')
   }
 
   const handleClose = () => {
@@ -288,16 +159,30 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           </Alert>
         )}
 
-        {cartData?.cart_titles?.length > 0 ? (
+        {filteredCarts?.length > 0 ? (
           <>
             <Card className="mb-4">
               <Card.Header className="bg-light">
-                <h5 className="mb-0">Available Carts</h5>
-                <small className="text-muted">Select one or more carts to process</small>
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 className="mb-0">Available Carts</h5>
+                    <small className="text-muted">Select one or more carts to process</small>
+                  </div>
+                  <InputGroup style={{ width: '300px' }}>
+                    <Form.Control
+                      placeholder="Search carts..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <InputGroup.Text>
+                      <FaSearch />
+                    </InputGroup.Text>
+                  </InputGroup>
+                </div>
               </Card.Header>
               <Card.Body style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 <ListGroup variant="flush">
-                  {cartData.cart_titles.map((cart) => (
+                  {filteredCarts.map((cart) => (
                     <ListGroup.Item
                       key={cart.cart_id}
                       action
@@ -355,6 +240,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
                     <option value="USD">USD</option>
                     <option value="SGD">SGD</option>
                     <option value="LKR">LKR</option>
+                    <option value="INR">INR</option>
                   </Form.Control>
                 </Form.Group>
               </div>
@@ -388,7 +274,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           <Button variant="outline-danger" className="me-2" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="outline-secondary" onClick={resetModal} disabled={loading}>
+          <Button variant="outline-secondary" onClick={resetModal} disabled={Object.values(loading).some(Boolean)}>
             Clear Selection
           </Button>
         </div>
@@ -397,9 +283,9 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             variant="success"
             className="me-2"
             onClick={() => handleDownload('pdf')}
-            disabled={loading || selectedCarts.length === 0 || !cartCurrency}
+            disabled={loading.pdf || loading.word || loading.quotation || selectedCarts.length === 0 || !cartCurrency}
           >
-            {loading ? (
+            {loading.pdf ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
@@ -411,9 +297,9 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
             variant="primary"
             className="me-2"
             onClick={() => handleDownload('word')}
-            disabled={loading || selectedCarts.length === 0 || !cartCurrency}
+            disabled={loading.word || loading.pdf || loading.quotation || selectedCarts.length === 0 || !cartCurrency}
           >
-            {loading ? (
+            {loading.word ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
@@ -424,13 +310,13 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           <Button
             variant="primary"
             onClick={() => handleDownload('quotation')}
-            disabled={loading || selectedCarts.length === 0 || !cartCurrency}
+            disabled={loading.quotation || loading.pdf || loading.word || selectedCarts.length === 0 || !cartCurrency}
           >
-            {loading ? (
+            {loading.quotation ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
-                <FaFileWord className="me-1" /> Quotation PDF(New)
+                <FaFilePdf className="me-1" /> Quotation PDF(New)
               </>
             )}
           </Button>
