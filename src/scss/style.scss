@@ -22,6 +22,10 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+.modal{
+    z-index: 1400 !important;
+}
+
 
 .MuiPaper-elevation2 {
     box-shadow: none !important;
