@@ -272,6 +272,12 @@ export default function HotelsOrderView(props) {
           setBookingData(response?.data?.data?.BookingDetail)
           console.log(response?.data?.data?.BookingDetail, 'Booking Data')
         }
+      }else if (data?.Provider == "hotelAhs" || data?.Provider === "ratehawk") {
+        if (response?.data?.data?.decoded_data) {
+          console.log(response?.data?.data?.decoded_data, "Booking Data");
+          setBookingData(response?.data?.data?.decoded_data);
+          console.log(response?.data?.data?.decoded_data, "Booking Data");
+        }
       }
 
       const checkInDate = new Date(bookingData.CheckIn)
