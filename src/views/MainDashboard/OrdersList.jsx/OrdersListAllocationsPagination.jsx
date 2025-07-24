@@ -37,6 +37,9 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
     const [moreOrderDetails, setMoreOrderDetails] = useState("");
     const [mainDataSet, setMainDataSet] = useState([]);
     const [hotelDataSet, setHotelDataSet] = useState([]);
+
+
+    console.log(hotelDataSet,"HotelsssssssssssssssssssssXXXXXXXXXXXXXXXXXX")
     const [statusCounts, setStatusCounts] = useState({
         All: 0,
         CustomerOrdered: 0,
@@ -114,7 +117,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                     });
                     
                     if (response.data.status === 200) {
-                        counts[status] = response.data.pagination.total;
+                        counts[status] = response.data?.pagination?.total || 10;
                     }
                 } catch (err) {
                     console.error(`Error fetching count for ${status}:`, err);

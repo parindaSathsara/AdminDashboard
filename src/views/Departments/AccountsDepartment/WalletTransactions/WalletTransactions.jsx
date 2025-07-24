@@ -275,14 +275,14 @@ const WalletTransactions = () => {
 
   const handleDownloadReceipt = (receiptPath) => {
     if (receiptPath) {
-      const receiptUrl = `${axios.defaults.imageUrl}/${receiptPath}`
+      const receiptUrl = `${receiptPath}`
       window.open(receiptUrl, '_blank')
     }
   }
 
   const getReceiptUrl = (receiptPath) => {
     if (!receiptPath) return null
-    return `${axios.defaults.imageUrl}/${receiptPath}`
+    return `${receiptPath}`
   }
 
   const isImageFile = (filename) => {

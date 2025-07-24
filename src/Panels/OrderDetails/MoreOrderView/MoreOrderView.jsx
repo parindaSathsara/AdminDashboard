@@ -110,6 +110,8 @@ export default function MoreOrderView(props) {
                 className="mt-4"
               >
 
+                {console.log("Test Dataaaa hotelsssssssssss")}
+
                 <Tab eventKey="basicdetails" title="Basic Info">
                   <>
                     {category == 3 ?
@@ -133,6 +135,7 @@ export default function MoreOrderView(props) {
 
                     {category == 4 ?
                       <HotelsOrderView productData={productDataSet}></HotelsOrderView>
+                      // null
                       :
                       null
                     }
