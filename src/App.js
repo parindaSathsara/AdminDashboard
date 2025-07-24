@@ -48,10 +48,11 @@ axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/';
 
 
 
-// axios.defaults.imageUrl = 'http://192.16.26.54:8000/';
-// axios.defaults.baseURL = 'http://192.16.26.54:8000/api';
-// axios.defaults.data = 'http://192.16.26.54:8000';
-// axios.defaults.url = 'http://192.16.26.54:8000/api';
+// axios.defaults.imageUrl = 'http://192.16.26.74:8000/';
+// axios.defaults.baseURL = 'http://192.16.26.74:8000/api';
+// axios.defaults.data = 'http://192.16.26.74:8000';
+// axios.defaults.url = 'http://192.16.26.74:8000/api';
+// axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
 
 
 // axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
