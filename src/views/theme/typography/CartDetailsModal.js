@@ -126,8 +126,8 @@ if (type === 'quotation_pdf' || type === 'quotation_word') {
 const contentDisposition = response.headers['content-disposition'] || `attachment; filename="${filename}"`;
 
 
-      let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
-      const contentDisposition = response.headers['content-disposition']
+      // let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
+      // const contentDisposition = response.headers['content-disposition']
       
       if (contentDisposition) {
         const match = contentDisposition.match(/filename[^;=\n]*=["']?([^"';\n]+)["']?/i)
