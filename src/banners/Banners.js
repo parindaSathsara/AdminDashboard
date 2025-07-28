@@ -51,7 +51,7 @@ const Banners = () => {
 
   const fetchBanners = async () => {
     try {
-      const response = await axios.get('/api/banners');
+      const response = await axios.get('/banners');
       setBanners(response.data);
     } catch (error) {
       console.error('Error fetching banners:', error);
@@ -70,9 +70,9 @@ const Banners = () => {
     e.preventDefault();
     try {
       if (isEdit) {
-        await axios.put(`/api/banners/${currentBanner.id}`, currentBanner);
+        await axios.put(`/banners/${currentBanner.id}`, currentBanner);
       } else {
-        await axios.post('/api/banners', currentBanner);
+        await axios.post('/banners', currentBanner);
       }
       setModalVisible(false);
       fetchBanners();
@@ -110,7 +110,7 @@ const Banners = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this banner?')) {
       try {
-        await axios.delete(`/api/banners/${id}`);
+        await axios.delete(`/banners/${id}`);
         fetchBanners();
       } catch (error) {
         console.error('Error deleting banner:', error);
