@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState, useMemo, useEffect } from 'react'
+
 import { Button, Modal, Form, Card, ListGroup, Badge, Alert, Spinner, InputGroup } from 'react-bootstrap'
 import { FaFilePdf, FaFileWord, FaShoppingCart, FaDownload, FaSearch } from 'react-icons/fa'
 import { saveAs } from 'file-saver'
@@ -26,6 +27,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
         console.error("Failed to fetch currencies:", err);
       });
   }, []);
+
 
   // Filter carts based on search term
   const filteredCarts = useMemo(() => {
@@ -96,6 +98,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
         responseType: 'blob',
       })
 
+
       const contentType = response.headers['content-type']
 
       if (contentType.includes('application/json')) {
@@ -122,6 +125,10 @@ if (type === 'quotation_pdf' || type === 'quotation_word') {
 
 const contentDisposition = response.headers['content-disposition'] || `attachment; filename="${filename}"`;
 
+
+      let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
+      const contentDisposition = response.headers['content-disposition']
+      
       if (contentDisposition) {
         const match = contentDisposition.match(/filename[^;=\n]*=["']?([^"';\n]+)["']?/i)
         if (match && match[1]) {
@@ -281,6 +288,7 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
         <option key={code} value={code}>{code}</option>
       ))}
     </Form.Control>
+
                 </Form.Group>
               </div>
             </div>
@@ -363,6 +371,7 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
           <Button
             variant="secondary"
             onClick={() => handleDownload('quotation_word')}
+
             disabled={loading.quotation || loading.pdf || loading.word || selectedCarts.length === 0 || !cartCurrency}
           >
             {loading.quotation ? (
@@ -370,6 +379,7 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
             ) : (
               <>
                 <FaFilePdf className="me-1" /> Quotation Word
+
               </>
             )}
           </Button>
