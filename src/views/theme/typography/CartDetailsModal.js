@@ -1,5 +1,6 @@
 import axios from 'axios'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
+
 import { Button, Modal, Form, Card, ListGroup, Badge, Alert, Spinner, InputGroup } from 'react-bootstrap'
 import { FaFilePdf, FaFileWord, FaShoppingCart, FaDownload, FaSearch } from 'react-icons/fa'
 import { saveAs } from 'file-saver'
@@ -13,6 +14,20 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+
+  useEffect(() => {
+    axios.get('/get-currency')
+      .then(res => {
+        if (res.data.status === 'success') {
+          setCurrencyOptions(res.data.codes);
+        }
+      })
+      .catch(err => {
+        console.error("Failed to fetch currencies:", err);
+      });
+  }, []);
+
 
   // Filter carts based on search term
   const filteredCarts = useMemo(() => {
@@ -70,14 +85,19 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
       endpoint = 'getCartByCustomerId_word'
     } else if (type === 'pdf') {
       endpoint = 'getCartByCustomerId_pdf'
-    } else if (type === 'quotation') {
-      endpoint = 'summary-quatation'
+    } else if (type === 'quotation_pdf') {
+      endpoint = 'summary-quatation/pdf'
     }
+    else if (type === 'quotation_word') {
+      endpoint = 'summary-quatation/word'
+    }
+
 
     try {
       const response = await axios.post(endpoint, payload, {
         responseType: 'blob',
       })
+
 
       const contentType = response.headers['content-type']
 
@@ -90,6 +110,21 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           throw new Error('Please check the cart - The cart may be empty')
         }
       }
+
+    
+      // let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
+      // const contentDisposition = response.headers['content-disposition']
+      
+      let filename = ''; // Declare filename outside
+
+if (type === 'quotation_pdf' || type === 'quotation_word') {
+  filename = `quotation_details.${type === 'quotation_pdf' ? 'pdf' : 'docx'}`;
+} else {
+  filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`;
+}
+
+const contentDisposition = response.headers['content-disposition'] || `attachment; filename="${filename}"`;
+
 
       let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
       const contentDisposition = response.headers['content-disposition']
@@ -230,7 +265,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
                   <Form.Label>
                     Currency <span className="text-danger">*</span>
                   </Form.Label>
-                  <Form.Control
+                  {/* <Form.Control
                     as="select"
                     value={cartCurrency}
                     onChange={(e) => setCartCurrency(e.target.value)}
@@ -241,7 +276,19 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
                     <option value="SGD">SGD</option>
                     <option value="LKR">LKR</option>
                     <option value="INR">INR</option>
-                  </Form.Control>
+                  </Form.Control> */}
+                  <Form.Control
+      as="select"
+      value={cartCurrency}
+      onChange={(e) => setCartCurrency(e.target.value)}
+      required
+    >
+      <option value="">Select Currency</option>
+      {currencyOptions.map(code => (
+        <option key={code} value={code}>{code}</option>
+      ))}
+    </Form.Control>
+
                 </Form.Group>
               </div>
             </div>
@@ -309,14 +356,30 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
           </Button>
           <Button
             variant="primary"
-            onClick={() => handleDownload('quotation')}
+            className="me-2"
+            onClick={() => handleDownload('quotation_pdf')}
             disabled={loading.quotation || loading.pdf || loading.word || selectedCarts.length === 0 || !cartCurrency}
           >
             {loading.quotation ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
-                <FaFilePdf className="me-1" /> Quotation PDF(New)
+                <FaFilePdf className="me-1" /> Quotation PDF
+              </>
+            )}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleDownload('quotation_word')}
+
+            disabled={loading.quotation || loading.pdf || loading.word || selectedCarts.length === 0 || !cartCurrency}
+          >
+            {loading.quotation ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              <>
+                <FaFilePdf className="me-1" /> Quotation Word
+
               </>
             )}
           </Button>

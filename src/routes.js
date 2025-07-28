@@ -24,15 +24,19 @@ import KpiDashboard from './views/KPIDashboard/KpiDashboard'
 import GlobalTarget from './views/KPIDashboard/GlobleTarget'
 import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
 
-
-
 // const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
 const Sales = React.lazy(() => import('./views/Sales/Sales'))
 
-const AccountsRefunds = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsRefund'))
-const AccountsDepartment = React.lazy(() => import('./views/Departments/AccountsDepartment/AccountsDepartment.jsx'))
-const DeliveryDepartment = React.lazy(() => import('./views/Departments/DeliveryDepartment/DeliveryDepartment.jsx'))
+const AccountsRefunds = React.lazy(() =>
+  import('./views/Departments/AccountsDepartment/AccountsRefund'),
+)
+const AccountsDepartment = React.lazy(() =>
+  import('./views/Departments/AccountsDepartment/AccountsDepartment.jsx'),
+)
+const DeliveryDepartment = React.lazy(() =>
+  import('./views/Departments/DeliveryDepartment/DeliveryDepartment.jsx'),
+)
 
 const ChatsHome = React.lazy(() => import('./views/Chats/Chatshome'))
 const ChatsIndex = React.lazy(() => import('./views/_Chats/ChatsIndex'))
@@ -89,7 +93,7 @@ import VIewBlog from './Panels/BlogWriting/VIewBlog'
 
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
-import AccessManagement from './views/ManageAccess/AccessManagement';
+import AccessManagement from './views/ManageAccess/AccessManagement'
 import Bridgify from './Panels/API_details/Bridgify'
 import TBO from './Panels/API_details/TBO'
 import UserCountStats from './Panels/UserCount/UserCountStats'
@@ -97,6 +101,7 @@ import VendorCategorize from './views/VendorCategorize/VendorCategorize'
 import Promotions from './views/Promotions/Promotions'
 import VendorStats from './views/VendorCategorize/VendorStats'
 import RateHawk from './Panels/API_details/RateHawk'
+import WalletTransactions from './views/Departments/AccountsDepartment/WalletTransactions/WalletTransactions'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -119,6 +124,7 @@ const routes = [
   // { path: '/sales', name: 'Sales', element: Sales, exact: true },
   { path: '/accounts/customerorders', name: 'Customer orders', element: AccountsDepartment },
   { path: '/accounts/refundRequests', name: 'Refunds', element: AccountsRefunds },
+  { path: '/accounts/walletrequests', name: 'Wallet Transactions', element: WalletTransactions },
 
   { path: '/products', name: 'Products', element: ProductList },
   { path: '/products/analytics', name: 'Product Analytics', element: ProductAnalytics },
@@ -169,13 +175,8 @@ const routes = [
   { path: '/vendors/categorize', name: 'Vendor Categorize', element: VendorCategorize },
   { path: '/vendor-analytics', name: 'Vendor Analytics', element: VendorStats },
 
-
   // prmotions
   { path: '/promotions', name: 'Promotions', element: Promotions },
-
-
-
-
 ]
 
 export default routes

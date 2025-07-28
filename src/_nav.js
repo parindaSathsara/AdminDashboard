@@ -198,7 +198,13 @@ function getNavigationHook(permissions) {
           component: CNavItem,
           name: 'Refund Requests',
           to: '/accounts/refundRequests',
+        },
+        {
+          component: CNavItem,
+          name: 'Wallet Transactions',
+          to: '/accounts/walletrequests',
         }
+
       ],
     },
     // {
