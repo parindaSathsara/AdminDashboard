@@ -102,6 +102,7 @@ import Promotions from './views/Promotions/Promotions'
 import VendorStats from './views/VendorCategorize/VendorStats'
 import RateHawk from './Panels/API_details/RateHawk'
 import WalletTransactions from './views/Departments/AccountsDepartment/WalletTransactions/WalletTransactions'
+import Banners from './banners/Banners'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -177,6 +178,7 @@ const routes = [
 
   // prmotions
   { path: '/promotions', name: 'Promotions', element: Promotions },
+  { path: '/banners', exact: true, name: 'Banners', element: Banners },
 ]
 
 export default routes
