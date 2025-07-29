@@ -23,3 +23,7 @@
   margin-left: 10px !important;            /* Optional: adjust space when on the right */
   width: 100px !important;            /* Optional: adjust width */
 }
+
+.popover{
+  z-index: 1600 !important;
+}
