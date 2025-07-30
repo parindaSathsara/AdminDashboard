@@ -12,7 +12,7 @@
     width: '100%' !important;
   } */
 .swal2-container {
-  z-index: 1500 !important;
+  z-index: 100000 !important;
 }
 
 .MuiTooltip-popperc {
