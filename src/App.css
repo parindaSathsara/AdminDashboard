@@ -27,3 +27,6 @@
 .popover{
   z-index: 1600 !important;
 }
+.MuiPopper-root{
+  display: none !important;
+}
