@@ -312,6 +312,12 @@ function getNavigationHook(permissions) {
       hidden: !permissions.includes("manage user access"),
     },
     {
+  component: CNavItem,
+  name: 'Banners',
+  to: '/banners',
+  icon: <CIcon icon={cilAlbum} customClassName="nav-icon" />,
+},
+    {
       component: CNavGroup,
       name: 'Services',
       to: '/services',

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Confetti from 'react-confetti';
 import { toast, ToastContainer } from 'react-toastify';
-import { CIcon } from '@coreui/icons-react';
+import  CIcon  from '@coreui/icons-react';
 import { cilUser, cilChart, cilArrowCircleTop, cilClock } from '@coreui/icons';
 import 'react-toastify/dist/ReactToastify.css';
 import BeepSound from '../../assets/beep-sound.mp3';

@@ -458,20 +458,54 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
     }
   }
 
-  const handleOrderCancellation = async (data) => {
-    cancellationData['reason'] = data;
+  const handleOrderCancellation = async (reason) => {
+  try {
+    // Show loading indicator
+    Swal.fire({
+      title: 'Cancelling Order',
+      html: 'Please wait...',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    // Prepare cancellation data
+    const data = {
+      reason: reason,
+      id: cancellationData.id,
+      value: cancellationData.value
+    };
+
+    // Call cancellation API
+    const response = await candelOrder(data);
     
-    try {
-      Swal.showLoading();
-      await candelOrder(cancellationData);
-    } catch (error) {
-      console.error("Order cancellation failed:", error);
-    } finally {
-      Swal.hideLoading();
-      props?.reload();
-      setSelectedStatusCheckout('Cancel');
-    }
+    // Close loading indicator
+    Swal.close();
+    
+    // Show success message
+    Swal.fire({
+      title: 'Success!',
+      text: 'Order has been cancelled',
+      icon: 'success',
+      confirmButtonColor: '#3085d6'
+    });
+    
+    // Reload data
+    props?.reload();
+  } catch (error) {
+    // Handle API error
+    Swal.fire({
+      title: 'Cancellation Failed',
+      text: error.response?.data?.message || 
+            error.message || 
+            'Failed to cancel order',
+      icon: 'error'
+    });
+  } finally {
+    // Always close the modal
+    setCancellationReasonModal(false);
   }
+};
 
   const [clickedStatus, setClickedStatus] = useState('')
 

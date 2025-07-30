@@ -403,23 +403,32 @@ const OrdersNew = () => {
       </CRow>
 
       {selectedOrderDetails && (
-        <DetailExpander
-          show={detailExpander}
-          onHide={() => setDetailExpander(false)}
-          orderid={selectedOrderDetails.OrderId}
-          component={
-            <OrderDetails
-              pageType="orders"
-              dataset={selectedOrderDetails}
-              orderid={selectedOrderDetails.OrderId}
-              orderData={selectedOrderDetails}
-              hideStatus={false}
-              updatedData={() => console.log("Updated")}
-            />
-          }
-          style={isTableFullscreen ? { zIndex: 100000 } : {}}
-        />
-      )}
+
+  <DetailExpander
+    show={detailExpander}
+    onHide={() => setDetailExpander(false)}
+    orderid={selectedOrderDetails.OrderId}
+    component={
+      <OrderDetails 
+        pageType="orders" 
+        dataset={selectedOrderDetails} 
+        orderid={selectedOrderDetails.OrderId} 
+        orderData={selectedOrderDetails} 
+        hideStatus={false} 
+        updatedData={() => console.log("Updated")} 
+      />
+    }
+    style={isTableFullscreen ? { 
+      zIndex: 100000, // Higher than fullscreen z-index
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    } : {}}
+  /> 
+)}
+
     </>
   );
 };
