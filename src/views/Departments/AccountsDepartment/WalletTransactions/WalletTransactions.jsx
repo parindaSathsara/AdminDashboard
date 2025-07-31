@@ -89,6 +89,7 @@ import Swal from 'sweetalert2'
 import LoadingBar from 'react-top-loading-bar'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 import axios from 'axios'
+import moment from 'moment'
 
 const WalletTransactions = () => {
   const { userData } = useContext(UserLoginContext)
@@ -196,23 +197,23 @@ const WalletTransactions = () => {
   const loadTopUpRequests = async () => {
     try {
       const params = new URLSearchParams()
-      
+
       // Add pagination params
       params.append('page', currentPage)
       params.append('per_page', perPage)
-      
+
       // Add filter params
       Object.keys(filters).forEach((key) => {
         if (filters[key]) params.append(key, filters[key])
       })
 
-      console.log(`${API_BASE}/admin/wallet/topup-requests?${params}`, "Request params")
+      console.log(`${API_BASE}/admin/wallet/topup-requests?${params}`, 'Request params')
 
       const response = await axios.get(`${API_BASE}/admin/wallet/topup-requests?${params}`)
       if (response.data.success) {
         console.log(response?.data?.data, 'Response data')
         const paginationData = response.data.data
-        
+
         setTopUpRequests(paginationData.data || [])
         setTotalRequests(paginationData.total || 0)
         setCurrentPage(paginationData.current_page || 1)
@@ -233,7 +234,7 @@ const WalletTransactions = () => {
       const response = await axios.get(`${API_BASE}/admin/wallet/wallets?${params}`)
       if (response.data.success) {
         const paginationData = response.data.data
-        
+
         setWallets(paginationData.data || [])
         setTotalWallets(paginationData.total || 0)
         setCurrentWalletPage(paginationData.current_page || 1)
@@ -378,10 +379,57 @@ const WalletTransactions = () => {
     }
   }
 
-  const handleDownloadReceipt = (receiptPath) => {
-    if (receiptPath) {
-      const receiptUrl = `${receiptPath}`
-      window.open(receiptUrl, '_blank')
+  const handleDownloadReceipt = async (requestId, filename = 'receipt') => {
+    if (!requestId) return
+
+    setProgress(30) // Show loading
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `/admin/wallet/topup-requests/${requestId}/download-receipt`,
+        responseType: 'blob',
+      })
+
+      // Create blob URL from response
+      const blob = new Blob([response.data])
+      const url = window.URL.createObjectURL(blob)
+
+      // Get filename from response headers or use default
+      const contentDisposition = response.headers['content-disposition']
+      let downloadFilename = filename
+
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/)
+        if (filenameMatch) {
+          downloadFilename = filenameMatch[1]
+        }
+      }
+
+      // Create download link and trigger download
+      const link = document.createElement('a')
+      link.href = url
+      link.download = downloadFilename
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      // Clean up the blob URL
+      window.URL.revokeObjectURL(url)
+
+      showSuccessAlert('Receipt downloaded successfully')
+    } catch (error) {
+      console.error('Download failed:', error)
+
+      if (error.response?.status === 404) {
+        showErrorAlert('Receipt file not found')
+      } else if (error.response?.status === 403) {
+        showErrorAlert('You do not have permission to download this file')
+      } else {
+        showErrorAlert('Failed to download receipt. Please try again.')
+      }
+    } finally {
+      setProgress(100)
     }
   }
 
@@ -508,20 +556,20 @@ const WalletTransactions = () => {
   )
 
   // Custom Pagination Component
-  const CustomPagination = ({ 
-    currentPage, 
-    totalPages, 
-    totalItems, 
-    perPage, 
-    onPageChange, 
-    onPerPageChange 
+  const CustomPagination = ({
+    currentPage,
+    totalPages,
+    totalItems,
+    perPage,
+    onPageChange,
+    onPerPageChange,
   }) => {
     const startItem = (currentPage - 1) * perPage + 1
     const endItem = Math.min(currentPage * perPage, totalItems)
 
     const getVisiblePages = () => {
       if (totalPages <= 1) return []
-      
+
       const delta = 2
       const range = []
       const rangeWithDots = []
@@ -556,9 +604,7 @@ const WalletTransactions = () => {
       }
 
       // Remove duplicates
-      return rangeWithDots.filter((item, index, arr) => 
-        index === 0 || arr[index - 1] !== item
-      )
+      return rangeWithDots.filter((item, index, arr) => index === 0 || arr[index - 1] !== item)
     }
 
     const paginationItemStyle = {
@@ -572,21 +618,21 @@ const WalletTransactions = () => {
       color: '#6c757d',
       textDecoration: 'none',
       fontSize: '14px',
-      fontWeight: '500'
+      fontWeight: '500',
     }
 
     const activePaginationItemStyle = {
       ...paginationItemStyle,
       backgroundColor: '#0d6efd',
       borderColor: '#0d6efd',
-      color: '#fff'
+      color: '#fff',
     }
 
     const disabledPaginationItemStyle = {
       ...paginationItemStyle,
       cursor: 'not-allowed',
       opacity: '0.6',
-      backgroundColor: '#f8f9fa'
+      backgroundColor: '#f8f9fa',
     }
 
     return (
@@ -637,13 +683,15 @@ const WalletTransactions = () => {
               <div
                 key={`page-${index}-${page}`}
                 style={
-                  page === '...' 
+                  page === '...'
                     ? disabledPaginationItemStyle
-                    : page === currentPage 
-                    ? activePaginationItemStyle 
+                    : page === currentPage
+                    ? activePaginationItemStyle
                     : paginationItemStyle
                 }
-                onClick={() => typeof page === 'number' && page !== currentPage && onPageChange(page)}
+                onClick={() =>
+                  typeof page === 'number' && page !== currentPage && onPageChange(page)
+                }
                 className="me-1"
               >
                 {page}
@@ -897,7 +945,9 @@ const WalletTransactions = () => {
                 <CFormSelect
                   size="sm"
                   value={filters.payment_method}
-                  onChange={(e) => handleFilterChange({ ...filters, payment_method: e.target.value })}
+                  onChange={(e) =>
+                    handleFilterChange({ ...filters, payment_method: e.target.value })
+                  }
                 >
                   <option value="">Payment Method</option>
                   <option value="bank_transfer">Bank Transfer</option>
@@ -920,7 +970,11 @@ const WalletTransactions = () => {
               </CCol>
               <CCol md={2}>
                 <CButtonGroup size="sm">
-                  <CButton color="info" variant="ghost" onClick={() => activeTab === 'requests' ? loadTopUpRequests() : loadWallets()}>
+                  <CButton
+                    color="info"
+                    variant="ghost"
+                    onClick={() => (activeTab === 'requests' ? loadTopUpRequests() : loadWallets())}
+                  >
                     <ArrowClockwise size={14} />
                   </CButton>
                   <CButton color="success" variant="ghost" onClick={handleExport}>
@@ -1037,6 +1091,26 @@ const WalletTransactions = () => {
                 <small className="text-muted">
                   Submitted: {new Date(requestDetails.submitted_at).toLocaleString()}
                 </small>
+
+                <br></br>
+
+                {requestDetails.status == 'cancelled' ? (
+                  <small className="text-muted">
+                    Cancelled at: {new Date(requestDetails.cancelled_at).toLocaleString()}
+                  </small>
+                ) : null}
+
+                {requestDetails.status == 'rejected' ? (
+                  <small className="text-muted">
+                    Rejected at:{' '}
+                    {(() => {
+                      const gmtDate = new Date(requestDetails.verified_at)
+                      // Add 5 hours and 30 minutes (5.5 * 60 * 60 * 1000 milliseconds)
+                      const istDate = new Date(gmtDate.getTime() + 5.5 * 60 * 60 * 1000)
+                      return istDate.toLocaleString('en-US')
+                    })()}{' '}
+                  </small>
+                ) : null}
               </div>
 
               {/* Customer Info */}
@@ -1135,7 +1209,10 @@ const WalletTransactions = () => {
                         color="primary"
                         variant="ghost"
                         onClick={() =>
-                          window.open(getReceiptUrl(requestDetails.payment_slip.path), '_blank')
+                          handleDownloadReceipt(
+                            requestDetails?.id,
+                            requestDetails?.payment_slip?.original_name,
+                          )
                         }
                       >
                         <CloudDownload size={14} className="me-1" />
@@ -1476,7 +1553,9 @@ const WalletTransactions = () => {
           <CButton
             color="primary"
             size="sm"
-            onClick={() => window.open(getReceiptUrl(requestDetails?.payment_slip?.path), '_blank')}
+            onClick={() =>
+              handleDownloadReceipt(requestDetails?.id, requestDetails?.payment_slip?.original_name)
+            }
           >
             <CloudDownload size={14} className="me-1" />
             Download
