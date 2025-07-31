@@ -63,7 +63,7 @@ const OrdersNew = () => {
           search
         }
       });
-      
+
       if (response.data.success) {
         setOrderData(response.data.data);
         setPagination({
@@ -116,9 +116,9 @@ const OrdersNew = () => {
     { accessorKey: 'OrderId', header: 'Order ID' },
     { accessorKey: 'checkout_date', header: 'Booking Date' },
     {
-      accessorKey: 'refundableAmount', 
-      header: 'Refunding Amount', 
-      align: 'left', 
+      accessorKey: 'refundableAmount',
+      header: 'Refunding Amount',
+      align: 'left',
       Cell: ({ cell }) => {
         if (cell?.getValue() > 0) {
           console.log(cell, "Refundable Amount");
@@ -133,11 +133,11 @@ const OrdersNew = () => {
       }
     },
     { accessorKey: 'min_service_date', header: 'Service Date' },
-    { 
-      accessorKey: 'payment_type', 
+    {
+      accessorKey: 'payment_type',
       header: 'Payment Type',
       Cell: ({ cell }) => (
-        <span style={{ 
+        <span style={{
           color: cell.getValue() === 'paid' ? 'green' : 'orange',
           fontWeight: 'bold'
         }}>
@@ -145,42 +145,42 @@ const OrdersNew = () => {
         </span>
       )
     },
-    { 
-      accessorKey: 'total_amount', 
+    {
+      accessorKey: 'total_amount',
       header: 'Total Amount',
       Cell: ({ row }) => (
         <span>
           {CurrencyConverter(
-            row.original.ItemCurrency, 
-            row.original.total_amount, 
+            row.original.ItemCurrency,
+            row.original.total_amount,
             currencyData
           )}
         </span>
       )
     },
-    { 
-      accessorKey: 'paid_amount', 
+    {
+      accessorKey: 'paid_amount',
       header: 'Paid Amount',
       Cell: ({ row }) => (
         <span>
           {CurrencyConverter(
-            row.original.ItemCurrency, 
-            row.original.paid_amount, 
+            row.original.ItemCurrency,
+            row.original.paid_amount,
             currencyData
           )}
         </span>
       )
     },
-    { 
-      accessorKey: 'balance_amount', 
+    {
+      accessorKey: 'balance_amount',
       header: 'Balance',
       Cell: ({ row }) => (
-        <span style={{ 
+        <span style={{
           color: row.original.balance_amount > 0 ? 'red' : 'green'
         }}>
           {CurrencyConverter(
-            row.original.ItemCurrency, 
-            row.original.balance_amount, 
+            row.original.ItemCurrency,
+            row.original.balance_amount,
             currencyData
           )}
         </span>
@@ -203,11 +203,11 @@ const OrdersNew = () => {
     },
     renderDetailPanel: ({ row }) => (
       <div style={{ padding: '20px' }}>
-        <OrderDetails 
-          pageType="orders" 
-          orderid={row.original.OrderId} 
-          orderData={row.original} 
-          hideStatus={false} 
+        <OrderDetails
+          pageType="orders"
+          orderid={row.original.OrderId}
+          orderData={row.original}
+          hideStatus={false}
         />
       </div>
     ),
@@ -224,7 +224,7 @@ const OrdersNew = () => {
           <IconButton onClick={() => handleFullScreen(row.original)}>
             <Fullscreen />
           </IconButton>
-        </Tooltip>    
+        </Tooltip>
       </Box>
     ),
   });
@@ -240,17 +240,19 @@ const OrdersNew = () => {
   }
 
   // Fullscreen container styles
-  const containerStyle = isTableFullscreen ? {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 9999,
-    backgroundColor: 'white',
-    padding: '20px',
-    overflow: 'auto'
-  } : {};
+  const containerStyle = isTableFullscreen
+    ? {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1030,
+        backgroundColor: 'white',
+        padding: '20px',
+        overflow: 'auto',
+      }
+    : {}
 
   return (
     <>
@@ -272,26 +274,26 @@ const OrdersNew = () => {
                             onKeyPress={handleKeyPress}
                           />
                           {searchTerm && (
-                            <CButton 
-                              color="secondary" 
+                            <CButton
+                              color="secondary"
                               onClick={handleClearSearch}
                               style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                             >
                               <Clear />
                             </CButton>
                           )}
-                          <CButton 
-                            color="primary" 
+                          <CButton
+                            color="primary"
                             onClick={handleSearch}
                             style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                           >
                             <Search />
                           </CButton>
                         </CInputGroup>
-                        
+
                         {/* Table Fullscreen Toggle Button */}
                         <Tooltip title={isTableFullscreen ? "Exit Fullscreen" : "Click Fullscreen"}>
-                          <IconButton 
+                          <IconButton
                             onClick={toggleTableFullscreen}
                             color="primary"
                             size="large"
@@ -303,20 +305,20 @@ const OrdersNew = () => {
                     )}
                   </div>
                 </div>
-                
-                <Tabs 
-                  defaultActiveKey="group" 
-                  id="orders-view-tabs" 
-                  className="mt-4" 
+
+                <Tabs
+                  defaultActiveKey="group"
+                  id="orders-view-tabs"
+                  className="mt-4"
                   style={{ fontSize: 16 }}
-                  activeKey={activeTab} 
+                  activeKey={activeTab}
                   onSelect={handleTabSelect}
                 >
                   <Tab eventKey="group" title="Group Wise">
                     {orderData.length > 0 ? (
                       <>
                         <MaterialReactTable table={table} />
-                        
+
                         {/* Hide pagination when in fullscreen mode */}
                         {
                           <div className="mt-3 d-flex justify-content-between align-items-center">
@@ -330,21 +332,21 @@ const OrdersNew = () => {
                                 </span>
                               )}
                             </div>
-                            
+
                             <CPagination aria-label="Page navigation">
-                              <CPaginationItem 
+                              <CPaginationItem
                                 disabled={pagination.currentPage === 1}
                                 onClick={() => handlePageChange(1)}
                               >
                                 First
                               </CPaginationItem>
-                              <CPaginationItem 
+                              <CPaginationItem
                                 disabled={pagination.currentPage === 1}
                                 onClick={() => handlePageChange(pagination.currentPage - 1)}
                               >
                                 Previous
                               </CPaginationItem>
-                              
+
                               {Array.from({ length: Math.min(5, pagination.lastPage) }, (_, i) => {
                                 let pageNum;
                                 if (pagination.lastPage <= 5) {
@@ -356,7 +358,7 @@ const OrdersNew = () => {
                                 } else {
                                   pageNum = pagination.currentPage - 2 + i;
                                 }
-                                
+
                                 return (
                                   <CPaginationItem
                                     key={pageNum}
@@ -367,14 +369,14 @@ const OrdersNew = () => {
                                   </CPaginationItem>
                                 );
                               })}
-                              
-                              <CPaginationItem 
+
+                              <CPaginationItem
                                 disabled={pagination.currentPage === pagination.lastPage}
                                 onClick={() => handlePageChange(pagination.currentPage + 1)}
                               >
                                 Next
                               </CPaginationItem>
-                              <CPaginationItem 
+                              <CPaginationItem
                                 disabled={pagination.currentPage === pagination.lastPage}
                                 onClick={() => handlePageChange(pagination.lastPage)}
                               >
@@ -401,23 +403,32 @@ const OrdersNew = () => {
       </CRow>
 
       {selectedOrderDetails && (
-        <DetailExpander
-          show={detailExpander}
-          onHide={() => setDetailExpander(false)}
-          orderid={selectedOrderDetails.OrderId}
-          component={
-            <OrderDetails 
-              pageType="orders" 
-              dataset={selectedOrderDetails} 
-              orderid={selectedOrderDetails.OrderId} 
-              orderData={selectedOrderDetails} 
-              hideStatus={false} 
-              updatedData={() => console.log("Updated")} 
-            />
-          }
-          style={isTableFullscreen ? { zIndex: 100000 } : {}}
-        /> 
-      )}
+
+  <DetailExpander
+    show={detailExpander}
+    onHide={() => setDetailExpander(false)}
+    orderid={selectedOrderDetails.OrderId}
+    component={
+      <OrderDetails 
+        pageType="orders" 
+        dataset={selectedOrderDetails} 
+        orderid={selectedOrderDetails.OrderId} 
+        orderData={selectedOrderDetails} 
+        hideStatus={false} 
+        updatedData={() => console.log("Updated")} 
+      />
+    }
+    style={isTableFullscreen ? { 
+      zIndex: 100000, // Higher than fullscreen z-index
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    } : {}}
+  /> 
+)}
+
     </>
   );
 };
