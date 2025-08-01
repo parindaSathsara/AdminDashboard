@@ -147,7 +147,7 @@ const resendAllSupplierVouchers = (id, indexId, goid) => {
       } else {
         Swal.fire(
           'Error!',
-          'There was an issue resending the order email.',
+          'Order email could not be resent. Supplier vouchers can only be sent for Aahaas products.',
           'error'
         );
       }
