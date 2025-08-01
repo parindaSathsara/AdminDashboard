@@ -21,6 +21,7 @@ import { confirmResendEmail, downloadAllSupplierVouchers, downloadOrderReceipt, 
 import RichTextEditor from './RichTextEditor';
 import Swal from 'sweetalert2';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
+import { Provider } from 'react-redux';
 
 const EmailDashboard = () => {
   const { userData } = useContext(UserLoginContext);
@@ -77,7 +78,8 @@ const EmailDashboard = () => {
 
       var dataSet = response.map(res => ({
         value: res.id,
-        label: res.voucher_id
+        label: res.voucher_id,
+        provider: res.provider
       }));
 
 
@@ -237,7 +239,10 @@ const EmailDashboard = () => {
                 <Select
                   options={orderIndexIds}
                   value={selectedOrderIndexId}
-                  onChange={(selectedOption) => setSelectedOrderIndexId(selectedOption)}
+                  onChange={(selectedOption) =>
+                  {
+                     setSelectedOrderIndexId(selectedOption)
+                  }}
                   placeholder="Select Order Index ID"
                   isDisabled={emailType?.value == "customer_invoice" ? true : false}
                   isLoading={checkoutIndexLoading}
@@ -245,27 +250,32 @@ const EmailDashboard = () => {
               </CCol>
 
 
-              <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
                 {
-                  userData?.permissions?.includes("email resend") &&
+                  (userData?.permissions?.includes("email resend") && (emailType.value==="customer_invoice"||(emailType.value === "supplier_voucher" && selectedOrderIndexId?.provider=="aahaas"))) &&
+              <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+
                   <CButton color="dark" className='full-width' onClick={handleEmailResend}>
                     Resend
                     <CIcon icon={cilReload} style={{ marginLeft: 10 }} />
                   </CButton>
-                }
-
               </CCol>
-
-              <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                }
                 {
-                  userData?.permissions?.includes("download order receipt") &&
+                  (userData?.permissions?.includes("download order receipt") && (emailType.value==="customer_invoice"||(emailType.value === "supplier_voucher" && selectedOrderIndexId?.provider=="aahaas"))) &&
+              <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+
                   <CButton color="dark" className='full-width' onClick={handleDownloadReceipt}>
                     Download
                     <CIcon icon={cilCloudDownload} style={{ marginLeft: 10 }} />
                   </CButton>
-                }
               </CCol>
-
+                }
+                {
+        (emailType.value==="supplier_voucher" && selectedOrderIndexId?.provider && selectedOrderIndexId?.provider !== "aahaas") &&
+              <CCol xs={12} sm={6} lg={4} className="d-flex justify-content-center">
+                This is a {selectedOrderIndexId?.provider} product cannot be downloaded or resent supplier vouchers.
+              </CCol>
+                }
             </CRow>
           </CCardBody>
         </CCard>
