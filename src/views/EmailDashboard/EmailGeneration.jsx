@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState,useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import {
     CCard,
     CCardBody,
@@ -26,9 +26,11 @@ import Swal from 'sweetalert2';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState } from 'draft-js';
+import { EditorState, Modifier } from 'draft-js';
 import draftToHtml from "draftjs-to-html";
 import { convertToRaw } from "draft-js";
+import { FaEraser } from 'react-icons/fa';
+
 
 const EmailGeneration = () => {
     const fileInputRef = useRef(null);
@@ -46,6 +48,24 @@ const EmailGeneration = () => {
 
     const handleEditorChange = (state) => {
         setEditorState(state);
+    };
+    const removeSelectedText = () => {
+        const selection = editorState.getSelection();
+
+        if (!selection.isCollapsed()) {
+            const contentState = editorState.getCurrentContent();
+            const newContentState = Modifier.removeRange(
+                contentState,
+                selection,
+                'backward'
+            );
+            const newEditorState = EditorState.push(
+                editorState,
+                newContentState,
+                'remove-range'
+            );
+            setEditorState(newEditorState);
+        }
     };
 
     const handleONCheckoutIDClick = (selectedOption) => {
@@ -359,10 +379,11 @@ const EmailGeneration = () => {
         setFiles([]);
         if (fileInputRef.current) {
             fileInputRef.current.value = ""; // clear the input field
-          }
+        }
     };
 
     return (
+
         <CContainer fluid>
             {loading ? <div className="d-flex justify-content-center"><CSpinner style={{ marginTop: "15%" }} /></div> :
                 <> <CCol xs={12}>
@@ -495,6 +516,60 @@ const EmailGeneration = () => {
                         </CCardBody>
                     </CCard>
                 </CCol>
+                    <style>{`
+  .rdw-colorpicker-dropdown {
+    width: 180px !important;
+     overflow-x: hidden !important;
+  }
+
+  .rdw-colorpicker-modal span {
+    white-space: nowrap !important;
+  }
+    
+
+  .rdw-image-modal,
+  .rdw-embedded-modal,
+  .rdw-link-modal {
+    position: absolute !important;
+    top: 40% !important; /* Distance below toolbar button */
+    left: 40% !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
+    max-width: 90vw !important;
+    min-width: 300px;
+    min-height: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    word-break: break-word;
+    white-space: normal;
+    overflow: hidden !important;
+    box-sizing: border-box;
+  }
+
+
+  .rdw-image-modal input,
+  .rdw-embedded-modal input,
+  .rdw-link-modal input {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Remove scrollbars */
+  .rdw-image-modal,
+  .rdw-embedded-modal,
+  .rdw-link-modal {
+    scrollbar-width: none;
+  }
+
+  .rdw-image-modal::-webkit-scrollbar,
+  .rdw-embedded-modal::-webkit-scrollbar,
+  .rdw-link-modal::-webkit-scrollbar {
+    display: none;
+  }
+`}</style>
 
 
 
@@ -510,7 +585,41 @@ const EmailGeneration = () => {
                                     <Editor
                                         editorState={editorState}
                                         onEditorStateChange={handleEditorChange}
-                                        style={{ marginRight: "20px" }} />
+                                        toolbar={{
+                                            options: [
+                                                'inline',
+                                                'blockType',
+                                                'fontSize',
+                                                'fontFamily',
+                                                'list',
+                                                'textAlign',
+                                                'colorPicker',
+                                                'link',
+                                                'embedded',
+                                                'emoji',
+                                                'image',
+                                                'history'
+                                                // removed 'remove' option
+                                            ]
+                                        }}
+                                        toolbarCustomButtons={[
+                                            <button
+                                                key="custom-remove"
+                                                onClick={removeSelectedText}
+                                                style={{
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    padding: '5px',
+                                                    margin: '0 10px',
+                                                    fontSize: '18px'
+                                                }}
+                                                title="Clear Selected Text"
+                                            >
+                                                <FaEraser />
+                                            </button>
+                                        ]}
+                                    />
                                 </CRow>
 
                                 <CRow className="mb-3">

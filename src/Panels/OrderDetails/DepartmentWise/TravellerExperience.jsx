@@ -168,18 +168,18 @@ export default function TravellerExperience(props) {
     }
 
     try {
-    Swal.fire({
-  title: 'Please wait...',
-  text: 'Submitting traveller experience...',
-  allowOutsideClick: false,
-  didOpen: () => {
-    Swal.showLoading();
-  },
-});
+      Swal.fire({
+        title: 'Please wait...',
+        text: 'Submitting traveller experience...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
 
-setTimeout(() => {
-  Swal.close(); // or Swal.hideLoading() if you want to keep modal open
-}, 5000);
+      setTimeout(() => {
+        Swal.close(); // or Swal.hideLoading() if you want to keep modal open
+      }, 5000);
       const response = await axios.post(`/create_traveller`, data)
       if (response.data.status == 200) {
         await axios
@@ -359,15 +359,18 @@ setTimeout(() => {
 
   const [driverId, setDriverId] = useState('')
   const handleClickDriverAllocation = (dataset) => {
-    // console.log(dataset, "Dataset Value is")
     setAllocateProductData(dataset?.data);
     if (dataset.data.category === 'Lifestyles') {
-      setDriverId(dataset.data.vehicle_driver_id)
-      setDriverAllocationStatus({ status: true, data: dataset })
+      setDriverId(dataset.data.vehicle_driver_id);
+
+      // Pass country to filter drivers
+      const country = dataset.data.country;
+      setDriverAllocationStatus({ status: true, data: dataset });
+      getAllExistingDeivers(country);
     } else {
-      alert('Driver allocation is avaliable only for lifestyle products')
+      alert('Driver allocation is available only for lifestyle products');
     }
-  }
+  };
 
   const getDisableStatus = (rowData) => {
     // console.log(rowData, "Rowwwww")
@@ -726,15 +729,21 @@ setTimeout(() => {
   const [driverDetailsLoading, setDriverDetailsLoading] = useState(true)
   const [driverDetails, setDriverDetails] = useState([])
 
-  const getAllExistingDeivers = async () => {
-    setDriverDetailsLoading(true)
-    await axios.get('/vehicle-drivers').then((response) => {
-      setDriverDetailsLoading(false)
-      console.log('driverrrrrrrrrrr', response.data.data)
-      setDriverDetails(response.data.data)
-    })
-  }
+  const getAllExistingDeivers = async (country = null) => {
+    setDriverDetailsLoading(true);
 
+    let url = '/vehicle-drivers';
+    if (country) {
+      url += `?country=${country}`;
+    }
+
+    await axios.get(url).then((response) => {
+      setDriverDetailsLoading(false);
+      setDriverDetails(response.data.data);
+      setOriginalDriverDetails(response.data.data); // Store original list for filtering
+    });
+  };
+  const [originalDriverDetails, setOriginalDriverDetails] = useState([]);
   useEffect(() => {
     getAllExistingDeivers()
   }, [driverAllocationStatus.status])
@@ -824,13 +833,10 @@ setTimeout(() => {
                   placeholder="Filter by Driver Name"
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
-                    const filtered = driverDetails.filter(driver =>
+                    const filtered = originalDriverDetails.filter(driver =>
                       driver.driver_name.toLowerCase().includes(searchTerm)
                     );
                     setDriverDetails(filtered);
-                    if (e.target.value === '') {
-                      getAllExistingDeivers(); // Reset to original list if search is cleared
-                    }
                   }}
                 />
               </CCol>
@@ -839,13 +845,10 @@ setTimeout(() => {
                   placeholder="Filter by Vehicle Number"
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
-                    const filtered = driverDetails.filter(driver =>
+                    const filtered = originalDriverDetails.filter(driver =>
                       driver.vehicle_number.toLowerCase().includes(searchTerm)
                     );
                     setDriverDetails(filtered);
-                    if (e.target.value === '') {
-                      getAllExistingDeivers();
-                    }
                   }}
                 />
               </CCol>
@@ -854,13 +857,10 @@ setTimeout(() => {
                   placeholder="Filter by Vehicle Province"
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
-                    const filtered = driverDetails.filter(driver =>
+                    const filtered = originalDriverDetails.filter(driver =>
                       driver.vehicle_province.toLowerCase().includes(searchTerm)
                     );
                     setDriverDetails(filtered);
-                    if (e.target.value === '') {
-                      getAllExistingDeivers();
-                    }
                   }}
                 />
               </CCol>
