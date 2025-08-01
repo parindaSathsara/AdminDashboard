@@ -30,3 +30,6 @@
 .MuiPopper-root{
   display: none !important;
 }
+.MuiPopover-root{
+  z-index: 9999 !important;
+}
