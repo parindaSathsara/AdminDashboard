@@ -70,9 +70,9 @@ const Bridgify = () => {
 
     const data = {
         columns: [
-            { 
-                title: 'View More', 
-                field: 'actions', 
+            {
+                title: 'View More',
+                field: 'actions',
                 align: 'center',
                 export: false,
                 width: '10%',
@@ -88,9 +88,9 @@ const Bridgify = () => {
                     minWidth: '100px'
                 }
             },
-            { 
-                title: 'Order ID', 
-                field: 'order_id', 
+            {
+                title: 'Order ID',
+                field: 'order_id',
                 align: 'left',
                 width: '12%',
                 cellStyle: {
@@ -108,9 +108,9 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Total Amount', 
-                field: 'total_amount', 
+            {
+                title: 'Total Amount',
+                field: 'total_amount',
                 align: 'right',
                 width: '10%',
                 cellStyle: {
@@ -128,9 +128,9 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Paid Amount', 
-                field: 'paid_amount', 
+            {
+                title: 'Paid Amount',
+                field: 'paid_amount',
                 align: 'right',
                 width: '10%',
                 cellStyle: {
@@ -148,29 +148,10 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Balance Amount', 
-                field: 'balance_amount', 
-                align: 'right',
-                width: '10%',
-                cellStyle: {
-                    textAlign: 'right',
-                    padding: '8px',
-                    fontWeight: '500',
-                    minWidth: '100px',
-                    fontSize: '12px'
-                },
-                headerStyle: {
-                    textAlign: 'right',
-                    fontWeight: 'bold',
-                    backgroundColor: '#f8f9fa',
-                    minWidth: '100px',
-                    fontSize: '12px'
-                }
-            },
-            { 
-                title: 'Product Title', 
-                field: 'product_details', 
+
+            {
+                title: 'Product Title',
+                field: 'product_details',
                 align: 'left',
                 width: '15%',
                 cellStyle: {
@@ -188,9 +169,9 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Selected Timeslot', 
-                field: 'timeslots', 
+            {
+                title: 'Selected Timeslot',
+                field: 'timeslots',
                 align: 'left',
                 width: '12%',
                 cellStyle: {
@@ -208,9 +189,9 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Ticket Details', 
-                field: 'tickets', 
+            {
+                title: 'Ticket Details',
+                field: 'tickets',
                 align: 'left',
                 width: '15%',
                 cellStyle: {
@@ -228,8 +209,8 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Customer Name', 
+            {
+                title: 'Customer Name',
                 field: 'customer',
                 align: 'left',
                 width: '12%',
@@ -248,9 +229,9 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Email', 
-                field: 'email', 
+            {
+                title: 'Email',
+                field: 'email',
                 align: 'left',
                 width: '15%',
                 cellStyle: {
@@ -268,9 +249,9 @@ const Bridgify = () => {
                     fontSize: '12px'
                 }
             },
-            { 
-                title: 'Phone', 
-                field: 'phone', 
+            {
+                title: 'Phone',
+                field: 'phone',
                 align: 'left',
                 width: '40%',
                 cellStyle: {
@@ -534,7 +515,7 @@ const Bridgify = () => {
                             columns={data.columns}
                             data={data.rows}
                             options={{
-                                headerStyle: { 
+                                headerStyle: {
                                     fontSize: '12px',
                                     fontWeight: 'bold',
                                     backgroundColor: '#f8f9fa',
@@ -542,7 +523,7 @@ const Bridgify = () => {
                                     padding: '8px',
                                     textAlign: 'center'
                                 },
-                                cellStyle: { 
+                                cellStyle: {
                                     fontSize: '12px',
                                     padding: '8px',
                                     borderBottom: '1px solid #dee2e6'
@@ -577,7 +558,7 @@ const Bridgify = () => {
                                 //             }).join(',')
                                 //         )
                                 //     ].join('\n');
-                                    
+
                                 //     const blob = new Blob([csvContent], { type: 'text/csv' });
                                 //     const url = window.URL.createObjectURL(blob);
                                 //     const a = document.createElement('a');
@@ -588,87 +569,87 @@ const Bridgify = () => {
                                 // },
                                 // Enhanced PDF export options
                                 exportCsv: (columns, data) => {
-    // Filter out columns that should not be exported (like View More)
-    const exportableColumns = columns.filter(col => col.export !== false && col.field !== 'actions');
-    
-    // Unicode bold characters mapping for A-Z, a-z, 0-9
-    const boldMap = {
-        'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 
-        'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 
-        'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 
-        'Y': '𝗬', 'Z': '𝗭',
-        'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 
-        'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 
-        'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 
-        'y': '𝘆', 'z': '𝘇',
-        '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', 
-        '8': '𝟴', '9': '𝟵'
-    };
-    
-    // Create header row with bold formatting
-    const headerRow = exportableColumns.map(col => {
-        const boldTitle = col.title.split('').map(char => boldMap[char] || char).join('');
-        return `"${boldTitle}"`;
-    }).join(',');
-    
-    // Create data rows
-    const dataRows = data.map(row => 
-        exportableColumns.map(col => {
-            let value = row[col.field] || '';
-            
-            // Handle phone number formatting to prevent scientific notation
-            if (col.field === 'phone' && value && value !== 'N/A') {
-                // Add a tab character before the phone number to force text format
-                value = `\t${value}`;
-            }
-            
-            // Clean data for CSV export
-            if (typeof value === 'string') {
-                // Remove HTML tags and escape quotes
-                value = value.replace(/<[^>]*>/g, '').replace(/"/g, '""');
-                return `"${value}"`;
-            }
-            
-            return value;
-        }).join(',')
-    );
-    
-    // Combine header and data
-    const csvContent = [headerRow, ...dataRows].join('\n');
-    
-    // Add BOM for proper UTF-8 encoding (helps with special characters)
-    const BOM = '\uFEFF';
-    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-    
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-},
+                                    // Filter out columns that should not be exported (like View More)
+                                    const exportableColumns = columns.filter(col => col.export !== false && col.field !== 'actions');
+
+                                    // Unicode bold characters mapping for A-Z, a-z, 0-9
+                                    const boldMap = {
+                                        'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛',
+                                        'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣',
+                                        'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫',
+                                        'Y': '𝗬', 'Z': '𝗭',
+                                        'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵',
+                                        'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽',
+                                        'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅',
+                                        'y': '𝘆', 'z': '𝘇',
+                                        '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳',
+                                        '8': '𝟴', '9': '𝟵'
+                                    };
+
+                                    // Create header row with bold formatting
+                                    const headerRow = exportableColumns.map(col => {
+                                        const boldTitle = col.title.split('').map(char => boldMap[char] || char).join('');
+                                        return `"${boldTitle}"`;
+                                    }).join(',');
+
+                                    // Create data rows
+                                    const dataRows = data.map(row =>
+                                        exportableColumns.map(col => {
+                                            let value = row[col.field] || '';
+
+                                            // Handle phone number formatting to prevent scientific notation
+                                            if (col.field === 'phone' && value && value !== 'N/A') {
+                                                // Add a tab character before the phone number to force text format
+                                                value = `\t${value}`;
+                                            }
+
+                                            // Clean data for CSV export
+                                            if (typeof value === 'string') {
+                                                // Remove HTML tags and escape quotes
+                                                value = value.replace(/<[^>]*>/g, '').replace(/"/g, '""');
+                                                return `"${value}"`;
+                                            }
+
+                                            return value;
+                                        }).join(',')
+                                    );
+
+                                    // Combine header and data
+                                    const csvContent = [headerRow, ...dataRows].join('\n');
+
+                                    // Add BOM for proper UTF-8 encoding (helps with special characters)
+                                    const BOM = '\uFEFF';
+                                    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = `bridgify-cart-items-${new Date().toISOString().split('T')[0]}.csv`;
+                                    a.click();
+                                    window.URL.revokeObjectURL(url);
+                                },
                                 exportPdf: (columns, data) => {
                                     import('jspdf').then(({ jsPDF }) => {
                                         import('jspdf-autotable').then(() => {
                                             const doc = new jsPDF('landscape');
-                                            
+
                                             // Title
                                             doc.setFontSize(16);
                                             doc.text('Bridgify Cart Items Report', 20, 20);
-                                            
+
                                             // Date
                                             doc.setFontSize(10);
                                             doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 30);
-                                            
+
                                             // Table
                                             doc.autoTable({
                                                 head: [columns.filter(col => col.export !== false).map(col => col.title)],
-                                                body: data.map(row => 
+                                                body: data.map(row =>
                                                     columns
                                                         .filter(col => col.export !== false)
                                                         .map(col => {
                                                             const value = row[col.field] || 'N/A';
-                                                            return typeof value === 'string' 
+                                                            return typeof value === 'string'
                                                                 ? value.replace(/<[^>]*>/g, '') // Remove HTML tags
                                                                 : value;
                                                         })
@@ -710,7 +691,7 @@ const Bridgify = () => {
                                                 margin: { top: 10, right: 10, bottom: 10, left: 10 },
                                                 tableWidth: 'auto'
                                             });
-                                            
+
                                             doc.save(`bridgify-cart-items-${new Date().toISOString().split('T')[0]}.pdf`);
                                         });
                                     });
@@ -822,6 +803,8 @@ const Bridgify = () => {
                                                                                         color="primary"
                                                                                         href={ticket.voucher_url[0]}
                                                                                         target="_blank"
+                                                                                        style={{ color: 'white !important' }}
+                                                                                        className="text-white"
                                                                                     >
                                                                                         View Voucher
                                                                                     </CButton>

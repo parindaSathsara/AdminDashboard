@@ -191,7 +191,7 @@ const OrdersNew = () => {
   const table = useMaterialReactTable({
     columns,
     data: orderData,
-    enableFullScreenToggle:false, // if this prop is present
+    enableFullScreenToggle: false, // if this prop is present
     enablePagination: false,
     enableRowSelection: false,
     enableColumnActions: true,
@@ -217,7 +217,7 @@ const OrdersNew = () => {
       }
     },
     // Removed row actions since you don't want fullscreen in action column
-     enableRowActions: true,
+    enableRowActions: true,
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Full Screen">
@@ -242,16 +242,16 @@ const OrdersNew = () => {
   // Fullscreen container styles
   const containerStyle = isTableFullscreen
     ? {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 1030,
-        backgroundColor: 'white',
-        padding: '20px',
-        overflow: 'auto',
-      }
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 1030,
+      backgroundColor: 'white',
+      padding: '20px',
+      overflow: 'auto',
+    }
     : {}
 
   return (
@@ -332,58 +332,80 @@ const OrdersNew = () => {
                                 </span>
                               )}
                             </div>
+                            <div className="d-flex align-items-center flex-wrap gap-2">
+                              <div className="d-flex align-items-center">
+                                <span className="me-2">Items per page:</span>
+                                <select
+                                  className="form-select form-select-sm"
+                                  style={{ width: '80px' }}
+                                  value={pagination.perPage}
+                                  onChange={(e) => {
+                                    const newPerPage = parseInt(e.target.value);
+                                    fetchOrders(1, newPerPage, searchTerm);
+                                  }}
+                                >
+                                  {[10, 20, 50, 100].map((size) => (
+                                    <option key={size} value={size}>
+                                      {size}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
 
-                            <CPagination aria-label="Page navigation">
-                              <CPaginationItem
-                                disabled={pagination.currentPage === 1}
-                                onClick={() => handlePageChange(1)}
-                              >
-                                First
-                              </CPaginationItem>
-                              <CPaginationItem
-                                disabled={pagination.currentPage === 1}
-                                onClick={() => handlePageChange(pagination.currentPage - 1)}
-                              >
-                                Previous
-                              </CPaginationItem>
+                              <CPagination aria-label="Page navigation" className="m-0">
+                                <CPaginationItem
+                                  disabled={pagination.currentPage === 1}
+                                  onClick={() => handlePageChange(1)}
+                                >
+                                  First
+                                </CPaginationItem>
+                                <CPaginationItem
+                                  disabled={pagination.currentPage === 1}
+                                  onClick={() => handlePageChange(pagination.currentPage - 1)}
+                                >
+                                  Previous
+                                </CPaginationItem>
 
-                              {Array.from({ length: Math.min(5, pagination.lastPage) }, (_, i) => {
-                                let pageNum;
-                                if (pagination.lastPage <= 5) {
-                                  pageNum = i + 1;
-                                } else if (pagination.currentPage <= 3) {
-                                  pageNum = i + 1;
-                                } else if (pagination.currentPage >= pagination.lastPage - 2) {
-                                  pageNum = pagination.lastPage - 4 + i;
-                                } else {
-                                  pageNum = pagination.currentPage - 2 + i;
-                                }
+                                {Array.from({ length: Math.min(5, pagination.lastPage) }, (_, i) => {
+                                  let pageNum;
+                                  if (pagination.lastPage <= 5) {
+                                    pageNum = i + 1;
+                                  } else if (pagination.currentPage <= 3) {
+                                    pageNum = i + 1;
+                                  } else if (pagination.currentPage >= pagination.lastPage - 2) {
+                                    pageNum = pagination.lastPage - 4 + i;
+                                  } else {
+                                    pageNum = pagination.currentPage - 2 + i;
+                                  }
 
-                                return (
-                                  <CPaginationItem
-                                    key={pageNum}
-                                    active={pageNum === pagination.currentPage}
-                                    onClick={() => handlePageChange(pageNum)}
-                                  >
-                                    {pageNum}
-                                  </CPaginationItem>
-                                );
-                              })}
+                                  return (
+                                    <CPaginationItem
+                                      key={pageNum}
+                                      active={pageNum === pagination.currentPage}
+                                      onClick={() => handlePageChange(pageNum)}
+                                    >
+                                      {pageNum}
+                                    </CPaginationItem>
+                                  );
+                                })}
 
-                              <CPaginationItem
-                                disabled={pagination.currentPage === pagination.lastPage}
-                                onClick={() => handlePageChange(pagination.currentPage + 1)}
-                              >
-                                Next
-                              </CPaginationItem>
-                              <CPaginationItem
-                                disabled={pagination.currentPage === pagination.lastPage}
-                                onClick={() => handlePageChange(pagination.lastPage)}
-                              >
-                                Last
-                              </CPaginationItem>
-                            </CPagination>
+                                <CPaginationItem
+                                  disabled={pagination.currentPage === pagination.lastPage}
+                                  onClick={() => handlePageChange(pagination.currentPage + 1)}
+                                >
+                                  Next
+                                </CPaginationItem>
+                                <CPaginationItem
+                                  disabled={pagination.currentPage === pagination.lastPage}
+                                  onClick={() => handlePageChange(pagination.lastPage)}
+                                >
+                                  Last
+                                </CPaginationItem>
+                              </CPagination>
+                            </div>
                           </div>
+
+
                         }
                       </>
                     ) : (
@@ -404,30 +426,30 @@ const OrdersNew = () => {
 
       {selectedOrderDetails && (
 
-  <DetailExpander
-    show={detailExpander}
-    onHide={() => setDetailExpander(false)}
-    orderid={selectedOrderDetails.OrderId}
-    component={
-      <OrderDetails 
-        pageType="orders" 
-        dataset={selectedOrderDetails} 
-        orderid={selectedOrderDetails.OrderId} 
-        orderData={selectedOrderDetails} 
-        hideStatus={false} 
-        updatedData={() => console.log("Updated")} 
-      />
-    }
-    style={isTableFullscreen ? { 
-      zIndex: 100000, // Higher than fullscreen z-index
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0
-    } : {}}
-  /> 
-)}
+        <DetailExpander
+          show={detailExpander}
+          onHide={() => setDetailExpander(false)}
+          orderid={selectedOrderDetails.OrderId}
+          component={
+            <OrderDetails
+              pageType="orders"
+              dataset={selectedOrderDetails}
+              orderid={selectedOrderDetails.OrderId}
+              orderData={selectedOrderDetails}
+              hideStatus={false}
+              updatedData={() => console.log("Updated")}
+            />
+          }
+          style={isTableFullscreen ? {
+            zIndex: 100000, // Higher than fullscreen z-index
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+          } : {}}
+        />
+      )}
 
     </>
   );
