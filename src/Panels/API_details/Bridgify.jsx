@@ -1,27 +1,27 @@
 import {
-    CCard,
-    CCardBody,
-    CCardImage,
-    CCardText,
-    CCardTitle,
-    CCol,
-    CContainer,
-    CRow,
-    CTable,
-    CTableHead,
-    CTableRow,
-    CTableHeaderCell,
-    CTableBody,
-    CTableDataCell,
-    CModal,
-    CModalHeader,
-    CModalTitle,
-    CModalBody,
-    CModalFooter,
-    CButton,
-    CSpinner,
-    CBadge,
-    CAlert
+  CCard,
+  CCardBody,
+  CCardImage,
+  CCardText,
+  CCardTitle,
+  CCol,
+  CContainer,
+  CRow,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+  CButton,
+  CSpinner,
+  CBadge,
+  CAlert,
 } from '@coreui/react'
 import axios from 'axios'
 import MaterialTable from 'material-table'
@@ -29,44 +29,34 @@ import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 
 const Bridgify = () => {
-    const [cartItems, setCartItems] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [selectedCart, setSelectedCart] = useState(null)
-    const [showModal, setShowModal] = useState(false)
-    const [modalLoading, setModalLoading] = useState(false)
-    const [cancellationInfo, setCancellationInfo] = useState({})
-    const [cancellationLoading, setCancellationLoading] = useState({})
+  const [cartItems, setCartItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [selectedCart, setSelectedCart] = useState(null)
+  const [showModal, setShowModal] = useState(false)
+  const [modalLoading, setModalLoading] = useState(false)
+  const [cancellationInfo, setCancellationInfo] = useState({})
+  const [cancellationLoading, setCancellationLoading] = useState({})
+  const [checkoutId, setCheckoutId] = useState(null)
 
-    useEffect(() => {
-        fetchCartItems()
-    }, [])
+  useEffect(() => {
+    fetchCartItems()
+  }, [])
 
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case "paid":
-                return <CBadge color="success">Paid</CBadge>
-            case "pending":
-                return <CBadge color="warning">Pending</CBadge>
-            case "cancelled":
-                return <CBadge color="danger">Cancelled</CBadge>
-            case "FAL":
-                return <CBadge color="danger">Failed</CBadge>
-            default:
-                return <CBadge color="info">{status}</CBadge>
-        }
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'paid':
+        return <CBadge color="success">Paid</CBadge>
+      case 'pending':
+        return <CBadge color="warning">Pending</CBadge>
+      case 'cancelled':
+        return <CBadge color="danger">Cancelled</CBadge>
+      case 'FAL':
+        return <CBadge color="danger">Failed</CBadge>
+      default:
+        return <CBadge color="info">{status}</CBadge>
     }
+  }
 
-    // Function to truncate text for better display and export
-    const truncateText = (text, maxLength = 50) => {
-        if (!text) return 'N/A';
-        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-    }
-
-    // Function to format currency values consistently
-    const formatCurrency = (amount, currency = '') => {
-        if (!amount) return 'N/A';
-        return `${currency} ${parseFloat(amount).toFixed(2)}`;
-    }
 
     const data = {
         columns: [
@@ -312,167 +302,172 @@ const Bridgify = () => {
                 actions: <CButton color="primary" size="sm" onClick={() => handleRowClick(item?.cart_short_uuid)}>View More</CButton>
             }
         }),
+
     }
+  }
 
-    const fetchCartItems = async () => {
-        try {
-            setLoading(true)
-            const response = await axios.get('/bridgify/carts')
-            if (response.data.success && response.data.data) {
-                setCartItems(response.data.data)
-                console.log('Cart Items:', response.data.data);
+  const fetchCartDetails = async (shortUuid) => {
+    try {
+      setModalLoading(true)
+      const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
 
-            } else {
-                throw new Error('Failed to fetch cart items')
-            }
-        } catch (error) {
+      if (response.data.success && response.data.data) {
+        setSelectedCart(response.data.data)
+        setShowModal(true)
+        console.log('Cart Items:', response.data.data)
+      } else {
+        console.log('API Response:', response.data)
+        setSelectedCart(null)
+        setShowModal(true)
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error fetching cart details!',
+      })
+      console.error('Error fetching cart details:', error)
+      setSelectedCart(null)
+      setShowModal(true)
+    } finally {
+      setModalLoading(false)
+    }
+  }
+
+  const fetchCancellationInfo = async (shortUuid, index) => {
+    try {
+      setCancellationLoading((prevState) => ({
+        ...prevState,
+        [index]: true,
+      }))
+
+      const response = await axios.get(`/bridgify/carts/cancelation/${checkoutId}`)
+
+      if (response.data.success && response.data.data) {
+        setCancellationInfo((prevState) => ({
+          ...prevState,
+          [shortUuid]: response.data.data['cancellation-info'],
+        }))
+        console.log('Cancellation Info:', response.data.data)
+      } else {
+        console.log('API Response:', response.data)
+        setCancellationInfo((prevState) => ({
+          ...prevState,
+          [shortUuid]: [],
+        }))
+      }
+    } catch (error) {
+      console.error('Error fetching cancellation info:', error)
+      setCancellationInfo((prevState) => ({
+        ...prevState,
+        [shortUuid]: [],
+      }))
+    } finally {
+      setCancellationLoading((prevState) => ({
+        ...prevState,
+        [index]: false,
+      }))
+    }
+  }
+
+  const handleCancellationRequest = async (shortUuid, cartItemUuid) => {
+    try {
+      Swal.fire({
+        title: 'Request Cancellation',
+        text: 'Are you sure you want to cancel this booking?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            // Show loading state
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Error fetching cart items!',
+              title: 'Processing',
+              text: 'Submitting cancellation request...',
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading()
+              },
             })
-            console.error('Error fetching cart items:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
 
-    const fetchCartDetails = async (shortUuid) => {
-        try {
-            setModalLoading(true)
-            const response = await axios.get(`/bridgify/carts/order-info/${shortUuid}`)
+            // Make cancellation request
+            const response = await axios.post(
+              `/bridgify/carts/cancelation/${shortUuid}/${cartItemUuid}`,
+            )
 
-            if (response.data.success && response.data.data) {
-                setSelectedCart(response.data.data)
-                setShowModal(true)
-                console.log('Cart Items:', response.data.data)
+            if (response.data.success) {
+              Swal.fire(
+                'Cancellation Requested!',
+                'Your cancellation request has been submitted successfully.',
+                'success',
+              )
+              // Refresh data as needed
+              fetchCartDetails(shortUuid)
             } else {
-                console.log('API Response:', response.data)
-                setSelectedCart(null)
-                setShowModal(true)
+              throw new Error(response.data.message || 'Cancellation request failed')
             }
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Error fetching cart details!',
-            })
-            console.error('Error fetching cart details:', error)
-            setSelectedCart(null)
-            setShowModal(true)
-        } finally {
-            setModalLoading(false)
+          } catch (error) {
+            Swal.fire('Error', error.message || 'Failed to process cancellation request.', 'error')
+          }
         }
+      })
+    } catch (error) {
+      console.error('Error handling cancellation request:', error)
     }
+  }
 
-    const fetchCancellationInfo = async (shortUuid, index) => {
-        try {
-            setCancellationLoading(prevState => ({
-                ...prevState,
-                [index]: true
-            }))
+  const handleRowClick = (shortUuid, checkout_id) => {
+    fetchCartDetails(shortUuid, checkout_id)
+    setCheckoutId(checkout_id)
+  }
 
-            const response = await axios.get(`/bridgify/carts/cancelation/${shortUuid}`)
+  const toggleCancellationInfo = (shortUuid, index) => {
+    const collapseElement = document.getElementById(`cancellationInfo${index}`)
+    if (collapseElement) {
+      const isShowing = collapseElement.classList.contains('show')
+      collapseElement.classList.toggle('show')
 
-            if (response.data.success && response.data.data) {
-                setCancellationInfo(prevState => ({
-                    ...prevState,
-                    [shortUuid]: response.data.data['cancellation-info']
-                }))
-                console.log('Cancellation Info:', response.data.data)
-            } else {
-                console.log('API Response:', response.data)
-                setCancellationInfo(prevState => ({
-                    ...prevState,
-                    [shortUuid]: []
-                }))
-            }
-        } catch (error) {
-            console.error('Error fetching cancellation info:', error)
-            setCancellationInfo(prevState => ({
-                ...prevState,
-                [shortUuid]: []
-            }))
-        } finally {
-            setCancellationLoading(prevState => ({
-                ...prevState,
-                [index]: false
-            }))
-        }
+      // Fetch cancellation info if opening and haven't fetched it yet
+      if (!isShowing && !cancellationInfo[shortUuid]) {
+        fetchCancellationInfo(shortUuid, index)
+      }
     }
+  }
 
-    const handleCancellationRequest = async (shortUuid, cartItemUuid) => {
-        try {
-            Swal.fire({
-                title: 'Request Cancellation',
-                text: 'Are you sure you want to cancel this booking?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, cancel it!',
-                cancelButtonText: 'No, keep it'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        // Show loading state
-                        Swal.fire({
-                            title: 'Processing',
-                            text: 'Submitting cancellation request...',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading()
-                            }
-                        })
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A'
+    const date = new Date(dateString)
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+  }
 
-                        // Make cancellation request
-                        const response = await axios.post(`/bridgify/carts/cancelation/${shortUuid}/${cartItemUuid}`)
+  // Helper to generate mock cancellation data based on the item
+  const getMockCancellationInfo = (item) => {
+    // This is just example data - in reality, this would come from the API
+    if (!item) return null
 
-                        if (response.data.success) {
-                            Swal.fire(
-                                'Cancellation Requested!',
-                                'Your cancellation request has been submitted successfully.',
-                                'success'
-                            )
-                            // Refresh data as needed
-                            fetchCartDetails(shortUuid)
-                        } else {
-                            throw new Error(response.data.message || 'Cancellation request failed')
-                        }
-                    } catch (error) {
-                        Swal.fire(
-                            'Error',
-                            error.message || 'Failed to process cancellation request.',
-                            'error'
-                        )
-                    }
-                }
-            })
-        } catch (error) {
-            console.error('Error handling cancellation request:', error)
-        }
+    return {
+      cancellation_eligible: item.status === 'paid',
+      cancellation_deadline: item.attraction_date
+        ? new Date(new Date(item.attraction_date).getTime() - 48 * 60 * 60 * 1000)
+            .toISOString()
+            .split('T')[0]
+        : 'N/A',
+      refund_amount: item.merchant_total_price
+        ? (parseFloat(item.merchant_total_price) * 0.75).toFixed(2)
+        : 'N/A',
+      refund_percentage: '75%',
+      cancellation_fee: item.merchant_total_price
+        ? (parseFloat(item.merchant_total_price) * 0.25).toFixed(2)
+        : 'N/A',
+      cancellation_fee_percentage: '25%',
+      cancellation_policy:
+        'Standard 48-hour cancellation policy applies. Cancellations made less than 48 hours before the scheduled date are subject to a 25% cancellation fee.',
+      currency: item.currency || '',
     }
+  }
 
-    const handleRowClick = (shortUuid) => {
-        fetchCartDetails(shortUuid)
-    }
-
-    const toggleCancellationInfo = (shortUuid, index) => {
-        const collapseElement = document.getElementById(`cancellationInfo${index}`)
-        if (collapseElement) {
-            const isShowing = collapseElement.classList.contains('show')
-            collapseElement.classList.toggle('show')
-
-            // Fetch cancellation info if opening and haven't fetched it yet
-            if (!isShowing && !cancellationInfo[shortUuid]) {
-                fetchCancellationInfo(shortUuid, index)
-            }
-        }
-    }
-
-    const formatDate = (dateString) => {
-        if (!dateString) return 'N/A'
-        const date = new Date(dateString)
-        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    }
 
     // Helper to generate mock cancellation data based on the item
     const getMockCancellationInfo = (item) => {
@@ -915,6 +910,7 @@ const Bridgify = () => {
             </CModal>
         </CContainer>
     )
+
 }
 
 export default Bridgify
