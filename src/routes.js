@@ -112,7 +112,7 @@ const routes = [
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
   { path: '/blogs/newBlog', name: 'Add Blog', element: BlogMainPage, exact: true },
   { path: '/blogs/listBlogs', name: 'List Blogs', element: ListBlogs, exact: true },
-  { path: '/blogs/viewBlog/:id', name: 'View Blog', element: VIewBlog, exact: true },
+  { path: '/blogs/listBlogs/viewBlog/:id', name: 'View Blog', element: VIewBlog, exact: true },
 
   { path: '/offers_promo', name: 'Discounts', element: OffersPromoDashboard, exact: true },
 
