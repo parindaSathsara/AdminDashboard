@@ -36,6 +36,7 @@ const Bridgify = () => {
   const [modalLoading, setModalLoading] = useState(false)
   const [cancellationInfo, setCancellationInfo] = useState({})
   const [cancellationLoading, setCancellationLoading] = useState({})
+  const [checkoutId, setCheckoutId] = useState(null)
 
   useEffect(() => {
     fetchCartItems()
@@ -334,7 +335,11 @@ const Bridgify = () => {
           20,
         ),
         actions: (
-          <CButton color="primary" size="sm" onClick={() => handleRowClick(item?.cart_short_uuid)}>
+          <CButton
+            color="primary"
+            size="sm"
+            onClick={() => handleRowClick(item?.cart_short_uuid, item?.checkout_id)}
+          >
             View More
           </CButton>
         ),
@@ -399,7 +404,7 @@ const Bridgify = () => {
         [index]: true,
       }))
 
-      const response = await axios.get(`/bridgify/carts/cancelation/${shortUuid}`)
+      const response = await axios.get(`/bridgify/carts/cancelation/${checkoutId}`)
 
       if (response.data.success && response.data.data) {
         setCancellationInfo((prevState) => ({
@@ -476,8 +481,9 @@ const Bridgify = () => {
     }
   }
 
-  const handleRowClick = (shortUuid) => {
-    fetchCartDetails(shortUuid)
+  const handleRowClick = (shortUuid, checkout_id) => {
+    fetchCartDetails(shortUuid, checkout_id)
+    setCheckoutId(checkout_id)
   }
 
   const toggleCancellationInfo = (shortUuid, index) => {
