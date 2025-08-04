@@ -410,23 +410,33 @@ const Promotions = () => {
         })
       }
 
-      const response = await axios.post('/pushNotification', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      let current = 0
+      let total = 1
+      while (current < 100) {
+        try {
+          formData.append('offset', current)
+          const response = await axios.post('/pushNotification', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          current = response.data.current
+          total = response.data.total
+          const percentCompleted = Math.round((current * 100) / total)
           setProgress(percentCompleted)
-        },
-      })
-
+        } catch (error) {
+          console.error('Error pushing notification:', error)
+          continue
+        }
+      }
       Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: `Notifications sent to ${response.data.user_count} users`,
+        text: `Notifications sent to ${total} users`,
       })
       resetForm()
     } catch (error) {
+      console.log('Error sending notifications:', error)
       const errorMsg = error.response?.data?.error || 'Failed to send notifications'
       const missingEmails = error.response?.data?.missing_emails || []
 
