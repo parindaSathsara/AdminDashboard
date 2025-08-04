@@ -87,7 +87,7 @@ const RateHawk = () => {
               day: 'numeric'
             });
         };
-      
+
         // For created_at, include time
         const toSLDateTime = (dateString) => {
           if (!dateString) return 'N/A';
@@ -102,17 +102,17 @@ const RateHawk = () => {
               hour12: true
             });
         };
-      
+
         return {
-          order_id: order.order_id, 
-          partner_order_id: order.partner_data.order_id, 
-          agreement_number: order.agreement_number, 
-          status: order.status, 
-          hotel_name: order.hotel_data?.id || 'N/A', 
+          order_id: order.order_id,
+          partner_order_id: order.partner_data.order_id,
+          agreement_number: order.agreement_number,
+          status: order.status,
+          hotel_name: order.hotel_data?.id || 'N/A',
           dates: `${toSLTime(order.checkin_at)} to ${toSLTime(order.checkout_at)}`,
           amount: `${order.amount_sell?.amount || '0'} ${order.amount_sell?.currency_code || ''}`,
-          guests: order.rooms_data?.reduce((total, room) => total + room.guest_data?.adults_number, 0) || 0, 
-          created_at: toSLDateTime(order.created_at), 
+          guests: order.rooms_data?.reduce((total, room) => total + room.guest_data?.adults_number, 0) || 0,
+          created_at: toSLDateTime(order.created_at),
           actions: (
             <CButton color="primary" size="sm" onClick={() => handleRowClick(order)}>
               View Details
@@ -120,8 +120,8 @@ const RateHawk = () => {
           )
         };
       })
-      
-      
+
+
   }
 
   const fetchOrders = async () => {
@@ -136,7 +136,6 @@ const RateHawk = () => {
         search: searchParams,
         language: 'en',
       })
-
       if (response.data.status === 200 && response.data.data?.orders) {
         setOrders(response.data.data.orders)
       } else {
@@ -468,8 +467,8 @@ const RateHawk = () => {
 
                       {/* {selectedOrder.is_cancellable && (
                                                 <div className="text-center mt-3">
-                                                    <CButton 
-                                                        color="danger" 
+                                                    <CButton
+                                                        color="danger"
                                                         onClick={() => handleCancellation(selectedOrder.order_id)}
                                                     >
                                                         Cancel Booking
