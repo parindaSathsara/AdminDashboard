@@ -692,16 +692,31 @@ const OrderAllocate = ({ normalUser = false }) => {
             <Tab eventKey="Cancel" title={<span className="custom-tab-cancel">Cancelled <span class="text-white badge text-bg-danger">{ordersDataStatic.filter(filterData => filterData?.info?.status == "Cancel").length}</span></span>} />
         </Tabs>
 
-        {loading ? (
-            <div className="text-center p-5">
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-2">Loading orders data...</p>
+       <div style={{ position: 'relative' }}>
+      {loading && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          zIndex: 10,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backdropFilter: 'blur(2px)'
+        }}>
+          <div className="text-center p-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
-        ) : (
-            <MaterialReactTable table={table} />
-        )}
+            <p className="mt-2">Loading orders data...</p>
+          </div>
+        </div>
+      )}
+      <MaterialReactTable table={table} />
+    </div>
     </>
     );
 };

@@ -1,3 +1,89 @@
 .sideBarSub::-webkit-scrollbar {
     display: none;
 }
+/* AppSidebar.css */
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  /* background-color: #fff; */
+  /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); */
+}
+.sidebar-brand {
+  padding: 20px 15px;
+  border-bottom: 1px solid #eee;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar-nav {
+  flex: 1;
+  padding: 15px 0;
+  width: 100%;
+}
+
+.sidebar-footer {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.version-text {
+  color: #64635a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Custom scrollbar styling */
+.custom-scrollbar .simplebar-scrollbar::before {
+  background-color: #fff;
+  opacity: 0.7;
+}
+
+.custom-scrollbar .simplebar-track.simplebar-vertical {
+  width: 8px;
+  background-color: #000;
+  border-radius: 4px;
+}
+
+.custom-scrollbar .simplebar-content-wrapper {
+  padding-right: 15px;
+}
+
+/* Navigation item styling */
+.nav-link {
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  margin: 5px 10px;
+}
+
+.nav-link:hover {
+  background-color: rgba(223, 159, 31, 0.1);
+}
+
+.nav-link.active {
+  background-color: rgba(223, 159, 31, 0.2);
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* Nav group styling */
+.nav-group-items {
+  padding-left: 25px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar-brand {
+    height: 60px;
+    padding: 10px;
+  }
+  
+  .sidebar-nav {
+    padding: 10px 0;
+  }
+}
+
+
+
