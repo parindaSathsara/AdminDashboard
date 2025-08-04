@@ -23,6 +23,7 @@ import SupplierSupport from './views/SupplierSupport/SupplierSupport'
 import KpiDashboard from './views/KPIDashboard/KpiDashboard'
 import GlobalTarget from './views/KPIDashboard/GlobleTarget'
 import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
+import Settings from "./views/Settings/Settings"
 
 // const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
@@ -179,6 +180,7 @@ const routes = [
   // prmotions
   { path: '/promotions', name: 'Promotions', element: Promotions },
   { path: '/banners', exact: true, name: 'Banners', element: Banners },
+  { path: '/settings', exact: true, name: 'Settings', element: Settings },
 ]
 
 export default routes
