@@ -82,7 +82,7 @@ const AppHeader = () => {
 
   const location = useLocation();
   useEffect(() => {
-  
+
   console.log('xwnwekCurrent pathname:', location.pathname);
   console.log('xwnwekSearch params:', location.search);
   console.log('xwnwekHash:', location.hash);
@@ -98,27 +98,27 @@ const AppHeader = () => {
   const [unReadCount, setUnReadCount] = useState(0)
   const [newHotList, setNewHotList] = useState([])
 
-  useEffect(() => {
-    const fetchNotifications = () => {
-      // fetchInAppNotificationsCount(userData?.id).then(response => {
-      //   console.log(response, "Read Notification")
-      //   setUnReadCount(response);
+  // useEffect(() => {
+  //   const fetchNotifications = () => {
+  //     // fetchInAppNotificationsCount(userData?.id).then(response => {
+  //     //   console.log(response, "Read Notification")
+  //     //   setUnReadCount(response);
 
-      // });
-      readInAppNotificationsOrderWise().then(response => {
-        // console.log(response?.data?.data?.notifications, "Read Notification")
-        setUnReadCount(response?.data?.data?.unread_count);
-        setNewHotList(response?.data?.data?.notifications);
-      });
-    };
+  //     // });
+  //     readInAppNotificationsOrderWise().then(response => {
+  //       // console.log(response?.data?.data?.notifications, "Read Notification")
+  //       setUnReadCount(response?.data?.data?.unread_count);
+  //       setNewHotList(response?.data?.data?.notifications);
+  //     });
+  //   };
 
-    fetchNotifications(); // Initial call
+  //   fetchNotifications(); // Initial call
 
-    const intervalId = setInterval(fetchNotifications, 10000); // Call every 10 seconds
+  //   const intervalId = setInterval(fetchNotifications, 10000); // Call every 10 seconds
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [userData?.id]);
+  //   // Cleanup interval on component unmount
+  //   return () => clearInterval(intervalId);
+  // }, [userData?.id]);
 
 
 
