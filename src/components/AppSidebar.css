@@ -52,15 +52,13 @@
 }
 
 /* Navigation item styling */
-.nav-link {
+/* .nav-link {
   transition: all 0.3s ease;
   border-radius: 5px;
   margin: 5px 10px;
-}
+} */
 
-.nav-link:hover {
-  background-color: rgba(223, 159, 31, 0.1);
-}
+
 
 .nav-link.active {
   background-color: rgba(223, 159, 31, 0.2);
