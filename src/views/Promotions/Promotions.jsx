@@ -412,7 +412,7 @@ const Promotions = () => {
 
       let current = 0
       let total = 1
-      while (current < 100) {
+      while (current < total) {
         try {
           formData.append('offset', current)
           const response = await axios.post('/pushNotification', formData, {
