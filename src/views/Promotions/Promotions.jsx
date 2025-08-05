@@ -422,6 +422,10 @@ const Promotions = () => {
           })
           current = response.data.current
           total = response.data.total
+          
+          setProcessedUsers(current)
+          setTotalUsers(total)
+
           const percentCompleted = Math.round((current * 100) / total)
           setProgress(percentCompleted)
         } catch (error) {
