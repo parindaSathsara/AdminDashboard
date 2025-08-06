@@ -49,7 +49,7 @@
     button[aria-label="Column Actions"]::after {
     content: "Column Actions";
     position: absolute;
-    top: 100%;
+    top: 130%;
     left: 50%;
     transform: translateX(-50%);
     background: #333;
@@ -67,5 +67,10 @@
     button[aria-label="Column Actions"]:hover::after {
     opacity: 1;
     }
+
+    
+
+    
+
 
 

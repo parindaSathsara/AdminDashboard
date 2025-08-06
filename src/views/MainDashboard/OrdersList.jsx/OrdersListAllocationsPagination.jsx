@@ -85,7 +85,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 setOrdersData(mappedData);
                 setPagination(prev => ({
                     ...prev,
-                    totalCount: data.pagination.total,
+                   totalCount: data.pagination?.total || 0,
                 }));
             } else {
                 console.error('Error fetching data:', data.error);
