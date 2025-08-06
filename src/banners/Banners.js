@@ -39,7 +39,7 @@ const Banners = () => {
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  
+
   const [currentBanner, setCurrentBanner] = useState({
     id: null,
     route: '',
@@ -70,30 +70,29 @@ const Banners = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!currentBanner.route) newErrors.route = 'Route is required';
     if (!currentBanner.title) newErrors.title = 'Title is required';
     if (!currentBanner.description) newErrors.description = 'Description is required';
     if (!currentBanner.product_id) newErrors.product_id = 'Product ID is required';
     if (!currentBanner.category) newErrors.category = 'Category is required';
     if (!isEdit && !imageFile) newErrors.image = 'Image is required';
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
     }
-    
+
     setCurrentBanner({
       ...currentBanner,
       [name]: type === 'checkbox' ? checked : value
@@ -102,15 +101,15 @@ const Banners = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    
+
     if (errors.image) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors.image;
         return newErrors;
       });
     }
-    
+
     if (file) {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
@@ -131,67 +130,63 @@ const Banners = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  if (!validateForm()) {
-    return;
-  }
-  
-  setLoading(true);
-  
-  try {
-    const formData = new FormData();
-    
-    // Append all fields
-    Object.keys(currentBanner).forEach(key => {
-      // Ensure is_active is appended as a boolean
-if (key === 'is_active') {
-  formData.append(key, currentBanner[key] ? '1' : '0');
-} else {
-  formData.append(key, currentBanner[key]);
-}
+    e.preventDefault();
 
-    });
-    
-    // Append image if exists (for both create and update)
-    if (imageFile) {
-      formData.append('image', imageFile);
+    if (!validateForm()) {
+      return;
     }
-    
-    // For edit, include ID and method
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+
+      Object.keys(currentBanner).forEach(key => {
+        if (key === 'is_active') {
+          formData.append(key, currentBanner[key] ? '1' : '0');
+        } else {
+          formData.append(key, currentBanner[key]);
+        }
+
+      });
+
+      if (imageFile) {
+        formData.append('image', imageFile);
       }
-    };
 
-    const url = isEdit 
-      ? `/banners/${currentBanner.id}`
-      : '/banners';
-      
-    const response = isEdit
-      ? await axios.post(url, formData, config)
-      : await axios.post(url, formData, config);
-    
-    showSuccess(response.data.message);
-    setModalVisible(false);
-    setImageFile(null);
-    setImagePreview(null);
-    fetchBanners();
-  } catch (error) {
-    console.error('Error saving banner:', error);
-    if (error.response?.data?.error) {
-      const errorMsg = typeof error.response.data.error === 'string' 
-        ? error.response.data.error
-        : Object.values(error.response.data.error).join(', ');
-      showError(errorMsg);
-    } else {
-      showError('An error occurred while saving the banner');
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+
+      const url = isEdit
+        ? `/banners/${currentBanner.id}`
+        : '/banners';
+
+      const response = isEdit
+        ? await axios.post(url, formData, config)
+        : await axios.post(url, formData, config);
+
+      showSuccess(response.data.message);
+      setModalVisible(false);
+      setImageFile(null);
+      setImagePreview(null);
+      fetchBanners();
+    } catch (error) {
+      console.error('Error saving banner:', error);
+      if (error.response?.data?.error) {
+        const errorMsg = typeof error.response.data.error === 'string'
+          ? error.response.data.error
+          : Object.values(error.response.data.error).join(', ');
+        showError(errorMsg);
+      } else {
+        showError('An error occurred while saving the banner');
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const openCreateModal = () => {
     setCurrentBanner({
@@ -281,11 +276,11 @@ if (key === 'is_active') {
                   <CTableRow key={banner.id}>
                     <CTableDataCell>{banner.id}</CTableDataCell>
                     <CTableDataCell>
-                      <CImage 
-                        src={banner.image} 
-                        alt={banner.title} 
-                        width={100} 
-                        thumbnail 
+                      <CImage
+                        src={banner.image}
+                        alt={banner.title}
+                        width={100}
+                        thumbnail
                       />
                     </CTableDataCell>
                     <CTableDataCell>{banner.title}</CTableDataCell>
@@ -308,18 +303,18 @@ if (key === 'is_active') {
                     <CTableDataCell>{banner.sort_order}</CTableDataCell>
                     <CTableDataCell>{banner.nationality || 'All'}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton 
-                        color="info" 
-                        variant="outline" 
+                      <CButton
+                        color="info"
+                        variant="outline"
                         size="sm"
                         className="me-2"
                         onClick={() => openEditModal(banner)}
                       >
                         <CIcon icon={cilPencil} />
                       </CButton>
-                      <CButton 
-                        color="danger" 
-                        variant="outline" 
+                      <CButton
+                        color="danger"
+                        variant="outline"
                         size="sm"
                         onClick={() => handleDelete(banner.id)}
                       >
@@ -335,7 +330,8 @@ if (key === 'is_active') {
       </CCol>
 
       {/* Create/Edit Modal */}
-      <CModal visible={modalVisible} onClose={() => setModalVisible(false)}>
+      <CModal visible={modalVisible} onClose={() => setModalVisible(false)} backdrop="static"         // prevent clicking outside to close
+  keyboard={false} >
         <CModalHeader onClose={() => setModalVisible(false)}>
           <CModalTitle>{isEdit ? 'Edit Banner' : 'Create New Banner'}</CModalTitle>
         </CModalHeader>
@@ -351,7 +347,7 @@ if (key === 'is_active') {
                 className={errors.image ? 'is-invalid' : ''}
               />
               {errors.image && <div className="invalid-feedback">{errors.image}</div>}
-              
+
               {imagePreview && (
                 <div className="mt-2">
                   <CImage src={imagePreview} width={150} thumbnail />
@@ -367,9 +363,9 @@ if (key === 'is_active') {
                 </div>
               )}
             </div>
-            
-           
-            
+
+
+
             <div className="mb-3">
               <CFormLabel>Route <span className="text-danger">*</span></CFormLabel>
               <CFormInput
@@ -383,7 +379,7 @@ if (key === 'is_active') {
               />
               {errors.route && <div className="invalid-feedback">{errors.route}</div>}
             </div>
-            
+
             <div className="row mb-3">
               <div className="col-md-6">
                 <CFormLabel>Product ID <span className="text-danger">*</span></CFormLabel>
@@ -416,7 +412,7 @@ if (key === 'is_active') {
                 {errors.category && <div className="invalid-feedback">{errors.category}</div>}
               </div>
             </div>
-            
+
             <div className="mb-3">
               <CFormLabel>Title <span className="text-danger">*</span></CFormLabel>
               <CFormInput
@@ -430,7 +426,7 @@ if (key === 'is_active') {
               />
               {errors.title && <div className="invalid-feedback">{errors.title}</div>}
             </div>
-            
+
             <div className="mb-3">
               <CFormLabel>Description <span className="text-danger">*</span></CFormLabel>
               <CFormTextarea
@@ -444,7 +440,7 @@ if (key === 'is_active') {
               />
               {errors.description && <div className="invalid-feedback">{errors.description}</div>}
             </div>
-            
+
             <div className="row mb-3">
               <div className="col-md-6">
                 <CFormLabel>Sort Order</CFormLabel>
@@ -468,7 +464,7 @@ if (key === 'is_active') {
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <CFormCheck
                 label="Active Banner"
@@ -478,17 +474,17 @@ if (key === 'is_active') {
                 disabled={loading}
               />
             </div>
-            
+
             <CModalFooter>
-              <CButton 
-                color="secondary" 
+              <CButton
+                color="secondary"
                 onClick={() => setModalVisible(false)}
                 disabled={loading}
               >
                 Cancel
               </CButton>
-              <CButton 
-                color="primary" 
+              <CButton
+                color="primary"
                 type="submit"
                 disabled={loading}
               >

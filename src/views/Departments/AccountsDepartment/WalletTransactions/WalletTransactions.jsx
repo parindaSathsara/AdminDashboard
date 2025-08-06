@@ -498,8 +498,10 @@ const WalletTransactions = () => {
   }
 
   const formatCurrency = (amount, currency) => {
-    const symbols = { USD: '$', EUR: '€', GBP: '£', LKR: 'Rs.' }
-    return `${symbols[currency] || currency} ${parseFloat(amount).toLocaleString()}`
+    return `${currency} ${parseFloat(amount).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`
   }
 
   // Pagination handlers

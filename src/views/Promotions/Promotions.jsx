@@ -179,33 +179,43 @@ const styles = {
   };
 
   // Handle user selection from dropdown
-  const handleUserSelect = (event, value) => {
-    if (value && !selectedUsers.some(user => user.email === value.email)) {
-      setSelectedUsers([...selectedUsers, value]);
-      setSearchTerm('');
-      setSearchResults([]);
-    }
-  };
+const handleUserSelect = (event, value) => {
+  if (!value) return;
+
+  let user = value;
+
+  // If user is a string (from manual entry), wrap it in an object
+  if (typeof value === 'string') {
+    user = { email: value };
+  }
+
+  // Avoid duplicate emails
+  if (!selectedUsers.some((u) => u.email === user.email)) {
+    setSelectedUsers([...selectedUsers, user]);
+    setSearchTerm('');
+    setSearchResults([]);
+  }
+};
+
 
   // Handle Enter key press for exact search
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && searchTerm) {
-      event.preventDefault();
-      debouncedSearch.cancel();
-      
-      // Check if search term matches any existing result
-      const exactMatch = searchResults.find(
-        user => user.email.toLowerCase() === searchTerm.toLowerCase()
-      );
-      
-      if (exactMatch) {
-        handleUserSelect(null, exactMatch);
-      } else if (searchTerm.includes('@')) {
-        // Add as new user if it looks like an email
-        handleUserSelect(null, { email: searchTerm });
-      }
+ const handleKeyDown = (event) => {
+  if (event.key === 'Enter' && searchTerm) {
+    event.preventDefault();
+    debouncedSearch.cancel();
+
+    const exactMatch = searchResults.find(
+      user => user.email.toLowerCase() === searchTerm.toLowerCase()
+    );
+
+    if (exactMatch) {
+      handleUserSelect(null, exactMatch);
+    } else if (searchTerm.includes('@')) {
+      handleUserSelect(null, searchTerm); // Pass string, will be wrapped properly
     }
-  };
+  }
+};
+
 
   // Remove a selected user
   const handleRemoveUser = (emailToRemove) => {
@@ -265,7 +275,7 @@ const styles = {
       <Autocomplete
   freeSolo
   options={searchResults}
-  getOptionLabel={(option) => option.email}
+ getOptionLabel={(option) => (typeof option === 'string' ? option : option.email || '')}
   inputValue={searchTerm}
   onInputChange={handleSearchChange}
   onChange={handleUserSelect}
