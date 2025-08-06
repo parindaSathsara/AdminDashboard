@@ -148,6 +148,9 @@ const WalletTransactions = () => {
   const [adminNotes, setAdminNotes] = useState('')
   const [rejectionReason, setRejectionReason] = useState('')
 
+  // Multiple images state
+  const [selectedReceiptIndex, setSelectedReceiptIndex] = useState(0)
+
   const defaultMaterialTheme = createTheme()
 
   // API endpoints
@@ -253,6 +256,7 @@ const WalletTransactions = () => {
       if (response.data.success) {
         setRequestDetails(response.data.data)
         setSelectedRequest(response.data.data)
+        setSelectedReceiptIndex(0) // Reset to first image
         setShowDetailsOffcanvas(true)
       }
     } catch (error) {
@@ -403,23 +407,21 @@ const handleExport = async () => {
   }
 };
 
-  const handleDownloadReceipt = async (requestId, filename = 'receipt') => {
+  const handleDownloadReceipt = async (requestId, filename = 'receipt', imageIndex = 0) => {
     if (!requestId) return
 
-    setProgress(30) // Show loading
+    setProgress(30)
 
     try {
       const response = await axios({
         method: 'GET',
-        url: `/admin/wallet/topup-requests/${requestId}/download-receipt`,
+        url: `/admin/wallet/topup-requests/${requestId}/download-receipt?index=${imageIndex}`,
         responseType: 'blob',
       })
 
-      // Create blob URL from response
       const blob = new Blob([response.data])
       const url = window.URL.createObjectURL(blob)
 
-      // Get filename from response headers or use default
       const contentDisposition = response.headers['content-disposition']
       let downloadFilename = filename
 
@@ -430,7 +432,6 @@ const handleExport = async () => {
         }
       }
 
-      // Create download link and trigger download
       const link = document.createElement('a')
       link.href = url
       link.download = downloadFilename
@@ -438,7 +439,6 @@ const handleExport = async () => {
       link.click()
       document.body.removeChild(link)
 
-      // Clean up the blob URL
       window.URL.revokeObjectURL(url)
 
       showSuccessAlert('Receipt downloaded successfully')
@@ -466,6 +466,104 @@ const handleExport = async () => {
     if (!filename) return false
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
     return imageExtensions.some((ext) => filename.toLowerCase().includes(ext))
+  }
+
+  // New function to render receipt section with multiple images support
+  const renderReceiptSection = () => {
+    // Handle both single image (backward compatibility) and multiple images
+    let paymentSlips = requestDetails?.payment_slips || []
+    
+    // If no payment_slips but has old payment_slip, create array for backward compatibility
+    if (paymentSlips.length === 0 && requestDetails?.payment_slip) {
+      paymentSlips = [{
+        ...requestDetails.payment_slip,
+        index: 0
+      }]
+    }
+
+    if (paymentSlips.length === 0) {
+      return null
+    }
+
+    return (
+      <div className="mb-4">
+        <h6 className="mb-3 d-flex align-items-center gap-2">
+          <FileEarmarkImage size={16} />
+          Payment Receipt{paymentSlips.length > 1 ? 's' : ''} ({paymentSlips.length})
+        </h6>
+        
+        {paymentSlips.map((slip, index) => (
+          <div key={index} className="border rounded p-3 mb-3">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <small className="text-muted">File {index + 1}:</small>
+                <div className="fw-medium">{slip.original_name}</div>
+              </div>
+              {paymentSlips.length > 1 && (
+                <CBadge color="primary" className="ms-2">
+                  #{index + 1}
+                </CBadge>
+              )}
+            </div>
+            
+            {slip.error && (
+              <CAlert color="warning" className="py-2 mb-2">
+                <small>{slip.error}</small>
+              </CAlert>
+            )}
+            
+            <div className="d-flex gap-2 mb-2">
+              <CButton
+                size="sm"
+                color="primary"
+                variant="ghost"
+                onClick={() => handleDownloadReceipt(requestDetails.id, slip.original_name, index)}
+                disabled={slip.error}
+              >
+                <CloudDownload size={14} className="me-1" />
+                Download
+              </CButton>
+              
+              {!slip.error && slip.url && isImageFile(slip.original_name) && (
+                <CButton
+                  size="sm"
+                  color="info"
+                  variant="ghost"
+                  onClick={() => {
+                    setSelectedReceiptIndex(index)
+                    setShowReceiptModal(true)
+                  }}
+                >
+                  <Eye size={14} className="me-1" />
+                  Preview
+                </CButton>
+              )}
+            </div>
+            
+            {/* Small preview for images */}
+            {!slip.error && slip.url && isImageFile(slip.original_name) && (
+              <div className="mt-2">
+                <CImage
+                  src={slip.url}
+                  alt={`Receipt Preview ${index + 1}`}
+                  style={{ 
+                    width: '100%', 
+                    maxHeight: '100px', 
+                    objectFit: 'cover',
+                    cursor: 'pointer'
+                  }}
+                  className="rounded border"
+                  onClick={() => {
+                    setSelectedReceiptIndex(index)
+                    setShowReceiptModal(true)
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
   }
 
   const showSuccessAlert = (message) => {
@@ -1217,59 +1315,8 @@ const handleExport = async () => {
                 </div>
               )}
 
-              {/* Receipt */}
-              {requestDetails.payment_slip && (
-                <div className="mb-4">
-                  <h6 className="mb-3 d-flex align-items-center gap-2">
-                    <FileEarmarkImage size={16} />
-                    Payment Receipt
-                  </h6>
-                  <div className="border rounded p-3">
-                    <div className="mb-2">
-                      <small className="text-muted">File:</small>
-                      <div>{requestDetails.payment_slip.original_name}</div>
-                    </div>
-                    <div className="d-flex gap-2">
-                      <CButton
-                        size="sm"
-                        color="primary"
-                        variant="ghost"
-                        onClick={() =>
-                          handleDownloadReceipt(
-                            requestDetails?.id,
-                            requestDetails?.payment_slip?.original_name,
-                          )
-                        }
-                      >
-                        <CloudDownload size={14} className="me-1" />
-                        Download
-                      </CButton>
-                      {isImageFile(requestDetails.payment_slip.original_name) && (
-                        <CButton
-                          size="sm"
-                          color="info"
-                          variant="ghost"
-                          onClick={() => setShowReceiptModal(true)}
-                        >
-                          <Eye size={14} className="me-1" />
-                          Preview
-                        </CButton>
-                      )}
-                    </div>
-                    {/* Image preview if available */}
-                    {isImageFile(requestDetails.payment_slip.original_name) && (
-                      <div className="mt-2">
-                        <CImage
-                          src={getReceiptUrl(requestDetails.payment_slip.path)}
-                          alt="Receipt Preview"
-                          style={{ width: '100%', maxHeight: '120px', objectFit: 'cover' }}
-                          className="rounded"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Receipt Section - Updated to handle multiple images */}
+              {renderReceiptSection()}
 
               {/* Admin Notes */}
               {requestDetails.admin_notes && (
@@ -1554,41 +1601,132 @@ const handleExport = async () => {
         </COffcanvasBody>
       </COffcanvas>
 
-      {/* Compact Receipt Modal */}
+      {/* Updated Receipt Modal with Multiple Images Support */}
       <CModal visible={showReceiptModal} onClose={() => setShowReceiptModal(false)} size="lg">
         <CModalHeader className="border-0 pb-0">
           <CModalTitle>
             <div className="d-flex align-items-center gap-2">
               <FileEarmarkImage size={18} />
-              Payment Receipt
+              {(() => {
+                let paymentSlips = requestDetails?.payment_slips || []
+                if (paymentSlips.length === 0 && requestDetails?.payment_slip) {
+                  paymentSlips = [requestDetails.payment_slip]
+                }
+                return `Payment Receipt${paymentSlips.length > 1 ? ` ${selectedReceiptIndex + 1} of ${paymentSlips.length}` : ''}`
+              })()}
             </div>
           </CModalTitle>
         </CModalHeader>
         <CModalBody className="text-center pt-0">
-          {requestDetails?.payment_slip &&
-            isImageFile(requestDetails.payment_slip.original_name) && (
-              <CImage
-                src={getReceiptUrl(requestDetails.payment_slip.path)}
-                alt="Payment Receipt"
-                style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain' }}
-                className="border rounded shadow-sm"
-              />
-            )}
+          {(() => {
+            let paymentSlips = requestDetails?.payment_slips || []
+            if (paymentSlips.length === 0 && requestDetails?.payment_slip) {
+              paymentSlips = [requestDetails.payment_slip]
+            }
+            
+            const currentSlip = paymentSlips[selectedReceiptIndex]
+            
+            if (!currentSlip) return null
+
+            return (
+              <>
+                {/* Navigation for multiple images */}
+                {paymentSlips.length > 1 && (
+                  <div className="d-flex justify-content-center align-items-center gap-3 mb-3">
+                    <CButton
+                      size="sm"
+                      color="secondary"
+                      variant="ghost"
+                      onClick={() => setSelectedReceiptIndex(Math.max(0, selectedReceiptIndex - 1))}
+                      disabled={selectedReceiptIndex === 0}
+                    >
+                      <ChevronLeft size={16} />
+                    </CButton>
+                    
+                    <div className="d-flex gap-1">
+                      {paymentSlips.map((_, index) => (
+                        <div
+                          key={index}
+                          className={`rounded-circle ${
+                            index === selectedReceiptIndex ? 'bg-primary' : 'bg-secondary'
+                          }`}
+                          style={{
+                            width: '8px',
+                            height: '8px',
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => setSelectedReceiptIndex(index)}
+                        />
+                      ))}
+                    </div>
+                    
+                    <CButton
+                      size="sm"
+                      color="secondary"
+                      variant="ghost"
+                      onClick={() => setSelectedReceiptIndex(Math.min(paymentSlips.length - 1, selectedReceiptIndex + 1))}
+                      disabled={selectedReceiptIndex === paymentSlips.length - 1}
+                    >
+                      <ChevronRight size={16} />
+                    </CButton>
+                  </div>
+                )}
+
+                <div className="mb-2">
+                  <small className="text-muted">{currentSlip.original_name}</small>
+                </div>
+                
+                {currentSlip.url && !currentSlip.error && isImageFile(currentSlip.original_name) && (
+                  <CImage
+                    src={currentSlip.url}
+                    alt={`Payment Receipt ${selectedReceiptIndex + 1}`}
+                    style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain' }}
+                    className="border rounded shadow-sm"
+                  />
+                )}
+                
+                {currentSlip.error && (
+                  <CAlert color="warning">
+                    {currentSlip.error}
+                  </CAlert>
+                )}
+                
+                {!isImageFile(currentSlip.original_name) && (
+                  <CAlert color="info">
+                    Preview not available for this file type. Use download to view the file.
+                  </CAlert>
+                )}
+              </>
+            )
+          })()}
         </CModalBody>
         <CModalFooter className="border-0 pt-0">
-          <CButton
-            color="primary"
-            size="sm"
-            onClick={() =>
-              handleDownloadReceipt(requestDetails?.id, requestDetails?.payment_slip?.original_name)
-            }
-          >
-            <CloudDownload size={14} className="me-1" />
-            Download
-          </CButton>
-          <CButton color="secondary" size="sm" onClick={() => setShowReceiptModal(false)}>
-            Close
-          </CButton>
+          <div className="d-flex gap-2 w-100 justify-content-center">
+            {(() => {
+              let paymentSlips = requestDetails?.payment_slips || []
+              if (paymentSlips.length === 0 && requestDetails?.payment_slip) {
+                paymentSlips = [requestDetails.payment_slip]
+              }
+              const currentSlip = paymentSlips[selectedReceiptIndex]
+              
+              return (
+                <>
+                  <CButton
+                    color="primary"
+                    size="sm"
+                    onClick={() => handleDownloadReceipt(requestDetails?.id, currentSlip?.original_name, selectedReceiptIndex)}
+                    disabled={currentSlip?.error}
+                  >
+                    <CloudDownload size={14} className="me-1" />
+                    Download
+                  </CButton>
+                  <CButton color="secondary" size="sm" onClick={() => setShowReceiptModal(false)}>
+                    Close
+                  </CButton>
+                </>
+              )
+            })()}
+          </div>
         </CModalFooter>
       </CModal>
 
