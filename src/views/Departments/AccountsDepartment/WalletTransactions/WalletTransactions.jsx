@@ -359,25 +359,49 @@ const WalletTransactions = () => {
     }
   }
 
-  const handleExport = async () => {
-    setProgress(50)
-    try {
-      const params = new URLSearchParams()
-      Object.keys(filters).forEach((key) => {
-        if (filters[key]) params.append(key, filters[key])
-      })
+const handleExport = async () => {
+  setProgress(50);
+  try {
+    const params = new URLSearchParams();
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) params.append(key, filters[key]);
+    });
 
-      const response = await axios.get(`${API_BASE}/admin/wallet/export-topup-requests?${params}`)
-      if (response.data.success) {
-        window.open(response.data.data.download_url, '_blank')
-        showSuccessAlert('Export completed successfully')
-      }
-    } catch (error) {
-      showErrorAlert('Export failed')
-    } finally {
-      setProgress(100)
-    }
+    // Get token from your auth context
+    const token = localStorage.getItem('token') || userData?.token; 
+
+    const response = await axios.get(`${API_BASE}/admin/wallet/export-topup-requests?${params}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      responseType: 'blob' // Important for file downloads
+    });
+
+    // Create blob URL from response
+    const blob = new Blob([response.data]);
+    const url = window.URL.createObjectURL(blob);
+
+    // Create download link and trigger download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `topup_requests_${new Date().toISOString()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    
+    showSuccessAlert('Export completed successfully');
+  } catch (error) {
+    console.error('Export failed:', error);
+    showErrorAlert(error.response?.data?.message || 'Export failed');
+  } finally {
+    setProgress(100);
   }
+};
 
   const handleDownloadReceipt = async (requestId, filename = 'receipt') => {
     if (!requestId) return
