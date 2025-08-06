@@ -1,8 +1,76 @@
-.basic-single {
-    z-index: 500 !important;
-}
+    .basic-single {
+        z-index: 500 !important;
+    }
 
-.select__menu {
-    background-color: red !important;
-    z-index: 100000000;
-}
+    .select__menu {
+        background-color: red !important;
+        z-index: 100000000;
+    }
+    .basic-single {
+        z-index: 500 !important;
+    }
+
+    .select__menu {
+        background-color: red !important;
+        z-index: 100000000;
+    }
+    /* Tooltip for the move icon */
+    button[aria-label="Move"] {
+    position: relative;
+    }
+
+    button[aria-label="Move"]::after {
+    content: "Move";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 1000;
+    }
+
+    button[aria-label="Move"]:hover::after {
+    opacity: 1;
+    }
+
+    /* Tooltip for the column actions icon */
+    button[aria-label="Column Actions"] {
+    position: relative;
+    }
+
+    button[aria-label="Column Actions"]::after {
+    content: "Column Actions";
+    position: absolute;
+    top: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 10001;
+    }
+
+    button[aria-label="Column Actions"]:hover::after {
+    opacity: 1;
+    }
+
+    
+
+    
+
+
+

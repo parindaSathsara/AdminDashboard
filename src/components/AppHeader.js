@@ -240,7 +240,7 @@ const AppHeader = () => {
 
 
               <CCol className="d-flex align-items-center justify-content-center currency-col">
-                {location.pathname !== '/dashboard' && <CurrencyController />}
+                {location.pathname !== '/dashboard' && location.pathname !== '/accounts/walletrequests' && <CurrencyController />}
               </CCol>
 
               {/* <CCol className="d-flex align-items-center justify-content-center currency-col">
