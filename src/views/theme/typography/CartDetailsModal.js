@@ -119,6 +119,7 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
       }
 
       const contentDisposition = response.headers['content-disposition'] || `attachment; filename="${filename}"`;
+
       
       if (contentDisposition) {
         const match = contentDisposition.match(/filename[^;=\n]*=["']?([^"';\n]+)["']?/i)
