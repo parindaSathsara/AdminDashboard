@@ -30,14 +30,12 @@ export default function ProductWiseOrdersPaginate() {
   const [hotelDataSet, setHotelDataSet] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Pagination state
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
     totalCount: 0,
   });
 
-  // Status counts for tabs
   const [statusCounts, setStatusCounts] = useState({
     All: 0,
     CustomerOrdered: 0,
@@ -107,28 +105,22 @@ export default function ProductWiseOrdersPaginate() {
     }
   };
 
-  // Initial load
   useEffect(() => {
     fetchData(pagination.pageIndex, pagination.pageSize, currentFilters);
     fetchStatusCounts();
   }, []);
 
-  // Handle pagination and filter changes
   useEffect(() => {
     fetchData(pagination.pageIndex, pagination.pageSize, currentFilters, searchTerm);
   }, [pagination.pageIndex, pagination.pageSize, currentFilters]);
 
-  // Handle search
   const handleSearch = () => {
-    // Reset to first page when searching
     setPagination(prev => ({ ...prev, pageIndex: 0 }));
     fetchData(0, pagination.pageSize, currentFilters, searchTerm);
   };
 
-  // Handle clear search
   const handleClearSearch = () => {
     setSearchTerm('');
-    // Reset to first page when clearing search
     setPagination(prev => ({ ...prev, pageIndex: 0 }));
     fetchData(0, pagination.pageSize, currentFilters);
   };
@@ -288,7 +280,9 @@ export default function ProductWiseOrdersPaginate() {
     rowCount: pagination.totalCount,
     onPaginationChange: setPagination,
     state: {
-      pagination,
+     isLoading: loading,             // Add loading state
+    showProgressBars: loading,      // Show progress bars during loading
+    pagination,  
     },
     muiTablePaginationProps: {
       rowsPerPageOptions: [10, 20, 25, 50, 100],
@@ -413,11 +407,8 @@ export default function ProductWiseOrdersPaginate() {
         />
       </Tabs>
 
-      {loading ? (
-        <LoaderPanel message="Loading product data..." />
-      ) : (
         <MaterialReactTable table={table} />
-      )}
+      
     </>
   );
 }

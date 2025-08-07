@@ -39,7 +39,8 @@ const ReportGenerationPage = () => {
   const { userData } = useContext(UserLoginContext)
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [category, setCategory] = useState({ value: 0 })
+const [category, setCategory] = useState(null)
+
   const [reportType, setReportType] = useState(null)
   const [dataSets, setDataSets] = useState(null)
 
@@ -81,8 +82,13 @@ const ReportGenerationPage = () => {
     if (!startDate) errors.startDate = 'Start date is required'
     if (!endDate) errors.endDate = 'End date is required'
     if (!reportType) errors.reportType = 'Report type is required'
-    if (!category || category.value === '' || category.value === 0)
-      errors.category = 'Category is required'
+    if (
+  reportType?.value === 'products_report' &&
+  (category === null || category.value === undefined || category.value === '')
+) {
+  errors.category = 'Category is required'
+}
+
 
     if (startDate && endDate) {
       const start = moment(startDate)

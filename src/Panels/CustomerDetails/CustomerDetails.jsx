@@ -28,39 +28,49 @@ function CustomerDetails(props) {
   };
 
   const handleSendMessage = async () => {
-    if (contactDetails.suggestion && contactDetails.reach_type) {
-      const dataSet = {
-        customerID: props?.dataset?.customer_id,
-        reach_type: contactDetails?.reach_type,
-        content: contactDetails?.suggestion
-      };
+  if (contactDetails.suggestion && contactDetails.reach_type) {
+    const dataSet = {
+      customerID: props?.dataset?.customer_id,
+      reach_type: contactDetails?.reach_type,
+      content: contactDetails?.suggestion
+    };
 
-      try {
-        const result = await axios.post("sendMesageToCustomer", dataSet);
-        if (result?.status === 200) {
-          Swal.fire({
-            title: "Message Sent to customer",
-            text: "Message Sent",
-            icon: "success"
-          });
-          setContactDetail({ suggestion: "", reach_type: "" });
-          setVisible(false);
-        }
-      } catch (error) {
+    try {
+      const result = await axios.post("sendMesageToCustomer", dataSet);
+      if (result?.status === 200) {
         Swal.fire({
-          title: "Error",
-          text: "Failed to send message",
-          icon: "error"
+          title: "Message Sent to customer",
+          text: "Message Sent",
+          icon: "success",
+          // Add these options to ensure it appears on top
+          zIndex: 100000, // Higher than fullscreen z-index
+          backdrop: 'rgba(0,0,0,0.7)',
+          customClass: {
+            container: 'swal2-top'
+          }
         });
+        setContactDetail({ suggestion: "", reach_type: "" });
+        setVisible(false);
       }
-    } else {
+    } catch (error) {
       Swal.fire({
         title: "Error",
-        text: "Please fill out all fields",
-        icon: "error"
+        text: "Failed to send message",
+        icon: "error",
+        zIndex: 100000,
+        backdrop: 'rgba(0,0,0,0.7)'
       });
     }
-  };
+  } else {
+    Swal.fire({
+      title: "Error",
+      text: "Please fill out all fields",
+      icon: "error",
+      zIndex: 100000,
+      backdrop: 'rgba(0,0,0,0.7)'
+    });
+  }
+};
 
   const suggestionOptions = [
     { 

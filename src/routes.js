@@ -23,6 +23,7 @@ import SupplierSupport from './views/SupplierSupport/SupplierSupport'
 import KpiDashboard from './views/KPIDashboard/KpiDashboard'
 import GlobalTarget from './views/KPIDashboard/GlobleTarget'
 import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
+import Settings from "./views/Settings/Settings"
 
 // const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
@@ -102,6 +103,7 @@ import Promotions from './views/Promotions/Promotions'
 import VendorStats from './views/VendorCategorize/VendorStats'
 import RateHawk from './Panels/API_details/RateHawk'
 import WalletTransactions from './views/Departments/AccountsDepartment/WalletTransactions/WalletTransactions'
+import Banners from './banners/Banners'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -111,7 +113,7 @@ const routes = [
   { path: '/flightCard', name: 'Flights', element: FlightOrderView, exact: true },
   { path: '/blogs/newBlog', name: 'Add Blog', element: BlogMainPage, exact: true },
   { path: '/blogs/listBlogs', name: 'List Blogs', element: ListBlogs, exact: true },
-  { path: '/blogs/viewBlog/:id', name: 'View Blog', element: VIewBlog, exact: true },
+  { path: '/blogs/listBlogs/viewBlog/:id', name: 'View Blog', element: VIewBlog, exact: true },
 
   { path: '/offers_promo', name: 'Discounts', element: OffersPromoDashboard, exact: true },
 
@@ -177,6 +179,8 @@ const routes = [
 
   // prmotions
   { path: '/promotions', name: 'Promotions', element: Promotions },
+  { path: '/banners', exact: true, name: 'Banners', element: Banners },
+  { path: '/settings', exact: true, name: 'Settings', element: Settings },
 ]
 
 export default routes

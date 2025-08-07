@@ -527,11 +527,17 @@ function ChatsMeta() {
                 onClick={() => handleFilterchat('', chatList)}
               />
             )}
-            <FontAwesomeIcon
-              icon={faFilter}
-              className="chat-search-input-main-icon"
-              onClick={() => setOpenFilter(!openFilter)}
-            />
+            <div className="filter-icon-container" onClick={() => setOpenFilter(!openFilter)}>
+    <FontAwesomeIcon
+      icon={faFilter}
+      className="chat-search-input-main-icon"
+    />
+    {filterCheckBoxes.length > 0 && (
+      <span className="filter-count-badge">
+        {filterCheckBoxes.length}
+      </span>
+    )}
+  </div>
           </div>
           <div className={openFilter ? 'filter-open' : 'filter-close'}>
             <div className="d-flex justify-content-between align-items-center">
@@ -559,6 +565,8 @@ function ChatsMeta() {
             </div>
           </div>
           <div className="chat-lists" ref={chatListContainerRef}>
+            {pinnedChats.length > 0 && (
+  <>
             <p className="chatWise-heading">My pinned chats</p>
             {getPaginatedChats(getFilteredChats('pinned').map((value, key) => (
               <div
@@ -611,6 +619,7 @@ function ChatsMeta() {
                 </div>
               </div>
             )))}
+            
             {/* <p className="chatWise-heading">All chats</p> */}
 
             {/* Responsive Pagination */}
@@ -704,6 +713,8 @@ function ChatsMeta() {
                   />
                 </Pagination>
               </div>
+            )}
+            </>
             )}
             <Tabs
               defaultActiveKey="All"

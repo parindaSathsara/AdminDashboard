@@ -194,7 +194,9 @@ function OrderDetails(props) {
   }, [props.orderid, props.orderData])
   const reload = () => {
     // console.log(props?.orderid, "Order data id is val")
-    props?.updatedData()
+     if (props?.updatedData) {
+    props.updatedData()
+  }
     if (props?.productViewData) {
       getDashboardProductOrderDetails(props.orderid?.info?.checkoutID).then((res) => {
         // setDetailsLoading(false)

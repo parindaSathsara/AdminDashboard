@@ -48,10 +48,10 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 
 
-// axios.defaults.imageUrl = 'http://192.16.26.74:8000/';
-// axios.defaults.baseURL = 'http://192.16.26.74:8000/api';
-// axios.defaults.data = 'http://192.16.26.74:8000';
-// axios.defaults.url = 'http://192.16.26.74:8000/api';
+//axios.defaults.imageUrl = 'http://192.168.0.158:8000/';
+//axios.defaults.baseURL = 'http://192.168.0.158:8000/api';
+//axios.defaults.data = 'http://192.168.0.158:8000';
+//axios.defaults.url = 'http://192.168.0.158:8000/api';
 // axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
 
 

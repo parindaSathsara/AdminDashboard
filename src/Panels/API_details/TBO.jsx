@@ -14,6 +14,7 @@ import React, { useState, useEffect } from 'react'
 const TBO = () => {
   const [tboDetails, setTboDetails] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null) // add error state
 
   useEffect(() => {
     fetchTboDetails()
@@ -24,8 +25,11 @@ const TBO = () => {
       const res = await axios.get('/tbov2/getAgencyBalance')
       setTboDetails(res.data)
       setLoading(false)
+      setError(null) // clear error on success
     } catch (err) {
       console.error('Error fetching details:', err)
+      setError('Unable to fetch data right now. Please note this feature works on the live site.') // friendly message
+      setLoading(false)
     }
   }
 
@@ -42,6 +46,8 @@ const TBO = () => {
                 <div className="text-center p-3">
                   <CSpinner color="primary" />
                 </div>
+              ) : error ? (
+                <div className="text-center p-3 text-danger fw-bold">{error}</div>
               ) : (
                 <>
                   <CCardText className="d-flex justify-content-between align-items-center mb-3">

@@ -12,7 +12,7 @@
     width: '100%' !important;
   } */
 .swal2-container {
-  z-index: 1500 !important;
+  z-index: 100000 !important;
 }
 
 .MuiTooltip-popperc {
@@ -22,4 +22,20 @@
   pointer-events: none !important;         /* Optional: prevents blocking mouse events */
   margin-left: 10px !important;            /* Optional: adjust space when on the right */
   width: 100px !important;            /* Optional: adjust width */
+}
+
+.popover{
+  z-index: 1600 !important;
+}
+.MuiPopper-root{
+  display: none !important;
+}
+.MuiPopover-root{
+  z-index: 9999 !important;
+}
+
+
+.nav-tabs .nav-link.active {
+  color: black !important;   /* Set font color to black */
+  background-color: white !important; /* Optional: if you want white background */
 }

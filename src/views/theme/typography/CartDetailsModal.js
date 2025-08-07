@@ -1,6 +1,5 @@
 import axios from 'axios'
 import React, { useState, useMemo, useEffect } from 'react'
-
 import { Button, Modal, Form, Card, ListGroup, Badge, Alert, Spinner, InputGroup } from 'react-bootstrap'
 import { FaFilePdf, FaFileWord, FaShoppingCart, FaDownload, FaSearch } from 'react-icons/fa'
 import { saveAs } from 'file-saver'
@@ -28,16 +27,16 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
       });
   }, []);
 
-
   // Filter carts based on search term
   const filteredCarts = useMemo(() => {
-  if (!cartData?.cart_titles) return [];
-  return cartData.cart_titles.filter(cart =>
-    cart.cart_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cart.cart_id.toString().includes(searchTerm)
-  );
-}, [cartData, searchTerm]);
+    if (!cartData?.cart_titles) return [];
+    return cartData.cart_titles.filter(cart =>
+      cart.cart_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cart.cart_id.toString().includes(searchTerm)
+    );
+  }, [cartData, searchTerm]);
 
+  const hasCarts = cartData?.cart_titles?.length > 0;
 
   const handleCartSelection = (cart) => {
     if (selectedCarts.some((c) => c.cart_id === cart.cart_id)) {
@@ -112,22 +111,15 @@ const CartDetailsModal = ({ showModal, handleCloseModal, selectedCustomer, cartD
       }
 
     
-      // let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
-      // const contentDisposition = response.headers['content-disposition']
-      
-      let filename = ''; // Declare filename outside
+      let filename = '';
+      if (type === 'quotation_pdf' || type === 'quotation_word') {
+        filename = `quotation_details.${type === 'quotation_pdf' ? 'pdf' : 'docx'}`;
+      } else {
+        filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`;
+      }
 
-if (type === 'quotation_pdf' || type === 'quotation_word') {
-  filename = `quotation_details.${type === 'quotation_pdf' ? 'pdf' : 'docx'}`;
-} else {
-  filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`;
-}
+      const contentDisposition = response.headers['content-disposition'] || `attachment; filename="${filename}"`;
 
-const contentDisposition = response.headers['content-disposition'] || `attachment; filename="${filename}"`;
-
-
-      // let filename = `cart_details.${type === 'quotation' ? 'pdf' : type}`
-      // const contentDisposition = response.headers['content-disposition']
       
       if (contentDisposition) {
         const match = contentDisposition.match(/filename[^;=\n]*=["']?([^"';\n]+)["']?/i)
@@ -164,7 +156,7 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
     setError(null)
     setSuccess(null)
     setLoading({ pdf: false, word: false, quotation: false })
-    setSearchTerm('')
+    // setSearchTerm('')
   }
 
   const handleClose = () => {
@@ -194,28 +186,39 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
           </Alert>
         )}
 
-        {filteredCarts?.length > 0 ? (
-          <>
-            <Card className="mb-4">
-              <Card.Header className="bg-light">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h5 className="mb-0">Available Carts</h5>
-                    <small className="text-muted">Select one or more carts to process</small>
-                  </div>
-                  <InputGroup style={{ width: '300px' }}>
-                    <Form.Control
-                      placeholder="Search carts..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <InputGroup.Text>
-                      <FaSearch />
-                    </InputGroup.Text>
-                  </InputGroup>
+        {/* Always show search box if there are carts */}
+        {hasCarts && (
+          <Card className="mb-4">
+            <Card.Header className="bg-light">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 className="mb-0">Available Carts</h5>
+                  <small className="text-muted">Select one or more carts to process</small>
                 </div>
-              </Card.Header>
-              <Card.Body style={{ maxHeight: '300px', overflowY: 'auto' }}>
+               <InputGroup style={{ width: '300px' }}>
+  <Form.Control
+    placeholder="Search carts..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  {searchTerm && (
+    <InputGroup.Text
+      style={{ cursor: 'pointer' }}
+      onClick={() => setSearchTerm('')}
+    >
+      ✕
+    </InputGroup.Text>
+  )}
+  <InputGroup.Text>
+    <FaSearch />
+  </InputGroup.Text>
+</InputGroup>
+
+              </div>
+            </Card.Header>
+            <Card.Body style={{ maxHeight: '300px', overflowY: 'auto' }}>
+              {/* Show cart list or empty message */}
+              {filteredCarts.length > 0 ? (
                 <ListGroup variant="flush">
                   {filteredCarts.map((cart) => (
                     <ListGroup.Item
@@ -230,9 +233,25 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
-              </Card.Body>
-            </Card>
+              ) : (
+                <p className="text-muted text-center">
+                  {searchTerm ? "No carts match your search" : "No carts available"}
+                </p>
+              )}
+            </Card.Body>
+          </Card>
+        )}
 
+        {/* Show "no carts" message only when there are truly no carts */}
+        {!hasCarts && (
+          <div className="text-center py-4">
+            <p className="text-muted">No carts available for this customer.</p>
+          </div>
+        )}
+
+        {/* Additional controls (always shown if carts exist) */}
+        {hasCarts && (
+          <>
             <div className="row mb-3">
               <div className="col-md-4">
                 <Form.Group controlId="shippingCharges">
@@ -265,30 +284,17 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
                   <Form.Label>
                     Currency <span className="text-danger">*</span>
                   </Form.Label>
-                  {/* <Form.Control
+                  <Form.Control
                     as="select"
                     value={cartCurrency}
                     onChange={(e) => setCartCurrency(e.target.value)}
                     required
                   >
                     <option value="">Select Currency</option>
-                    <option value="USD">USD</option>
-                    <option value="SGD">SGD</option>
-                    <option value="LKR">LKR</option>
-                    <option value="INR">INR</option>
-                  </Form.Control> */}
-                  <Form.Control
-      as="select"
-      value={cartCurrency}
-      onChange={(e) => setCartCurrency(e.target.value)}
-      required
-    >
-      <option value="">Select Currency</option>
-      {currencyOptions.map(code => (
-        <option key={code} value={code}>{code}</option>
-      ))}
-    </Form.Control>
-
+                    {currencyOptions.map(code => (
+                      <option key={code} value={code}>{code}</option>
+                    ))}
+                  </Form.Control>
                 </Form.Group>
               </div>
             </div>
@@ -310,10 +316,6 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
               </Card>
             )}
           </>
-        ) : (
-          <div className="text-center py-4">
-            <p className="text-muted">No carts available for this customer.</p>
-          </div>
         )}
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-between">
@@ -371,7 +373,6 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
           <Button
             variant="secondary"
             onClick={() => handleDownload('quotation_word')}
-
             disabled={loading.quotation || loading.pdf || loading.word || selectedCarts.length === 0 || !cartCurrency}
           >
             {loading.quotation ? (
@@ -379,7 +380,6 @@ const contentDisposition = response.headers['content-disposition'] || `attachmen
             ) : (
               <>
                 <FaFilePdf className="me-1" /> Quotation Word
-
               </>
             )}
           </Button>

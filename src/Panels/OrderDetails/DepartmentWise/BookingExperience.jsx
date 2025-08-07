@@ -318,7 +318,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
             // updateDeliveryStatus(e.checkoutID, targetvalue, '')
             //   .then((result) => {
             //     console.log('resulttt', result)
-                
+
             //     props.reload()
 
             //     setSelectedStatusCheckout('Approved')
@@ -458,20 +458,54 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
     }
   }
 
-  const handleOrderCancellation = async (data) => {
-    cancellationData['reason'] = data;
-    
-    try {
-      Swal.showLoading();
-      await candelOrder(cancellationData);
-    } catch (error) {
-      console.error("Order cancellation failed:", error);
-    } finally {
-      Swal.hideLoading();
-      props?.reload();
-      setSelectedStatusCheckout('Cancel');
-    }
+  const handleOrderCancellation = async (reason) => {
+  try {
+    // Show loading indicator
+    Swal.fire({
+      title: 'Cancelling Order',
+      html: 'Please wait...',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    // Prepare cancellation data
+    const data = {
+      reason: reason,
+      id: cancellationData.id,
+      value: cancellationData.value
+    };
+
+    // Call cancellation API
+    const response = await candelOrder(data);
+
+    // Close loading indicator
+    Swal.close();
+
+    // Show success message
+    Swal.fire({
+      title: 'Success!',
+      text: 'Order has been cancelled',
+      icon: 'success',
+      confirmButtonColor: '#3085d6'
+    });
+
+    // Reload data
+    props?.reload();
+  } catch (error) {
+    // Handle API error
+    Swal.fire({
+      title: 'Cancellation Failed',
+      text: error.response?.data?.message ||
+            error.message ||
+            'Failed to cancel order',
+      icon: 'error'
+    });
+  } finally {
+    // Always close the modal
+    setCancellationReasonModal(false);
   }
+};
 
   const [clickedStatus, setClickedStatus] = useState('')
 
@@ -742,21 +776,21 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
   //   }
   // };
 
-  
+
   const showBookingDataModal = async (data) => {
     try {
       console.log('Data received for booking:', data);
       const response = await axios.get('/order-status/'+ data.orderID);
       console.log("API response:", response);
-      
+
       // Check if response data exists and has a status field
       const bookingStatus = response?.data?.status === 200 ? 200 : null;
       console.log('Determined booking status:', bookingStatus);
-      
+
       // Set the booking data
       console.log('About to set viewBookingData with:', data);
       setViewBookingData(data);
-      
+
       // Set the booking data directly from the props
       setBookingData({
         status: bookingStatus,  // Add this line to include the status
@@ -764,11 +798,11 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
           HotelName: data.PName,
           City: data.DAddress.split(',').slice(-3, -2)[0].trim(),
           CountryCode: data.DAddress.split(',').pop().trim(),
-          HotelBookingStatus: bookingStatus === 200 ? 'Confirmed' : 
+          HotelBookingStatus: bookingStatus === 200 ? 'Confirmed' :
                              (data.supplier_status === 'Pending' ? 'Pending' : 'Confirmed'),
           CheckInDate: data.checkInDate,
           CheckOutDate: data.checkOutDate,
-          NoOfRooms: 1, 
+          NoOfRooms: 1,
           InvoiceAmount: data.total_amount,
           InvoiceNo: data.checkoutID.toString(),
           BookingSource: 'Aahaas',
@@ -776,7 +810,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
           ConfirmationNo: data.checkoutID.toString(),
           BookingRefNo: data.orderID.toString(),
           HotelPolicyDetail: 'Standard hotel policy applies',
-          StarRating: '3', 
+          StarRating: '3',
           currency: data.currency,
         },
         basicInfo: {
@@ -788,13 +822,13 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
           currency: data.currency,
         },
       })
-  
+
       setHotelProvider('hotelTbo');
       setBookingDataModel(true);
-      
+
       // This will still show the old value (likely null)
       console.log('Right after setting viewBookingData:', viewBookingData);
-      
+
     } catch (error) {
       console.error('Error in showBookingDataModal:', error);
       setModelDefaultMessage('Error loading booking details');
@@ -1511,7 +1545,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
           {selectedDocument && selectedDocument.length > 0 ? (
             <ul style={{ padding: 0, listStyleType: 'none' }}>
               {selectedDocument.map((url, index) => {
-                const fileName = url.split('/').pop() // Extract the file name from the URL
+                const fileName = "File " + (index + 1) ;
                 return (
                   <li
                     key={index}
@@ -1524,9 +1558,8 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                       paddingBottom: '5px',
                     }}
                   >
-                    <span style={{ fontWeight: '500' }}>{fileName}</span>
                     <a
-                      href={axios.defaults.imageUrl + url}
+                      href={url}
                       download={fileName} // This attribute will prompt a download
                       target="_blank"
                       rel="noopener noreferrer"
@@ -1538,6 +1571,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                       }}
                     >
                       <CIcon icon={cilInfo} size="lg" />
+                      <span style={{ fontWeight: '500',marginLeft:"5px" }}>{fileName}</span>
                     </a>
                   </li>
                 )
@@ -1610,7 +1644,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
             productData[0]?.Provider === 'hotelAhs' ||
             productData[0]?.Provider === 'hotelTboH' ||
             productData[0]?.Provider === 'ratehawk' ? (
-             
+
               <div style={{
                 fontFamily: 'Arial, sans-serif',
                 maxWidth: '850px',
@@ -1648,7 +1682,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                           {viewBookingData?.supplier_status || 'Pending'}
                         </span>
                       </p>
-                      
+
                       {/* Confirmation Number */}
                       <p style={{ margin: '8px 0', fontSize: '15px' }}>
                         <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>
@@ -1656,7 +1690,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                         </span>
                         {viewBookingData?.checkoutID || 'N/A'}
                       </p>
-                      
+
                       {/* Invoice Number */}
                       <p style={{ margin: '8px 0', fontSize: '15px' }}>
                         <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>
@@ -1664,7 +1698,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                         </span>
                         {viewBookingData?.orderID || 'N/A'}
                       </p>
-                      
+
                       {/* Rooms */}
                       <p style={{ margin: '8px 0', fontSize: '15px' }}>
                         <span style={{ fontWeight: 'bold', color: '#555', width: '160px', display: 'inline-block' }}>
@@ -1674,7 +1708,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                       </p>
                     </div>
                   </div>
-              
+
                   {/* Stay Information */}
                   <div style={{ flex: '1', minWidth: '250px' }}>
                     <div style={{
@@ -1704,7 +1738,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                             {/* {new Date(viewBookingData?.checkInDate).getFullYear()} */}
                           </p>
                         </div>
-              
+
                         {/* Duration */}
                         <div style={{ display: 'flex', alignItems: 'center', padding: '0 15px' }}>
                           <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
@@ -1713,7 +1747,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                           </div>
                           <div style={{ height: '1px', width: '50px', backgroundColor: '#ddd' }}></div>
                         </div>
-              
+
                         {/* Check-out Date */}
                         <div style={{ textAlign: 'center', flex: '1' }}>
                           <p style={{ margin: '0', fontSize: '13px', color: '#555' }}>CHECK-OUT</p>
@@ -1735,7 +1769,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                     </div>
                   </div>
                 </div>
-              
+
                 {/* Hotel Information */}
                 <h2 style={{
                   color: '#2c3e50',
@@ -1788,7 +1822,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                       {viewBookingData?.decoded_data?.hotelMainRequest?.hotelData?.country || 'Malaysia'}
                     </p>
                   </div>
-              
+
                   {/* Map Placeholder */}
                   <div style={{
                     flex: '1',
@@ -1805,13 +1839,13 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                       <div style={{ fontSize: '24px', marginBottom: '5px' }}>📍</div>
                       <div style={{ fontSize: '14px' }}>Location:</div>
                       <div style={{ fontSize: '13px' }}>
-                        {viewBookingData?.decoded_data?.hotelMainRequest?.hotelData?.city || 'Kuala Lumpur'}, 
+                        {viewBookingData?.decoded_data?.hotelMainRequest?.hotelData?.city || 'Kuala Lumpur'},
                         {viewBookingData?.decoded_data?.hotelMainRequest?.hotelData?.country || 'Malaysia'}
                       </div>
                     </div>
                   </div>
                 </div>
-              
+
                 {/* Pricing Information */}
                 <h2 style={{
                   color: '#2c3e50',
@@ -1842,7 +1876,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                     <span>Aahaas</span>
                   </div>
                 </div>
-              
+
                 {/* Guest Information */}
                 <h2 style={{
                   color: '#2c3e50',
@@ -1869,7 +1903,7 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                     <span>{viewBookingData?.decoded_data?.paxDetails?.[0]?.Phoneno || 'N/A'}</span>
                   </div>
                 </div>
-              
+
                 {/* Hotel Policy */}
                 <h2 style={{
                   color: '#2c3e50',
@@ -1886,12 +1920,12 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
                   marginBottom: '20px',
                 }}>
                   <p style={{ color: '#555' }}>
-                    {viewBookingData?.decoded_data?.hotelRatesRequest?.RateConditions?.join(' ') || 
+                    {viewBookingData?.decoded_data?.hotelRatesRequest?.RateConditions?.join(' ') ||
                      'Standard hotel policy applies. Please contact the hotel directly for specific policies.'}
                   </p>
                 </div>
               </div>
-           
+
           ) : (
             <div
               style={{

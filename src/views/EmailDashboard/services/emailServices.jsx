@@ -147,7 +147,7 @@ const resendAllSupplierVouchers = (id, indexId, goid) => {
       } else {
         Swal.fire(
           'Error!',
-          'There was an issue resending the order email.',
+          'Order email could not be resent. Supplier vouchers can only be sent for Aahaas products.',
           'error'
         );
       }
@@ -155,7 +155,7 @@ const resendAllSupplierVouchers = (id, indexId, goid) => {
     .catch(error => {
       Swal.fire(
         'Error!',
-        'There was an issue resending the order email (TBO and Flights can not send the Supplier voucher).',
+        'Order email could not be resent. Supplier vouchers can only be sent for Aahaas products.',
         'error'
       );
     });
@@ -199,7 +199,7 @@ const sendGenerateEmail = async (data) => {
   try{
       await axios.post(`/aahaas-mail/send`, data,{
         headers: {
-          "Content-Type": "multipart/form-data", 
+          "Content-Type": "multipart/form-data",
         },
       })
       .then(response => {
@@ -210,7 +210,7 @@ const sendGenerateEmail = async (data) => {
      })
   }catch(error){
       returnVal =  [400,[] ]
-  }    
+  }
 
   return returnVal
 }
@@ -226,7 +226,7 @@ const getAllSuppliers = async () => {
       dataSet = response.data
      })
   }catch(error){
-  }    
+  }
 
   return dataSet
 }
@@ -242,7 +242,7 @@ const getAllCustomer = async () => {
       dataSet = response.data
      })
   }catch(error){
-  }    
+  }
 
   return dataSet
 }
@@ -260,7 +260,7 @@ const getAllInternalEmails = async () => {
       dataSet = response.data
      })
   }catch(error){
-  }    
+  }
 
   return dataSet
 }

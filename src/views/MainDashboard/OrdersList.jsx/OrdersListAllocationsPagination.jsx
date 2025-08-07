@@ -85,7 +85,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 setOrdersData(mappedData);
                 setPagination(prev => ({
                     ...prev,
-                    totalCount: data.pagination.total,
+                   totalCount: data.pagination?.total || 0,
                 }));
             } else {
                 console.error('Error fetching data:', data.error);
@@ -598,16 +598,31 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 />
             </Tabs>
 
-            {loading ? (
-                <div className="text-center p-5">
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <p className="mt-2">Loading orders data...</p>
-                </div>
-            ) : (
-                <MaterialReactTable table={table} />
-            )}
+            <div style={{ position: 'relative' }}>
+      {loading && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          zIndex: 10,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backdropFilter: 'blur(2px)'
+        }}>
+          <div className="text-center p-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-2">Loading orders data...</p>
+          </div>
+        </div>
+      )}
+      <MaterialReactTable table={table} />
+    </div>
         </>
     );
 };
