@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   CButton,
   CCard,
@@ -14,7 +14,7 @@ import {
   CFormSelect,
   CFormLabel,
   CImage,
-} from '@coreui/react';
+} from '@coreui/react'
 import {
   TextField,
   Button,
@@ -26,12 +26,12 @@ import {
   Autocomplete,
   Chip,
   MenuItem,
-  Popper 
-} from '@mui/material';
-import Swal from 'sweetalert2';
-import axios from 'axios';
-import { BellFill, Send } from 'react-bootstrap-icons';
-import debounce from 'lodash/debounce';
+  Popper,
+} from '@mui/material'
+import Swal from 'sweetalert2'
+import axios from 'axios'
+import { BellFill, Send } from 'react-bootstrap-icons'
+import debounce from 'lodash/debounce'
 
 const stackScreenData = {
   navigators: [
@@ -82,101 +82,101 @@ const stackScreenData = {
       screens: ['My Carts'],
     },
   ],
-};
+}
 
 const Promotions = () => {
   // Notification content states
-  const [notificationTitle, setNotificationTitle] = useState('');
-  const [notificationContent, setNotificationContent] = useState('');
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
-  const [redirectLink, setRedirectLink] = useState('');
+  const [notificationTitle, setNotificationTitle] = useState('')
+  const [notificationContent, setNotificationContent] = useState('')
+  const [image, setImage] = useState(null)
+  const [imagePreview, setImagePreview] = useState('')
+  const [redirectLink, setRedirectLink] = useState('')
 
   // Target audience states
-  const [receivers, setReceivers] = useState('1');
-  const [mostOrderedCount, setMostOrderedCount] = useState(10);
-  const [selectedStack, setSelectedStack] = useState('MainNavigatorStack');
-  const [selectedScreen, setSelectedScreen] = useState('Home');
-  const [availableScreens, setAvailableScreens] = useState([]);
+  const [receivers, setReceivers] = useState('1')
+  const [mostOrderedCount, setMostOrderedCount] = useState(10)
+  const [selectedStack, setSelectedStack] = useState('MainNavigatorStack')
+  const [selectedScreen, setSelectedScreen] = useState('Home')
+  const [availableScreens, setAvailableScreens] = useState([])
 
   // User search and selection states
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [selectedUsers, setSelectedUsers] = useState([])
 
   // Notification sending states
-  const [isSending, setIsSending] = useState(false);
-  const [isBatchSending, setIsBatchSending] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [processedUsers, setProcessedUsers] = useState(0);
+  const [isSending, setIsSending] = useState(false)
+  const [isBatchSending, setIsBatchSending] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [totalUsers, setTotalUsers] = useState(0)
+  const [processedUsers, setProcessedUsers] = useState(0)
 
   // Add this to your component's style or CSS file
-const styles = {
-  autocompletePopper: {
-    zIndex: 1300, // Make sure it's above other elements
-    position: 'relative',
-  },
-  autocompletePaper: {
-    marginTop: '8px', // Add some spacing from the input
-    maxHeight: '200px', // Limit height
-    overflow: 'auto', // Add scroll if needed
-  },
-};
+  const styles = {
+    autocompletePopper: {
+      zIndex: 1300, // Make sure it's above other elements
+      position: 'relative',
+    },
+    autocompletePaper: {
+      marginTop: '8px', // Add some spacing from the input
+      maxHeight: '200px', // Limit height
+      overflow: 'auto', // Add scroll if needed
+    },
+  }
 
   // Update available screens when stack changes
   useEffect(() => {
-    const navigator = stackScreenData.navigators.find((nav) => nav.name === selectedStack);
+    const navigator = stackScreenData.navigators.find((nav) => nav.name === selectedStack)
     if (navigator) {
-      setAvailableScreens(navigator.screens);
+      setAvailableScreens(navigator.screens)
       if (!navigator.screens.includes(selectedScreen)) {
-        setSelectedScreen(navigator.screens[0] || '');
+        setSelectedScreen(navigator.screens[0] || '')
       }
     }
-  }, [selectedStack]);
+  }, [selectedStack])
 
   // Debounced search function
   const debouncedSearch = useCallback(
     debounce(async (searchValue) => {
       if (searchValue.length < 3) {
-        setSearchResults([]);
-        return;
+        setSearchResults([])
+        return
       }
 
       try {
-        setIsSearching(true);
+        setIsSearching(true)
         const response = await axios.post('/getUserByEmail', {
-          searchTerm: searchValue
-        });
-        
+          searchTerm: searchValue,
+        })
+
         if (response.data.status === 200) {
-          const filteredResults = response.data.users.filter(user => 
-            !selectedUsers.some(selected => selected.email === user.email)
-          );
-          setSearchResults(filteredResults);
+          const filteredResults = response.data.users.filter(
+            (user) => !selectedUsers.some((selected) => selected.email === user.email),
+          )
+          setSearchResults(filteredResults)
         } else {
-          setSearchResults([]);
+          setSearchResults([])
         }
       } catch (error) {
-        console.error('Error searching users:', error);
-        setSearchResults([]);
+        console.error('Error searching users:', error)
+        setSearchResults([])
       } finally {
-        setIsSearching(false);
+        setIsSearching(false)
       }
     }, 500),
-    [selectedUsers]
-  );
+    [selectedUsers],
+  )
 
   // Handle search term changes
   const handleSearchChange = (event, value) => {
-    setSearchTerm(value);
+    setSearchTerm(value)
     if (value) {
-      debouncedSearch(value);
+      debouncedSearch(value)
     } else {
-      setSearchResults([]);
+      setSearchResults([])
     }
-  };
+  }
 
   // Handle user selection from dropdown
 const handleUserSelect = (event, value) => {
@@ -217,30 +217,31 @@ const handleUserSelect = (event, value) => {
 };
 
 
+
   // Remove a selected user
   const handleRemoveUser = (emailToRemove) => {
-    setSelectedUsers(selectedUsers.filter(user => user.email !== emailToRemove));
-  };
+    setSelectedUsers(selectedUsers.filter((user) => user.email !== emailToRemove))
+  }
 
   // Render user search component
   const renderUserSearch = () => (
     <div className="mb-3">
       <Box sx={{ position: 'relative', mb: 3 }}>
-      <CFormLabel className="fw-bold">Search and Select Users by Email</CFormLabel>
-      
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
-        {selectedUsers.map((user) => (
-          <Chip
-            key={user.email}
-            label={user.email}
-            onDelete={() => handleRemoveUser(user.email)}
-            color="primary"
-            variant="outlined"
-          />
-        ))}
-      </Box>
-      
-      {/* <Autocomplete
+        <CFormLabel className="fw-bold">Search and Select Users by Email</CFormLabel>
+
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
+          {selectedUsers.map((user) => (
+            <Chip
+              key={user.email}
+              label={user.email}
+              onDelete={() => handleRemoveUser(user.email)}
+              color="primary"
+              variant="outlined"
+            />
+          ))}
+        </Box>
+
+        {/* <Autocomplete
         freeSolo
         options={searchResults}
         getOptionLabel={(option) => option.email}
@@ -272,6 +273,7 @@ const handleUserSelect = (event, value) => {
         )}
         filterOptions={(options) => options}
       /> */}
+
       <Autocomplete
   freeSolo
   options={searchResults}
@@ -349,16 +351,16 @@ const handleUserSelect = (event, value) => {
         {selectedUsers.length} user(s) selected
       </Typography>
     </div>
-  );
+  )
 
   // Handle image upload
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+      setImage(file)
+      setImagePreview(URL.createObjectURL(file))
     }
-  };
+  }
 
   // Validate form before submission
   const validateForm = () => {
@@ -367,8 +369,8 @@ const handleUserSelect = (event, value) => {
         icon: 'error',
         title: 'Validation Error',
         text: 'Please enter a valid notification title (min 5 characters)',
-      });
-      return false;
+      })
+      return false
     }
 
     // if (!notificationContent.trim() || notificationContent.length < 5) {
@@ -385,100 +387,112 @@ const handleUserSelect = (event, value) => {
         icon: 'error',
         title: 'Validation Error',
         text: 'Please select at least one user',
-      });
-      return false;
+      })
+      return false
     }
 
-    return true;
-  };
+    return true
+  }
 
   // Send notifications
   const handleSendNotification = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) return
 
-    setIsSending(true);
-    setIsBatchSending(true);
-    setProgress(0);
-    setProcessedUsers(0);
-    setTotalUsers(0);
+    setIsSending(true)
+    setIsBatchSending(true)
+    setProgress(0)
+    setProcessedUsers(0)
+    setTotalUsers(0)
 
     try {
-      const formData = new FormData();
-      formData.append('title', notificationTitle);
-      formData.append('description', notificationContent);
-      formData.append('redirectLink', redirectLink);
-      formData.append('receivers', receivers);
-      formData.append('mostOrderedCount', mostOrderedCount);
-      formData.append('selectedStack', selectedStack);
-      formData.append('selectedScreen', selectedScreen);
-      
-      if (image) formData.append('image', image);
-      
+      const formData = new FormData()
+      formData.append('title', notificationTitle)
+      formData.append('description', notificationContent)
+      formData.append('redirectLink', redirectLink)
+      formData.append('receivers', receivers)
+      formData.append('mostOrderedCount', mostOrderedCount)
+      formData.append('selectedStack', selectedStack)
+      formData.append('selectedScreen', selectedScreen)
+
+      if (image) formData.append('image', image)
+
       if (receivers === '4') {
         selectedUsers.forEach((user, index) => {
-          formData.append(`userEmails[${index}]`, user.email);
-        });
+          formData.append(`userEmails[${index}]`, user.email)
+        })
       }
 
-      const response = await axios.post('/pushNotification', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
-      });
+      let current = 0
+      let total = 1
+      while (current < total) {
+        try {
+          formData.append('offset', current)
+          const response = await axios.post('/pushNotification', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          current = response.data.current
+          total = response.data.total
+          
+          setProcessedUsers(current)
+          setTotalUsers(total)
 
+          const percentCompleted = Math.round((current * 100) / total)
+          setProgress(percentCompleted)
+        } catch (error) {
+          console.error('Error pushing notification:', error)
+          continue
+        }
+      }
       Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: `Notifications sent to ${response.data.user_count} users`,
-      });
-      resetForm();
+        text: `Notifications sent to ${total} users`,
+      })
+      resetForm()
     } catch (error) {
-      const errorMsg = error.response?.data?.error || 'Failed to send notifications';
-      const missingEmails = error.response?.data?.missing_emails || [];
-      
+      console.log('Error sending notifications:', error)
+      const errorMsg = error.response?.data?.error || 'Failed to send notifications'
+      const missingEmails = error.response?.data?.missing_emails || []
+
       if (missingEmails.length > 0) {
         Swal.fire({
           icon: 'error',
           title: 'Some users not found',
           html: `These emails were not found: <br>${missingEmails.join('<br>')}`,
-        });
+        })
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
           text: errorMsg,
-        });
+        })
       }
     } finally {
-      setIsSending(false);
-      setIsBatchSending(false);
+      setIsSending(false)
+      setIsBatchSending(false)
     }
-  };
+  }
 
   // Reset form to initial state
   const resetForm = () => {
-    setNotificationTitle('');
-    setNotificationContent('');
-    setRedirectLink('');
-    setImage(null);
-    setImagePreview('');
-    setReceivers('1');
-    setMostOrderedCount(10);
-    setSelectedStack('MainNavigatorStack');
-    setSelectedScreen('Home');
-    setProgress(0);
-    setProcessedUsers(0);
-    setTotalUsers(0);
-    setSelectedUsers([]);
-    setSearchTerm('');
-    setSearchResults([]);
-  };
+    setNotificationTitle('')
+    setNotificationContent('')
+    setRedirectLink('')
+    setImage(null)
+    setImagePreview('')
+    setReceivers('1')
+    setMostOrderedCount(10)
+    setSelectedStack('MainNavigatorStack')
+    setSelectedScreen('Home')
+    setProgress(0)
+    setProcessedUsers(0)
+    setTotalUsers(0)
+    setSelectedUsers([])
+    setSearchTerm('')
+    setSearchResults([])
+  }
 
   return (
     <CRow>
@@ -565,9 +579,9 @@ const handleUserSelect = (event, value) => {
                         color="danger"
                         variant="outline"
                         onClick={() => {
-                          setImage(null);
-                          setImagePreview('');
-                          document.querySelector('input[type="file"]').value = '';
+                          setImage(null)
+                          setImagePreview('')
+                          document.querySelector('input[type="file"]').value = ''
                         }}
                         disabled={isSending}
                       >
@@ -719,7 +733,7 @@ const handleUserSelect = (event, value) => {
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Promotions;
+export default Promotions

@@ -82,7 +82,7 @@ const AppHeader = () => {
 
   const location = useLocation();
   useEffect(() => {
-  
+
   console.log('xwnwekCurrent pathname:', location.pathname);
   console.log('xwnwekSearch params:', location.search);
   console.log('xwnwekHash:', location.hash);
@@ -114,10 +114,10 @@ const AppHeader = () => {
 
     fetchNotifications(); // Initial call
 
-    const intervalId = setInterval(fetchNotifications, 10000); // Call every 10 seconds
+    // const intervalId = setInterval(fetchNotifications, 10000); // Call every 10 seconds
 
     // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, [userData?.id]);
 
 
