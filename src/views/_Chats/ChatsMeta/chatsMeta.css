@@ -36,7 +36,27 @@
   font-size: 10px;
   font-weight: bold;
 }
+.clear-filters-btn {
+  border: 1px solid #ddd;
+  color: #666;
+  font-size: 12px;
+  padding: 2px 8px;
+}
 
+.clear-filters-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.filter-types {
+  margin-right: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-types input {
+  margin-right: 5px;
+}
 .search-resutls-open::-webkit-scrollbar,
 .search-resutls-close::-webkit-scrollbar,
 .chat-message-messages-open::-webkit-scrollbar,

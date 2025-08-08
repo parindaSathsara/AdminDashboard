@@ -11,7 +11,7 @@
 }
 .sidebar-brand {
   padding: 20px 15px;
-  border-bottom: 1px solid #eee;
+  /* border-bottom: 1px solid #eee; */
   height: 80px;
   display: flex;
   align-items: center;
@@ -25,7 +25,7 @@
 
 .sidebar-footer {
   padding: 15px;
-  border-top: 1px solid #eee;
+  /* border-top: 1px solid #eee; */
   text-align: center;
 }
 
