@@ -48,6 +48,7 @@ function PropotionTopics() {
         formData.index += 1
       } catch (error) {
         console.error('Error submitting form:', error)
+        break
       }
     }
   }
