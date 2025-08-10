@@ -12,6 +12,7 @@ import {
 } from '@coreui/react'
 import { Box, Typography, LinearProgress } from '@mui/material'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 function PropotionTopics() {
   const [progress, setProgress] = useState(0)
@@ -49,6 +50,17 @@ function PropotionTopics() {
         break
       }
     }
+    setFormData({
+      topic: '',
+      description: '',
+    })
+    setProgress(0)
+    Swal.fire({
+      title: 'Success',
+      text: 'Promotion topic created successfully!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    })
   }
 
   const handleClear = () => {
