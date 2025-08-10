@@ -17,10 +17,8 @@ function PropotionTopics() {
   const [progress, setProgress] = useState(0)
 
   const [formData, setFormData] = useState({
-    name: '',
-    title: '',
+    topic: '',
     description: '',
-    type: '',
   })
 
   const handleChange = (e) => {
