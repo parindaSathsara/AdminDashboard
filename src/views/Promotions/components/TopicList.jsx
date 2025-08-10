@@ -43,7 +43,6 @@ function TopicList() {
 
                     <p className="text-muted small mb-3">{topic.description}</p>
 
-                    {/* Stats Section */}
                     <div className="topic-stats">
                       <div className="stat-item">
                         <span className="stat-value">{topic.total_devices}</span>
@@ -59,15 +58,14 @@ function TopicList() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="d-flex gap-2 mt-3">
+                    {/* <div className="d-flex gap-2 mt-3">
                       <CButton size="sm" color="primary" variant="outline">
                         Edit
                       </CButton>
                       <CButton size="sm" color="danger" variant="outline">
                         Delete
                       </CButton>
-                    </div>
+                    </div> */}
                   </CCardBody>
                 </CCard>
               </CCol>
