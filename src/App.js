@@ -38,11 +38,11 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
 
 
-// axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
-// axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
-// axios.defaults.data = 'https://staging-admin-api.aahaas.com';
-// axios.defaults.url = 'https://dev-gateway.aahaas.com/api';
-// axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/';
+axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
+axios.defaults.baseURL = 'https://staging-admin-api.aahaas.com/api';
+axios.defaults.data = 'https://staging-admin-api.aahaas.com';
+axios.defaults.url = 'https://dev-gateway.aahaas.com/api';
+axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/';
 
 
 
@@ -55,11 +55,11 @@ axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 // axios.defaults.imageUrl = 'https://dev-gateway.aahaas.com/';
 
 
-axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
-axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
-axios.defaults.data = 'https://admin-api.aahaas.com'
-axios.defaults.url = 'https://gateway.aahaas.com/api';
-axios.defaults.supplierUrl = 'https://supplier.aahaas.com/';
+// axios.defaults.imageUrl = 'https://gateway.aahaas.com/';
+// axios.defaults.baseURL = 'https://admin-api.aahaas.com/api'
+// axios.defaults.data = 'https://admin-api.aahaas.com'
+// axios.defaults.url = 'https://gateway.aahaas.com/api';
+// axios.defaults.supplierUrl = 'https://supplier.aahaas.com/';
 
 
 // axios.defaults.baseURL = 'http://172.16.26.67:8000/api'
@@ -225,25 +225,25 @@ function App() {
     try {
       const params = {};
       if (lastOrderId) params.last_order_id = lastOrderId;
-      
+
       // const response = await axios.get('/fetch_new_orders', { params });
       const response = await axios.get('/fetch_new_orders', { params });
       const { orders, latest_order_id } = response.data;
-  
+
       if (orders && orders.length > 0) {
         setLastOrderId(latest_order_id);
-        
+
         // Get notified orders from cache
         const notifiedOrders = JSON.parse(localStorage.getItem('notifiedOrders') || '{}');
         let newNotifications = false;
-  
+
         orders.forEach(order => {
           // Check if this order has already been notified
           if (!notifiedOrders[order.OrderId]) {
             // Mark as notified
             notifiedOrders[order.OrderId] = true;
             newNotifications = true;
-            
+
             // Show notification
             const newChat = {
               chat_avatar: "",
@@ -260,7 +260,7 @@ function App() {
             setOrderNotification(false)
           }
         });
-  
+
         // Update cache if we had new notifications
         if (newNotifications) {
           localStorage.setItem('notifiedOrders', JSON.stringify(notifiedOrders));
@@ -270,7 +270,7 @@ function App() {
       console.error('Error checking for new orders:', error);
     }
   };
-  
+
   // Poll every 30 seconds
   useEffect(() => {
     const interval = setInterval(checkForNewOrders, 100000);
@@ -314,12 +314,12 @@ const [recentlyNotifiedChats, setRecentlyNotifiedChats] = useState({});
 //   if (recentlyNotifiedChats[chatId]) {
 //     return; // Skip showing another notification
 //   }
-  
+
 //   const audio = new Audio(ChatAlert);
 //   audio.play().catch((error) => {
 //     console.log('Audio play failed:', error);
 //   });
-  
+
 //   const id = Date.now();
 //   const newNotification = {
 //     id: chatId?.toString(),
@@ -329,18 +329,18 @@ const [recentlyNotifiedChats, setRecentlyNotifiedChats] = useState({});
 //     user_name: newChat?.last_message?.name,
 //     message: newChat?.last_message?.value
 //   };
-  
+
 //   // Mark this chat as recently notified
 //   setRecentlyNotifiedChats(prev => ({
 //     ...prev,
 //     [chatId]: true
 //   }));
-  
+
 //   setNotifications(prev => [...prev, newNotification]);
-  
+
 //   setTimeout(() => {
 //     setNotifications(prev => prev.filter(n => n.id !== chatId.toString()));
-    
+
 //     // After notification expires, remove from recently notified list
 //     setRecentlyNotifiedChats(prev => {
 //       const updated = {...prev};
@@ -388,7 +388,7 @@ const addNotification = (newChat, chatId, type = 'chat') => {
 const addNotification1 = (newChat, chatId) => {
   const audio = new Audio(ChatAlert);
   audio.play();
-  
+
   setNotifications(prev => [
     ...prev,
     {
@@ -424,14 +424,14 @@ const addNotification1 = (newChat, chatId) => {
   //     (querySnapshot) => {
   //       if (!querySnapshot.empty) {
   //         console.log(querySnapshot.docs, "Order Notification Data issss");
-          
+
   //         // Get the most recent order (first document in the sorted snapshot)
   //         const latestOrderDoc = querySnapshot.docs[0];
   //         const latestOrderData = latestOrderDoc.data();
   //         const latestOrderId = latestOrderDoc.id;
-          
+
   //         console.log("Latest order:", latestOrderId, latestOrderData);
-          
+
   //         // Check if this order has unreads before notifying
   //         if (latestOrderData.admin_unreads && latestOrderData.admin_unreads !== 0) {
   //           // Map order data to match the notification format expected by addNotification
@@ -443,7 +443,7 @@ const addNotification1 = (newChat, chatId) => {
   //               value: latestOrderData.last_message || 'New order message'
   //             }
   //           };
-            
+
   //           // Call the notification function with the formatted data
   //           addNotification(formattedOrderData, latestOrderId);
   //         }
@@ -455,7 +455,7 @@ const addNotification1 = (newChat, chatId) => {
   //       console.error("Error fetching real-time data: ", error);
   //     }
   //   );
-    
+
   //   return () => unsubscribe();
   // };
   const useOrderNotifications3 = () => {
@@ -474,7 +474,7 @@ const addNotification1 = (newChat, chatId) => {
               //       addNotification(newChat, chatId);
               //     }
               //   }
-                
+
               // })
               if (!querySnapshot.empty) {
 
@@ -497,18 +497,18 @@ const addNotification1 = (newChat, chatId) => {
                 };
                 setOrderNotification(true)
                 addNotification(newChat, chatId);
-    
-    
+
+
               } else {
                 console.log("No orders found.");
               }
-    
+
             },
             (error) => {
               console.error("Error fetching real-time data: ", error);
             }
           );
-    
+
           return () => unsubscribe();
   };
 
