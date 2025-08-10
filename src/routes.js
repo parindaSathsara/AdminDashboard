@@ -180,7 +180,7 @@ const routes = [
   { path: '/vendor-analytics', name: 'Vendor Analytics', element: VendorStats },
 
   // prmotions
-  { path: '/promotions', name: 'Push Notification', element: Promotions },
+  { path: '/promotions/push-notifications', name: 'Push Notifications', element: Promotions },
   { path: '/promotions/topics', name: 'Notification Topics', element: PrpmotionTopics },
   {
     path: '/whatsapp-notifications',

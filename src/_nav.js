@@ -183,7 +183,7 @@ function getNavigationHook(permissions) {
         {
           component: CNavItem,
           name: 'Push Notifications',
-          to: '/promotions', // Changed to /promotions
+          to: '/promotions/push-notifications', // Changed to /promotions
           // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
         },
         {
