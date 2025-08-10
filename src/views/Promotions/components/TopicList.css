@@ -1,0 +1,10 @@
+.topic-card {
+  transition: all 0.25s ease-in-out;
+  background:rgb(240, 240, 240);
+}
+
+.topic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
