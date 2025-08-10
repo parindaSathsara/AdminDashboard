@@ -14,7 +14,7 @@ import { Box, Typography, LinearProgress } from '@mui/material'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
-function TopicCreate() {
+function TopicCreate({ onTopicCreated }) {
   const [progress, setProgress] = useState(0)
 
   const [formData, setFormData] = useState({
@@ -55,6 +55,7 @@ function TopicCreate() {
       description: '',
     })
     setProgress(0)
+    onTopicCreated()
     Swal.fire({
       title: 'Success',
       text: 'Promotion topic created successfully!',

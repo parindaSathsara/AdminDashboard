@@ -3,7 +3,7 @@ import { CCard, CCardBody, CBadge, CButton, CRow, CCol } from '@coreui/react'
 import './TopicList.css'
 import axios from 'axios'
 
-function TopicList() {
+function TopicList(props) {
   const [topics, setTopics] = useState([])
 
   const fetchTopics = async () => {
@@ -17,7 +17,7 @@ function TopicList() {
 
   useEffect(() => {
     fetchTopics()
-  }, [])
+  }, [props.isTopicCreated])
 
   const typeColors = {
     active: 'success',
