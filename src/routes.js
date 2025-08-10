@@ -23,7 +23,7 @@ import SupplierSupport from './views/SupplierSupport/SupplierSupport'
 import KpiDashboard from './views/KPIDashboard/KpiDashboard'
 import GlobalTarget from './views/KPIDashboard/GlobleTarget'
 import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
-import Settings from "./views/Settings/Settings"
+import Settings from './views/Settings/Settings'
 
 // const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
@@ -105,7 +105,7 @@ import RateHawk from './Panels/API_details/RateHawk'
 import WalletTransactions from './views/Departments/AccountsDepartment/WalletTransactions/WalletTransactions'
 import Banners from './banners/Banners'
 import WhatsAppNotifications from './Panels/PushNotifications/WhatsAppNotifications'
-
+import PrpmotionTopics from './views/Promotions/PropotionTopics'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -181,7 +181,12 @@ const routes = [
 
   // prmotions
   { path: '/promotions', name: 'Push Notification', element: Promotions },
- {path:'/whatsapp-notifications', name:'WhatsApp Notifications', element: WhatsAppNotifications},
+  { path: '/promotions/topics', name: 'Notification Topics', element: PrpmotionTopics },
+  {
+    path: '/whatsapp-notifications',
+    name: 'WhatsApp Notifications',
+    element: WhatsAppNotifications,
+  },
   { path: '/banners', exact: true, name: 'Banners', element: Banners },
   { path: '/settings', exact: true, name: 'Settings', element: Settings },
 ]
