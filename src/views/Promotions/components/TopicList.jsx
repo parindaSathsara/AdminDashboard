@@ -45,16 +45,16 @@ function TopicList(props) {
 
                     <div className="topic-stats">
                       <div className="stat-item">
+                        <span className="stat-value">{topic.total_users}</span>
+                        <span className="stat-label">Total Users</span>
+                      </div>
+                      <div className="stat-item">
                         <span className="stat-value">{topic.total_devices}</span>
                         <span className="stat-label">Total Devices</span>
                       </div>
                       <div className="stat-item">
                         <span className="stat-value">{topic.success_devices ?? 0}</span>
                         <span className="stat-label">Success Devices</span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-value">{topic.total_users}</span>
-                        <span className="stat-label">Total Users</span>
                       </div>
                     </div>
 
