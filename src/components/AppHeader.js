@@ -239,10 +239,9 @@ const AppHeader = () => {
             <CRow className="align-items-center">
 
 
-              <CCol className="d-flex align-items-center justify-content-center currency-col">
-                {location.pathname !== '/dashboard' && location.pathname !== '/accounts/walletrequests' && <CurrencyController />}
+             <CCol className="d-flex align-items-center justify-content-center currency-col">
+              {location.pathname === '/orders' && <CurrencyController />}
               </CCol>
-
               {/* <CCol className="d-flex align-items-center justify-content-center currency-col">
               <div className="supportCenter" style={{color:'black'}}><CIcon icon={cilHeadphones} /></div>
               </CCol> */}

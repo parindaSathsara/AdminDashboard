@@ -104,6 +104,8 @@ import VendorStats from './views/VendorCategorize/VendorStats'
 import RateHawk from './Panels/API_details/RateHawk'
 import WalletTransactions from './views/Departments/AccountsDepartment/WalletTransactions/WalletTransactions'
 import Banners from './banners/Banners'
+import WhatsAppNotifications from './Panels/PushNotifications/WhatsAppNotifications'
+
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -178,7 +180,8 @@ const routes = [
   { path: '/vendor-analytics', name: 'Vendor Analytics', element: VendorStats },
 
   // prmotions
-  { path: '/promotions', name: 'Promotions', element: Promotions },
+  { path: '/promotions', name: 'Push Notification', element: Promotions },
+ {path:'/whatsapp-notifications', name:'WhatsApp Notifications', element: WhatsAppNotifications},
   { path: '/banners', exact: true, name: 'Banners', element: Banners },
   { path: '/settings', exact: true, name: 'Settings', element: Settings },
 ]
