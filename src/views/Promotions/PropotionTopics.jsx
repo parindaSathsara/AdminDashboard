@@ -10,8 +10,12 @@ import {
   CRow,
   CCol,
 } from '@coreui/react'
+import { Box, Typography, LinearProgress } from '@mui/material'
+import axios from 'axios'
 
 function PropotionTopics() {
+  const [progress, setProgress] = useState(0)
+
   const [formData, setFormData] = useState({
     name: '',
     title: '',
@@ -27,17 +31,31 @@ function PropotionTopics() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
+    formData.index = 1
+    let max_requests = 1
+    while (formData.index <= max_requests) {
+      try {
+        const response = await axios.post('/promotions/create_topic', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        max_requests = response?.data?.max_requests ?? 1
+        let progress = ((formData.index / max_requests) * 100).toFixed(2)
+        setProgress(parseInt(progress))
+        formData.index += 1
+      } catch (error) {
+        console.error('Error submitting form:', error)
+      }
+    }
   }
 
   const handleClear = () => {
     setFormData({
-      name: '',
-      title: '',
+      topic: '',
       description: '',
-      type: '',
     })
   }
 
@@ -49,34 +67,22 @@ function PropotionTopics() {
 
         <CForm onSubmit={handleSubmit}>
           <CRow>
-            {/* Name */}
-            <CCol md={6} className="mb-3">
-              <CFormInput
-                type="text"
-                name="name"
-                label="Topic Name"
-                value={formData.name}
+            <CCol md={12} className="mb-4">
+              <CFormSelect
+                name="topic"
+                label="Select Topic"
+                value={formData.topic}
                 onChange={handleChange}
-                placeholder="Enter name"
                 required
-              />
-            </CCol>
-
-            {/* Notification Title */}
-            <CCol md={6} className="mb-3">
-              <CFormInput
-                type="text"
-                name="title"
-                label="Notification Title"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="Enter notification title"
-                required
-              />
+              >
+                <option value="">Select Type</option>
+                <option value="all_users">All users</option>
+                <option value="order_placed_users">Order placed users</option>
+                <option value="order_not_placed_users">Order not placed users</option>
+                <option value="users_with_products_in_carts">Users with products in carts</option>
+              </CFormSelect>
             </CCol>
           </CRow>
-
-          {/* Description */}
           <CRow>
             <CCol className="mb-3">
               <CFormTextarea
@@ -90,25 +96,25 @@ function PropotionTopics() {
               />
             </CCol>
           </CRow>
-
-          {/* Notification Type */}
-          <CRow>
-            <CCol md={6} className="mb-4">
-              <CFormSelect
-                name="type"
-                label="Notification Type"
-                value={formData.type}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Type</option>
-                <option value="all_users">All users</option>
-                <option value="order_placed_users">Order placed users</option>
-                <option value="order_not_placed_users">Order not placed users</option>
-                <option value="users_with_products_in_carts">Users with products in carts</option>
-              </CFormSelect>
-            </CCol>
-          </CRow>
+          {progress > 0 && (
+            <CRow>
+              <Box sx={{ mt: 3, mb: 3 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {progress == 100 ? 'Topic Created!' : 'Creating Topic...'}
+                </Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={progress}
+                  sx={{ height: 10, borderRadius: 5 }}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {progress}%
+                  </Typography>
+                </Box>
+              </Box>
+            </CRow>
+          )}
 
           {/* Action Buttons */}
           <div className="d-flex gap-3 justify-content-end">
@@ -116,7 +122,7 @@ function PropotionTopics() {
               Clear
             </CButton>
             <CButton color="primary" type="submit">
-              Subscribe
+              Create
             </CButton>
           </div>
         </CForm>
