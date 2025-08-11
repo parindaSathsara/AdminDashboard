@@ -106,6 +106,7 @@ import WalletTransactions from './views/Departments/AccountsDepartment/WalletTra
 import Banners from './banners/Banners'
 import WhatsAppNotifications from './Panels/PushNotifications/WhatsAppNotifications'
 import PrpmotionTopics from './views/Promotions/PropotionTopics'
+import PromotionTopicNotification from './views/Promotions/PromotionTopicNotification'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -181,7 +182,12 @@ const routes = [
 
   // prmotions
   { path: '/promotions/push-notifications', name: 'Push Notifications', element: Promotions },
-  { path: '/promotions/topics', name: 'Notification Topics', element: PrpmotionTopics },
+  { path: '/promotions/topics', name: 'Create Topics', element: PrpmotionTopics },
+  {
+    path: '/promotions/topics-notifications',
+    name: 'Topic Notifications',
+    element: PromotionTopicNotification,
+  },
   {
     path: '/whatsapp-notifications',
     name: 'WhatsApp Notifications',

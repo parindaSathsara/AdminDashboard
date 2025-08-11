@@ -188,8 +188,14 @@ function getNavigationHook(permissions) {
         },
         {
           component: CNavItem,
-          name: 'Notification Topics',
+          name: 'Create Topics',
           to: '/promotions/topics', // Changed to /promotions
+          // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+        },
+        {
+          component: CNavItem,
+          name: 'Topics Notifications',
+          to: 'promotions/topics-notifications', // Changed to /promotions
           // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
         },
         {
