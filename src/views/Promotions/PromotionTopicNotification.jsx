@@ -65,6 +65,14 @@ function PromotionTopicNotification() {
     Swal.fire('Success', `Notification sent successfully to ${total_users} users.`, 'success')
   }
 
+  const handleClear = () => {
+    setFormData({
+      topic_id: '',
+      title: '',
+      content: '',
+    })
+  }
+
   useEffect(() => {
     fetchTopics()
   }, [])
@@ -130,7 +138,7 @@ function PromotionTopicNotification() {
           </CRow>
           {progress > 0 && (
             <CRow>
-              <Box sx={{ mt: 3, mb: 3 }}>
+              <Box>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
                   {progress == 100 ? 'Topic Created!' : 'Creating Topic...'}
                 </Typography>
@@ -147,12 +155,16 @@ function PromotionTopicNotification() {
               </Box>
             </CRow>
           )}
-
-          <Box textAlign="right">
-            <CButton type="submit" color="primary" disabled={loading}>
-              {loading ? 'Sending...' : 'Send Notification'}
+          <div className="d-flex gap-3 justify-content-end">
+            <CButton color="secondary" variant="outline" type="button" onClick={handleClear}>
+              Clear
             </CButton>
-          </Box>
+            <Box textAlign="right">
+              <CButton type="submit" color="primary" disabled={loading}>
+                {loading ? 'Sending...' : 'Send Notification'}
+              </CButton>
+            </Box>
+          </div>
         </CForm>
       </CCardBody>
     </CCard>
