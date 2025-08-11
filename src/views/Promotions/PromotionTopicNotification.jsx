@@ -40,10 +40,12 @@ function PromotionTopicNotification() {
     }
     formData.index = 1
     let max_requests = 1
+    let total_users = 0
     setLoading(true)
     while (formData.index <= max_requests) {
       try {
         const response = await axios.post('promotions/send_notifications', formData)
+        total_users = response.data.total_users ?? 0
         max_requests = response?.data?.max_requests ?? 1
         let progress = ((formData.index / max_requests) * 100).toFixed(2)
         setProgress(parseInt(progress))
@@ -56,10 +58,11 @@ function PromotionTopicNotification() {
         break
       }
     }
+
     setProgress(0)
     setLoading(false)
     setFormData({ topic_id: '', title: '', content: '' })
-    Swal.fire('Success', 'Notification sent successfully!', 'success')
+    Swal.fire('Success', `Notification sent successfully to ${total_users} users.`, 'success')
   }
 
   useEffect(() => {
