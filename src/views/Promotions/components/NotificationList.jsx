@@ -34,7 +34,7 @@ function NotificationList() {
         params: { page, per_page: perPage },
       })
 
-      const { data, last_page } = response.data.notification
+      const { data, last_page } = response.data.notifications
       setNotifications(data)
       setTotalPages(last_page || 1)
     } catch (error) {
