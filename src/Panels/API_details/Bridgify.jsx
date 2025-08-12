@@ -114,29 +114,9 @@ const Bridgify = () => {
         },
       },
       {
-        title: 'Total Amount',
-        field: 'total_amount',
-        align: 'right',
-        width: '12%',
-        cellStyle: {
-          textAlign: 'center',
-          padding: '8px',
-          fontWeight: '500',
-          minWidth: '120px',
-          fontSize: '12px',
-        },
-        headerStyle: {
-          textAlign: 'center',
-          fontWeight: 'bold',
-          backgroundColor: '#f8f9fa',
-          minWidth: '120px',
-          fontSize: '12px',
-        },
-      },
-      {
-        title: 'Paid Amount',
-        field: 'paid_amount',
-        align: 'right',
+        title: 'Cost Price',
+        field: 'cost_price',
+        align: 'center',
         width: '12%',
         cellStyle: {
           textAlign: 'center',
@@ -297,13 +277,13 @@ const Bridgify = () => {
       const productDetails = item?.data?.product_details?.title || 'N/A'
       const selectedTimeslot = item?.data?.requires?.timeslots?.selected_value || 'N/A'
       const customerDetails = item?.data?.requires?.['customer-info']?.selected_value || []
-
+ const costPrice = item?.data?.create_order?.data?.total_order?.total_order_price || 0;
+  const costCurrency = item?.data?.create_order?.data?.total_order?.currency || '';
       return {
         order_id: item?.order_id || 'N/A',
         status: item?.status || 'N/A',
         balance_amount: formatCurrency(item?.balance_amount),
-        paid_amount: formatCurrency(item?.paid_amount),
-        total_amount: formatCurrency(item?.total_amount),
+        cost_price: formatCurrency(costPrice, costCurrency),
         transaction_amount: formatCurrency(
           item?.data?.save_cart?.selected_value?.transaction_amount,
         ),

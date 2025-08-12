@@ -67,10 +67,29 @@
     button[aria-label="Column Actions"]:hover::after {
     opacity: 1;
     }
+/* Add this to your existing CSS */
+.MuiTableHead-root .MuiTableCell-head {
+  position: relative;
+  z-index: 100 !important;
+}
 
-    
+.MuiTableHead-root .MuiIconButton-root {
+  position: relative;
+  z-index: 1000 !important;
+}
 
-    
+/* Ensure tooltips appear above everything */
+button[aria-label="Move"]::after, 
+button[aria-label="Column Actions"]::after {
+  z-index: 10000 !important;
+}
 
+/* Add this to your existing CSS */
+.MuiTableContainer-root {
+  overflow: visible !important;
+}
 
-
+.MuiTable-root {
+  position: relative;
+  z-index: 10;
+}
