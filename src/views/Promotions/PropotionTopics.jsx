@@ -4,9 +4,13 @@ import React, { useState } from 'react'
 
 function PropotionTopics() {
   const [isTopicCreated, setIsTopicCreated] = useState(false)
-  
+
   const handleTopicCreated = () => {
-    setIsTopicCreated(true)
+    if (isTopicCreated) {
+      setIsTopicCreated(false)
+    } else {
+      setIsTopicCreated(true)
+    }
   }
   return (
     <div>

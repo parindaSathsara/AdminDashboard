@@ -20,14 +20,14 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
-function NotificationList() {
+function NotificationList(props) {
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
   const [totalPages, setTotalPages] = useState(1)
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = async (props) => {
     setLoading(true)
     try {
       const response = await axios.get('/promotions/notifications/paginate', {
@@ -46,7 +46,7 @@ function NotificationList() {
 
   useEffect(() => {
     fetchNotifications()
-  }, [page, perPage])
+  }, [page, perPage, props.isNotificationCreated])
 
   const getStatusBadge = (status) => {
     return status === 1 ? (
