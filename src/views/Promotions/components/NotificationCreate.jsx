@@ -14,7 +14,7 @@ import { Box, Typography, LinearProgress } from '@mui/material'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
-function NotificationCreate(handleTopicCreated) {
+function NotificationCreate({ onNotificationCreated }) {
   const [topics, setTopics] = useState([])
   const [progress, setProgress] = useState(0)
 
@@ -62,7 +62,7 @@ function NotificationCreate(handleTopicCreated) {
     setProgress(0)
     setLoading(false)
     setFormData({ topic_id: '', title: '', content: '' })
-    handleTopicCreated()
+    onNotificationCreated()
     Swal.fire('Success', `Notification sent successfully to ${total_users} users.`, 'success')
   }
 
