@@ -93,6 +93,7 @@ function NotificationList(props) {
                   <CTableHeaderCell>Users</CTableHeaderCell>
                   <CTableHeaderCell>Total Device</CTableHeaderCell>
                   <CTableHeaderCell>Success Device</CTableHeaderCell>
+                  <CTableHeaderCell>Push Notification Status</CTableHeaderCell>
                   <CTableHeaderCell>Status</CTableHeaderCell>
                   <CTableHeaderCell>Sent At</CTableHeaderCell>
                 </CTableRow>
@@ -112,12 +113,20 @@ function NotificationList(props) {
                     <CTableDataCell>{item.topic.total_devices.toLocaleString()}</CTableDataCell>
                     <CTableDataCell>{item.topic.success_devices.toLocaleString()}</CTableDataCell>
                     <CTableDataCell>
-                      {item.is_success === 1 ? (
+                      {/* {item.is_success === 1 ? (
                         <CIcon icon={cilCheckCircle} className="text-success" />
                       ) : (
                         <CIcon icon={cilXCircle} className="text-danger" />
-                      )}{' '}
+                      )}{' '} */}
                       {getStatusBadge(item.is_success)}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {/* {item.is_sent_to_topic === 1 ? (
+                        <CIcon icon={cilCheckCircle} className="text-success" />
+                      ) : (
+                        <CIcon icon={cilXCircle} className="text-danger" />
+                      )}{' '} */}
+                      {getStatusBadge(item.is_sent_to_topic)}
                     </CTableDataCell>
                     <CTableDataCell>{new Date(item.created_at).toLocaleString()}</CTableDataCell>
                   </CTableRow>
