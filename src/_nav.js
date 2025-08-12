@@ -186,12 +186,12 @@ function getNavigationHook(permissions) {
       to: '/promotions',  // Changed to /promotions
       // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
     },
-    {
-      component: CNavItem,
-      name: 'WhatsApp Notifications',
-      to: '/whatsapp-notifications',
-      // icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
-    }
+    // {
+    //   component: CNavItem,
+    //   name: 'WhatsApp Notifications',
+    //   to: '/whatsapp-notifications',
+    //   // icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
+    // }
   ]
 },
     {
