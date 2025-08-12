@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
@@ -16,11 +16,20 @@ import Swal from 'sweetalert2'
 
 function TopicCreate({ onTopicCreated }) {
   const [progress, setProgress] = useState(0)
-
+  const [topicTitles, setTopicTitles] = useState([])
   const [formData, setFormData] = useState({
     topic: '',
     description: '',
   })
+
+  const fetchTopicTitles = async () => {
+    try {
+      const response = await axios.get('/promotions/topics-titles/all')
+      setTopicTitles(response?.data?.topic_titles || [])
+    } catch (error) {
+      console.log('Error fetching notifications:', error)
+    }
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -70,6 +79,9 @@ function TopicCreate({ onTopicCreated }) {
       description: '',
     })
   }
+  useEffect(() => {
+    fetchTopicTitles()
+  }, [])
 
   return (
     <CCard className="shadow-sm border-0">
@@ -88,10 +100,16 @@ function TopicCreate({ onTopicCreated }) {
                 required
               >
                 <option value="">Select Type</option>
-                <option value="all_users">All users</option>
-                <option value="order_placed_users">Order placed users</option>
-                <option value="order_not_placed_users">Order not placed users</option>
-                <option value="users_with_products_in_carts">Users with products in carts</option>
+                {topicTitles.map((title) => {
+                  const formattedTitle = title
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, (char) => char.toUpperCase())
+                  return (
+                    <option key={title} value={title}>
+                      {formattedTitle}
+                    </option>
+                  )
+                })}
               </CFormSelect>
             </CCol>
           </CRow>
