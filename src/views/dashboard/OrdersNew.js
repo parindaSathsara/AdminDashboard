@@ -241,6 +241,11 @@ const OrdersNew = () => {
     initialState: {
       density: 'compact'
     },
+     muiTablePaperProps: {
+    sx: {
+      overflow: 'visible',
+    }
+  },
     renderDetailPanel: ({ row }) => (
       <div style={{ padding: '20px' }}>
         <OrderDetails
@@ -251,11 +256,23 @@ const OrdersNew = () => {
         />
       </div>
     ),
-    muiTableContainerProps: {
-      sx: {
-        maxHeight: isTableFullscreen ? '100vh' : '500px' // Dynamic height based on fullscreen state
-      }
-    },
+  muiTableContainerProps: {
+    sx: {
+      maxHeight: isTableFullscreen ? '100vh' : '500px',
+      overflow: 'auto', // Change this to 'visible' to prevent clipping
+      '& .MuiTableHead-root': {
+        position: 'sticky',
+        top: 0,
+        zIndex: 200,
+        backgroundColor: '#f8f9fa',
+      },
+      '& .MuiTableHead-root .MuiTableCell-head': {
+        backgroundColor: '#f8f9fa',
+        position: 'relative',
+        zIndex: 210,
+      }
+    }
+  },
     // Removed row actions since you don't want fullscreen in action column
     enableRowActions: true,
     renderRowActions: ({ row }) => (

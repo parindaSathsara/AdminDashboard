@@ -206,6 +206,15 @@ function getNavigationHook(permissions) {
         },
       ],
     },
+
+    // {
+    //   component: CNavItem,
+    //   name: 'WhatsApp Notifications',
+    //   to: '/whatsapp-notifications',
+    //   // icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
+    // }
+  ]
+},
     {
       component: CNavItem,
       name: 'Products',

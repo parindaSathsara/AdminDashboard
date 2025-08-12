@@ -39,7 +39,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
     const [hotelDataSet, setHotelDataSet] = useState([]);
 
 
-    console.log(hotelDataSet,"HotelsssssssssssssssssssssXXXXXXXXXXXXXXXXXX")
+    console.log(hotelDataSet, "HotelsssssssssssssssssssssXXXXXXXXXXXXXXXXXX")
     const [statusCounts, setStatusCounts] = useState({
         All: 0,
         CustomerOrdered: 0,
@@ -61,7 +61,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
 
             const data = response.data;
             console.log(data, "Fetched Data");
-            
+
             if (data.status === 200) {
                 const mappedData = data.productData.map((result, index) => ({
                     id: (pageIndex * pageSize) + index + 1, // Better ID calculation for pagination
@@ -81,11 +81,11 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                     customerData: result?.customerData,
                     allocatedUser: result?.allocatedUser || [],
                 }));
-                
+
                 setOrdersData(mappedData);
                 setPagination(prev => ({
                     ...prev,
-                   totalCount: data.pagination?.total || 0,
+                    totalCount: data.pagination?.total || 0,
                 }));
             } else {
                 console.error('Error fetching data:', data.error);
@@ -115,7 +115,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                             status: status,
                         }
                     });
-                    
+
                     if (response.data.status === 200) {
                         counts[status] = response.data?.pagination?.total || 10;
                     }
@@ -132,7 +132,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
 
     useEffect(() => {
         fetchOrdersData(pagination.pageIndex, pagination.pageSize, currentFilter);
-        
+
         if (!normalUser) {
             monitorAvailability();
             getAvailableEmployees().then(response => {
@@ -251,12 +251,8 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
     };
 
     const handleMoreInfoModal = (row) => {
-
         // console.log(row, "Row Data iss Data set")
-
-
         console.log(row?.info, "Info is data value")
-
         setMoreOrderModalCategory(row?.info.catid)
         if (row?.info.catid == 3) {
             setMoreOrderDetails(row?.info.lifestyle_booking_id)
@@ -266,25 +262,17 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
             setMoreOrderDetails(row?.info.essential_pre_order_id)
             setMoreOrderModal(true)
         }
-
-
         else if (row?.info.catid == 4) {
             setMoreOrderDetails(row?.info.hotel_pre_booking_id)
-
             setHotelDataSet(row?.info)
             setMoreOrderModal(true)
         }
-
         else if (row?.info.catid == 5) {
             setMoreOrderDetails(row?.info.booking_id)
             setMoreOrderModal(true)
         }
-
         setMainDataSet(row)
-
     }
-
-
 
     const employeeOptions = availableEmployees.map((response) => ({
         value: response.id,
@@ -329,8 +317,8 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 header: 'Info',
                 enableColumnFilter: false,
                 Cell: ({ cell }) => (
-                    <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }} 
-                            onClick={() => handleMoreInfoModal(cell.row.original)}>
+                    <CButton style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }}
+                        onClick={() => handleMoreInfoModal(cell.row.original)}>
                         <CIcon icon={cilInfo} className="text-info" size="xl" />
                     </CButton>
                 ),
@@ -351,7 +339,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                     const allocatedUsers = cell?.row?.original?.info?.allocatedUser;
                     return (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            {(["view assign employee order","delete assign employee order", "assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
+                            {(["view assign employee order", "delete assign employee order", "assign new employee order"].some(permission => userData?.permissions?.includes(permission))) &&
                                 <CButton color="dark" className="position-relative" onClick={() => handleAssignEmployee(cell.row.original)}>
                                     Assign Employees
                                     <CBadge color="danger" position="top-end" shape="rounded-pill">
@@ -372,31 +360,31 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 enableSorting: false,
                 enableColumnFilter: false,
                 Cell: ({ cell }) => {
-                    const hasProductImage = cell.row.original.product_image && 
-                                           cell.row.original.product_image.trim() !== "";
+                    const hasProductImage = cell.row.original.product_image &&
+                        cell.row.original.product_image.trim() !== "";
                     const defaultImagePath = "https://play-lh.googleusercontent.com/qoEowqafsAPLEHj5pj-Tfgoj3XuehDt2cEBBe9vvRwyfaaMv3S2SzggQnbAmHx3eB6no=w240-h480-rw";
                     const imageUrl = hasProductImage
-                        ? (cell.row.original.product_image?.split(",")[0]?.includes("http") 
-                            ? cell.row.original.product_image?.split(",")[0] 
+                        ? (cell.row.original.product_image?.split(",")[0]?.includes("http")
+                            ? cell.row.original.product_image?.split(",")[0]
                             : "https://supplier.aahaas.com/" + cell.row.original.product_image?.split(",")[0])
                         : defaultImagePath;
-                    
+
                     return (
-                        <div style={{ 
-                            width: "120px", 
-                            height: "100px", 
-                            borderRadius: "10px", 
-                            overflow: 'hidden', 
-                            display: 'flex', 
-                            justifyContent: 'center', 
-                            alignItems: 'center' 
+                        <div style={{
+                            width: "120px",
+                            height: "100px",
+                            borderRadius: "10px",
+                            overflow: 'hidden',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
                         }}>
                             <CCardImage
                                 src={imageUrl}
-                                style={{ 
-                                    width: "100%", 
-                                    height: "100%", 
-                                    objectFit: "cover" 
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover"
                                 }}
                                 onError={(e) => {
                                     e.target.src = defaultImagePath;
@@ -412,7 +400,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
             { accessorKey: 'category', header: 'Category', size: 150 },
             { accessorKey: 'service_location', header: 'Service Location', size: 200 },
             { accessorKey: 'service_date', header: 'Service Date', size: 150 },
-            { 
+            {
                 accessorKey: 'info.status',
                 header: 'Status',
                 size: 120,
@@ -420,12 +408,13 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                     const status = cell.getValue();
                     let badgeColor = 'secondary';
                     let displayText = status;
-                    
+
                     if (status === 'Approved') {
                         badgeColor = 'warning';
                         displayText = 'Ongoing';
                     } else if (status === 'Completed') {
                         badgeColor = 'success';
+                        displayText = 'Completed';
                     } else if (status === 'Cancel') {
                         badgeColor = 'danger';
                         displayText = 'Cancelled';
@@ -433,7 +422,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                         badgeColor = 'info';
                         displayText = 'Pending';
                     }
-                    
+
                     return <CBadge color={badgeColor}>{displayText}</CBadge>;
                 }
             },
@@ -449,6 +438,17 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
         muiTableBodyRowProps: ({ row }) => ({
             sx: rowStyle(row.original),
         }),
+        muiTableHeadCellProps: ({ column }) => ({
+            title: column.getIsSorted()
+                ? `Sort by ${column.columnDef.header} ${column.getIsSorted() === 'asc' ? '(Ascending)' : '(Descending)'}`
+                : `Sort by ${column.columnDef.header}`,
+            sx: {
+                '&:hover': {
+                    cursor: column.getCanSort() ? 'pointer' : 'default',
+                  
+                },
+            },
+        }),
         muiTableContainerProps: { sx: { maxHeight: '500px' } },
         enableStickyHeader: true,
         manualPagination: true,
@@ -456,6 +456,7 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
         onPaginationChange: setPagination,
         state: {
             pagination,
+            isLoading: loading,
         },
     });
 
@@ -474,8 +475,8 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 category={moreOrderModalCategory}
                 productViewData
                 hotelsOrderView={hotelDataSet}
-                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e=>console.log(e)}/>}
-                    // style={{ zIndex: 10000 }} // Add this
+                productViewComponent={<OrderDetails orderid={mainDataSet} orderData={mainDataSet} hideStatus={false} productViewData updatedData={e => console.log(e)} />}
+            // style={{ zIndex: 10000 }} // Add this
             />
 
             <Modal
@@ -556,73 +557,73 @@ const OrderAllocatePagination = ({ normalUser = false }) => {
                 onSelect={handleFilterChange}
                 activeKey={currentFilter}
             >
-                <Tab 
-                    eventKey="All" 
+                <Tab
+                    eventKey="All"
                     title={
                         <span className="custom-tab-all">
                             All Orders <span className="badge text-bg-light">{statusCounts.All}</span>
                         </span>
-                    } 
+                    }
                 />
-                <Tab 
-                    eventKey="CustomerOrdered" 
+                <Tab
+                    eventKey="CustomerOrdered"
                     title={
                         <span className="custom-tab-pending">
                             Pending <span className="text-white badge text-bg-secondary">{statusCounts.CustomerOrdered}</span>
                         </span>
-                    } 
+                    }
                 />
-                <Tab 
-                    eventKey="Approved" 
+                <Tab
+                    eventKey="Approved"
                     title={
                         <span className="custom-tab-ongoing">
                             Ongoing <span className="text-white badge text-bg-warning">{statusCounts.Approved}</span>
                         </span>
-                    } 
+                    }
                 />
-                <Tab 
-                    eventKey="Completed" 
+                <Tab
+                    eventKey="Completed"
                     title={
                         <span className="custom-tab-completed">
                             Completed <span className="text-white badge text-bg-success">{statusCounts.Completed}</span>
                         </span>
-                    } 
+                    }
                 />
-                <Tab 
-                    eventKey="Cancel" 
+                <Tab
+                    eventKey="Cancel"
                     title={
                         <span className="custom-tab-cancel">
                             Cancelled <span className="text-white badge text-bg-danger">{statusCounts.Cancel}</span>
                         </span>
-                    } 
+                    }
                 />
             </Tabs>
 
             <div style={{ position: 'relative' }}>
-      {loading && (
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-          zIndex: 10,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backdropFilter: 'blur(2px)'
-        }}>
-          <div className="text-center p-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
+                {loading && (
+                    <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        zIndex: 10,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backdropFilter: 'blur(2px)'
+                    }}>
+                        <div className="text-center p-5">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                            <p className="mt-2">Loading orders data...</p>
+                        </div>
+                    </div>
+                )}
+                <MaterialReactTable table={table} />
             </div>
-            <p className="mt-2">Loading orders data...</p>
-          </div>
-        </div>
-      )}
-      <MaterialReactTable table={table} />
-    </div>
         </>
     );
 };
