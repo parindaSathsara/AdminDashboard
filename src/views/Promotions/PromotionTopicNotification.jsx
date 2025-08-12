@@ -7,7 +7,7 @@ function PromotionTopicNotification() {
 
   const handleNotificationCreated = () => {
     if (isNotificationCreated) {
-      setIsNotificationCreated(true)
+      setIsNotificationCreated(false)
     } else {
       setIsNotificationCreated(true)
     }
