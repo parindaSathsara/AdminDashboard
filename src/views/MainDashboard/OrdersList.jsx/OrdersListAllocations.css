@@ -86,7 +86,7 @@ button[aria-label="Column Actions"]::after {
 
 /* Add this to your existing CSS */
 .MuiTableContainer-root {
-  overflow: visible !important;
+  overflow: auto !important;
 }
 
 .MuiTable-root {
