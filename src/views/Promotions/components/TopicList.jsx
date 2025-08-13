@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CBadge, CButton, CRow, CCol } from '@coreui/react'
+import { Box, Typography, LinearProgress } from '@mui/material'
 import './TopicList.css'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 function TopicList(props) {
   const [topics, setTopics] = useState([])
+  const [progressByTopic, setProgressByTopic] = useState({})
+  const [updatingIds, setUpdatingIds] = useState([])
 
   const fetchTopics = async () => {
     try {
@@ -15,6 +19,48 @@ function TopicList(props) {
     }
   }
 
+  const updateProgress = (topic_id, value) => {
+    setProgressByTopic((prev) => ({
+      ...prev,
+      [topic_id]: value,
+    }))
+  }
+
+  const handleUpdate = async (topic_id) => {
+    setUpdatingIds((prev) => [...prev, topic_id])
+    let index = 1
+    let max_requests = 1
+    while (index <= max_requests) {
+      try {
+        const response = await axios.post(
+          '/promotions/update_topic',
+          {
+            topic_id: topic_id,
+            index: index,
+          },
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        )
+        max_requests = response?.data?.max_requests ?? 1
+        let progress = ((index / max_requests) * 100).toFixed(2)
+        updateProgress(topic_id, parseInt(progress))
+        index += 1
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: error?.response?.data?.message ?? error.message,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        })
+        return
+      }
+    }
+    updateProgress(topic_id, 0)
+    setUpdatingIds((prev) => prev.filter((num) => num !== topic_id))
+  }
   useEffect(() => {
     fetchTopics()
   }, [props.isTopicCreated])
@@ -58,14 +104,37 @@ function TopicList(props) {
                       </div>
                     </div>
 
-                    {/* <div className="d-flex gap-2 mt-3">
-                      <CButton size="sm" color="primary" variant="outline">
-                        Edit
+                    <div className="d-flex gap-2 mt-3">
+                      <CButton
+                        size="sm"
+                        color="primary"
+                        variant="outline"
+                        onClick={() => handleUpdate(topic.id)}
+                      >
+                        <i class="fa fa-refresh" aria-hidden="true"></i> Refresh
                       </CButton>
-                      <CButton size="sm" color="danger" variant="outline">
-                        Delete
-                      </CButton>
-                    </div> */}
+                    </div>
+                    {updatingIds.includes(topic.id) && progressByTopic[topic.id] > 0 && (
+                      <CRow>
+                        <Box sx={{ mt: 3, mb: 3 }}>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            {progressByTopic[topic.id] == 100
+                              ? 'Topic Updated!'
+                              : 'Updating Topic...'}
+                          </Typography>
+                          <LinearProgress
+                            variant="determinate"
+                            value={progressByTopic[topic.id]}
+                            sx={{ height: 3, borderRadius: 5 }}
+                          />
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              {progressByTopic[topic.id]}%
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </CRow>
+                    )}
                   </CCardBody>
                 </CCard>
               </CCol>
