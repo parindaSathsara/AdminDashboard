@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { CCard, CCardBody, CBadge, CButton, CRow, CCol } from '@coreui/react'
+import { CCard, CCardBody, CBadge, CButton, CRow, CCol, CSpinner } from '@coreui/react'
 import { Box, Typography, LinearProgress } from '@mui/material'
 import './TopicList.css'
 import axios from 'axios'
@@ -28,6 +28,7 @@ function TopicList(props) {
 
   const handleUpdate = async (topic_id) => {
     setUpdatingIds((prev) => [...prev, topic_id])
+    updateProgress(topic_id, 1)
     let index = 1
     let max_requests = 1
     while (index <= max_requests) {
@@ -63,7 +64,7 @@ function TopicList(props) {
   }
   useEffect(() => {
     fetchTopics()
-  }, [props.isTopicCreated])
+  }, [props.isTopicCreated, updatingIds])
 
   const typeColors = {
     active: 'success',
@@ -109,9 +110,18 @@ function TopicList(props) {
                         size="sm"
                         color="primary"
                         variant="outline"
+                        disabled={updatingIds.includes(topic.id)} // disable while loading
                         onClick={() => handleUpdate(topic.id)}
                       >
-                        <i class="fa fa-refresh" aria-hidden="true"></i> Refresh
+                        {updatingIds.includes(topic.id) ? (
+                          <>
+                            <CSpinner size="sm" className="me-2" /> Loading...
+                          </>
+                        ) : (
+                          <>
+                            <i className="fa fa-refresh" aria-hidden="true"></i> Refresh
+                          </>
+                        )}
                       </CButton>
                     </div>
                     {updatingIds.includes(topic.id) && progressByTopic[topic.id] > 0 && (
