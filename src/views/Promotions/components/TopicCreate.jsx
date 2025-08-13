@@ -55,7 +55,13 @@ function TopicCreate({ onTopicCreated }) {
         setProgress(parseInt(progress))
         formData.index += 1
       } catch (error) {
-        console.error('Error submitting form:', error)
+        Swal.fire({
+          title: 'Error',
+          text: error?.response?.data?.message ?? error.message,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        })
+        return
         break
       }
     }
