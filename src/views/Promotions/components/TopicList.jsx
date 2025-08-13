@@ -124,6 +124,10 @@ function TopicList(props) {
                         )}
                       </CButton>
                     </div>
+                    <div className="text-muted small mt-2">
+                      Last updated at:{' '}
+                      {topic.updated_at ? new Date(topic.updated_at).toLocaleString() : 'Never'}
+                    </div>
                     {updatingIds.includes(topic.id) && progressByTopic[topic.id] > 0 && (
                       <CRow>
                         <Box sx={{ mt: 3, mb: 3 }}>
