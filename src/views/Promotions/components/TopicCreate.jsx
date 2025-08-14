@@ -123,7 +123,7 @@ function TopicCreate({ onTopicCreated }) {
             <CCol className="mb-3">
               <CFormTextarea
                 name="description"
-                label="Description"
+                label="Remarks"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Enter detailed description"
