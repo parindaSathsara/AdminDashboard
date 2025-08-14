@@ -155,54 +155,85 @@ function AdditionalInfoBox(props) {
                                     otherInfoData?.map((val, idx) => {
                                         return (
                                             <tr key={idx}>
+                                                {/* Flight Details */}
                                                 <td>
-                                                    {
-                                                        val.flight_details.split(',')?.map((value, index) => (
-                                                            <>
-                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Flight Detail {index + 1}</a> <br />
-                                                            </>
-                                                        ))
-                                                    }
-                                                </td>
-                                                <td>
-                                                    {
-                                                        val.passport_copies.split(',')?.map((value, index) => (
-                                                            <>
-                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Passport Detail {index + 1}</a> <br />
-                                                            </>
-                                                        ))
-                                                    }
-                                                </td>
-                                                <td>
-                                                    {
-                                                        val.vaccine_certificate.split(',')?.map((value, index) => (
-                                                            <>
-                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Vaccination Detail {index + 1}</a> <br />
-                                                            </>
+                                                    {val.flight_details && val.flight_details.trim() !== "" &&
+                                                        val.flight_details.split(',').map((value, index) => (
+                                                            value.trim() && (
+                                                                <React.Fragment key={index}>
+                                                                    <a href={axios.defaults.data + "/" + value} className='link' target='_blank'>
+                                                                        Flight Detail {index + 1}
+                                                                    </a>
+                                                                    <br />
+                                                                </React.Fragment>
+                                                            )
                                                         ))
                                                     }
                                                 </td>
 
+                                                {/* Passport Details */}
                                                 <td>
-                                                    {
-                                                        val.supplier_confirmation.split(',')?.map((value, index) => (
-                                                            <>
-                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Supplier Detail {index + 1}</a> <br />
-                                                            </>
+                                                    {val.passport_copies && val.passport_copies.trim() !== "" &&
+                                                        val.passport_copies.split(',').map((value, index) => (
+                                                            value.trim() && (
+                                                                <React.Fragment key={index}>
+                                                                    <a href={axios.defaults.data + "/" + value} className='link' target='_blank'>
+                                                                        Passport Detail {index + 1}
+                                                                    </a>
+                                                                    <br />
+                                                                </React.Fragment>
+                                                            )
                                                         ))
                                                     }
                                                 </td>
 
+                                                {/* Vaccine Details */}
                                                 <td>
-                                                    {
-                                                        val.special_notes.split(',')?.map((value, index) => (
-                                                            <>
-                                                                <a href={axios.defaults.data + "/" + value} className='link' target='_blank' key={index} >Special Detail {index + 1}</a> <br />
-                                                            </>
+                                                    {val.vaccine_certificate && val.vaccine_certificate.trim() !== "" &&
+                                                        val.vaccine_certificate.split(',').map((value, index) => (
+                                                            value.trim() && (
+                                                                <React.Fragment key={index}>
+                                                                    <a href={axios.defaults.data + "/" + value} className='link' target='_blank'>
+                                                                        Vaccination Detail {index + 1}
+                                                                    </a>
+                                                                    <br />
+                                                                </React.Fragment>
+                                                            )
                                                         ))
                                                     }
                                                 </td>
-                                                {/* <td colSpan={2}>{val.flight_details}</td> */}
+
+                                                {/* Supplier Details */}
+                                                <td>
+                                                    {val.supplier_confirmation && val.supplier_confirmation.trim() !== "" &&
+                                                        val.supplier_confirmation.split(',').map((value, index) => (
+                                                            value.trim() && (
+                                                                <React.Fragment key={index}>
+                                                                    <a href={axios.defaults.data + "/" + value} className='link' target='_blank'>
+                                                                        Supplier Detail {index + 1}
+                                                                    </a>
+                                                                    <br />
+                                                                </React.Fragment>
+                                                            )
+                                                        ))
+                                                    }
+                                                </td>
+
+                                                {/* Special Details */}
+                                                <td>
+                                                    {val.special_notes && val.special_notes.trim() !== "" &&
+                                                        val.special_notes.split(',').map((value, index) => (
+                                                            value.trim() && (
+                                                                <React.Fragment key={index}>
+                                                                    <a href={axios.defaults.data + "/" + value} className='link' target='_blank'>
+                                                                        Special Detail {index + 1}
+                                                                    </a>
+                                                                    <br />
+                                                                </React.Fragment>
+                                                            )
+                                                        ))
+                                                    }
+                                                </td>
                                             </tr>
                                         )
                                     })

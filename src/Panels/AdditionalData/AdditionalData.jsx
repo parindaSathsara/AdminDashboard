@@ -56,6 +56,27 @@ function AdditionalData(props) {
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
+        // Check if all notes are empty
+        const allNotesEmpty = Object.values(inputChange).every(val => val.trim() === "");
+
+        // Check if all file arrays are empty
+        const allFilesEmpty =
+            flightData.length === 0 &&
+            passportData.length === 0 &&
+            vaccineData.length === 0 &&
+            suppData.length === 0 &&
+            otherData.length === 0;
+
+        // If both notes and files are empty, show error and stop
+        if (allNotesEmpty && allFilesEmpty) {
+            Swal.fire({
+                title: "Error",
+                text: "Please add at least one note or upload a file before submitting.",
+                icon: "error"
+            });
+            return;
+        }
+
         const form_data = new FormData();
 
         form_data.append('orderid', props.orderid);
@@ -69,24 +90,18 @@ function AdditionalData(props) {
         for (let i = 0; i < flightData.length; i++) {
             form_data.append('flight_data[]', flightData[i]);
         }
-
         for (let i = 0; i < passportData.length; i++) {
             form_data.append('passport_data[]', passportData[i]);
         }
-
         for (let i = 0; i < vaccineData.length; i++) {
             form_data.append('vaccine_data[]', vaccineData[i]);
         }
-
         for (let i = 0; i < suppData.length; i++) {
             form_data.append('supplier_data[]', suppData[i]);
         }
-
         for (let i = 0; i < otherData.length; i++) {
             form_data.append('special_data[]', otherData[i]);
         }
-
-        // console.log(...form_data);
 
         createNewOtherInfo(form_data).then(RESULT => {
             Swal.fire({
@@ -94,9 +109,9 @@ function AdditionalData(props) {
                 text: "Additional Information Updated Successfully",
                 icon: "success"
             });
-        })
+        });
+    };
 
-    }
 
     return (
         <div className='aditional_box w-100'>
