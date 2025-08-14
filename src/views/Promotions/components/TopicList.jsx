@@ -29,15 +29,16 @@ function TopicList(props) {
   const handleUpdate = async (topic_id) => {
     setUpdatingIds((prev) => [...prev, topic_id])
     updateProgress(topic_id, 1)
-    let index = 1
-    let max_requests = 1
-    while (index <= max_requests) {
+
+    let unsubscribe_index = 1
+    let unsubscribe_max_requests = 1
+    while (unsubscribe_index <= unsubscribe_max_requests) {
       try {
         const response = await axios.post(
-          '/promotions/update_topic',
+          '/promotions/unsubscribe_from_topics',
           {
             topic_id: topic_id,
-            index: index,
+            index: unsubscribe_index,
           },
           {
             headers: {
@@ -45,10 +46,41 @@ function TopicList(props) {
             },
           },
         )
-        max_requests = response?.data?.max_requests ?? 1
-        let progress = ((index / max_requests) * 100).toFixed(2)
+        unsubscribe_max_requests = response?.data?.max_requests ?? 1
+        let progress = ((unsubscribe_index / unsubscribe_max_requests) * 50).toFixed(2)
         updateProgress(topic_id, parseInt(progress))
-        index += 1
+        unsubscribe_index += 1
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: error?.response?.data?.message ?? error.message,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        })
+        return
+      }
+    }
+
+    let update_index = 1
+    let update_max_requests = 1
+    while (update_index <= update_max_requests) {
+      try {
+        const response = await axios.post(
+          '/promotions/update_topic',
+          {
+            topic_id: topic_id,
+            index: update_index,
+          },
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        )
+        update_max_requests = response?.data?.max_requests ?? 1
+        let progress = ((update_index / update_max_requests) * 50 + 50).toFixed(2)
+        updateProgress(topic_id, parseInt(progress))
+        update_index += 1
       } catch (error) {
         Swal.fire({
           title: 'Error',
