@@ -116,7 +116,7 @@ function NotificationCreate({ onNotificationCreated }) {
             <CCol md={12}>
               <CFormInput
                 type="text"
-                label="Title"
+                label="Notification Title"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
@@ -128,12 +128,12 @@ function NotificationCreate({ onNotificationCreated }) {
           <CRow className="mb-3">
             <CCol md={12}>
               <CFormTextarea
-                label="Description"
+                label="Notification Content"
                 name="content"
                 rows="4"
                 value={formData.content}
                 onChange={handleChange}
-                placeholder="Enter notification description"
+                placeholder="Enter notification content"
               />
             </CCol>
           </CRow>
