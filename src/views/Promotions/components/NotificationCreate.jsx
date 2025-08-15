@@ -55,7 +55,7 @@ function NotificationCreate({ onNotificationCreated }) {
         setLoading(false)
         console.log('Error sending notification:', error)
         Swal.fire('Error', 'Failed to send notification', 'error')
-        break
+        return
       }
     }
 
