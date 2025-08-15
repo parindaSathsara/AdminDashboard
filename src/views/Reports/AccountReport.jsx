@@ -236,6 +236,7 @@ const ReportGenerationPage = () => {
       reportType: reportType?.value,
       // orderId: order?.value,
       dateType: dateType,
+      currency: currency?.value,
       currencyValue: currency?.value,
       currencyType: currencyType?.value,
       dateType: typeDate?.value,

@@ -25,7 +25,9 @@ import {
   CFormCheck,
   CImage,
   CSpinner,
-  CAlert
+  CAlert,
+  CPagination,
+  CPaginationItem
 } from '@coreui/react';
 import axios from 'axios';
 import { cilPencil, cilTrash, cilPlus } from '@coreui/icons';
@@ -39,6 +41,10 @@ const Banners = () => {
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10);
+  const [totalBanners, setTotalBanners] = useState(0);
+  const [countries, setCountries] = useState([]);
 
   const [currentBanner, setCurrentBanner] = useState({
     id: null,
@@ -56,15 +62,26 @@ const Banners = () => {
 
   useEffect(() => {
     fetchBanners();
-  }, []);
+    fetchCountries();
+  }, [currentPage]);
 
   const fetchBanners = async () => {
     try {
-      const response = await axios.get('/banners');
-      setBanners(response.data);
+      const response = await axios.get(`/banners?page=${currentPage}&per_page=${perPage}`);
+      setBanners(response.data.data);
+      setTotalBanners(response.data.total);
     } catch (error) {
       console.error('Error fetching banners:', error);
       showError('Failed to fetch banners');
+    }
+  };
+
+  const fetchCountries = async () => {
+    try {
+      const response = await axios.get('/api/countries');
+      setCountries(response.data.countries);
+    } catch (error) {
+      console.error('Error fetching countries:', error);
     }
   };
 
@@ -141,14 +158,15 @@ const Banners = () => {
     try {
       const formData = new FormData();
 
-      Object.keys(currentBanner).forEach(key => {
-        if (key === 'is_active') {
-          formData.append(key, currentBanner[key] ? '1' : '0');
-        } else {
-          formData.append(key, currentBanner[key]);
-        }
-
-      });
+      // Explicitly append all fields
+      formData.append('route', currentBanner.route);
+      formData.append('title', currentBanner.title);
+      formData.append('description', currentBanner.description);
+      formData.append('is_active', currentBanner.is_active ? '1' : '0');
+      formData.append('sort_order', currentBanner.sort_order);
+      formData.append('nationality', currentBanner.nationality || '');
+      formData.append('product_id', currentBanner.product_id);
+      formData.append('category', currentBanner.category);
 
       if (imageFile) {
         formData.append('image', imageFile);
@@ -215,7 +233,7 @@ const Banners = () => {
       description: banner.description,
       is_active: banner.is_active,
       sort_order: banner.sort_order,
-      nationality: banner.nationality,
+      nationality: banner.nationality || '',
       product_id: banner.data_set?.product_id || '',
       category: banner.data_set?.category || 'Lifestyles'
     });
@@ -238,6 +256,8 @@ const Banners = () => {
       }
     }
   };
+
+  const totalPages = Math.ceil(totalBanners / perPage);
 
   return (
     <CRow>
@@ -325,13 +345,53 @@ const Banners = () => {
                 ))}
               </CTableBody>
             </CTable>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <CPagination className="mt-3" aria-label="Page navigation">
+                <CPaginationItem 
+                  disabled={currentPage === 1} 
+                  onClick={() => setCurrentPage(1)}
+                >
+                  First
+                </CPaginationItem>
+                <CPaginationItem 
+                  disabled={currentPage === 1} 
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  Previous
+                </CPaginationItem>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <CPaginationItem
+                    key={page}
+                    active={page === currentPage}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </CPaginationItem>
+                ))}
+                
+                <CPaginationItem 
+                  disabled={currentPage === totalPages} 
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Next
+                </CPaginationItem>
+                <CPaginationItem 
+                  disabled={currentPage === totalPages} 
+                  onClick={() => setCurrentPage(totalPages)}
+                >
+                  Last
+                </CPaginationItem>
+              </CPagination>
+            )}
           </CCardBody>
         </CCard>
       </CCol>
 
       {/* Create/Edit Modal */}
-      <CModal visible={modalVisible} onClose={() => setModalVisible(false)} backdrop="static"         // prevent clicking outside to close
-  keyboard={false} >
+      <CModal visible={modalVisible} onClose={() => setModalVisible(false)} backdrop="static" keyboard={false}>
         <CModalHeader onClose={() => setModalVisible(false)}>
           <CModalTitle>{isEdit ? 'Edit Banner' : 'Create New Banner'}</CModalTitle>
         </CModalHeader>
@@ -363,8 +423,6 @@ const Banners = () => {
                 </div>
               )}
             </div>
-
-
 
             <div className="mb-3">
               <CFormLabel>Route <span className="text-danger">*</span></CFormLabel>
@@ -454,14 +512,19 @@ const Banners = () => {
               </div>
               <div className="col-md-6">
                 <CFormLabel>Nationality</CFormLabel>
-                <CFormInput
-                  type="text"
+                <CFormSelect
                   name="nationality"
                   value={currentBanner.nationality}
                   onChange={handleInputChange}
-                  placeholder="e.g. LK, US, UK"
                   disabled={loading}
-                />
+                >
+                  <option value="">All Countries</option>
+                  {countries.map(country => (
+                    <option key={country.code} value={country.code}>
+                      {country.name} ({country.code})
+                    </option>
+                  ))}
+                </CFormSelect>
               </div>
             </div>
 

@@ -176,10 +176,35 @@ function getNavigationHook(permissions) {
       icon: <CIcon icon={cilChartLine} customClassName="nav-icon" />,
     },
     {
-      component: CNavItem,
+      component: CNavGroup,
       name: 'Promotions',
-      to: '/promotions',
       icon: <CIcon icon={cilBullhorn} customClassName="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Push Notifications',
+          to: '/promotions/push-notifications', // Changed to /promotions
+          // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+        },
+        {
+          component: CNavItem,
+          name: 'Create Topics',
+          to: '/promotions/topics', // Changed to /promotions
+          // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+        },
+        {
+          component: CNavItem,
+          name: 'Topics Notifications',
+          to: 'promotions/topics-notifications', // Changed to /promotions
+          // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+        },
+        // {
+        //   component: CNavItem,
+        //   name: 'WhatsApp Notifications',
+        //   to: '/whatsapp-notifications',
+        //   // icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
+        // },
+      ],
     },
     {
       component: CNavItem,

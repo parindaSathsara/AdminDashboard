@@ -12,6 +12,8 @@ import {
   CInputGroupText,
   CButton
 } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilNoteAdd, cilViewStream } from '@coreui/icons';
 import axios from 'axios';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { CurrencyContext } from 'src/Context/CurrencyContext';
@@ -24,6 +26,9 @@ import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
 import ProductWiseOrders from './MainComponents/ProductWiseOrders';
 import { Tab, Tabs } from 'react-bootstrap';
 import ProductWiseOrdersPaginate from './MainComponents/ProductWiseOrdersPaginate';
+import AdditionalData from 'src/Panels/AdditionalData/AdditionalData';
+import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox';
+
 
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
@@ -41,7 +46,18 @@ const OrdersNew = () => {
     total: 0,
     lastPage: 1
   });
+  const [showModalAdd, setShowModalAdd] = useState(false);
+  const [showAdditionalModal, setShowAdditionalModal] = useState(false);
+  const [orderid, setOrderId] = useState(null);
+  const handleAdditionalModal = (id) => {
+    setOrderId(id);
+    setShowModalAdd(true);
+  };
 
+  const handleAdditionalInfoModal = (id) => {
+    setOrderId(id);
+    setShowAdditionalModal(true);
+  };
   const handleFullScreen = (rowData) => {
     setSelectedOrderDetails(rowData);
     setDetailExpander(true);
@@ -186,6 +202,29 @@ const OrdersNew = () => {
         </span>
       )
     },
+    {
+      accessorKey: 'additional_data',
+      header: 'Additional Information',
+      Cell: ({ row }) => (
+        <div style={{ display: 'flex', gap: '5px' }}>
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() => handleAdditionalModal(row.original.OrderId)}
+          >
+            <CIcon icon={cilNoteAdd} size="sm" />
+          </button>
+          <button
+            className="btn btn-info btn-sm"
+            onClick={() => handleAdditionalInfoModal(row.original.OrderId)}
+          >
+            <CIcon icon={cilViewStream} size="sm" />
+          </button>
+        </div>
+      ),
+      // You can disable sorting/filtering for this column if it's just for actions
+      enableSorting: false,
+      enableColumnFilter: false,
+    },
   ];
 
   const table = useMaterialReactTable({
@@ -198,9 +237,15 @@ const OrdersNew = () => {
     enableColumnFilters: false,
     enableGlobalFilter: false,
     enableSorting: true,
+    enableGrouping: true,
     initialState: {
       density: 'compact'
     },
+     muiTablePaperProps: {
+    sx: {
+      overflow: 'visible',
+    }
+  },
     renderDetailPanel: ({ row }) => (
       <div style={{ padding: '20px' }}>
         <OrderDetails
@@ -211,11 +256,23 @@ const OrdersNew = () => {
         />
       </div>
     ),
-    muiTableContainerProps: {
-      sx: {
-        maxHeight: isTableFullscreen ? '100vh' : '500px' // Dynamic height based on fullscreen state
-      }
-    },
+  muiTableContainerProps: {
+    sx: {
+      maxHeight: isTableFullscreen ? '100vh' : '500px',
+      overflow: 'auto', // Change this to 'visible' to prevent clipping
+      '& .MuiTableHead-root': {
+        position: 'sticky',
+        top: 0,
+        zIndex: 200,
+        backgroundColor: '#f8f9fa',
+      },
+      '& .MuiTableHead-root .MuiTableCell-head': {
+        backgroundColor: '#f8f9fa',
+        position: 'relative',
+        zIndex: 210,
+      }
+    }
+  },
     // Removed row actions since you don't want fullscreen in action column
     enableRowActions: true,
     renderRowActions: ({ row }) => (
@@ -450,7 +507,21 @@ const OrdersNew = () => {
           } : {}}
         />
       )}
+      {showModalAdd && (
+        <AdditionalData
+          show={showModalAdd}
+          onHide={() => setShowModalAdd(false)}
+          orderid={orderid}
+        />
+      )}
 
+      {showAdditionalModal && (
+        <AdditionalInfoBox
+          show={showAdditionalModal}
+          onHide={() => setShowAdditionalModal(false)}
+          orderid={orderid}
+        />
+      )}
     </>
   );
 };

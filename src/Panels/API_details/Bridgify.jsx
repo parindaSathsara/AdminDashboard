@@ -69,7 +69,7 @@ const Bridgify = () => {
     return `${currency} ${parseFloat(amount).toFixed(2)}`
   }
 
-  const data = {
+ const data = {
     columns: [
       {
         title: 'View More',
@@ -94,92 +94,11 @@ const Bridgify = () => {
         title: 'Order ID',
         field: 'order_id',
         align: 'left',
-        width: '12%',
-        cellStyle: {
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          maxWidth: '120px',
-          padding: '8px',
-          fontSize: '12px',
-        },
-        headerStyle: {
-          fontWeight: 'bold',
-          backgroundColor: '#f8f9fa',
-          minWidth: '120px',
-          fontSize: '12px',
-        },
-      },
-      {
-        title: 'Total Amount',
-        field: 'total_amount',
-        align: 'right',
-        width: '10%',
-        cellStyle: {
-          textAlign: 'right',
-          padding: '8px',
-          fontWeight: '500',
-          minWidth: '100px',
-          fontSize: '12px',
-        },
-        headerStyle: {
-          textAlign: 'right',
-          fontWeight: 'bold',
-          backgroundColor: '#f8f9fa',
-          minWidth: '100px',
-          fontSize: '12px',
-        },
-      },
-      {
-        title: 'Paid Amount',
-        field: 'paid_amount',
-        align: 'right',
-        width: '10%',
-        cellStyle: {
-          textAlign: 'right',
-          padding: '8px',
-          fontWeight: '500',
-          minWidth: '100px',
-          fontSize: '12px',
-        },
-        headerStyle: {
-          textAlign: 'right',
-          fontWeight: 'bold',
-          backgroundColor: '#f8f9fa',
-          minWidth: '100px',
-          fontSize: '12px',
-        },
-      },
-      // {
-      //   title: 'Balance Amount',
-      //   field: 'balance_amount',
-      //   align: 'right',
-      //   width: '10%',
-      //   cellStyle: {
-      //     textAlign: 'right',
-      //     padding: '8px',
-      //     fontWeight: '500',
-      //     minWidth: '100px',
-      //     fontSize: '12px',
-      //   },
-      //   headerStyle: {
-      //     textAlign: 'right',
-      //     fontWeight: 'bold',
-      //     backgroundColor: '#f8f9fa',
-      //     minWidth: '100px',
-      //     fontSize: '12px',
-      //   },
-      // },
-      {
-        title: 'Product Title',
-        field: 'product_details',
-        align: 'left',
         width: '15%',
         cellStyle: {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          maxWidth: '150px',
           padding: '8px',
           fontSize: '12px',
         },
@@ -188,78 +107,110 @@ const Bridgify = () => {
           backgroundColor: '#f8f9fa',
           minWidth: '150px',
           fontSize: '12px',
+        },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '150px',
+        },
+      },
+      {
+        title: 'Cost Price',
+        field: 'cost_price',
+        align: 'center',
+        width: '12%',
+        cellStyle: {
+          textAlign: 'center',
+          padding: '8px',
+          fontWeight: '500',
+          minWidth: '120px',
+          fontSize: '12px',
+        },
+        headerStyle: {
+          textAlign: 'center',
+          fontWeight: 'bold',
+          backgroundColor: '#f8f9fa',
+          minWidth: '120px',
+          fontSize: '12px',
+        },
+      },
+      {
+        title: 'Product Title',
+        field: 'product_details',
+        align: 'center',
+        width: '20%',
+        cellStyle: {
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          padding: '8px',
+          fontSize: '12px',
+        },
+        headerStyle: {
+          fontWeight: 'bold',
+          backgroundColor: '#f8f9fa',
+          minWidth: '200px',
+          fontSize: '12px',
+        },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '200px',
         },
       },
       {
         title: 'Selected Timeslot',
         field: 'timeslots',
-        align: 'left',
-        width: '12%',
+        align: 'center',
+        width: '15%',
         cellStyle: {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          maxWidth: '120px',
           padding: '8px',
           fontSize: '12px',
         },
         headerStyle: {
           fontWeight: 'bold',
           backgroundColor: '#f8f9fa',
-          minWidth: '120px',
+          minWidth: '150px',
           fontSize: '12px',
+        },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '150px',
         },
       },
       {
         title: 'Ticket Details',
         field: 'tickets',
-        align: 'left',
-        width: '15%',
+        align: 'center',
+        width: '20%',
         cellStyle: {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          maxWidth: '150px',
           padding: '8px',
           fontSize: '12px',
         },
         headerStyle: {
           fontWeight: 'bold',
           backgroundColor: '#f8f9fa',
-          minWidth: '150px',
+          minWidth: '200px',
           fontSize: '12px',
+        },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '200px',
         },
       },
       {
         title: 'Customer Name',
         field: 'customer',
-        align: 'left',
-        width: '12%',
-        cellStyle: {
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          maxWidth: '120px',
-          padding: '8px',
-          fontSize: '12px',
-        },
-        headerStyle: {
-          fontWeight: 'bold',
-          backgroundColor: '#f8f9fa',
-          minWidth: '120px',
-          fontSize: '12px',
-        },
-      },
-      {
-        title: 'Email',
-        field: 'email',
-        align: 'left',
+        align: 'center',
         width: '15%',
         cellStyle: {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          maxWidth: '150px',
           padding: '8px',
           fontSize: '12px',
         },
@@ -269,25 +220,55 @@ const Bridgify = () => {
           minWidth: '150px',
           fontSize: '12px',
         },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '150px',
+        },
       },
       {
-        title: 'Phone',
-        field: 'phone',
-        align: 'left',
-        width: '40%',
+        title: 'Email',
+        field: 'email',
+        align: 'center',
+        width: '20%',
         cellStyle: {
-          // whiteSpace: 'nowrap',
-          // overflow: 'hidden',
-          // textOverflow: 'ellipsis',
-          maxWidth: '100px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
           padding: '8px',
           fontSize: '12px',
         },
         headerStyle: {
           fontWeight: 'bold',
           backgroundColor: '#f8f9fa',
-          minWidth: '100px',
+          minWidth: '200px',
           fontSize: '12px',
+        },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '200px',
+        },
+      },
+      {
+        title: 'Phone',
+        field: 'phone',
+        align: 'center',
+        width: '15%',
+        cellStyle: {
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          padding: '8px',
+          fontSize: '12px',
+        },
+        headerStyle: {
+          fontWeight: 'bold',
+          backgroundColor: '#f8f9fa',
+          minWidth: '150px',
+          fontSize: '12px',
+        },
+        filterCellStyle: {
+          padding: '8px',
+          minWidth: '150px',
         },
       },
     ],
@@ -296,13 +277,13 @@ const Bridgify = () => {
       const productDetails = item?.data?.product_details?.title || 'N/A'
       const selectedTimeslot = item?.data?.requires?.timeslots?.selected_value || 'N/A'
       const customerDetails = item?.data?.requires?.['customer-info']?.selected_value || []
-
+ const costPrice = item?.data?.create_order?.data?.total_order?.total_order_price || 0;
+  const costCurrency = item?.data?.create_order?.data?.total_order?.currency || '';
       return {
         order_id: item?.order_id || 'N/A',
         status: item?.status || 'N/A',
         balance_amount: formatCurrency(item?.balance_amount),
-        paid_amount: formatCurrency(item?.paid_amount),
-        total_amount: formatCurrency(item?.total_amount),
+        cost_price: formatCurrency(costPrice, costCurrency),
         transaction_amount: formatCurrency(
           item?.data?.save_cart?.selected_value?.transaction_amount,
         ),
@@ -562,9 +543,12 @@ const Bridgify = () => {
                   padding: '8px',
                   borderBottom: '1px solid #dee2e6',
                 },
+                filterCellStyle: {
+                  padding: '8px',
+                  minWidth: '150px',
+                },
                 paging: true,
                 pageSize: 10,
-                pageSizeOptions: [],
                 search: true,
                 columnsButton: true,
                 exportButton: true,
@@ -774,7 +758,7 @@ const Bridgify = () => {
                           fillColor: [245, 245, 245],
                         },
                         columnStyles: {
-                          0: { cellWidth: 25 }, // Order ID
+                          0: { cellWidth: 20 }, // Order ID
                           1: { cellWidth: 20, halign: 'right' }, // Total Amount
                           2: { cellWidth: 20, halign: 'right' }, // Paid Amount
                           3: { cellWidth: 20, halign: 'right' }, // Balance Amount
