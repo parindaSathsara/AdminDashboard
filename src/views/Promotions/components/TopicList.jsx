@@ -31,42 +31,42 @@ function TopicList(props) {
 
   const handleUpdate = async (topic_id) => {
     setUpdatingIds((prev) => [...prev, topic_id])
-    updateProgress(topic_id, 1, 'Removing current users from the topic...')
+    // updateProgress(topic_id, 1, 'Removing current users from the topic...')
 
-    let unsubscribe_index = 1
-    let unsubscribe_max_requests = 1
-    while (unsubscribe_index <= unsubscribe_max_requests) {
-      try {
-        const response = await axios.post(
-          '/promotions/unsubscribe_from_topics',
-          {
-            topic_id: topic_id,
-            index: unsubscribe_index,
-          },
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          },
-        )
-        unsubscribe_max_requests = response?.data?.max_requests ?? 1
-        let progress = ((unsubscribe_index / unsubscribe_max_requests) * 50).toFixed(2)
-        updateProgress(topic_id, parseInt(progress), 'Removing current users from the topic...')
-        unsubscribe_index += 1
-      } catch (error) {
-        Swal.fire({
-          title: 'Error',
-          text: error?.response?.data?.message ?? error.message,
-          icon: 'error',
-          confirmButtonText: 'OK',
-        })
-        return
-      }
-    }
+    // let unsubscribe_index = 1
+    // let unsubscribe_max_requests = 1
+    // while (unsubscribe_index <= unsubscribe_max_requests) {
+    //   try {
+    //     const response = await axios.post(
+    //       '/promotions/unsubscribe_from_topics',
+    //       {
+    //         topic_id: topic_id,
+    //         index: unsubscribe_index,
+    //       },
+    //       {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         },
+    //       },
+    //     )
+    //     unsubscribe_max_requests = response?.data?.max_requests ?? 1
+    //     let progress = ((unsubscribe_index / unsubscribe_max_requests) * 50).toFixed(2)
+    //     updateProgress(topic_id, parseInt(progress), 'Removing current users from the topic...')
+    //     unsubscribe_index += 1
+    //   } catch (error) {
+    //     Swal.fire({
+    //       title: 'Error',
+    //       text: error?.response?.data?.message ?? error.message,
+    //       icon: 'error',
+    //       confirmButtonText: 'OK',
+    //     })
+    //     return
+    //   }
+    // }
 
     let update_index = 1
     let update_max_requests = 1
-    updateProgress(topic_id, 50, 'Adding new users to the topic...')
+    updateProgress(topic_id, 0, 'Adding new users to the topic...')
     while (update_index <= update_max_requests) {
       try {
         const response = await axios.post(
@@ -82,7 +82,7 @@ function TopicList(props) {
           },
         )
         update_max_requests = response?.data?.max_requests ?? 1
-        let progress = ((update_index / update_max_requests) * 50 + 50).toFixed(2)
+        let progress = ((update_index / update_max_requests) * 100).toFixed(2)
         updateProgress(topic_id, parseInt(progress), 'Adding new users to the topic...')
         update_index += 1
       } catch (error) {
