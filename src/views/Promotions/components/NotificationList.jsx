@@ -86,9 +86,11 @@ function NotificationList(props) {
                   key={item.id}
                   className="mb-3 shadow-sm"
                   style={{
-                    backgroundColor: 'white',
+                    // backgroundColor: 'white',
                     border: '1px solid #e0e0e0',
                     borderRadius: '8px',
+                    // background: item.id % 2 === 0 ? '#f8f9fa' : '#ffffff',
+                    background: 'linear-gradient(145deg, #fdfbfb, #ebedee)',
                   }}
                 >
                   <CCardBody className="p-4">
