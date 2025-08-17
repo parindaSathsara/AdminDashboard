@@ -10,6 +10,12 @@ import {
   CPagination,
   CPaginationItem,
   CFormSelect,
+  CButton,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CRow,
   CCol,
 } from '@coreui/react'
@@ -22,6 +28,8 @@ function NotificationList(props) {
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
   const [totalPages, setTotalPages] = useState(1)
+  const [topicModalVisible, setTopicModalVisible] = useState(false)
+  const [selectedTopic, setSelectedTopic] = useState(null)
 
   const fetchNotifications = async (props) => {
     setLoading(true)
@@ -50,6 +58,12 @@ function NotificationList(props) {
     ) : (
       <CBadge color="danger">Failed</CBadge>
     )
+  }
+
+  const openTopicModal = (topic) => {
+    console.log(topic)
+    setSelectedTopic(topic)
+    setTopicModalVisible(true)
   }
 
   return (
@@ -121,8 +135,18 @@ function NotificationList(props) {
                         </div>
                         <div>
                           <small className="text-muted d-block">Topic</small>
-                          <span className="badge bg-info text-light" title={item.topic.description}>
-                            {item.topic.topic}
+                          <span
+                            className="badge bg-info text-light"
+                            title={item.topic?.description}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => openTopicModal(item.topic)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') openTopicModal(item.topic)
+                            }}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {item.topic?.topic || '-'}
                           </span>
                         </div>
                       </CCol>
@@ -244,6 +268,78 @@ function NotificationList(props) {
                 </CPagination>
               </div>
             )}
+            {/* Topic Details Modal */}
+            <CModal
+              visible={topicModalVisible}
+              onClose={() => setTopicModalVisible(false)}
+              backdrop="static"
+              keyboard={false}
+            >
+              <CModalHeader onClose={() => setTopicModalVisible(false)}>
+                <CModalTitle>Topic Details</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                {selectedTopic ? (
+                  <div>
+                    <p>
+                      <strong>Name:</strong> {selectedTopic.topic}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {selectedTopic.description || '-'}
+                    </p>
+                    <p>
+                      <strong>Type:</strong> {selectedTopic.type || '-'}
+                    </p>
+                    <p>
+                      <strong>Total Users:</strong>{' '}
+                      {selectedTopic.total_users != null
+                        ? Number(selectedTopic.total_users).toLocaleString()
+                        : '-'}
+                    </p>
+                    <p>
+                      <strong>Success Users:</strong>{' '}
+                      {selectedTopic.success_users != null
+                        ? Number(selectedTopic.success_users).toLocaleString()
+                        : '-'}
+                    </p>
+                    <p>
+                      <strong>Total Devices:</strong>{' '}
+                      {selectedTopic.total_devices != null
+                        ? Number(selectedTopic.total_devices).toLocaleString()
+                        : '-'}
+                    </p>
+                    <p>
+                      <strong>Success Devices:</strong>{' '}
+                      {selectedTopic.success_devices != null
+                        ? Number(selectedTopic.success_devices).toLocaleString()
+                        : '-'}
+                    </p>
+                    <p>
+                      <strong>Status:</strong> {selectedTopic.status || '-'}
+                    </p>
+                    <p>
+                      <strong>Created At:</strong>{' '}
+                      {selectedTopic.created_at
+                        ? new Date(selectedTopic.created_at).toLocaleString()
+                        : '-'}
+                    </p>
+                    <p>
+                      <strong>Updated At:</strong>{' '}
+                      {selectedTopic.updated_at
+                        ? new Date(selectedTopic.updated_at).toLocaleString()
+                        : '-'}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-muted">No topic data available.</p>
+                )}
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="secondary" onClick={() => setTopicModalVisible(false)}>
+                  Close
+                </CButton>
+              </CModalFooter>
+            </CModal>
           </>
         )}
       </CCard>
