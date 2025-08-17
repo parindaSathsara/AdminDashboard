@@ -114,7 +114,16 @@ function NotificationList(props) {
                     borderRadius: '12px',
                     background: '#ffffff',
                     border: '1px solid #e6e6e6',
-                    transition: 'box-shadow 0.2s ease',
+                    transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                    borderLeft: item.is_success === 1 ? '6px solid #10b981' : '6px solid #ef4444',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-6px)'
+                    e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.12)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)'
                   }}
                 >
                   <CCardBody className="p-3">
@@ -153,9 +162,20 @@ function NotificationList(props) {
                           )}
                           <div>
                             <h6
-                              className="mb-1 fw-bold"
+                              className="mb-1 fw-bold d-flex align-items-center"
                               style={{ fontSize: '1.1rem', color: '#1e293b' }}
                             >
+                              <span
+                                style={{
+                                  width: '10px',
+                                  height: '10px',
+                                  borderRadius: '50%',
+                                  display: 'inline-block',
+                                  marginRight: '8px',
+                                  background: item.is_success === 1 ? '#10b981' : '#ef4444',
+                                  boxShadow: '0 0 8px rgba(0,0,0,0.06)',
+                                }}
+                              />
                               {item.title}
                             </h6>
                             <small className="text-muted">
@@ -165,7 +185,6 @@ function NotificationList(props) {
                           </div>
                         </div>
                       </CCol>
-
                       {/* Middle Section - Content and Topic */}
                       <CCol md={4} className="mb-3 mb-md-0">
                         <div className="mb-3">
