@@ -115,13 +115,13 @@ function NotificationList(props) {
                       <CCol md={4} className="mb-3 mb-md-0">
                         <div className="mb-2">
                           <small className="text-muted d-block">Content</small>
-                          <p className="mb-0 text-truncate" style={{ maxWidth: '250px' }}>
+                          <p className="mb-0" style={{ maxWidth: '250px' }}>
                             {item.content || '-'}
                           </p>
                         </div>
                         <div>
                           <small className="text-muted d-block">Topic</small>
-                          <span className="badge bg-info text-dark" title={item.topic.description}>
+                          <span className="badge bg-info text-light" title={item.topic.description}>
                             {item.topic.topic}
                           </span>
                         </div>
@@ -142,18 +142,16 @@ function NotificationList(props) {
                               <CIcon icon={cilDevices} size="sm" className="me-1" />
                               Devices
                             </small>
-                            <span className="fw-bold">
-                              {item.topic.total_devices.toLocaleString()}
-                            </span>
+                            <span className="fw-bold">{item.total_devices.toLocaleString()}</span>
                           </div>
                           <div className="col-12">
                             <small className="text-muted d-block">Success Rate</small>
                             <span className="fw-bold text-success">
-                              {item.topic.success_devices.toLocaleString()}
+                              {item.successful_devices.toLocaleString()}
                             </span>
                             <small className="text-muted">
                               {' '}
-                              / {item.topic.total_devices.toLocaleString()}
+                              / {item.total_devices.toLocaleString()}
                             </small>
                           </div>
                         </div>
@@ -167,7 +165,7 @@ function NotificationList(props) {
                             {getStatusBadge(item.is_success)}
                           </div>
                           <div className="mb-3">
-                            <small className="text-muted d-block">Send Status</small>
+                            <small className="text-muted d-block">Is Sent to Topic</small>
                             {getStatusBadge(item.is_sent_to_topic)}
                           </div>
                           <div>
@@ -194,7 +192,7 @@ function NotificationList(props) {
             {/* Empty State */}
             {notifications.length === 0 && (
               <CCard
-                className="text-center py-5"
+                className="text-center py-5 m-4"
                 style={{ backgroundColor: 'white', border: '1px solid #e0e0e0' }}
               >
                 <CCardBody>
