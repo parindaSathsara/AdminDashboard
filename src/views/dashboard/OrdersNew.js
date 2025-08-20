@@ -141,29 +141,32 @@ const OrdersNew = () => {
       },
     },
 
-    {
-      accessorKey: 'refundableAmount',
-      header: 'Refunding Amount',
-      muiTableHeadCellProps: {
-        sx: { minWidth: '240px' },
-      },
-      muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
-      },
-      align: 'left',
-      Cell: ({ cell }) => {
-        if (cell?.getValue() > 0) {
-          console.log(cell, "Refundable Amount");
-          return (
-            <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-              Refunding {CurrencyConverter(currencyData.base, cell.getValue(), currencyData)}
-            </CBadge>
-          )
-        } else {
-          return <p>No Refund Request</p>
-        }
-      }
-    },
+   {
+  accessorKey: 'refundableAmount',
+  header: 'Refunding Amount',
+  muiTableHeadCellProps: {
+    sx: { minWidth: '240px' },
+  },
+  muiTableBodyCellProps: {
+    sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+  },
+  align: 'left',
+  Cell: ({ cell, row }) => { // Add row parameter here
+    if (cell?.getValue() > 0) {
+      return (
+        <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
+          Refunding {CurrencyConverter(
+            row.original.ItemCurrency, // Use the order's currency, not currencyData.base
+            cell.getValue(), 
+            currencyData
+          )}
+        </CBadge>
+      )
+    } else {
+      return <p>No Refund Request</p>
+    }
+  }
+},
     {
       accessorKey: 'min_service_date', header: 'Service Date', muiTableHeadCellProps: {
         sx: { minWidth: '200px' },
