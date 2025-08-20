@@ -256,23 +256,31 @@ const OrdersNew = () => {
         />
       </div>
     ),
-  muiTableContainerProps: {
-    sx: {
-      maxHeight: isTableFullscreen ? '100vh' : '500px',
-      overflow: 'auto', // Change this to 'visible' to prevent clipping
-      '& .MuiTableHead-root': {
-        position: 'sticky',
-        top: 0,
-        zIndex: 200,
-        backgroundColor: '#f8f9fa',
-      },
-      '& .MuiTableHead-root .MuiTableCell-head': {
-        backgroundColor: '#f8f9fa',
-        position: 'relative',
-        zIndex: 210,
-      }
-    }
-  },
+     muiTableHeadCellProps: {
+            sx: {
+                position: 'relative',
+                zIndex: 1,
+            },
+        },
+   muiTableContainerProps: {
+            sx: {
+                maxHeight: isTableFullscreen ? '100vh' : '500px',
+                overflow: 'auto',
+                '& .MuiTableHead-root': {
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 2,
+                    backgroundColor: '#f8f9fa',
+                },
+                '& .MuiTableHead-root .MuiTableCell-head': {
+                    backgroundColor: '#f8f9fa',
+                    position: 'relative',
+                },
+                '& .MuiTooltip-popper': {
+                    zIndex: 10000, // This should fix the issue
+                }
+            }
+        },
     // Removed row actions since you don't want fullscreen in action column
     enableRowActions: true,
     renderRowActions: ({ row }) => (
