@@ -14,7 +14,6 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
     const dataVal = dataSet.map(item => ({
       PID: item?.PID,
       product_title: item?.product_title,
-      // category_id: item?.catid,
       category_name: item?.catid === 1 ? "Essentials" :
         item?.catid === 2 ? "Non Essentials" :
           item?.catid === 3 ? "Lifestyles" :
@@ -27,8 +26,12 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
       company_name: item?.company_name,
       service_location: item?.DAddress,
       service_date: item?.service_date,
-      status: item?.status,
+      status: item?.status === "CustomerOrdered" ? "Pending" : item?.status,
       checkout_date: item?.checkout_date,
+      // Add the new status fields from checkoutData
+      delivery_status: item?.checkoutData?.delivery_status,
+      supplier_status: item?.checkoutData?.supplier_status,
+      accounts_status: item?.checkoutData?.accounts_status,
       ...(category === 0 && {
         category_id: item?.catid === 1 ? "Essentials" :
           item?.catid === 2 ? "Non Essentials" :
@@ -41,10 +44,14 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
     setData(dataVal);
   }, [dataSet, category]);
 
-  const columns = useMemo(() => [
+   const columns = useMemo(() => [
     { accessorKey: 'PID', header: 'Product ID', size: 40 },
     { accessorKey: 'category_name', header: 'Category', size: 40 },
     { accessorKey: 'status', header: 'Status', size: 40 },
+    // Add the new status columns
+    { accessorKey: 'delivery_status', header: 'Delivery Status', size: 40 },
+    { accessorKey: 'supplier_status', header: 'Supplier Status', size: 40 },
+    { accessorKey: 'accounts_status', header: 'Accounts Status', size: 40 },
     { accessorKey: 'product_title', header: 'Product Title', size: 120 },
     { accessorKey: 'currency', header: 'Currency', size: 120 },
     { accessorKey: 'total_amount', header: 'Total Amount', size: 120 },
