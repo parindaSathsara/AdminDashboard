@@ -130,28 +130,61 @@ const OrdersNew = () => {
 
   const columns = [
     { accessorKey: 'OrderId', header: 'Order ID' },
-    { accessorKey: 'checkout_date', header: 'Booking Date' },
     {
-      accessorKey: 'refundableAmount',
-      header: 'Refunding Amount',
-      align: 'left',
-      Cell: ({ cell }) => {
-        if (cell?.getValue() > 0) {
-          console.log(cell, "Refundable Amount");
-          return (
-            <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-              Refunding {CurrencyConverter(currencyData.base, cell.getValue(), currencyData)}
-            </CBadge>
-          )
-        } else {
-          return <p>No Refund Request</p>
-        }
-      }
+      accessorKey: 'checkout_date',
+      header: 'Booking Date',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '210px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+      },
     },
-    { accessorKey: 'min_service_date', header: 'Service Date' },
+
+   {
+  accessorKey: 'refundableAmount',
+  header: 'Refunding Amount',
+  muiTableHeadCellProps: {
+    sx: { minWidth: '240px' },
+  },
+  muiTableBodyCellProps: {
+    sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+  },
+  align: 'left',
+  Cell: ({ cell, row }) => { // Add row parameter here
+    if (cell?.getValue() > 0) {
+      return (
+        <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
+          Refunding {CurrencyConverter(
+            row.original.ItemCurrency, // Use the order's currency, not currencyData.base
+            cell.getValue(), 
+            currencyData
+          )}
+        </CBadge>
+      )
+    } else {
+      return <p>No Refund Request</p>
+    }
+  }
+},
+    {
+      accessorKey: 'min_service_date', header: 'Service Date', muiTableHeadCellProps: {
+        sx: { minWidth: '200px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+      },
+    },
     {
       accessorKey: 'payment_type',
       header: 'Payment Type',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '210px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+      },
+
       Cell: ({ cell }) => (
         <span style={{
           color: cell.getValue() === 'paid' ? 'green' : 'orange',
@@ -164,6 +197,12 @@ const OrdersNew = () => {
     {
       accessorKey: 'total_amount',
       header: 'Total Amount',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '210px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+      },
       Cell: ({ row }) => (
         <span>
           {CurrencyConverter(
@@ -177,6 +216,12 @@ const OrdersNew = () => {
     {
       accessorKey: 'paid_amount',
       header: 'Paid Amount',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '210px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+      },
       Cell: ({ row }) => (
         <span>
           {CurrencyConverter(
@@ -230,7 +275,7 @@ const OrdersNew = () => {
   const table = useMaterialReactTable({
     columns,
     data: orderData,
-    enableFullScreenToggle: false, // if this prop is present
+    enableFullScreenToggle: false,
     enablePagination: false,
     enableRowSelection: false,
     enableColumnActions: true,
@@ -241,11 +286,11 @@ const OrdersNew = () => {
     initialState: {
       density: 'compact'
     },
-     muiTablePaperProps: {
-    sx: {
-      overflow: 'visible',
-    }
-  },
+    muiTablePaperProps: {
+      sx: {
+        overflow: 'visible',
+      }
+    },
     renderDetailPanel: ({ row }) => (
       <div style={{ padding: '20px' }}>
         <OrderDetails
@@ -256,32 +301,48 @@ const OrdersNew = () => {
         />
       </div>
     ),
-     muiTableHeadCellProps: {
-            sx: {
-                position: 'relative',
-                zIndex: 1,
-            },
+    // Add this configuration for sort tooltips
+    muiTableHeadCellProps: ({ column }) => ({
+      title: column.getIsSorted()
+        ? `Sort by ${column.columnDef.header} ${column.getIsSorted() === 'asc' ? '(Ascending)' : '(Descending)'}`
+        : `Sort by ${column.columnDef.header}`,
+      sx: {
+        '&:hover': {
+          cursor: column.getCanSort() ? 'pointer' : 'default',
         },
-   muiTableContainerProps: {
-            sx: {
-                maxHeight: isTableFullscreen ? '100vh' : '500px',
-                overflow: 'auto',
-                '& .MuiTableHead-root': {
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 2,
-                    backgroundColor: '#f8f9fa',
-                },
-                '& .MuiTableHead-root .MuiTableCell-head': {
-                    backgroundColor: '#f8f9fa',
-                    position: 'relative',
-                },
-                '& .MuiTooltip-popper': {
-                    zIndex: 10000, // This should fix the issue
-                }
-            }
+        position: 'relative',
+        overflow: 'visible !important',
+        '& .MuiButton-root': {
+          position: 'relative',
+          zIndex: 11,
+        }
+      },
+    }),
+    muiTableContainerProps: {
+      sx: {
+        maxHeight: isTableFullscreen ? '100vh' : '500px',
+        overflow: 'auto',
+        position: 'relative',
+        '& .MuiTableHead-root': {
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundColor: '#f8f9fa',
         },
-    // Removed row actions since you don't want fullscreen in action column
+        '& .MuiTableHead-root .MuiTableCell-head': {
+          backgroundColor: '#f8f9fa',
+          position: 'relative',
+          overflow: 'visible !important',
+        },
+        '& .MuiTooltip-popper': {
+          zIndex: 10000,
+          '& .MuiTooltip-tooltip': {
+            position: 'relative',
+            zIndex: 10001,
+          }
+        }
+      }
+    },
     enableRowActions: true,
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
