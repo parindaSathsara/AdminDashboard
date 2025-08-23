@@ -910,9 +910,46 @@ async function adminToggleStatus(status, userID) {
 
 }
 
+
+// Get admin names by IDs
+const getAdminNames = async (adminIds = []) => {
+  try {
+    const response = await axios.post('/get-admin-names', {
+      admin_ids: adminIds
+    });
+
+    if (response.data.success) {
+      return response.data.data; // { "1": "John", "3": "Sarah" }
+    } else {
+      return {};
+    }
+  } catch (error) {
+    console.error('Error fetching admin names:', error);
+    throw error;
+  }
+};
+// Get customer contact details by customer ID
+const getCustomerContact = async (customerId) => {
+  try {
+    const response = await axios.post('/get-customer-details', {
+      customer_id: customerId
+    });
+
+    if (response.data.success) {
+      return response.data.data; // { contact_number, customer_email, customer_fname, ... }
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching customer contact:', error);
+    throw error;
+  }
+};
+
+
 export {
   getAllRefundRequests, getAllFeedbacks, getVendorDetails, getAllProducts, adminToggleStatus, getDashboardOrdersIdWiseProduct, getDashboardProductOrderDetails,
   getAllChartsDataSales, getAllCardData, getDashboardOrders, getPaymentStatusById, updateDeliveryStatus, candelOrder, updateCartOrderStatus, getDashboardOrdersIdWise, createNewOtherInfo, getAllDataUserWise,
   availableHotelProducts, getDataEmailPrev, sendHotelConfirmationEmail, sendOrderConfirmationVoucher, getCustomerVoucherData, PaymentStatusChange, getOtherInforDataByOrderId, updateAdditionalInfoDataByOrderId,
-  getVendorDetailsCategorize, getVendorCategoryCounts,getVendorSummary
+  getVendorDetailsCategorize, getVendorCategoryCounts,getVendorSummary,getAdminNames,getCustomerContact
 }

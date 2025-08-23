@@ -16,6 +16,8 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
     { accessorKey: 'payment_type', header: 'Payment Type' },
     { accessorKey: 'pay_category', header: 'Pay Category' },
     { accessorKey: 'checkout_status', header: 'Checkout Status' },
+    { accessorKey: 'payment_status', header: 'Payment Status' },
+  
   ];
 
   const handleExportData = () => {

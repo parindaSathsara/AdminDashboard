@@ -3,94 +3,137 @@ import { useEffect, useState } from "react";
 import AccountsDetails from "src/Panels/AccountsDetails/AccountsDetails";
 import OrderDetails from "src/Panels/OrderDetails/OrderDetails";
 import ProductDetails from "src/Panels/ProductDetails/ProductDetails";
-import { getPaymentStatusById } from "src/service/api_calls";
-
-
-
+import { getDashboardOrdersIdWise, getPaymentStatusById } from "src/service/api_calls";
 
 function OrderDetailsAccounts(props) {
-
     const [paymentDataSet, setPaymentDataSet] = useState([])
-
     const [dataset, setDataset] = useState([])
+    const [detailedData, setDetailedData] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-
         setPaymentDataSet(props.paymentDataSet)
-
-        // console.log(props.paymentDataSet, "Payment Data Set")
+        
+        // Fetch detailed data for this specific order
+        const fetchDetailedData = async () => {
+            try {
+                setLoading(true)
+                const detailedOrderData = await getDashboardOrdersIdWise(props.orderid)
+                setDetailedData(detailedOrderData)
+            } catch (error) {
+                console.error("Error fetching detailed order data:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        
+        if (props.orderid) {
+            fetchDetailedData()
+        }
 
         // getPaymentStatusById(props.paymentDataSet?.id, props.paymentDataSet?.OrderId, props.paymentDataSet?.payment_type, props.paymentDataSet?.pay_category).then((res) => {
         //     setDataset(res.data[0])
-
         //     // console.log("Res Data set  value is", res.data[0])
         // })
+    }, [props.paymentDataSet, props.orderid])
 
+    // Calculate values based on data from both APIs
+    const calculateValues = () => {
+        // Default values from first API
+        let paidAmount = paymentDataSet.paid_amount || 0
+        let discountAmount = 0
+        
+        // If we have detailed data from second API, use those values
+        if (detailedData && detailedData.lifestyleData && detailedData.lifestyleData.length > 0) {
+            const lifestyleItem = detailedData.lifestyleData[0]
+            paidAmount = parseFloat(lifestyleItem.paid_amount) || 0
+            
+            // Calculate discount amount (original total - discounted paid amount)
+            const originalTotalAmount = parseFloat(paymentDataSet.total_amount) || 0
+            discountAmount = originalTotalAmount - paidAmount
+        }
+        
+        const totalAmount = parseFloat(paymentDataSet.total_amount) || 0
+        const balanceAmount = parseFloat(paymentDataSet.balance_amount) || 0
+        const deliveryCharge = parseFloat(paymentDataSet.delivery_charge) || 0
+        
+        return {
+            paidAmount,
+            discountAmount,
+            totalAmount,
+            balanceAmount,
+            deliveryCharge
+        }
+    }
 
-
-    }, [props.paymentDataSet])
-
-
-
-    console.log(paymentDataSet, "Payment Data set value is")
-
+    const values = calculateValues()
 
     return (
-
         <div className="orderDetailsMainContainer">
-
             <CRow>
                 <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
-                        text="Lorem ipsum dolor sit amet enim."
+                        text="Total order amount before any discounts"
                         progress={{ color: 'info', value: 100 }}
                         title="Total Amount"
-                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.total_amount?.toFixed(2)}
+                        value={paymentDataSet.ItemCurrency + " " + values.totalAmount.toFixed(2)}
                     />
                 </CCol>
                 <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
-
                         title="Paid Amount"
-                        progress={{ color: 'success', value: (paymentDataSet.paid_amount / paymentDataSet.total_amount) * 100 }}
-                        text="Lorem ipsum dolor sit amet enim."
-                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.paid_amount}
+                        progress={{ color: 'success', value: values.totalAmount > 0 ? (values.paidAmount / values.totalAmount) * 100 : 0 }}
+                        text="Amount paid after discounts applied"
+                        value={paymentDataSet.ItemCurrency + " " + values.paidAmount.toFixed(2)}
                     />
                 </CCol>
                 <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
-                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.balance_amount}
+                        value={paymentDataSet.ItemCurrency + " " + values.balanceAmount.toFixed(2)}
                         title="Balance Amount"
-                        progress={{ color: 'warning', value: (paymentDataSet.balance_amount / paymentDataSet.total_amount) * 100 }}
-                        text="Lorem ipsum dolor sit amet enim."
+                        progress={{ color: 'warning', value: values.totalAmount > 0 ? (values.balanceAmount / values.totalAmount) * 100 : 0 }}
+                        text="Remaining amount to be paid"
                     />
                 </CCol>
-
                 <CCol xs={12} sm={6} lg={3}>
                     <CWidgetStatsC
                         className="mb-4"
-                        value={paymentDataSet.ItemCurrency + " " + paymentDataSet.delivery_charge}
-                        title="Delivery Amount"
-                        progress={{ color: 'warning', value: (paymentDataSet.delivery_charge / paymentDataSet.total_amount) * 100 }}
-                        text="Lorem ipsum dolor sit amet enim."
+                        value={paymentDataSet.ItemCurrency + " " + values.deliveryCharge.toFixed(2)}
+                        title="Delivery Charge"
+                        progress={{ color: 'warning', value: values.totalAmount > 0 ? (values.deliveryCharge / values.totalAmount) * 100 : 0 }}
+                        text="Delivery or service charge"
                     />
                 </CCol>
             </CRow>
 
+            {values.discountAmount > 0 && (
+                <CRow>
+                    <CCol xs={12}>
+                        <div className="alert alert-info">
+                            <strong>Discount Applied:</strong> {paymentDataSet.ItemCurrency} {values.discountAmount.toFixed(2)} 
+                            ({values.totalAmount > 0 ? ((values.discountAmount / values.totalAmount) * 100).toFixed(2) : 0}% off)
+                        </div>
+                    </CCol>
+                </CRow>
+            )}
 
             <div className='mainContainerTables'>
-
-
                 <AccountsDetails pnlType={"orders"} dataset={props?.paymentDataSet} orderid={props.orderid} relord={() => reload()} />
-
+                
                 <div className="col-md-12 mb-4 sub_box materialTableDP">
-                    <OrderDetails dataset={props?.paymentDataSet} orderid={props.orderid} orderData={props?.paymentDataSet} hideStatus={false} accounts />
+                    <OrderDetails 
+                        dataset={props?.paymentDataSet} 
+                        orderid={props.orderid} 
+                        orderData={props?.paymentDataSet} 
+                        hideStatus={false} 
+                        accounts 
+                    />
                 </div>
-
             </div>
+        
 
 
             {/* <CRow>
