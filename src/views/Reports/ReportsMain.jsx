@@ -192,7 +192,7 @@ const ReportGenerationPage = () => {
                     onChange={date => {
                       setStartDate(date);
                       setValidationErrors(prev => {
-                        const newErrors = {...prev};
+                        const newErrors = { ...prev };
                         delete newErrors.startDate;
                         return newErrors;
                       });
@@ -203,7 +203,7 @@ const ReportGenerationPage = () => {
                     selectsStart
                     startDate={startDate}
                     endDate={endDate}
-                    popperProps={{ 
+                    popperProps={{
                       positionFixed: true,
                       modifiers: [
                         {
@@ -224,7 +224,14 @@ const ReportGenerationPage = () => {
                   <br />
                   <DatePicker
                     selected={endDate}
-                    onChange={(date) => setEndDate(date)}
+                    onChange={(date) => {
+                      setEndDate(date)
+                      setValidationErrors(prev => {
+                        const newErrors = { ...prev }
+                        delete newErrors.endDate
+                        return newErrors
+                      })
+                    }}
                     className="form-control full-width"
                     placeholderText="Select end date"
                     id="end-date"
@@ -232,7 +239,7 @@ const ReportGenerationPage = () => {
                     selectsEnd
                     startDate={startDate}
                     endDate={endDate}
-                    popperProps={{ 
+                    popperProps={{
                       positionFixed: true,
                       modifiers: [
                         {
@@ -257,6 +264,11 @@ const ReportGenerationPage = () => {
                     onChange={(selectedOption) => {
                       setReportType(selectedOption)
                       setCategory([])
+                      setValidationErrors(prev => {
+                        const newErrors = { ...prev }
+                        delete newErrors.reportType
+                        return newErrors
+                      })
                     }}
                     placeholder="Select a Report Type"
                     id="report-type"
@@ -276,7 +288,14 @@ const ReportGenerationPage = () => {
                     <Select
                       options={reportType?.value === 'chats_report' ? chatCategories : categories}
                       value={category}
-                      onChange={(selectedOption) => setCategory(selectedOption)}
+                      onChange={(selectedOption) => {
+                        setCategory(selectedOption)
+                        setValidationErrors(prev => {
+                          const newErrors = { ...prev }
+                          delete newErrors.category
+                          return newErrors
+                        })
+                      }}
                       placeholder="Select a category"
                       id="category"
                       isDisabled={reportType?.value == 'customer_report'}
@@ -294,45 +313,45 @@ const ReportGenerationPage = () => {
                   {['generate all report', 'all accounts access'].some((permission) =>
                     userData?.permissions?.includes(permission),
                   ) && (
-                    <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
-                      Generate Report
-                    </CButton>
-                  )}
+                      <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
+                        Generate Report
+                      </CButton>
+                    )}
                 </CCol>
               </CRow>
 
               {(reportType?.value === 'main_orders_report' ||
                 reportType?.value === 'orders_report' ||
                 reportType?.value === 'driver_allocation') && (
-                <CRow className="mt-3">
-                  <CCol xs={12}>
-                    <CFormLabel htmlFor="date-type" style={{ fontWeight: 'bold' }}>
-                      Date Type
-                    </CFormLabel>
-                    <br />
-                    <CFormCheck
-                      inline
-                      type="radio"
-                      id="service_date"
-                      name="dateType"
-                      value="service_date"
-                      label="Service Date"
-                      checked={dateType === 'service_date'}
-                      onChange={() => setDateType('service_date')}
-                    />
-                    <CFormCheck
-                      inline
-                      type="radio"
-                      id="booking_date"
-                      name="dateType"
-                      value="booking_date"
-                      label="Booking Date"
-                      checked={dateType === 'booking_date'}
-                      onChange={() => setDateType('booking_date')}
-                    />
-                  </CCol>
-                </CRow>
-              )}
+                  <CRow className="mt-3">
+                    <CCol xs={12}>
+                      <CFormLabel htmlFor="date-type" style={{ fontWeight: 'bold' }}>
+                        Date Type
+                      </CFormLabel>
+                      <br />
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        id="service_date"
+                        name="dateType"
+                        value="service_date"
+                        label="Service Date"
+                        checked={dateType === 'service_date'}
+                        onChange={() => setDateType('service_date')}
+                      />
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        id="booking_date"
+                        name="dateType"
+                        value="booking_date"
+                        label="Booking Date"
+                        checked={dateType === 'booking_date'}
+                        onChange={() => setDateType('booking_date')}
+                      />
+                    </CCol>
+                  </CRow>
+                )}
             </CCardBody>
           </CCard>
         </CCol>

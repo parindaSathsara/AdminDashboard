@@ -215,23 +215,28 @@ export default function ProductWiseOrdersPaginate() {
     { accessorKey: 'booked_date', header: 'Booked Date', enableColumnFilter: false }
   ];
 
-  const data = useMemo(() => allOrdersProducts?.map((result, index) => ({
-    id: (pagination.pageIndex * pagination.pageSize) + index + 1,
-    product_id: result?.PID,
-    product_image: result?.product_image,
-    service_location: result?.location,
-    product_title: result?.product_title,
-    category: result?.category,
-    service_date: result?.service_date,
-    balance_amount: result?.balance_amount,
-    paid_amount: result?.paid_amount,
-    total_amount: result?.total_amount,
-    booked_date: result?.checkout_date,
-    info: result,
-    order_id: "AHS_" + result?.orderID,
-    currency: result?.currency,
-  })), [allOrdersProducts, pagination.pageIndex, pagination.pageSize]);
+  const data = useMemo(() => allOrdersProducts?.map((result, index) => {
+   const bookedDate = (result?.catid === '4')
+     ? result?.booked_date 
+     : result?.checkout_date; 
 
+   return {
+     id: (pagination.pageIndex * pagination.pageSize) + index + 1,
+     product_id: result?.PID,
+     product_image: result?.product_image,
+     service_location: result?.location,
+     product_title: result?.product_title,
+     category: result?.category,
+     service_date: result?.service_date,
+     balance_amount: result?.balance_amount,
+     paid_amount: result?.paid_amount,
+     total_amount: result?.total_amount,
+     booked_date: bookedDate, 
+     info: result,
+     order_id: "AHS_" + result?.orderID,
+     currency: result?.currency,
+   };
+ }), [allOrdersProducts, pagination.pageIndex, pagination.pageSize]);
   const rowStyle = (data) => {
 
     if (data?.info?.orderID == lastUpdatedId) {

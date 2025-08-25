@@ -339,7 +339,7 @@ function App() {
         ? newChat.chat_avatar.includes(',')
           ? newChat.chat_avatar.split(',')[0]
           : newChat.chat_avatar
-        : 'https://aahaas-appqr.s3.ap-southeast-1.amazonaws.com/Logo+Resize+3.png',
+        : 'https://gateway.aahaas.com/aahaas.png',
       title: type === 'order' ? 'A New Order Has Arrived!' : 'A New Chat Has Arrived!',
       description: newChat?.chat_name,
       user_name: newChat?.last_message?.name,
