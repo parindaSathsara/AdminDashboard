@@ -119,10 +119,11 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
     columns,
     data,
     enableRowSelection: true,
-    enableColumnDragging: true,
+    enableColumnDragging: false,
     columnFilterDisplayMode: 'popover',
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'bottom',
+    enableColumnActions: false,
     state: {},
     renderTopToolbarCustomActions: ({ table }) => (
       <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>

@@ -123,9 +123,10 @@ useEffect(() => {
         columns,
         data,
         enableRowSelection: true,
-        enableColumnDragging: true,
+        enableColumnDragging: false,
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
+        enableColumnActions: false,
         positionToolbarAlertBanner: 'bottom',
         state: { },
         renderTopToolbarCustomActions: ({ table }) => (
