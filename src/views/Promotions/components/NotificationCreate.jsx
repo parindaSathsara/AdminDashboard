@@ -97,7 +97,7 @@ function NotificationCreate({ onNotificationCreated }) {
           <CRow className="mb-3">
             <CCol md={12}>
               <CFormSelect
-                label="Select Topic"
+                label="Select Topic *"
                 name="topic_id"
                 value={formData.topic_id}
                 onChange={handleChange}
@@ -116,7 +116,7 @@ function NotificationCreate({ onNotificationCreated }) {
             <CCol md={12}>
               <CFormInput
                 type="text"
-                label="Notification Title"
+                label="Notification Title *"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
@@ -128,7 +128,7 @@ function NotificationCreate({ onNotificationCreated }) {
           <CRow className="mb-3">
             <CCol md={12}>
               <CFormTextarea
-                label="Notification Content"
+                label="Notification Content *"
                 name="content"
                 rows="4"
                 value={formData.content}

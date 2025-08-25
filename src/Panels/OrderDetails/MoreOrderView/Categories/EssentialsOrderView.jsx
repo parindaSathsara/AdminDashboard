@@ -198,29 +198,31 @@ export default function EssentialsOrderView(props) {
 
 
 
-
+ const imageUrls = basicDetails?.product_images ? basicDetails.product_images.split(',') : [];
 
 
     return (
         <CContainer style={{ backgroundColor: 'white', padding: 20, borderRadius: 20, paddingRight: 60, paddingLeft: 60 }} fluid>
             <CRow>
 
-                <CCol xs="12" lg="3">
-                    <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px' }}>
-                        <CImage
-                            src={basicDetails?.["product_images"]}
-                            fluid
-                            style={{
-                                position: 'absolute',
-                                top: '0',
-                                left: '0',
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                            }}
-                        />
-                    </div>
-                </CCol>
+               {imageUrls.map((url, index) => (
+                    <CCol key={index} xs="12" lg="3">
+                        <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', borderRadius: '12px', marginBottom: '20px' }}>
+                            <CImage
+                                src={url.trim()} // Use the individual URL and trim whitespace
+                                fluid
+                                style={{
+                                    position: 'absolute',
+                                    top: '0',
+                                    left: '0',
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </div>
+                    </CCol>
+                ))}
 
 
                 <CCol className='py-4'>
