@@ -367,6 +367,11 @@ function getNavigationHook(permissions) {
       items: [
         {
           component: CNavItem,
+          name: 'Vervotech',
+          to: '/services/vervotech',
+        },
+        {
+          component: CNavItem,
           name: 'Bridgify',
           to: '/services/bridgyfy',
         },
