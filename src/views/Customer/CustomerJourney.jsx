@@ -44,6 +44,8 @@ import {
   cilChartPie,
   cilEnvelopeClosed,
   cilX,
+  cilArrowTop,
+  cilArrowBottom,
 } from '@coreui/icons'
 
 const CustomerJourney = () => {
@@ -54,16 +56,31 @@ const CustomerJourney = () => {
   const [perPage, setPerPage] = useState(10)
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [sortBy, setSortBy] = useState('')
+  const [sortDirection, setSortDirection] = useState('asc')
 
   // Fetch customer analytics data
-  const fetchAnalyticsData = async (page = 1, per_page = 10) => {
+  const fetchAnalyticsData = async (
+    page = 1,
+    per_page = 10,
+    order_by = '',
+    order_by_direction = 'asc',
+  ) => {
     try {
       setLoading(true)
+      const params = {
+        page: page,
+        per_page: per_page,
+      }
+
+      // Add sorting parameters if provided
+      if (order_by) {
+        params.order_by = order_by
+        params.order_by_direction = order_by_direction
+      }
+
       const response = await axios.get(`customer/analytics/all`, {
-        params: {
-          page: page,
-          per_page: per_page,
-        },
+        params: params,
       })
 
       if (response.data.message === 'Customer analytics data retrieved successfully') {
@@ -80,8 +97,8 @@ const CustomerJourney = () => {
   }
 
   useEffect(() => {
-    fetchAnalyticsData(currentPage, perPage)
-  }, [currentPage, perPage])
+    fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)
+  }, [currentPage, perPage, sortBy, sortDirection])
 
   // Format duration to human readable format
   const formatDuration = (seconds) => {
@@ -151,6 +168,39 @@ const CustomerJourney = () => {
     setSelectedCustomer(null)
   }
 
+  // Handle column sorting
+  const handleSort = (column) => {
+    const sortableColumns = [
+      'session_count',
+      'total_screens_visited',
+      'total_session_duration',
+      'last_visit',
+      'user_id',
+    ]
+
+    if (!sortableColumns.includes(column)) {
+      return
+    }
+
+    if (sortBy === column) {
+      // Toggle direction if same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      // Set new column with ascending order
+      setSortBy(column)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1) // Reset to first page when sorting
+  }
+
+  // Get sort icon for column
+  const getSortIcon = (column) => {
+    if (sortBy !== column) {
+      return null
+    }
+    return sortDirection === 'asc' ? cilArrowTop : cilArrowBottom
+  }
+
   if (loading) {
     return (
       <CRow>
@@ -173,7 +223,10 @@ const CustomerJourney = () => {
           <CAlert color="danger">
             <h4>Error</h4>
             <p>{error}</p>
-            <CButton color="primary" onClick={() => fetchAnalyticsData(currentPage, perPage)}>
+            <CButton
+              color="primary"
+              onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
+            >
               <CIcon icon={cilReload} className="me-2" />
               Retry
             </CButton>
@@ -215,7 +268,7 @@ const CustomerJourney = () => {
                 <CButton
                   color="primary"
                   size="sm"
-                  onClick={() => fetchAnalyticsData(currentPage, perPage)}
+                  onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
                 >
                   <CIcon icon={cilReload} className="me-1" />
                   Refresh
@@ -292,13 +345,71 @@ const CustomerJourney = () => {
               <CTable hover responsive>
                 <CTableHead>
                   <CTableRow>
-                    <CTableHeaderCell>Customer</CTableHeaderCell>
-                    <CTableHeaderCell>Sessions</CTableHeaderCell>
-                    <CTableHeaderCell>Screens Visited</CTableHeaderCell>
-                    <CTableHeaderCell>Total Duration</CTableHeaderCell>
+                    <CTableHeaderCell
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                      onClick={() => handleSort('user_id')}
+                    >
+                      <div className="d-flex align-items-center">
+                        Customer
+                        {getSortIcon('user_id') && (
+                          <CIcon icon={getSortIcon('user_id')} className="ms-1" size="sm" />
+                        )}
+                      </div>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                      onClick={() => handleSort('session_count')}
+                    >
+                      <div className="d-flex align-items-center">
+                        Sessions
+                        {getSortIcon('session_count') && (
+                          <CIcon icon={getSortIcon('session_count')} className="ms-1" size="sm" />
+                        )}
+                      </div>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                      onClick={() => handleSort('total_screens_visited')}
+                    >
+                      <div className="d-flex align-items-center">
+                        Screens Visited
+                        {getSortIcon('total_screens_visited') && (
+                          <CIcon
+                            icon={getSortIcon('total_screens_visited')}
+                            className="ms-1"
+                            size="sm"
+                          />
+                        )}
+                      </div>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                      onClick={() => handleSort('total_session_duration')}
+                    >
+                      <div className="d-flex align-items-center">
+                        Total Duration
+                        {getSortIcon('total_session_duration') && (
+                          <CIcon
+                            icon={getSortIcon('total_session_duration')}
+                            className="ms-1"
+                            size="sm"
+                          />
+                        )}
+                      </div>
+                    </CTableHeaderCell>
                     <CTableHeaderCell>Avg Session</CTableHeaderCell>
                     <CTableHeaderCell>Engagement</CTableHeaderCell>
-                    <CTableHeaderCell>Last Visit</CTableHeaderCell>
+                    <CTableHeaderCell
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                      onClick={() => handleSort('last_visit')}
+                    >
+                      <div className="d-flex align-items-center">
+                        Last Visit
+                        {getSortIcon('last_visit') && (
+                          <CIcon icon={getSortIcon('last_visit')} className="ms-1" size="sm" />
+                        )}
+                      </div>
+                    </CTableHeaderCell>
                     <CTableHeaderCell>Actions</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
