@@ -13,6 +13,21 @@ import {
 } from '@coreui/react'
 import VervotechTabs from './VervotechTabs'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faGear,
+  faBuildingCircleArrowRight,
+  faListCheck,
+  faArrowsSpin,
+  faClock,
+  faCalendarPlus,
+  faCalendarCheck,
+  faKey,
+  faClipboard,
+  faExclamationTriangle,
+  faInfoCircle,
+} from '@fortawesome/free-solid-svg-icons'
 
 const HotelInitialMapping = () => {
   // Form state
@@ -23,7 +38,9 @@ const HotelInitialMapping = () => {
       { label: 'TBOindia', value: 'TBOindia' },
       { label: 'TBOGlobal', value: 'TBOGlobal' },
       { label: 'RateHawk', value: 'RateHawk' },
-      { label: 'SiteMinder', value: 'SiteMinder' },
+      { label: 'LevelTravel', value: 'LevelTravel' },
+      { label: 'ActivityLinker', value: 'ActivityLinker' },
+      { label: 'DiscoverQatar', value: 'DiscoverQatar' },
     ],
     [],
   )
@@ -32,11 +49,10 @@ const HotelInitialMapping = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [creating, setCreating] = useState(false)
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
   const [total, setTotal] = useState(0)
-
-  const totalPages = Math.max(1, Math.ceil(total / perPage))
 
   const fetchList = async () => {
     try {
@@ -48,7 +64,6 @@ const HotelInitialMapping = () => {
       // Expecting a structure; fallback safely if unknown
       const data = res?.data || {}
       const list = data?.data?.data || []
-      console.log('Umayanga', list)
 
       setItems(Array.isArray(list) ? list : [])
       setTotal(Number(data?.total || data?.count || list.length || 0))
@@ -63,12 +78,36 @@ const HotelInitialMapping = () => {
     fetchList()
   }, [])
 
-  const onCreate = (e) => {
+  const onCreate = async (e) => {
     e.preventDefault()
     if (!provider) return
-    // Submit logic will be implemented later
-    // Placeholder: show a quick feedback via console
-    console.log('Create initial mapping with provider:', provider)
+    try {
+      setCreating(true)
+      // call create endpoint
+      const res = await axios.post('vervotech/mapping/create', { provider })
+      // show success swal
+      await Swal.fire({
+        icon: 'success',
+        title: 'Created',
+        text: 'Initial mapping created successfully',
+        timer: 1800,
+        showConfirmButton: false,
+      })
+
+      // refresh list to include the newly created mapping
+      await fetchList()
+      // optionally reset provider selection
+      setProvider('')
+    } catch (err) {
+      console.error('Error creating mapping:', err)
+      Swal.fire({
+        icon: 'error',
+        title: 'Create failed',
+        text: err?.response?.data?.message || 'Could not create mapping',
+      })
+    } finally {
+      setCreating(false)
+    }
   }
 
   // helpers
@@ -137,7 +176,7 @@ const HotelInitialMapping = () => {
           </CForm>
           {/* List header */}
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h5 className="mb-0">Created Initial Mappings</h5>
+            <h5 className="mb-0">Created Initial Mappings ({total})</h5>
           </div>
 
           {/* Copy notification */}
@@ -171,14 +210,14 @@ const HotelInitialMapping = () => {
 
             {!loading && error && (
               <div className="alert alert-danger">
-                <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                <FontAwesomeIcon icon={faExclamationTriangle} className="me-2" />
                 {error}
               </div>
             )}
 
             {!loading && !error && items.length === 0 && (
               <div className="alert alert-info">
-                <i className="bi bi-info-circle-fill me-2"></i>
+                <FontAwesomeIcon icon={faInfoCircle} className="me-2" />
                 No mapping records found. Create a new mapping using the form above.
               </div>
             )}
@@ -195,13 +234,13 @@ const HotelInitialMapping = () => {
                     : 'warning'
 
                 return (
-                  <div key={item.id || idx} className="card border-0 shadow">
+                  <div key={item.id || idx} className="card border">
                     <div className="card-header bg-light d-flex justify-content-between align-items-center py-3">
                       <div className="d-flex align-items-center">
                         <CBadge color="dark" className="me-2">
                           #{item.id ?? '-'}
                         </CBadge>
-                        <CBadge color="info" className="me-2 text-dark">
+                        <CBadge color="info" className="me-2 text-light">
                           {item.provider || '-'}
                         </CBadge>
                         <small className="text-muted ms-2">Item {serial}</small>
@@ -214,54 +253,55 @@ const HotelInitialMapping = () => {
                       <div className="row g-3 mb-3">
                         <div className="col-6 col-md-3">
                           <div className="text-muted small mb-1">
-                            <i className="bi bi-gear-fill me-1"></i> Limit
+                            <FontAwesomeIcon icon={faGear} className="me-1" /> Limit
                           </div>
                           <div className="fw-bold h5 mb-0">{item.limit ?? '-'}</div>
                         </div>
 
                         <div className="col-6 col-md-3">
                           <div className="text-muted small mb-1">
-                            <i className="bi bi-building-add me-1"></i> New Hotels
+                            <FontAwesomeIcon icon={faBuildingCircleArrowRight} className="me-1" />{' '}
+                            New Hotels
                           </div>
                           <div className="fw-bold h5 mb-0">{item.processed_new_hotels ?? '-'}</div>
                         </div>
 
                         <div className="col-6 col-md-3">
                           <div className="text-muted small mb-1">
-                            <i className="bi bi-card-list me-1"></i> Records
+                            <FontAwesomeIcon icon={faListCheck} className="me-1" /> Records
                           </div>
                           <div className="fw-bold h5 mb-0">{item.processed_records ?? '-'}</div>
                         </div>
 
                         <div className="col-6 col-md-3">
                           <div className="text-muted small mb-1">
-                            <i className="bi bi-arrow-repeat me-1"></i> Circles
+                            <FontAwesomeIcon icon={faArrowsSpin} className="me-1" /> Circles
                           </div>
                           <div className="fw-bold h5 mb-0">{item.processed_circles ?? '-'}</div>
                         </div>
                       </div>
 
                       {/* Timestamps Section */}
-                      <div className="card bg-light mb-3">
+                      <div className="card border mb-3">
                         <div className="card-body py-2">
                           <div className="row g-3">
                             <div className="col-6 col-md-4">
                               <div className="text-muted small mb-1">
-                                <i className="bi bi-clock-history me-1"></i> Last Update
+                                <FontAwesomeIcon icon={faClock} className="me-1" /> Last Update
                               </div>
                               <div>{fmt(item.last_update_date_time)}</div>
                             </div>
 
                             <div className="col-6 col-md-4">
                               <div className="text-muted small mb-1">
-                                <i className="bi bi-calendar-plus me-1"></i> Created
+                                <FontAwesomeIcon icon={faCalendarPlus} className="me-1" /> Created
                               </div>
                               <div>{fmt(item.created_at)}</div>
                             </div>
 
                             <div className="col-6 col-md-4">
                               <div className="text-muted small mb-1">
-                                <i className="bi bi-calendar-check me-1"></i> Updated
+                                <FontAwesomeIcon icon={faCalendarCheck} className="me-1" /> Updated
                               </div>
                               <div>{fmt(item.updated_at)}</div>
                             </div>
@@ -274,12 +314,12 @@ const HotelInitialMapping = () => {
                         {/* Current Resume Key */}
                         <div className="col-12">
                           <div className="text-muted small mb-1">
-                            <i className="bi bi-key-fill me-1"></i> Current Resume Key
+                            <FontAwesomeIcon icon={faKey} className="me-1" /> Current Resume Key
                           </div>
                           {item.current_resume_key ? (
                             <div className="d-flex">
                               <code
-                                className="flex-grow-1 p-2 bg-light border rounded text-wrap"
+                                className="flex-grow-1 p-2 border rounded text-wrap"
                                 style={{ fontSize: '0.85rem', wordBreak: 'break-all' }}
                               >
                                 {truncate(item.current_resume_key)}
@@ -292,7 +332,7 @@ const HotelInitialMapping = () => {
                                     copyText(item.current_resume_key, 'Current Resume Key')
                                   }
                                 >
-                                  <i className="bi bi-clipboard"></i>
+                                  <FontAwesomeIcon icon={faClipboard} />
                                 </button>
                               </CTooltip>
                             </div>
@@ -306,7 +346,7 @@ const HotelInitialMapping = () => {
                         {/* Next Resume Key */}
                         <div className="col-12">
                           <div className="text-muted small mb-1">
-                            <i className="bi bi-key me-1"></i> Next Resume Key
+                            <FontAwesomeIcon icon={faKey} className="me-1" /> Next Resume Key
                           </div>
                           {item.next_resume_key ? (
                             <div className="d-flex">
@@ -322,7 +362,7 @@ const HotelInitialMapping = () => {
                                   className="btn btn-outline-secondary ms-2"
                                   onClick={() => copyText(item.next_resume_key, 'Next Resume Key')}
                                 >
-                                  <i className="bi bi-clipboard"></i>
+                                  <FontAwesomeIcon icon={faClipboard} />
                                 </button>
                               </CTooltip>
                             </div>
@@ -337,55 +377,6 @@ const HotelInitialMapping = () => {
                   </div>
                 )
               })}
-
-            {/* Pagination controls */}
-            {!loading && !error && items.length > 0 && (
-              <div className="d-flex justify-content-between align-items-center mt-3">
-                <div className="text-muted small">
-                  Showing page {page} of {Math.max(1, totalPages)} • {total} total items
-                </div>
-
-                <nav aria-label="Mapping pagination">
-                  <ul className="pagination pagination-sm mb-0">
-                    <li className={`page-item ${page <= 1 ? 'disabled' : ''}`}>
-                      <button
-                        className="page-link"
-                        onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      >
-                        &laquo; Previous
-                      </button>
-                    </li>
-
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      // Center current page in pagination window
-                      const start = Math.max(1, Math.min(page - 2, totalPages - 4))
-                      const pageNum = start + i
-                      if (pageNum > totalPages) return null
-
-                      return (
-                        <li
-                          key={pageNum}
-                          className={`page-item ${pageNum === page ? 'active' : ''}`}
-                        >
-                          <button className="page-link" onClick={() => setPage(pageNum)}>
-                            {pageNum}
-                          </button>
-                        </li>
-                      )
-                    })}
-
-                    <li className={`page-item ${page >= totalPages ? 'disabled' : ''}`}>
-                      <button
-                        className="page-link"
-                        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      >
-                        Next &raquo;
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            )}
           </div>
         </CCard>
       </CCol>

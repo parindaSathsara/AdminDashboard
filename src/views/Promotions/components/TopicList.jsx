@@ -19,25 +19,61 @@ function TopicList(props) {
     }
   }
 
-  const updateProgress = (topic_id, value) => {
+  const updateProgress = (topic_id, value, message) => {
     setProgressByTopic((prev) => ({
       ...prev,
-      [topic_id]: value,
+      [topic_id]: {
+        progress: value,
+        message: message,
+      },
     }))
   }
 
   const handleUpdate = async (topic_id) => {
     setUpdatingIds((prev) => [...prev, topic_id])
-    updateProgress(topic_id, 1)
-    let index = 1
-    let max_requests = 1
-    while (index <= max_requests) {
+    // updateProgress(topic_id, 1, 'Removing current users from the topic...')
+
+    // let unsubscribe_index = 1
+    // let unsubscribe_max_requests = 1
+    // while (unsubscribe_index <= unsubscribe_max_requests) {
+    //   try {
+    //     const response = await axios.post(
+    //       '/promotions/unsubscribe_from_topics',
+    //       {
+    //         topic_id: topic_id,
+    //         index: unsubscribe_index,
+    //       },
+    //       {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         },
+    //       },
+    //     )
+    //     unsubscribe_max_requests = response?.data?.max_requests ?? 1
+    //     let progress = ((unsubscribe_index / unsubscribe_max_requests) * 50).toFixed(2)
+    //     updateProgress(topic_id, parseInt(progress), 'Removing current users from the topic...')
+    //     unsubscribe_index += 1
+    //   } catch (error) {
+    //     Swal.fire({
+    //       title: 'Error',
+    //       text: error?.response?.data?.message ?? error.message,
+    //       icon: 'error',
+    //       confirmButtonText: 'OK',
+    //     })
+    //     return
+    //   }
+    // }
+
+    let update_index = 1
+    let update_max_requests = 1
+    updateProgress(topic_id, 0, 'Adding new users to the topic...')
+    while (update_index <= update_max_requests) {
       try {
         const response = await axios.post(
           '/promotions/update_topic',
           {
             topic_id: topic_id,
-            index: index,
+            index: update_index,
           },
           {
             headers: {
@@ -45,10 +81,10 @@ function TopicList(props) {
             },
           },
         )
-        max_requests = response?.data?.max_requests ?? 1
-        let progress = ((index / max_requests) * 100).toFixed(2)
-        updateProgress(topic_id, parseInt(progress))
-        index += 1
+        update_max_requests = response?.data?.max_requests ?? 1
+        let progress = ((update_index / update_max_requests) * 100).toFixed(2)
+        updateProgress(topic_id, parseInt(progress), 'Adding new users to the topic...')
+        update_index += 1
       } catch (error) {
         Swal.fire({
           title: 'Error',
@@ -59,7 +95,7 @@ function TopicList(props) {
         return
       }
     }
-    updateProgress(topic_id, 0)
+    updateProgress(topic_id, 0, '')
     setUpdatingIds((prev) => prev.filter((num) => num !== topic_id))
   }
   useEffect(() => {
@@ -128,22 +164,20 @@ function TopicList(props) {
                       Last updated at:{' '}
                       {topic.updated_at ? new Date(topic.updated_at).toLocaleString() : 'Never'}
                     </div>
-                    {updatingIds.includes(topic.id) && progressByTopic[topic.id] > 0 && (
+                    {updatingIds.includes(topic.id) && progressByTopic[topic.id].progress > 0 && (
                       <CRow>
                         <Box sx={{ mt: 3, mb: 3 }}>
                           <Typography variant="body2" color="text.secondary" gutterBottom>
-                            {progressByTopic[topic.id] == 100
-                              ? 'Topic Updated!'
-                              : 'Updating Topic...'}
+                            {progressByTopic[topic.id].message}
                           </Typography>
                           <LinearProgress
                             variant="determinate"
-                            value={progressByTopic[topic.id]}
+                            value={progressByTopic[topic.id].progress}
                             sx={{ height: 3, borderRadius: 5 }}
                           />
                           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                             <Typography variant="body2" color="text.secondary">
-                              {progressByTopic[topic.id]}%
+                              {progressByTopic[topic.id].progress}%
                             </Typography>
                           </Box>
                         </Box>

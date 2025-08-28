@@ -167,6 +167,11 @@ function getNavigationHook(permissions) {
           name: 'Customer Analytics',
           to: '/analytics',
         },
+        {
+          component: CNavItem,
+          name: 'Customer Journey',
+          to: '/customer-journey',
+        },
       ],
     },
     {

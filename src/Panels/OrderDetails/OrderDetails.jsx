@@ -64,9 +64,10 @@ import CurrencyConverter from 'src/Context/CurrencyConverter'
 import axios from 'axios'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { CurrencyContext } from 'src/Context/CurrencyContext'
+import FlightsOrderV2 from 'src/views/dashboard/FlightsUIV2/FlightsOrderV2'
 
 function OrderDetails(props) {
-  console.log("Props Data isSSSSSSSSSS",props )
+  console.log('Props Data isSSSSSSSSSS', props)
   const { userData } = useContext(UserLoginContext)
 
   // console.log(props.orderid)
@@ -76,6 +77,8 @@ function OrderDetails(props) {
   const [showModal, setShowModal] = useState(false)
   const [rowDetails, setRowDetails] = useState([])
   const [dates, setDates] = useState([])
+
+  console.log(productData, 'Product Data valuessxsxsxsx')
 
   const [lifestylesData, setLifestylesData] = useState([])
   const [essNEssData, setEssNEssData] = useState([])
@@ -194,9 +197,9 @@ function OrderDetails(props) {
   }, [props.orderid, props.orderData])
   const reload = () => {
     // console.log(props?.orderid, "Order data id is val")
-     if (props?.updatedData) {
-    props.updatedData()
-  }
+    if (props?.updatedData) {
+      props.updatedData()
+    }
     if (props?.productViewData) {
       getDashboardProductOrderDetails(props.orderid?.info?.checkoutID).then((res) => {
         // setDetailsLoading(false)
@@ -233,8 +236,6 @@ function OrderDetails(props) {
   const [hotelDataSet, setHotelDataSet] = useState([])
 
   const handleMoreInfoModal = (e, category) => {
-
-
     setMoreOrderModalCategory(category)
     if (category == 3) {
       setMoreOrderDetails(e.lifestyle_booking_id)
@@ -246,7 +247,7 @@ function OrderDetails(props) {
       setMoreOrderDetails(e.booking_id)
       setMoreOrderModal(true)
     } else if (category == 4) {
-      console.log("More Info Modal", e, category)
+      console.log('More Info Modal', e, category)
       setHotelDataSet(e?.hotelData ? e.hotelData : e)
       setMoreOrderDetails(e.booking_id)
       setMoreOrderModal(true)
@@ -277,8 +278,7 @@ function OrderDetails(props) {
     })
   }
 
-  const { currencyData, setCurrencyData } = useContext(CurrencyContext);
-
+  const { currencyData, setCurrencyData } = useContext(CurrencyContext)
 
   const lifestyles = {
     columns: [
@@ -602,6 +602,7 @@ function OrderDetails(props) {
       Provider: value.Provider === "hotelAhs" ? "Aahaas" : 
                 value.Provider === "ratehawk" ? "RateHawk" : 
                 value.Provider === "hotelTbo" ? "TBO" : " ",
+
       NoOfNights: value.NoOfNights,
       NoOfAdults: adultCount,
       NoOfChild: childCount, // This should now display correctly
@@ -701,8 +702,14 @@ function OrderDetails(props) {
           </CRow>
         </CCard>
         <hr></hr>
+
+        {console.log(flightsData, 'Product viewwwsdasdasdasd')}
         {flightsData?.length > 0 ? (
-          <FlightOrderView flightMetadata={flightsData}></FlightOrderView>
+          flightsData[0]?.requestedData ? (
+            <FlightsOrderV2 flightMetadata={flightsData[0]}></FlightsOrderV2>
+          ) : (
+            <FlightOrderView flightMetadata={flightsData}></FlightOrderView>
+          )
         ) : (
           <>
             {props?.productViewData ? (
@@ -714,30 +721,30 @@ function OrderDetails(props) {
 
                 {!props?.productViewData ? (
                   <CDropdown style={{ color: '#fff' }} variant="btn-group">
-                    <CDropdownToggle color="success" >Download Itinerary</CDropdownToggle>
+                    <CDropdownToggle color="success">Download Itinerary</CDropdownToggle>
                     <CDropdownMenu>
                       {[
                         'download order long itinerary',
                         'download account order long itinerary',
                       ].some((permission) => userData?.permissions?.includes(permission)) && (
-                          <CDropdownItem
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handleDownload('long')}
-                          >
-                            Long Itinerary
-                          </CDropdownItem>
-                        )}
+                        <CDropdownItem
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleDownload('long')}
+                        >
+                          Long Itinerary
+                        </CDropdownItem>
+                      )}
                       {[
                         'download order short itinerary',
                         'download account order short itinerary',
                       ].some((permission) => userData?.permissions?.includes(permission)) && (
-                          <CDropdownItem
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handleDownload('short')}
-                          >
-                            Short Itinerary
-                          </CDropdownItem>
-                        )}
+                        <CDropdownItem
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleDownload('short')}
+                        >
+                          Short Itinerary
+                        </CDropdownItem>
+                      )}
                     </CDropdownMenu>
                   </CDropdown>
                 ) : (
@@ -846,8 +853,6 @@ function OrderDetails(props) {
               dataset={rowDetails}
             />
           ) : null}
-
-
 
           <DetailExpander
             show={detailExpander}
