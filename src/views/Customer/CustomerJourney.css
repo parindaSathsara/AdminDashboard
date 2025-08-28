@@ -1,0 +1,99 @@
+.customer-journey-modal .modal-content {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.customer-journey-modal .modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.customer-details-card {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
+}
+
+.customer-details-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stats-card {
+  border: none !important;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.stats-card .card-body {
+  padding: 1.5rem;
+}
+
+.device-info-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s ease;
+}
+
+.device-info-card:hover {
+  transform: translateY(-2px);
+}
+
+.route-analytics-item {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  transition: background-color 0.2s ease;
+}
+
+.route-analytics-item:hover {
+  background-color: #f8f9fa;
+}
+
+.session-table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  font-weight: 600;
+}
+
+.customer-info-section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.customer-info-label {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.customer-info-value {
+  color: #212529;
+  font-size: 1rem;
+}
+
+.badge-subtle {
+  background-color: #e9ecef;
+  color: #495057;
+  font-weight: 500;
+}
+
+.progress-thin {
+  height: 4px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
