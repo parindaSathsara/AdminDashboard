@@ -13,7 +13,6 @@ import {
   CImage
 } from '@coreui/react';
 import Select from 'react-select';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { UserLoginContext } from 'src/Context/UserLoginContext';
 import { Editor } from "react-draft-wysiwyg";
@@ -40,7 +39,7 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
-// Optimized API calls with caching
+// Optimized API calls with caching (for non-searchable data)
 const useCachedApiCall = (apiFunction, transformData, defaultData = []) => {
   const [data, setData] = useState(defaultData);
   const [loading, setLoading] = useState(false);
@@ -48,7 +47,6 @@ const useCachedApiCall = (apiFunction, transformData, defaultData = []) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Check cache first
       if (cache.current.has(apiFunction.name)) {
         setData(cache.current.get(apiFunction.name));
         return;
@@ -74,6 +72,41 @@ const useCachedApiCall = (apiFunction, transformData, defaultData = []) => {
   return { data, loading };
 };
 
+// New hook for fetching customers with search and pagination
+const useFetchCustomers = (searchQuery) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Debounce the search query to avoid excessive API calls
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (debouncedSearchQuery === null) return;
+      setLoading(true);
+      try {
+        const response = await getAllCustomer(1, 20, debouncedSearchQuery);
+        if (response) {
+          const transformedData = response.data.map(customer => ({
+            value: customer.id,
+            label: customer.username,
+          }));
+          setData(transformedData);
+        }
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [debouncedSearchQuery]);
+
+  return { data, loading };
+};
+
 const EmailGeneration = () => {
   const fileInputRef = useRef(null);
   const { userData } = useContext(UserLoginContext);
@@ -92,8 +125,8 @@ const EmailGeneration = () => {
   const [subject, setSubject] = useState('');
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState([]);
+  const [customerSearch, setCustomerSearch] = useState('');
   
-  // Debounced subject to avoid too many re-renders
   const debouncedSubject = useDebounce(subject, 300);
   
   // Email types
@@ -109,13 +142,6 @@ const EmailGeneration = () => {
   ], []);
   
   // Transform functions for API data
-  const transformCustomers = useCallback((response) => {
-    return response ? response.map(customer => ({
-      value: customer.id,
-      label: customer.username
-    })) : [];
-  }, []);
-  
   const transformSuppliers = useCallback((response) => {
     return response ? response.map(supplier => ({
       value: supplier.id,
@@ -137,30 +163,27 @@ const EmailGeneration = () => {
     })) : [];
   }, []);
   
-  // Use cached API calls
-  const { data: customers, loading: customersLoading } = useCachedApiCall(
-    getAllCustomer, 
-    transformCustomers, 
-    []
-  );
-  
+  // Use cached API calls for non-searchable data
   const { data: suppliers, loading: suppliersLoading } = useCachedApiCall(
-    getAllSuppliers, 
-    transformSuppliers, 
+    getAllSuppliers,  
+    transformSuppliers,  
     []
   );
   
   const { data: internalEmails, loading: emailsLoading } = useCachedApiCall(
-    getAllInternalEmails, 
-    transformInternalEmails, 
+    getAllInternalEmails,  
+    transformInternalEmails,  
     []
   );
   
   const { data: orderIds, loading: ordersLoading } = useCachedApiCall(
-    getOrderIDs, 
-    transformOrderIds, 
+    getOrderIDs,  
+    transformOrderIds,  
     []
   );
+
+  // Use the new hook for customers with search
+  const { data: customers, loading: customersLoading } = useFetchCustomers(customerSearch);
   
   // Editor change handler
   const handleEditorChange = useCallback((state) => {
@@ -379,7 +402,7 @@ const EmailGeneration = () => {
   `, []);
   
   // Show loading if any API is still loading
-  const isDataLoading = customersLoading || suppliersLoading || emailsLoading || ordersLoading;
+  const isDataLoading = suppliersLoading || emailsLoading || ordersLoading;
   
   if (isDataLoading) {
     return (
@@ -480,12 +503,14 @@ const EmailGeneration = () => {
                         options={customers}
                         value={selectCustomer}
                         onChange={setSelectedCustomer}
-                        placeholder="Select Customer"
+                        onInputChange={(inputValue) => setCustomerSearch(inputValue)}
+                        placeholder="Type to search for a customer"
                         isSearchable
                         menuShouldScrollIntoView
                         menuShouldBlockScroll
                         maxMenuHeight={150}
                         isLoading={customersLoading}
+                        noOptionsMessage={() => "No customers found."}
                       />
                     </CCol>
                   )}

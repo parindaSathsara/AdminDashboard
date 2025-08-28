@@ -143,25 +143,25 @@ const ReportGenerationPage = () => {
   ]
 
   const [providerOptions, setProviderOptions] = useState([
-  { value: 'tbo_holidays', label: 'TBO Holidays' },
-  { value: 'tbo_india', label: 'TBO India' },
-  { value: 'ratehawk', label: 'Ratehawk' },
-  { value: 'aahaas', label: 'Aahaas' },
-  { value: 'bridgify', label: 'Bridgify' },
-]);
+    { value: 'tbo_holidays', label: 'TBO Holidays' },
+    { value: 'tbo_india', label: 'TBO India' },
+    { value: 'ratehawk', label: 'Ratehawk' },
+    { value: 'aahaas', label: 'Aahaas' },
+    { value: 'bridgify', label: 'Bridgify' },
+  ]);
 
   const [dataEmptyState, setDataEmptyState] = useState(false)
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [providerShow, setProviderShow] = useState(null);
 
   useEffect(() => {
-  if (reportType?.value === 'api') {
-    setProviderShow(true);
-  } else {
-    setProviderShow(false);
-    setSelectedProvider(null); // Reset provider when changing report type
-  }
-}, [reportType]);
+    if (reportType?.value === 'api') {
+      setProviderShow(true);
+    } else {
+      setProviderShow(false);
+      setSelectedProvider(null); // Reset provider when changing report type
+    }
+  }, [reportType]);
 
 
   const handleGenerateReport = async () => {
@@ -169,10 +169,10 @@ const ReportGenerationPage = () => {
 
     const errors = {}
     console.log('currency', currency);
-     if (reportType?.value === 'api' && !selectedProvider) {
-    errors.provider = 'Provider is required for API reports';
-  }
-  
+    if (reportType?.value === 'api' && !selectedProvider) {
+      errors.provider = 'Provider is required for API reports';
+    }
+
     if (!reportType) {
       console.log('No report type selected');
       errors.reportType = 'Report type is required';
@@ -264,38 +264,38 @@ const ReportGenerationPage = () => {
   const [currenctOrdeId, setCurrenctOrderId] = useState('')
   const [productPNLReport, setProductPNLReport] = useState([])
 
-const returnURL = (data, dataType) => {
-  let url = '';
+  const returnURL = (data, dataType) => {
+    let url = '';
 
-  if (data.reportType === 'pnl' && data.category === '0') {
-    url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
-  } else if (data.reportType === 'pnl' && data.category === '1') {
-    url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
-  } else if (data.reportType === 'payable' && data.category === '0') {
-    url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}`;
-    if (data.currencyType !== 'all' && data.currencyValue) {
-      url += `&currencyValue=${data.currencyValue}`;
+    if (data.reportType === 'pnl' && data.category === '0') {
+      url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+    } else if (data.reportType === 'pnl' && data.category === '1') {
+      url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+    } else if (data.reportType === 'payable' && data.category === '0') {
+      url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}`;
+      if (data.currencyType !== 'all' && data.currencyValue) {
+        url += `&currencyValue=${data.currencyValue}`;
+      }
+    } else if (data.reportType === 'payable' && data.category === '1') {
+      url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}`;
+      if (data.currencyType !== 'all' && data.currencyValue) {
+        url += `&currencyValue=${data.currencyValue}`;
+      }
+    } else if (data.reportType === 'receivable' && data.category === '0') {
+      url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+      if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
+    } else if (data.reportType === 'receivable' && data.category === '1') {
+      url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+      if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
+    } else if (data.reportType === 'cashflow') {
+      url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+      if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
+    } else if (data.reportType === 'api') {
+      url = `reports/api${dataType || '/html'}?start=${data.start}&end=${data.end}&dateType=${data.dateType}&provider=${data.provider}`;
     }
-  } else if (data.reportType === 'payable' && data.category === '1') {
-    url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}`;
-    if (data.currencyType !== 'all' && data.currencyValue) {
-      url += `&currencyValue=${data.currencyValue}`;
-    }
-  } else if (data.reportType === 'receivable' && data.category === '0') {
-    url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
-    if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
-  } else if (data.reportType === 'receivable' && data.category === '1') {
-    url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
-    if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
-  } else if (data.reportType === 'cashflow') {
-    url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
-    if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
-  } else if (data.reportType === 'api') {
-    url = `reports/api${dataType || '/html'}?start=${data.start}&end=${data.end}&dateType=${data.dateType}&provider=${data.provider}`;
-  }
 
-  return url;
-};
+    return url;
+  };
 
 
   // const handlePNLReport = async (data) => {
@@ -468,7 +468,11 @@ const returnURL = (data, dataType) => {
                     setCurrencyType(null)
                     setTypeDate(null)
                     setSelectedProvider(null) // Add this line
-
+                    setValidationErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.reportType;   // ✅ clear error when user selects
+                      return newErrors;
+                    });
                   }}
                   placeholder="Select a Report Type"
                   id="report-type"
@@ -493,6 +497,11 @@ const returnURL = (data, dataType) => {
                   value={category}
                   onChange={(selectedOption) => {
                     setCategory(selectedOption)
+                    setValidationErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.category;   // ✅ clear error
+                      return newErrors;
+                    });
                   }}
                   placeholder="Select a category"
                   id="category"
@@ -501,25 +510,30 @@ const returnURL = (data, dataType) => {
                 {validationErrors.category && (
                   <div className="text-danger">{validationErrors.category}</div>
                 )}
-              </CCol> }
+              </CCol>}
               {reportType?.value === 'api' ? (
-  <CCol xs={12} sm={6} lg={2}>
-    <CFormLabel htmlFor="provider">Provider</CFormLabel>
-    <br />
-    <Select
-      options={providerOptions}
-      value={selectedProvider}
-      onChange={(selectedOption) => {
-        setSelectedProvider(selectedOption)
-      }}
-      placeholder="Select a Provider"
-      id="provider"
-    />
-    {validationErrors.provider && (
-      <div className="text-danger">{validationErrors.provider}</div>
-    )}
-  </CCol>
-) : null}
+                <CCol xs={12} sm={6} lg={2}>
+                  <CFormLabel htmlFor="provider">Provider</CFormLabel>
+                  <br />
+                  <Select
+                    options={providerOptions}
+                    value={selectedProvider}
+                    onChange={(selectedOption) => {
+                      setSelectedProvider(selectedOption)
+                      setValidationErrors((prev) => {
+                        const newErrors = { ...prev };
+                        delete newErrors.provider;   // ✅ clear error
+                        return newErrors;
+                      });
+                    }}
+                    placeholder="Select a Provider"
+                    id="provider"
+                  />
+                  {validationErrors.provider && (
+                    <div className="text-danger">{validationErrors.provider}</div>
+                  )}
+                </CCol>
+              ) : null}
               {/* <CCol xs={12} sm={6} lg={2}>
                                 <CFormLabel htmlFor="category">Order Id</CFormLabel>
                                 <br />
@@ -535,6 +549,11 @@ const returnURL = (data, dataType) => {
                     value={currencyType}
                     onChange={(selectedOption) => {
                       setCurrencyType(selectedOption)
+                      setValidationErrors((prev) => {
+                        const newErrors = { ...prev };
+                        delete newErrors.currencyType;   // ✅ clear error
+                        return newErrors;
+                      });
                     }}
                     placeholder="Select a Currency Type"
                     id="currencyType"
@@ -545,7 +564,7 @@ const returnURL = (data, dataType) => {
                 </CCol>
               ) : null}
 
-              {(reportType?.value === 'payable' && currencyType?.value === 'all') || reportType?.value === 'api'  ? (
+              {(reportType?.value === 'payable' && currencyType?.value === 'all') || reportType?.value === 'api' ? (
                 null
               ) : (reportType?.value != 'pnl' ? (
                 <CCol xs={12} sm={6} lg={2}>
@@ -562,6 +581,12 @@ const returnURL = (data, dataType) => {
                     value={currency}
                     onChange={(selectedOption) => {
                       setCurrency(selectedOption)
+
+                      setValidationErrors((prev) => {
+                        const newErrors = { ...prev };
+                        delete newErrors.currency;   // ✅ clear error
+                        return newErrors;
+                      });
                     }}
                     placeholder="Select a Currency"
                     id="currency"
@@ -581,6 +606,11 @@ const returnURL = (data, dataType) => {
                   value={typeDate}
                   onChange={(selectedOption) => {
                     setTypeDate(selectedOption)
+                    setValidationErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.typeDate;   // ✅ clear error
+                      return newErrors;
+                    });
                   }}
                   placeholder="Select a Date Type"
                   id="typeDate"
@@ -597,7 +627,15 @@ const returnURL = (data, dataType) => {
                   <DatePicker
                     disabled={statusDate}
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => {
+                      setStartDate(date)
+                      setValidationErrors((prev) => {
+                        const newErrors = { ...prev };
+                        delete newErrors.startDate;   // ✅ clear error
+                        return newErrors;
+                      });
+                    }
+                    }
                     className="form-control full-width"
                     placeholderText="Select start date"
                     id="start-date"
@@ -612,7 +650,15 @@ const returnURL = (data, dataType) => {
                   <DatePicker
                     disabled={statusDate}
                     selected={endDate}
-                    onChange={(date) => setEndDate(date)}
+                    onChange={(date) => {
+                      setEndDate(date)
+                      setValidationErrors((prev) => {
+                        const newErrors = { ...prev };
+                        delete newErrors.endDate;   // ✅ clear error
+                        return newErrors;
+                      });
+                    }
+                    }
                     className="form-control full-width"
                     placeholderText="Select end date"
                     id="end-date"

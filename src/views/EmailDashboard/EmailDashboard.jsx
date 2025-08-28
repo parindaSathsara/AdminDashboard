@@ -230,9 +230,10 @@ const EmailDashboard = () => {
               </CCol>
 
               {userData?.permissions?.includes('email resend') &&
-                (emailType.value === 'customer_invoice' ||
+                ((emailType.value === 'customer_invoice' && selectedOrderID?.value) ||
                   (emailType.value === 'supplier_voucher' &&
-                    selectedOrderIndexId?.provider == 'aahaas')) && (
+                    selectedOrderIndexId?.provider === 'aahaas' &&
+                    selectedOrderID?.value)) && (
                   <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
                     <CButton color="dark" className="full-width" onClick={handleEmailResend}>
                       Resend
@@ -240,10 +241,12 @@ const EmailDashboard = () => {
                     </CButton>
                   </CCol>
                 )}
+
               {userData?.permissions?.includes('download order receipt') &&
-                (emailType.value === 'customer_invoice' ||
+                ((emailType.value === 'customer_invoice' && selectedOrderID?.value) ||
                   (emailType.value === 'supplier_voucher' &&
-                    selectedOrderIndexId?.provider == 'aahaas')) && (
+                    selectedOrderIndexId?.provider === 'aahaas' &&
+                    selectedOrderID?.value)) && (
                   <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
                     <CButton color="dark" className="full-width" onClick={handleDownloadReceipt}>
                       Download
@@ -251,6 +254,7 @@ const EmailDashboard = () => {
                     </CButton>
                   </CCol>
                 )}
+
               {emailType.value === 'supplier_voucher' &&
                 selectedOrderIndexId?.provider &&
                 selectedOrderIndexId?.provider !== 'aahaas' && (
