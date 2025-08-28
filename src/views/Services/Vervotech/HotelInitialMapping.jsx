@@ -255,7 +255,7 @@ const HotelInitialMapping = () => {
                       </div>
 
                       {/* Timestamps Section */}
-                      <div className="card bg-light mb-3">
+                      <div className="card border mb-3">
                         <div className="card-body py-2">
                           <div className="row g-3">
                             <div className="col-6 col-md-4">
@@ -292,7 +292,7 @@ const HotelInitialMapping = () => {
                           {item.current_resume_key ? (
                             <div className="d-flex">
                               <code
-                                className="flex-grow-1 p-2 bg-light border rounded text-wrap"
+                                className="flex-grow-1 p-2 border rounded text-wrap"
                                 style={{ fontSize: '0.85rem', wordBreak: 'break-all' }}
                               >
                                 {truncate(item.current_resume_key)}
