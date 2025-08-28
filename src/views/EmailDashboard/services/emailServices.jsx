@@ -231,21 +231,22 @@ const getAllSuppliers = async () => {
   return dataSet
 }
 
-const getAllCustomer = async () => {
-  var dataSet = null
-  try{
-      await axios.get(`customers/all`)
-      .then(response => {
-        dataSet = response.data.data
-      })
-     .catch(error =>{
-      dataSet = response.data
-     })
-  }catch(error){
+const getAllCustomer = async (page = 1, perPage = 20, search = '') => {
+  try {
+    const response = await axios.get(
+      `customers/all?page=${page}&per_page=${perPage}&search=${search}`
+    );
+    if (response.data.status === 200) {
+      // Return the full pagination object
+      return response.data;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return null;
   }
+};
 
-  return dataSet
-}
 
 const getAllInternalEmails = async () => {
   var dataSet = null

@@ -15,3 +15,62 @@
     margin-left: 10px !important;
     display: block;
 }
+
+/* AdditionalData.css */
+.additional-data-modal-body {
+  padding: 20px;
+}
+
+.additional-textfield .MuiInputLabel-root {
+  background-color: white;
+  padding: 0 8px;
+  margin-left: -4px;
+}
+
+.additional-textfield .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+
+.additional-textfield .Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2;
+  border-width: 2px;
+}
+
+.additional-textfield .MuiInputLabel-root.Mui-focused {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.upload_section .MuiButton-root {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.section_title {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+/* Ensure proper spacing for the form */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Fix for the modal body scroll if content is too long */
+.modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .additional-data-modal-body {
+    padding: 15px;
+  }
+  
+  .section_title {
+    font-size: 0.9rem;
+  }
+}

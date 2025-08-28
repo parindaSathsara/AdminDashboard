@@ -17,11 +17,13 @@ import Select from 'react-select'
 import LoaderPanel from 'src/Panels/LoaderPanel'
 
 import OrderCheckoutsReport from './OrderCheckouts/OrderCheckoutsReport'
-import { getReports } from './services/reportingServices'
+import { getReports, getCartInsightsReport, getCrossCategoryReport } from './services/reportingServices'
 
 import LifestylesCategoryData from './CategoryData/LifestylesCategoryData'
 import EssentialsCategoryData from './CategoryData/EssentialsCategoryData'
 import EducationCategoryData from './CategoryData/EducationCategoryData'
+import CartInsightsData from './CartData/CartInsightsData'
+import CrossCategoryData from './CartData/CrossCategoryData'
 
 import CustomersData from './CustomersData/CustomersData'
 
@@ -71,6 +73,8 @@ const ReportGenerationPage = () => {
     { value: 'customer_report', label: 'Customer Report' },
     { value: 'chats_report', label: 'Chats Report' },
     { value: 'driver_allocation', label: 'Driver Allocation' },
+    { value: 'cart_insights', label: 'Cart Insights Report' },
+    { value: 'cross_category', label: 'Cross Category Report' },
   ]
 
   const [dataEmptyState, setDataEmptyState] = useState(false)
@@ -82,6 +86,9 @@ const ReportGenerationPage = () => {
     if (!startDate) errors.startDate = 'Start date is required'
     if (!endDate) errors.endDate = 'End date is required'
     if (!reportType) errors.reportType = 'Report type is required'
+    if (reportType?.value === 'cart_insights' && !category) {
+      errors.category = 'Category is required';
+    }
     if (
       reportType?.value === 'products_report' &&
       (category === null || category.value === undefined || category.value === '')
@@ -121,7 +128,37 @@ const ReportGenerationPage = () => {
         setReportDataSet(response)
         setLoading(false)
       })
-    } else {
+    } else if (reportType?.value === 'cart_insights') {
+      const response = await getCartInsightsReport(dataSet)  // response is already an array
+      setReportDataSet(response || [])
+      setLoading(false)
+      if (!response || response.length === 0) {
+        setDataEmptyState(true)
+      } else {
+        setDataEmptyState(false)
+      }
+    } else if (reportType?.value === 'cross_category') {
+      setLoading(true);
+
+      // ✅ extract multiple category values
+      const selectedCategories = category && Array.isArray(category)
+        ? category.map(c => c.label.toLowerCase()) // send labels like "lifestyles", "educations"
+        : [];
+
+      const response = await getCrossCategoryReport({
+        startDate: moment(startDate).format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD'),
+        categories: selectedCategories,
+        productIds: [],
+      });
+
+      setReportDataSet(response || []);
+      setLoading(false);
+      setDataEmptyState(!response || response.length === 0);
+    }
+
+
+    else {
       await getReports(dataSet)
         .then((response) => {
           setReportDataSet(response)
@@ -203,18 +240,11 @@ const ReportGenerationPage = () => {
                     selectsStart
                     startDate={startDate}
                     endDate={endDate}
-                    popperProps={{
-                      positionFixed: true,
-                      modifiers: [
-                        {
-                          name: 'preventOverflow',
-                          options: {
-                            boundary: 'viewport'
-                          }
-                        }
-                      ]
-                    }}
+                    popperPlacement="bottom-start"
+                    popperClassName="datepicker-popper"   // ✅ custom class
+                    portalId="root"                       // ✅ render inside root div
                   />
+
                   {validationErrors.startDate && (
                     <div className="text-danger">{validationErrors.startDate}</div>
                   )}
@@ -239,6 +269,8 @@ const ReportGenerationPage = () => {
                     selectsEnd
                     startDate={startDate}
                     endDate={endDate}
+                    popperClassName="datepicker-popper"   // ✅ custom class
+                    portalId="root"
                     popperProps={{
                       positionFixed: true,
                       modifiers: [
@@ -286,6 +318,7 @@ const ReportGenerationPage = () => {
                     <CFormLabel htmlFor="category">Category</CFormLabel>
                     <br />
                     <Select
+                      isMulti={reportType?.value === 'cross_category'}  // ✅ allow multi-select
                       options={reportType?.value === 'chats_report' ? chatCategories : categories}
                       value={category}
                       onChange={(selectedOption) => {
@@ -304,6 +337,7 @@ const ReportGenerationPage = () => {
                         menuPortal: base => ({ ...base, zIndex: 9999 })
                       }}
                     />
+
                     {validationErrors.category && (
                       <div className="text-danger">{validationErrors.category}</div>
                     )}
@@ -380,9 +414,13 @@ const ReportGenerationPage = () => {
             <CustomersData dataSet={reportDataSet} category={category.value} />
           ) : reportType?.value === 'chats_report' ? (
             <ChatReportData dataSet={reportDataSet} category={category.value} />
-          ) : (
-            <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} dateType={dataSets.dateType} />
-          )
+          ) : reportType?.value === 'cross_category' ? (
+            <CrossCategoryData dataSet={reportDataSet} />
+          ) :
+            reportType?.value === 'cart_insights' ? (
+              <CartInsightsData dataSet={reportDataSet} category={category.value} />) : (
+              <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} dateType={dataSets.dateType} />
+            )
         ) : dataEmptyState ? (
           <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>
         ) : null}
