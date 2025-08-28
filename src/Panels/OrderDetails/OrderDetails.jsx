@@ -547,54 +547,65 @@ function OrderDetails(props) {
   // }
 
   const hotels = {
-    columns: [
-      {
-        field: 'view',
-        width: 5,
-        title: '',
-        align: 'left',
-        hidden: props?.productViewData ? true : false,
-        render: (e) => {
-          return (
-            <>
-              <CButton
-                style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }}
-                onClick={() => handleMoreInfoModal(e, 4)}
-              >
-                <CIcon icon={cilInfo} className="text-info" size="xl" />
-              </CButton>
-            </>
-          )
-        },
+  columns: [
+    {
+      field: 'view',
+      width: 5,
+      title: '',
+      align: 'left',
+      hidden: props?.productViewData ? true : false,
+      render: (e) => {
+        return (
+          <>
+            <CButton
+              style={{ backgroundColor: 'transparent', padding: 0, borderWidth: 0 }}
+              onClick={() => handleMoreInfoModal(e, 4)}
+            >
+              <CIcon icon={cilInfo} className="text-info" size="xl" />
+            </CButton>
+          </>
+        )
       },
-      { field: 'hotelName', title: 'Hotel Name' },
-      { field: 'Provider', title: 'Provider', align: 'left' },
-      { field: 'NoOfNights', title: 'No of Nights', align: 'left' },
-      { field: 'NoOfAdults', title: 'No of Adults', align: 'left' },
-      { field: 'NoOfChild', title: 'No of Child', align: 'left' },
-      { field: 'checkInDate', title: 'Check In Date', align: 'left' },
-      { field: 'checkOutDate', title: 'Check Out Date', align: 'left' },
-      { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
-      { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
-      { field: 'total_amount', title: 'Total Amount', align: 'left' },
-    ],
+    },
+    { field: 'hotelName', title: 'Hotel Name' },
+    { field: 'Provider', title: 'Provider', align: 'left' },
+    { field: 'NoOfNights', title: 'No of Nights', align: 'left' },
+    { field: 'NoOfAdults', title: 'No of Adults', align: 'left' },
+    { 
+      field: 'NoOfChild', 
+      title: 'No of Children', 
+      align: 'left',
+      render: (rowData) => rowData.NoOfChild || 0 // Ensure it shows 0 if undefined
+    },
+    { field: 'checkInDate', title: 'Check In Date', align: 'left' },
+    { field: 'checkOutDate', title: 'Check Out Date', align: 'left' },
+    { field: 'balance_amount', title: 'Balance Amount', align: 'left' },
+    { field: 'paid_amount', title: 'Paid Amount', align: 'left' },
+    { field: 'total_amount', title: 'Total Amount', align: 'left' },
+  ],
 
-    rows: hotelData?.map((value) => ({
+  rows: hotelData?.map((value) => {
+    // Ensure we're properly extracting the child count
+    const childCount = value.NoOfChild || 
+                      (value.decoded_data && value.decoded_data.NoOfChild) || 
+                      (value.hotelData && value.hotelData.NoOfChild) || 
+                      0;
+    
+    const adultCount = value.NoOfAdults || 
+                      (value.decoded_data && value.decoded_data.NoOfAdults) || 
+                      (value.hotelData && value.hotelData.NoOfAdults) || 
+                      0;
+
+    return {
       id: value.checkoutID,
       hotelName: value.hotelName,
-      // Provider: value.Provider == 'hotelAhs' ? 'Aahaas' : 'TBO',
-      // Provider: value.Provider === "hotelAhs" ? "Aahaas" : value.Provider === "ratehawk" ? "Rate Hawk" : "TBO",
-      Provider:
-        value.Provider === 'hotelAhs'
-          ? 'Aahaas'
-          : value.Provider === 'ratehawk'
-          ? 'RateHawk'
-          : value.Provider === 'hotelTbo'
-          ? 'TBO'
-          : ' ',
+      Provider: value.Provider === "hotelAhs" ? "Aahaas" : 
+                value.Provider === "ratehawk" ? "RateHawk" : 
+                value.Provider === "hotelTbo" ? "TBO" : " ",
+
       NoOfNights: value.NoOfNights,
-      NoOfAdults: value.NoOfAdults,
-      NoOfChild: value?.NoOfChild ? value.NoOfChild : 0,
+      NoOfAdults: adultCount,
+      NoOfChild: childCount, // This should now display correctly
       checkInDate: moment(value.checkInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       checkOutDate: moment(value.checkOutDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       balance_amount: CurrencyConverter(value.currency, value.balance_amount, currencyData),
@@ -603,8 +614,9 @@ function OrderDetails(props) {
       supplier_order: value.supplier_status,
       status: value.status,
       hotelData: value,
-    })),
-  }
+    }
+  }),
+}
 
   const ServiceWiseSummary = () => {
     const renderTable = (data, columns, title) =>

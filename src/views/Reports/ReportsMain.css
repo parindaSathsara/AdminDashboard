@@ -5,3 +5,6 @@
 .full-width {
     width: 100%;
 }
+.datepicker-popper {
+  z-index: 9999 !important;   /* higher than CoreUI cards/tables */
+}
