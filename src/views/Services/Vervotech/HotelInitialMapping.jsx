@@ -37,7 +37,9 @@ const HotelInitialMapping = () => {
       { label: 'TBOindia', value: 'TBOindia' },
       { label: 'TBOGlobal', value: 'TBOGlobal' },
       { label: 'RateHawk', value: 'RateHawk' },
-      { label: 'SiteMinder', value: 'SiteMinder' },
+      { label: 'LevelTravel', value: 'LevelTravel' },
+      { label: 'ActivityLinker', value: 'ActivityLinker' },
+      { label: 'DiscoverQatar', value: 'DiscoverQatar' },
     ],
     [],
   )
@@ -60,7 +62,6 @@ const HotelInitialMapping = () => {
       // Expecting a structure; fallback safely if unknown
       const data = res?.data || {}
       const list = data?.data?.data || []
-      console.log('Umayanga', list)
 
       setItems(Array.isArray(list) ? list : [])
       setTotal(Number(data?.total || data?.count || list.length || 0))
@@ -78,9 +79,15 @@ const HotelInitialMapping = () => {
   const onCreate = (e) => {
     e.preventDefault()
     if (!provider) return
-    // Submit logic will be implemented later
-    // Placeholder: show a quick feedback via console
-    console.log('Create initial mapping with provider:', provider)
+
+    axios
+      .post('vervotech/mapping/create', { provider })
+      .then(() => {
+        console.log('Create initial mapping with provider:', provider)
+      })
+      .catch((error) => {
+        console.error('Error creating mapping:', error)
+      })
   }
 
   // helpers
