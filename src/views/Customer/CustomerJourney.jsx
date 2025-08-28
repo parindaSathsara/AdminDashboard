@@ -290,7 +290,35 @@ const CustomerJourney = () => {
                         <CTableDataCell>
                           <div className="d-flex align-items-center">
                             <div className="avatar avatar-md me-3">
-                              <div className="avatar-initial rounded-circle bg-primary text-white">
+                              {customer.profile_picture ? (
+                                <img
+                                  src={customer.profile_picture}
+                                  alt={customer.user_name}
+                                  className="avatar-img rounded-circle"
+                                  style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    objectFit: 'cover',
+                                    border: '2px solid #e4e4e7',
+                                  }}
+                                  onError={(e) => {
+                                    e.target.style.display = 'none'
+                                    e.target.nextSibling.style.display = 'flex'
+                                  }}
+                                />
+                              ) : null}
+                              <div
+                                className="avatar-initial rounded-circle bg-primary text-white"
+                                style={{
+                                  display: customer.profile_picture ? 'none' : 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  width: '40px',
+                                  height: '40px',
+                                  fontSize: '16px',
+                                  fontWeight: '600',
+                                }}
+                              >
                                 {customer.user_name.charAt(0)}
                               </div>
                             </div>
