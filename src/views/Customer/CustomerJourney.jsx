@@ -244,10 +244,13 @@ const CustomerJourney = () => {
     return (
       <CRow>
         <CCol>
-          <CCard>
-            <CCardBody className="text-center">
-              <CSpinner color="primary" />
-              <div className="mt-2">Loading customer analytics...</div>
+          <CCard className="customer-details-card border-0 shadow-sm">
+            <CCardBody className="d-flex flex-column align-items-center justify-content-center py-5">
+              <div className="rounded-circle bg-primary bg-opacity-10 p-4 mb-3">
+                <CSpinner color="primary" />
+              </div>
+              <h5 className="mb-1">Loading Analytics</h5>
+              <div className="text-muted">Please wait while we fetch the customer data...</div>
             </CCardBody>
           </CCard>
         </CCol>
@@ -259,17 +262,23 @@ const CustomerJourney = () => {
     return (
       <CRow>
         <CCol>
-          <CAlert color="danger">
-            <h4>Error</h4>
-            <p>{error}</p>
-            <CButton
-              color="primary"
-              onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
-            >
-              <CIcon icon={cilReload} className="me-2" />
-              Retry
-            </CButton>
-          </CAlert>
+          <CCard className="customer-details-card border-0 shadow-sm">
+            <CCardBody className="d-flex flex-column align-items-center justify-content-center py-5">
+              <div className="rounded-circle bg-danger bg-opacity-10 p-4 mb-3">
+                <CIcon icon={cilX} size="xxl" className="text-danger" />
+              </div>
+              <h5 className="mb-2">Error Loading Data</h5>
+              <p className="text-muted text-center mb-4">{error}</p>
+              <CButton
+                color="primary"
+                className="px-4"
+                onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
+              >
+                <CIcon icon={cilReload} className="me-2" />
+                Retry
+              </CButton>
+            </CCardBody>
+          </CCard>
         </CCol>
       </CRow>
     )
@@ -280,85 +289,118 @@ const CustomerJourney = () => {
       {/* Header Section */}
       <CRow className="mb-4">
         <CCol>
-          <CCard>
-            <CCardHeader className="d-flex justify-content-between align-items-center">
-              <div>
-                <h4 className="mb-0">
-                  <CIcon icon={cilChartPie} className="me-2" />
-                  Customer Journey Analytics
-                </h4>
-                <small className="text-muted">
-                  Track customer engagement and behavior patterns
-                </small>
+          <CCard className="customer-details-card border-0 shadow-sm">
+            <CCardBody className="p-4">
+              <div className="d-flex justify-content-between align-items-start">
+                <div className="d-flex">
+                  <div className="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                    <CIcon icon={cilChartPie} size="xl" className="text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="mb-1">Customer Journey Analytics</h3>
+                    <div className="text-muted">
+                      Track customer engagement and behavior patterns across your platform
+                    </div>
+                  </div>
+                </div>
+                <div className="d-flex gap-3 align-items-center">
+                  <div className="border-end pe-3">
+                    <div className="text-muted small mb-1">Showing</div>
+                    <CDropdown>
+                      <CDropdownToggle color="light" className="fw-medium">
+                        <CIcon icon={cilSettings} className="me-2 text-primary" />
+                        {perPage} entries
+                      </CDropdownToggle>
+                      <CDropdownMenu>
+                        <CDropdownItem onClick={() => handlePerPageChange(5)}>
+                          5 entries
+                        </CDropdownItem>
+                        <CDropdownItem onClick={() => handlePerPageChange(10)}>
+                          10 entries
+                        </CDropdownItem>
+                        <CDropdownItem onClick={() => handlePerPageChange(25)}>
+                          25 entries
+                        </CDropdownItem>
+                        <CDropdownItem onClick={() => handlePerPageChange(50)}>
+                          50 entries
+                        </CDropdownItem>
+                      </CDropdownMenu>
+                    </CDropdown>
+                  </div>
+                  <CButton
+                    color="primary"
+                    className="px-4"
+                    onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
+                  >
+                    <CIcon icon={cilReload} className="me-2" />
+                    Refresh Data
+                  </CButton>
+                </div>
               </div>
-              <div className="d-flex gap-2">
-                <CDropdown>
-                  <CDropdownToggle color="outline-secondary" size="sm">
-                    <CIcon icon={cilSettings} className="me-1" />
-                    Per Page: {perPage}
-                  </CDropdownToggle>
-                  <CDropdownMenu>
-                    <CDropdownItem onClick={() => handlePerPageChange(5)}>5</CDropdownItem>
-                    <CDropdownItem onClick={() => handlePerPageChange(10)}>10</CDropdownItem>
-                    <CDropdownItem onClick={() => handlePerPageChange(25)}>25</CDropdownItem>
-                    <CDropdownItem onClick={() => handlePerPageChange(50)}>50</CDropdownItem>
-                  </CDropdownMenu>
-                </CDropdown>
-                <CButton
-                  color="primary"
-                  size="sm"
-                  onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
-                >
-                  <CIcon icon={cilReload} className="me-1" />
-                  Refresh
-                </CButton>
-              </div>
-            </CCardHeader>
+            </CCardBody>
           </CCard>
         </CCol>
       </CRow>
 
       {/* Summary Cards */}
-      <CRow className="mb-4">
+      <CRow className="mb-4 g-3">
         <CCol md={3}>
-          <CCard className="text-center">
-            <CCardBody>
-              <div className="fs-4 fw-semibold text-primary">{analyticsData?.total || 0}</div>
-              <div className="text-muted text-uppercase fw-semibold small">Total Customers</div>
-              <CIcon icon={cilUser} size="lg" className="text-primary mt-2" />
+          <CCard className="stats-card h-100 border-0 shadow-sm">
+            <CCardBody className="d-flex flex-column align-items-center p-4">
+              <div className="rounded-circle bg-primary bg-opacity-10 p-3 mb-3">
+                <CIcon icon={cilUser} size="xl" className="text-primary" />
+              </div>
+              <div className="fs-2 fw-bold text-primary mb-1">{analyticsData?.total || 0}</div>
+              <div className="text-muted mb-2">Total Customers</div>
+              <CBadge color="primary" className="badge-subtle">
+                Active Users
+              </CBadge>
             </CCardBody>
           </CCard>
         </CCol>
         <CCol md={3}>
-          <CCard className="text-center">
-            <CCardBody>
-              <div className="fs-4 fw-semibold text-success">
+          <CCard className="stats-card h-100 border-0 shadow-sm">
+            <CCardBody className="d-flex flex-column align-items-center p-4">
+              <div className="rounded-circle bg-success bg-opacity-10 p-3 mb-3">
+                <CIcon icon={cilScreenDesktop} size="xl" className="text-success" />
+              </div>
+              <div className="fs-2 fw-bold text-success mb-1">
                 {analyticsData?.data?.reduce((sum, customer) => sum + customer.session_count, 0) ||
                   0}
               </div>
-              <div className="text-muted text-uppercase fw-semibold small">Total Sessions</div>
-              <CIcon icon={cilScreenDesktop} size="lg" className="text-success mt-2" />
+              <div className="text-muted mb-2">Total Sessions</div>
+              <CBadge color="success" className="badge-subtle">
+                Platform Visits
+              </CBadge>
             </CCardBody>
           </CCard>
         </CCol>
         <CCol md={3}>
-          <CCard className="text-center">
-            <CCardBody>
-              <div className="fs-4 fw-semibold text-warning">
+          <CCard className="stats-card h-100 border-0 shadow-sm">
+            <CCardBody className="d-flex flex-column align-items-center p-4">
+              <div className="rounded-circle bg-warning bg-opacity-10 p-3 mb-3">
+                <CIcon icon={cilScreenDesktop} size="xl" className="text-warning" />
+              </div>
+              <div className="fs-2 fw-bold text-warning mb-1">
                 {analyticsData?.data?.reduce(
                   (sum, customer) => sum + parseInt(customer.total_screens_visited),
                   0,
                 ) || 0}
               </div>
-              <div className="text-muted text-uppercase fw-semibold small">Screens Visited</div>
-              <CIcon icon={cilScreenDesktop} size="lg" className="text-warning mt-2" />
+              <div className="text-muted mb-2">Screens Visited</div>
+              <CBadge color="warning" className="badge-subtle">
+                Page Views
+              </CBadge>
             </CCardBody>
           </CCard>
         </CCol>
         <CCol md={3}>
-          <CCard className="text-center">
-            <CCardBody>
-              <div className="fs-4 fw-semibold text-info">
+          <CCard className="stats-card h-100 border-0 shadow-sm">
+            <CCardBody className="d-flex flex-column align-items-center p-4">
+              <div className="rounded-circle bg-info bg-opacity-10 p-3 mb-3">
+                <CIcon icon={cilClock} size="xl" className="text-info" />
+              </div>
+              <div className="fs-2 fw-bold text-info mb-1">
                 {formatDuration(
                   analyticsData?.data?.reduce(
                     (sum, customer) => sum + parseInt(customer.total_session_duration),
@@ -366,8 +408,10 @@ const CustomerJourney = () => {
                   ) || 0,
                 )}
               </div>
-              <div className="text-muted text-uppercase fw-semibold small">Total Time</div>
-              <CIcon icon={cilClock} size="lg" className="text-info mt-2" />
+              <div className="text-muted mb-2">Total Time</div>
+              <CBadge color="info" className="badge-subtle">
+                Engagement Duration
+              </CBadge>
             </CCardBody>
           </CCard>
         </CCol>
@@ -376,70 +420,97 @@ const CustomerJourney = () => {
       {/* Customer Analytics Table */}
       <CRow>
         <CCol>
-          <CCard>
-            <CCardHeader>
-              <h5 className="mb-0">Customer Analytics Details</h5>
+          <CCard className="customer-details-card border-0 shadow-sm">
+            <CCardHeader className="border-bottom bg-transparent p-4">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center">
+                  <div className="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                    <CIcon icon={cilUser} className="text-primary" />
+                  </div>
+                  <h5 className="mb-0">Customer Analytics Details</h5>
+                </div>
+                <CBadge color="primary" className="badge-subtle px-3">
+                  {analyticsData?.data?.length || 0} Customers
+                </CBadge>
+              </div>
             </CCardHeader>
             <CCardBody className="p-0">
-              <CTable hover responsive>
-                <CTableHead>
+              <CTable hover responsive className="align-middle mb-0">
+                <CTableHead className="bg-light border-bottom">
                   <CTableRow>
                     <CTableHeaderCell
+                      className="px-4 py-3"
                       style={{ cursor: 'pointer', userSelect: 'none' }}
                       onClick={() => handleSort('user_id')}
                     >
                       <div className="d-flex align-items-center">
-                        Customer
-                        <CIcon icon={getSortIcon('user_id')} className="ms-1" size="sm" />
+                        <span>Customer</span>
+                        <CIcon icon={getSortIcon('user_id')} className="ms-2" size="sm" />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell
+                      className="py-3"
                       style={{ cursor: 'pointer', userSelect: 'none' }}
                       onClick={() => handleSort('session_count')}
                     >
                       <div className="d-flex align-items-center">
-                        Sessions
-                        <CIcon icon={getSortIcon('session_count')} className="ms-1" size="sm" />
+                        <span>Sessions</span>
+                        <CIcon icon={getSortIcon('session_count')} className="ms-2" size="sm" />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell
+                      className="py-3"
                       style={{ cursor: 'pointer', userSelect: 'none' }}
                       onClick={() => handleSort('total_screens_visited')}
                     >
                       <div className="d-flex align-items-center">
-                        Screens Visited
+                        <span>Screens Visited</span>
                         <CIcon
                           icon={getSortIcon('total_screens_visited')}
-                          className="ms-1"
+                          className="ms-2"
                           size="sm"
                         />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell
+                      className="py-3"
                       style={{ cursor: 'pointer', userSelect: 'none' }}
                       onClick={() => handleSort('total_session_duration')}
                     >
                       <div className="d-flex align-items-center">
-                        Total Duration
+                        <span>Total Duration</span>
                         <CIcon
                           icon={getSortIcon('total_session_duration')}
-                          className="ms-1"
+                          className="ms-2"
                           size="sm"
                         />
                       </div>
                     </CTableHeaderCell>
-                    <CTableHeaderCell>Avg Session</CTableHeaderCell>
-                    <CTableHeaderCell>Engagement</CTableHeaderCell>
+                    <CTableHeaderCell className="py-3">
+                      <div className="d-flex align-items-center">
+                        <span>Avg Session</span>
+                      </div>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="py-3">
+                      <div className="d-flex align-items-center">
+                        <span>Engagement</span>
+                      </div>
+                    </CTableHeaderCell>
                     <CTableHeaderCell
+                      className="py-3"
                       style={{ cursor: 'pointer', userSelect: 'none' }}
                       onClick={() => handleSort('last_visit')}
                     >
                       <div className="d-flex align-items-center">
-                        Last Visit
-                        <CIcon icon={getSortIcon('last_visit')} className="ms-1" size="sm" />
+                        <span>Last Visit</span>
+                        <CIcon icon={getSortIcon('last_visit')} className="ms-2" size="sm" />
                       </div>
                     </CTableHeaderCell>
-                    <CTableHeaderCell>Actions</CTableHeaderCell>
+                    <CTableHeaderCell className="py-3">
+                      <div className="d-flex align-items-center">
+                        <span>Actions</span>
+                      </div>
+                    </CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -567,38 +638,60 @@ const CustomerJourney = () => {
 
       {/* Pagination */}
       {analyticsData && analyticsData.last_page > 1 && (
-        <CRow className="mt-3">
+        <CRow className="mt-4">
           <CCol>
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="text-muted">
-                Showing {analyticsData.from} to {analyticsData.to} of {analyticsData.total} results
-              </div>
-              <CPagination>
-                <CPaginationItem
-                  disabled={!analyticsData.prev_page_url}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  Previous
-                </CPaginationItem>
+            <CCard className="customer-details-card border-0 shadow-sm">
+              <CCardBody className="p-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex align-items-center">
+                    <div className="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                      <CIcon icon={cilUser} className="text-primary" />
+                    </div>
+                    <div className="text-muted">
+                      Showing <span className="fw-medium">{analyticsData.from}</span> to{' '}
+                      <span className="fw-medium">{analyticsData.to}</span> of{' '}
+                      <span className="fw-medium">{analyticsData.total}</span> results
+                    </div>
+                  </div>
+                  <CPagination className="mb-0">
+                    <CPaginationItem
+                      disabled={!analyticsData.prev_page_url}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className="px-3"
+                    >
+                      Previous
+                    </CPaginationItem>
 
-                {Array.from({ length: analyticsData.last_page }, (_, i) => i + 1).map((page) => (
-                  <CPaginationItem
-                    key={page}
-                    active={page === currentPage}
-                    onClick={() => handlePageChange(page)}
-                  >
-                    {page}
-                  </CPaginationItem>
-                ))}
+                    {Array.from({ length: analyticsData.last_page }, (_, i) => i + 1).map(
+                      (page) => (
+                        <CPaginationItem
+                          key={page}
+                          active={page === currentPage}
+                          onClick={() => handlePageChange(page)}
+                          style={{
+                            backgroundColor:
+                              page === currentPage ? 'var(--cui-primary)' : 'transparent',
+                            color: page === currentPage ? '#fff' : 'var(--cui-primary)',
+                            borderColor: 'var(--cui-primary)',
+                            fontWeight: '500',
+                          }}
+                        >
+                          {page}
+                        </CPaginationItem>
+                      ),
+                    )}
 
-                <CPaginationItem
-                  disabled={!analyticsData.next_page_url}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  Next
-                </CPaginationItem>
-              </CPagination>
-            </div>
+                    <CPaginationItem
+                      disabled={!analyticsData.next_page_url}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className="px-3"
+                    >
+                      Next
+                    </CPaginationItem>
+                  </CPagination>
+                </div>
+              </CCardBody>
+            </CCard>
           </CCol>
         </CRow>
       )}
@@ -825,7 +918,7 @@ const CustomerJourney = () => {
                         <h5 className="mb-0">Device Information</h5>
                       </div>
                     </CCardHeader>
-                    <CCardBody className="p-4">
+                    <CCardBody className="p-4" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                       <div className="d-flex flex-column gap-3">
                         {selectedCustomerDetails.devices.map((device, index) => (
                           <div key={index} className="device-info-card p-3 rounded-3">
@@ -877,7 +970,7 @@ const CustomerJourney = () => {
                         <h5 className="mb-0">Route Analytics</h5>
                       </div>
                     </CCardHeader>
-                    <CCardBody className="p-4">
+                    <CCardBody className="p-4" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                       <div className="d-flex flex-column gap-3">
                         {selectedCustomerDetails.routes.map((route, index) => (
                           <div key={index} className="route-analytics-item p-3 rounded-3">
