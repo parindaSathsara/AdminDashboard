@@ -34,6 +34,7 @@ import {
   cilReload,
   cilSettings,
   cilChartPie,
+  cilEnvelopeClosed,
 } from '@coreui/icons'
 
 const CustomerJourney = () => {
@@ -325,6 +326,14 @@ const CustomerJourney = () => {
                             <div>
                               <div className="fw-semibold">{customer.user_name}</div>
                               <div className="text-muted small">ID: {customer.user_id}</div>
+                              {customer.email && (
+                                <div className="text-muted small d-flex align-items-center mt-1">
+                                  <CIcon icon={cilEnvelopeClosed} size="sm" className="me-1" />
+                                  <span className="text-truncate" style={{ maxWidth: '200px' }}>
+                                    {customer.email}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </CTableDataCell>
