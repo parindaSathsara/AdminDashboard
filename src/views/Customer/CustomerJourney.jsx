@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 import {
   CRow,
   CCol,
@@ -57,6 +58,8 @@ const CustomerJourney = () => {
   const [perPage, setPerPage] = useState(10)
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [selectedCustomerDetails, setSelectedCustomerDetails] = useState(null)
+  const [modalLoading, setModalLoading] = useState(false)
   const [sortBy, setSortBy] = useState('')
   const [sortDirection, setSortDirection] = useState('asc')
 
@@ -159,15 +162,34 @@ const CustomerJourney = () => {
   }
 
   // Handle viewing customer details
-  const handleViewCustomer = (customer) => {
+  const handleViewCustomer = async (customer) => {
     setSelectedCustomer(customer)
     setModalVisible(true)
+    setModalLoading(true)
+    setSelectedCustomerDetails(null)
+
+    try {
+      const response = await axios.get(`customer/analytics/details/${customer.user_id}`)
+
+      if (response.data.message === 'Customer details retrieved successfully') {
+        setSelectedCustomerDetails(response.data.data)
+      } else {
+        toast.error('Failed to fetch customer details')
+      }
+    } catch (err) {
+      console.error('Error fetching customer details:', err)
+      toast.error('Error fetching customer details: ' + err.message)
+    } finally {
+      setModalLoading(false)
+    }
   }
 
   // Handle closing modal
   const handleCloseModal = () => {
     setModalVisible(false)
     setSelectedCustomer(null)
+    setSelectedCustomerDetails(null)
+    setModalLoading(false)
   }
 
   // Handle column sorting
@@ -581,15 +603,20 @@ const CustomerJourney = () => {
       )}
 
       {/* Customer Details Modal */}
-      <CModal visible={modalVisible} onClose={handleCloseModal} size="lg">
+      <CModal visible={modalVisible} onClose={handleCloseModal} size="xl">
         <CModalHeader>
           <CModalTitle>
             <CIcon icon={cilUser} className="me-2" />
-            Customer Details
+            Customer Analytics Details
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
-          {selectedCustomer && (
+          {modalLoading ? (
+            <div className="text-center py-5">
+              <CSpinner color="primary" />
+              <div className="mt-2">Loading customer details...</div>
+            </div>
+          ) : selectedCustomerDetails ? (
             <div>
               {/* Customer Header */}
               <CRow className="mb-4">
@@ -598,205 +625,389 @@ const CustomerJourney = () => {
                     <CCardBody>
                       <div className="d-flex align-items-center">
                         <div className="avatar avatar-lg me-3">
-                          {selectedCustomer.profile_picture ? (
+                          {selectedCustomerDetails.customer.customer_profilepic ? (
                             <img
-                              src={selectedCustomer.profile_picture}
-                              alt={selectedCustomer.user_name}
+                              src={selectedCustomerDetails.customer.customer_profilepic}
+                              alt={selectedCustomerDetails.customer.customer_fname}
                               className="avatar-img rounded-circle"
                               style={{
-                                width: '60px',
-                                height: '60px',
+                                width: '80px',
+                                height: '80px',
                                 objectFit: 'cover',
                                 border: '3px solid #e4e4e7',
                               }}
-                            />
-                          ) : (
-                            <div
-                              className="avatar-initial rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                              style={{
-                                width: '60px',
-                                height: '60px',
-                                fontSize: '24px',
-                                fontWeight: '600',
+                              onError={(e) => {
+                                e.target.style.display = 'none'
+                                e.target.nextSibling.style.display = 'flex'
                               }}
-                            >
-                              {selectedCustomer.user_name.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-grow-1">
-                          <h4 className="mb-1">{selectedCustomer.user_name}</h4>
-                          <div className="text-muted">
-                            <div>
-                              <CIcon icon={cilUser} className="me-1" />
-                              Customer ID: {selectedCustomer.user_id}
-                            </div>
-                            {selectedCustomer.email && (
-                              <div className="mt-1">
-                                <CIcon icon={cilEnvelopeClosed} className="me-1" />
-                                {selectedCustomer.email}
-                              </div>
-                            )}
+                            />
+                          ) : null}
+                          <div
+                            className="avatar-initial rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                            style={{
+                              display: selectedCustomerDetails.customer.customer_profilepic
+                                ? 'none'
+                                : 'flex',
+                              width: '80px',
+                              height: '80px',
+                              fontSize: '32px',
+                              fontWeight: '600',
+                            }}
+                          >
+                            {selectedCustomerDetails.customer.customer_fname.charAt(0)}
                           </div>
                         </div>
+                        <div className="flex-grow-1">
+                          <h3 className="mb-1">
+                            {selectedCustomerDetails.customer.customer_fname}
+                          </h3>
+                          <div className="text-muted mb-2">
+                            <div className="d-flex align-items-center mb-1">
+                              <CIcon icon={cilUser} className="me-2" />
+                              <span>
+                                Customer ID: {selectedCustomerDetails.customer.customer_id}
+                              </span>
+                            </div>
+                            <div className="d-flex align-items-center mb-1">
+                              <CIcon icon={cilEnvelopeClosed} className="me-2" />
+                              <span>{selectedCustomerDetails.customer.customer_email}</span>
+                            </div>
+                            <div className="d-flex align-items-center">
+                              <CIcon icon={cilCalendar} className="me-2" />
+                              <span>
+                                Contact: {selectedCustomerDetails.customer.contact_number}
+                              </span>
+                            </div>
+                          </div>
+                          <CBadge
+                            color={
+                              selectedCustomerDetails.customer.customer_status === 'Active'
+                                ? 'success'
+                                : 'danger'
+                            }
+                            shape="rounded-pill"
+                          >
+                            {selectedCustomerDetails.customer.customer_status}
+                          </CBadge>
+                        </div>
                       </div>
                     </CCardBody>
                   </CCard>
                 </CCol>
               </CRow>
 
-              {/* Analytics Overview */}
+              {/* Analytics Overview Cards */}
               <CRow className="mb-4">
                 <CCol md={3}>
-                  <CCard className="text-center h-100">
+                  <CCard className="text-center h-100 border-start border-primary border-3">
                     <CCardBody>
                       <CIcon icon={cilScreenDesktop} size="xl" className="text-primary mb-2" />
-                      <div className="fs-4 fw-semibold text-primary">
-                        {selectedCustomer.session_count}
+                      <div className="fs-3 fw-bold text-primary">
+                        {selectedCustomerDetails.stats.session_count}
                       </div>
-                      <div className="text-muted small">Total Sessions</div>
+                      <div className="text-muted">Total Sessions</div>
+                      <small className="text-success">
+                        Avg: {selectedCustomerDetails.stats.avg_screens_per_session} screens/session
+                      </small>
                     </CCardBody>
                   </CCard>
                 </CCol>
                 <CCol md={3}>
-                  <CCard className="text-center h-100">
+                  <CCard className="text-center h-100 border-start border-success border-3">
                     <CCardBody>
                       <CIcon icon={cilScreenDesktop} size="xl" className="text-success mb-2" />
-                      <div className="fs-4 fw-semibold text-success">
-                        {selectedCustomer.total_screens_visited}
+                      <div className="fs-3 fw-bold text-success">
+                        {selectedCustomerDetails.stats.total_screens_visited}
                       </div>
-                      <div className="text-muted small">Screens Visited</div>
+                      <div className="text-muted">Screens Visited</div>
+                      <small className="text-info">
+                        {Math.round(
+                          selectedCustomerDetails.stats.total_screens_visited /
+                            selectedCustomerDetails.stats.session_count,
+                        )}{' '}
+                        per session
+                      </small>
                     </CCardBody>
                   </CCard>
                 </CCol>
                 <CCol md={3}>
-                  <CCard className="text-center h-100">
+                  <CCard className="text-center h-100 border-start border-warning border-3">
                     <CCardBody>
                       <CIcon icon={cilClock} size="xl" className="text-warning mb-2" />
-                      <div className="fs-4 fw-semibold text-warning">
-                        {formatDuration(parseInt(selectedCustomer.total_session_duration))}
+                      <div className="fs-3 fw-bold text-warning">
+                        {formatDuration(selectedCustomerDetails.stats.total_session_duration)}
                       </div>
-                      <div className="text-muted small">Total Time</div>
+                      <div className="text-muted">Total Duration</div>
+                      <small className="text-primary">
+                        Avg: {formatDuration(selectedCustomerDetails.stats.avg_session_duration)}
+                      </small>
                     </CCardBody>
                   </CCard>
                 </CCol>
                 <CCol md={3}>
-                  <CCard className="text-center h-100">
+                  <CCard className="text-center h-100 border-start border-info border-3">
                     <CCardBody>
                       <CIcon icon={cilCalendar} size="xl" className="text-info mb-2" />
-                      <div className="fs-4 fw-semibold text-info">
-                        {formatDuration(
-                          Math.round(
-                            parseInt(selectedCustomer.total_session_duration) /
-                              selectedCustomer.session_count,
-                          ),
-                        )}
+                      <div className="fs-6 fw-bold text-info">
+                        {new Date(selectedCustomerDetails.stats.first_visit).toLocaleDateString()}
                       </div>
-                      <div className="text-muted small">Avg Session</div>
+                      <div className="text-muted">First Visit</div>
+                      <small className="text-muted">
+                        Last:{' '}
+                        {new Date(selectedCustomerDetails.stats.last_visit).toLocaleDateString()}
+                      </small>
                     </CCardBody>
                   </CCard>
                 </CCol>
               </CRow>
 
-              {/* Detailed Information */}
-              <CRow>
+              {/* Devices and Routes Section */}
+              <CRow className="mb-4">
                 <CCol md={6}>
-                  <CCard>
-                    <CCardHeader>
-                      <h6 className="mb-0">Session Analytics</h6>
+                  <CCard className="h-100">
+                    <CCardHeader className="bg-light">
+                      <h5 className="mb-0">
+                        <CIcon icon={cilScreenDesktop} className="me-2" />
+                        Device Information
+                      </h5>
                     </CCardHeader>
                     <CCardBody>
-                      <div className="mb-3">
-                        <div className="d-flex justify-content-between mb-1">
-                          <span>Engagement Level</span>
-                          <span>
-                            {(() => {
-                              const engagement = getEngagementLevel(
-                                selectedCustomer.session_count,
-                                parseInt(selectedCustomer.total_session_duration),
-                              )
-                              return <CBadge color={engagement.color}>{engagement.level}</CBadge>
-                            })()}
-                          </span>
+                      {selectedCustomerDetails.devices.map((device, index) => (
+                        <div key={index} className="border rounded p-3 mb-3 bg-light">
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <h6 className="mb-0">{device.model}</h6>
+                            <CBadge color="info" shape="rounded-pill">
+                              {device.sessions_count} sessions
+                            </CBadge>
+                          </div>
+                          <div className="row text-sm">
+                            <div className="col-6">
+                              <strong>Brand:</strong> {device.brand}
+                            </div>
+                            <div className="col-6">
+                              <strong>OS:</strong> {device.system_name} {device.system_version}
+                            </div>
+                            <div className="col-6">
+                              <strong>Device ID:</strong> {device.device_id}
+                            </div>
+                            <div className="col-6">
+                              <strong>Build:</strong> {device.build_number}
+                            </div>
+                          </div>
+                          <div className="mt-2 text-muted small">
+                            <div>First seen: {new Date(device.first_seen).toLocaleString()}</div>
+                            <div>Last seen: {new Date(device.last_seen).toLocaleString()}</div>
+                          </div>
                         </div>
-                        <CProgress height={8}>
-                          <CProgressBar
-                            color={
-                              getEngagementLevel(
-                                selectedCustomer.session_count,
-                                parseInt(selectedCustomer.total_session_duration),
-                              ).color
-                            }
-                            value={
-                              getEngagementLevel(
-                                selectedCustomer.session_count,
-                                parseInt(selectedCustomer.total_session_duration),
-                              ).percentage
-                            }
-                          />
-                        </CProgress>
-                      </div>
-                      <div className="mb-3">
-                        <strong>Screens per Session:</strong>
-                        <div className="text-muted">
-                          {Math.round(
-                            selectedCustomer.total_screens_visited / selectedCustomer.session_count,
-                          )}{' '}
-                          screens on average
-                        </div>
-                      </div>
-                      <div>
-                        <strong>Session Frequency:</strong>
-                        <div className="text-muted">
-                          {selectedCustomer.session_count} sessions total
-                        </div>
-                      </div>
+                      ))}
                     </CCardBody>
                   </CCard>
                 </CCol>
+
                 <CCol md={6}>
-                  <CCard>
-                    <CCardHeader>
-                      <h6 className="mb-0">Activity Information</h6>
+                  <CCard className="h-100">
+                    <CCardHeader className="bg-light">
+                      <h5 className="mb-0">
+                        <CIcon icon={cilChartPie} className="me-2" />
+                        Route Analytics
+                      </h5>
                     </CCardHeader>
                     <CCardBody>
-                      <div className="mb-3">
-                        <strong>Last Visit:</strong>
-                        <div className="text-muted">
-                          {new Date(selectedCustomer.last_visit).toLocaleString()}
+                      {selectedCustomerDetails.routes.map((route, index) => (
+                        <div key={index} className="border rounded p-3 mb-3">
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <h6 className="mb-0 text-primary">{route.route_name}</h6>
+                            <CBadge color="primary" shape="rounded-pill">
+                              {route.total_visits} visits
+                            </CBadge>
+                          </div>
+                          <div className="row text-sm">
+                            <div className="col-6">
+                              <strong>Total Duration:</strong>{' '}
+                              {formatDuration(route.total_duration)}
+                            </div>
+                            <div className="col-6">
+                              <strong>Avg Duration:</strong>{' '}
+                              {formatDuration(route.average_duration)}
+                            </div>
+                            <div className="col-12 mt-1">
+                              <strong>Sessions:</strong> {route.sessions_count}
+                            </div>
+                          </div>
+                          <div className="mt-2">
+                            <CProgress height={6}>
+                              <CProgressBar
+                                color="primary"
+                                value={
+                                  (route.total_visits /
+                                    selectedCustomerDetails.stats.total_screens_visited) *
+                                  100
+                                }
+                              />
+                            </CProgress>
+                            <small className="text-muted">
+                              {Math.round(
+                                (route.total_visits /
+                                  selectedCustomerDetails.stats.total_screens_visited) *
+                                  100,
+                              )}
+                              % of total visits
+                            </small>
+                          </div>
                         </div>
-                        <div className="text-muted small">
-                          {getTimeSinceLastVisit(selectedCustomer.last_visit)}
-                        </div>
-                      </div>
-                      <div className="mb-3">
-                        <strong>Total Active Time:</strong>
-                        <div className="text-muted">
-                          {formatDuration(parseInt(selectedCustomer.total_session_duration))}
-                        </div>
-                      </div>
-                      <div>
-                        <strong>User Status:</strong>
-                        <div className="mt-1">
-                          {(() => {
-                            const hoursSinceLastVisit =
-                              Math.abs(new Date() - new Date(selectedCustomer.last_visit)) /
-                              (1000 * 60 * 60)
-                            if (hoursSinceLastVisit < 24) {
-                              return <CBadge color="success">Recently Active</CBadge>
-                            } else if (hoursSinceLastVisit < 168) {
-                              // 7 days
-                              return <CBadge color="warning">Active This Week</CBadge>
-                            } else {
-                              return <CBadge color="secondary">Inactive</CBadge>
-                            }
-                          })()}
-                        </div>
-                      </div>
+                      ))}
                     </CCardBody>
                   </CCard>
                 </CCol>
               </CRow>
+
+              {/* Sessions Detail */}
+              <CRow>
+                <CCol>
+                  <CCard>
+                    <CCardHeader className="bg-light">
+                      <h5 className="mb-0">
+                        <CIcon icon={cilClock} className="me-2" />
+                        Session History
+                      </h5>
+                    </CCardHeader>
+                    <CCardBody className="p-0">
+                      <CTable hover responsive>
+                        <CTableHead>
+                          <CTableRow>
+                            <CTableHeaderCell>Session Date</CTableHeaderCell>
+                            <CTableHeaderCell>Device</CTableHeaderCell>
+                            <CTableHeaderCell>Screens Visited</CTableHeaderCell>
+                            <CTableHeaderCell>Duration</CTableHeaderCell>
+                            <CTableHeaderCell>Routes</CTableHeaderCell>
+                          </CTableRow>
+                        </CTableHead>
+                        <CTableBody>
+                          {selectedCustomerDetails.sessions.map((session, index) => (
+                            <CTableRow key={index}>
+                              <CTableDataCell>
+                                <div>
+                                  <strong>
+                                    {new Date(session.created_at).toLocaleDateString()}
+                                  </strong>
+                                </div>
+                                <small className="text-muted">
+                                  {new Date(session.created_at).toLocaleTimeString()}
+                                </small>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  <strong>
+                                    {session.device.brand} {session.device.model}
+                                  </strong>
+                                </div>
+                                <small className="text-muted">
+                                  {session.device.system_name} {session.device.system_version}
+                                </small>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <CBadge color="info" shape="rounded-pill">
+                                  {session.total_screens_visited}
+                                </CBadge>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <span className="fw-semibold">
+                                  {formatDuration(session.total_session_duration)}
+                                </span>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div className="d-flex flex-wrap gap-1">
+                                  {session.routes.map((route, routeIndex) => (
+                                    <CBadge
+                                      key={routeIndex}
+                                      color="outline-primary"
+                                      className="me-1 mb-1"
+                                    >
+                                      {route.route_name} ({route.visits})
+                                    </CBadge>
+                                  ))}
+                                </div>
+                              </CTableDataCell>
+                            </CTableRow>
+                          ))}
+                        </CTableBody>
+                      </CTable>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              </CRow>
+
+              {/* Customer Information */}
+              <CRow className="mt-4">
+                <CCol>
+                  <CCard>
+                    <CCardHeader className="bg-light">
+                      <h5 className="mb-0">
+                        <CIcon icon={cilUser} className="me-2" />
+                        Customer Information
+                      </h5>
+                    </CCardHeader>
+                    <CCardBody>
+                      <CRow>
+                        <CCol md={6}>
+                          <div className="mb-3">
+                            <strong>Full Name:</strong>
+                            <div className="text-muted">
+                              {selectedCustomerDetails.customer.customer_fname}
+                            </div>
+                          </div>
+                          <div className="mb-3">
+                            <strong>Email:</strong>
+                            <div className="text-muted">
+                              {selectedCustomerDetails.customer.customer_email}
+                            </div>
+                          </div>
+                          <div className="mb-3">
+                            <strong>Contact Number:</strong>
+                            <div className="text-muted">
+                              {selectedCustomerDetails.customer.contact_number}
+                            </div>
+                          </div>
+                        </CCol>
+                        <CCol md={6}>
+                          <div className="mb-3">
+                            <strong>Nationality:</strong>
+                            <div className="text-muted">
+                              {selectedCustomerDetails.customer.customer_nationality}
+                            </div>
+                          </div>
+                          <div className="mb-3">
+                            <strong>Address:</strong>
+                            <div className="text-muted">
+                              {selectedCustomerDetails.customer.customer_address}
+                            </div>
+                          </div>
+                          <div className="mb-3">
+                            <strong>Account Created:</strong>
+                            <div className="text-muted">
+                              {new Date(
+                                selectedCustomerDetails.customer.created_at,
+                              ).toLocaleString()}
+                            </div>
+                          </div>
+                          <div className="mb-3">
+                            <strong>Last Updated:</strong>
+                            <div className="text-muted">
+                              {new Date(
+                                selectedCustomerDetails.customer.updated_at,
+                              ).toLocaleString()}
+                            </div>
+                          </div>
+                        </CCol>
+                      </CRow>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <div className="text-center py-5">
+              <CAlert color="warning">No detailed information available for this customer.</CAlert>
             </div>
           )}
         </CModalBody>
