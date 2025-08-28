@@ -264,45 +264,39 @@ const ReportGenerationPage = () => {
   const [currenctOrdeId, setCurrenctOrderId] = useState('')
   const [productPNLReport, setProductPNLReport] = useState([])
 
-  const returnURL = (data, dataType) => {
-    let url
-    if (data.reportType === 'pnl' && data.category === '0') {
-      console.log(data, "Data =>");
-      console.log('Data pnl by categories')
-      url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}`
-    } else if (data.reportType === 'pnl' && data.category === '1') {
-      console.log('Data pnl by orders')
-      url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}`
-      console.log(url, "PNL Report URL");
+const returnURL = (data, dataType) => {
+  let url = '';
 
-    } else if (data.reportType === 'payable' && data.category === '0') {
-      url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue
-        }`
-    } else if (data.reportType === 'payable' && data.category === '1') {
-      url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}&currencyType=${data.currencyType}&currencyValue=${data.currencyValue
-        }`
-    } else if (data.reportType === 'receivable' && data.category === '0') {
-      url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
-    } else if (data.reportType === 'receivable' && data.category === '1') {
-      url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&dateType=${data.dateType}&currencyValue=${data.currencyValue}`
-    } else if (data.reportType === 'cashflow') {
-      url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-        }&currencyValue=${data.currencyValue}&dateType=${data.dateType}`
+  if (data.reportType === 'pnl' && data.category === '0') {
+    url = `pnl/by-categories${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+  } else if (data.reportType === 'pnl' && data.category === '1') {
+    url = `pnl/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+  } else if (data.reportType === 'payable' && data.category === '0') {
+    url = `payable/summary${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}`;
+    if (data.currencyType !== 'all' && data.currencyValue) {
+      url += `&currencyValue=${data.currencyValue}`;
     }
-    else if (data.reportType === 'api') {
-      // url = `reports/api/html${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base
-      //   }&dateType=${data.dateType}&provider=${data.provider}`;
-      url = `reports/api${dataType ? dataType : "/html"}?start=${data.start}&end=${data.end}&dateType=${data.dateType}&provider=${data.provider}`;
+  } else if (data.reportType === 'payable' && data.category === '1') {
+    url = `payable/detailed${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}&currencyType=${data.currencyType}`;
+    if (data.currencyType !== 'all' && data.currencyValue) {
+      url += `&currencyValue=${data.currencyValue}`;
     }
-
-    return url
+  } else if (data.reportType === 'receivable' && data.category === '0') {
+    url = `receivable/by-orders${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+    if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
+  } else if (data.reportType === 'receivable' && data.category === '1') {
+    url = `receivable/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+    if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
+  } else if (data.reportType === 'cashflow') {
+    url = `cash-flow/by-products${dataType}?start=${data.start}&end=${data.end}&currency=${data.currency || currencyData?.base}&dateType=${data.dateType}`;
+    if (data.currencyValue) url += `&currencyValue=${data.currencyValue}`;
+  } else if (data.reportType === 'api') {
+    url = `reports/api${dataType || '/html'}?start=${data.start}&end=${data.end}&dateType=${data.dateType}&provider=${data.provider}`;
   }
+
+  return url;
+};
+
 
   // const handlePNLReport = async (data) => {
   //   console.log(data, 'Data')

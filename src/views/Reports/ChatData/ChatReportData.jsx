@@ -5,6 +5,7 @@ import { Box, Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import moment from 'moment';
+import { getAdminNames, getCustomerContact } from 'src/service/api_calls';
 
 const getDateAndtime = (value) => {
     const totalSeconds = value?.seconds + value?.nanoseconds / 1e9 || 0;
@@ -16,21 +17,58 @@ const ChatReportData = ({ dataSet, category }) => {
     console.log(dataSet,category, "Data Set Value is");
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        const dataVal = dataSet.map(item => ({
-            chat_name: item?.chat_name,
-            Customer_name: item?.customer_name,
-            Crated_time: getDateAndtime(item?.createdAt),
-            Status: item?.status,
-            Admin_includes: item?.admin_included ? item?.admin_included?.join() : 'Yet to initiate chat',
-            Admin_includes_count: item?.admin_included ? `${item.admin_included?.length} x admin` : 'Yet to initiate chat',
-        }));
-        setData(dataVal);
-    }, [dataSet, category]);
+    
+useEffect(() => {
+  const fetchReportData = async () => {
+    const allAdminIds = [
+      ...new Set(dataSet.flatMap(item => item?.admin_included || []))
+    ];
+    const adminMap = await getAdminNames(allAdminIds);
+
+    const dataWithContacts = await Promise.all(dataSet.map(async item => {
+      let customerContact = null;
+      if (item?.customer_id) {
+        try {
+          customerContact = await getCustomerContact(item.customer_id);
+        } catch (error) {
+          console.error(`Error fetching contact for customer ID: ${item.customer_id}`, error);
+        }
+      }
+
+      const adminNames = item.admin_included
+        ? item.admin_included.map(id => adminMap[id] || id).join(', ')
+        : 'Yet to initiate chat';
+
+      const adminCount = item.admin_included
+        ? `${item.admin_included.length} x admin`
+        : 'Yet to initiate chat';
+
+      return {
+        chat_name: item?.chat_name,
+        Customer_name: item?.customer_name,
+        Crated_time: getDateAndtime(item?.createdAt),
+        Status: item?.status,
+        Admin_includes: adminNames,
+        Admin_includes_count: adminCount,
+        customer_contact: customerContact?.contact_number || 'N/A',
+        customer_email: customerContact?.customer_email || 'N/A'
+      };
+    }));
+
+    setData(dataWithContacts);
+  };
+
+  if (dataSet.length > 0) {
+    fetchReportData();
+  }
+}, [dataSet]);
+
 
     const columns = useMemo(() => [
         { accessorKey: 'chat_name', header: 'Chat name', size: 40 },
         { accessorKey: 'Customer_name', header: 'Customer name', size: 40 },
+        { accessorKey: 'customer_contact', header: 'Contact Number', size: 100 },
+        { accessorKey: 'customer_email', header: 'Email Address', size: 100 },
         { accessorKey: 'Crated_time', header: 'Chat created date', size: 120 },
         { accessorKey: 'Status', header: 'Chat status', size: 120 },
         { accessorKey: 'Admin_includes', header: 'Admin includes', size: 120 },
@@ -85,9 +123,10 @@ const ChatReportData = ({ dataSet, category }) => {
         columns,
         data,
         enableRowSelection: true,
-        enableColumnDragging: true,
+        enableColumnDragging: false,
         columnFilterDisplayMode: 'popover',
         paginationDisplayMode: 'pages',
+        enableColumnActions: false,
         positionToolbarAlertBanner: 'bottom',
         state: { },
         renderTopToolbarCustomActions: ({ table }) => (

@@ -47,7 +47,7 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
    const columns = useMemo(() => [
     { accessorKey: 'PID', header: 'Product ID', size: 40 },
     { accessorKey: 'category_name', header: 'Category', size: 40 },
-    { accessorKey: 'status', header: 'Status', size: 40 },
+    { accessorKey: 'status', header: 'Main Status', size: 40 },
     // Add the new status columns
     { accessorKey: 'delivery_status', header: 'Delivery Status', size: 40 },
     { accessorKey: 'supplier_status', header: 'Supplier Status', size: 40 },
@@ -119,10 +119,11 @@ const OrderCheckoutsReport = ({ dataSet, category, dateType }) => {
     columns,
     data,
     enableRowSelection: true,
-    enableColumnDragging: true,
+    enableColumnDragging: false,
     columnFilterDisplayMode: 'popover',
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'bottom',
+    enableColumnActions: false,
     state: {},
     renderTopToolbarCustomActions: ({ table }) => (
       <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>

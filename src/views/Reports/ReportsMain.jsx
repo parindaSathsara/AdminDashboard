@@ -39,7 +39,7 @@ const ReportGenerationPage = () => {
   const { userData } = useContext(UserLoginContext)
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-const [category, setCategory] = useState(null)
+  const [category, setCategory] = useState(null)
 
   const [reportType, setReportType] = useState(null)
   const [dataSets, setDataSets] = useState(null)
@@ -83,12 +83,11 @@ const [category, setCategory] = useState(null)
     if (!endDate) errors.endDate = 'End date is required'
     if (!reportType) errors.reportType = 'Report type is required'
     if (
-  reportType?.value === 'products_report' &&
-  (category === null || category.value === undefined || category.value === '')
-) {
-  errors.category = 'Category is required'
-}
-
+      reportType?.value === 'products_report' &&
+      (category === null || category.value === undefined || category.value === '')
+    ) {
+      errors.category = 'Category is required'
+    }
 
     if (startDate && endDate) {
       const start = moment(startDate)
@@ -113,7 +112,6 @@ const [category, setCategory] = useState(null)
       dateType: dateType,
     }
 
-
     setDataSets(dataSet)
     console.log(dataSet, 'Data set value is data')
 
@@ -121,13 +119,11 @@ const [category, setCategory] = useState(null)
     if (reportType?.value === 'chats_report') {
       await getChatServices(dataSet).then((response) => {
         setReportDataSet(response)
-        // console.log(response);
         setLoading(false)
       })
     } else {
       await getReports(dataSet)
         .then((response) => {
-          // console.log(response);
           setReportDataSet(response)
           setLoading(false)
           if (response?.length === 0) {
@@ -179,166 +175,218 @@ const [category, setCategory] = useState(null)
 
   return (
     <CContainer fluid>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>All Report Generation</strong>
-          </CCardHeader>
-          <CCardBody>
-            <CRow className="align-items-end">
-              <CCol xs={12} sm={6} lg={3}>
-                <CFormLabel htmlFor="start-date">Start Date</CFormLabel>
-                <br />
-                <DatePicker
-                  selected={startDate}
-                  // onChange={(date) => setStartDate(date)}
-                  onChange={date => {
-                    setStartDate(date);
-                    // Clear the specific error when user changes the date
-                    setValidationErrors(prev => {
-                      const newErrors = {...prev};
-                      delete newErrors.startDate;
-                      return newErrors;
-                    });
-                  }}
-                  className="form-control full-width"
-                  placeholderText="Select start date"
-                  id="start-date"
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-                {validationErrors.startDate && (
-                  <div className="text-danger">{validationErrors.startDate}</div>
-                )}
-              </CCol>
-              <CCol xs={12} sm={6} lg={3}>
-                <CFormLabel htmlFor="end-date">End Date</CFormLabel>
-                <br />
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  className="form-control full-width"
-                  placeholderText="Select end date"
-                  id="end-date"
-                  minDate={startDate} // This will disable dates before the selected start date
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-                {validationErrors.endDate && (
-                  <div className="text-danger">{validationErrors.endDate}</div>
-                )}
-              </CCol>
-              <CCol xs={12} sm={6} lg={2}>
-                <CFormLabel htmlFor="report-type">Report Type</CFormLabel>
-                <br />
-                <Select
-                  options={reportTypes}
-                  value={reportType}
-                  onChange={(selectedOption) => {
-                    setReportType(selectedOption)
-                    setCategory([])
-                  }}
-                  placeholder="Select a Report Type"
-                  id="report-type"
-                />
-                {validationErrors.reportType && (
-                  <div className="text-danger">{validationErrors.reportType}</div>
-                )}
-              </CCol>
-              {reportType?.value !== 'main_orders_report' && (
-                <CCol xs={12} sm={6} lg={2}>
-                  <CFormLabel htmlFor="category">Category</CFormLabel>
+      {/* Form Container with higher z-index */}
+      <div className="report-form-container">
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CCardHeader>
+              <strong>All Report Generation</strong>
+            </CCardHeader>
+            <CCardBody>
+              <CRow className="align-items-end">
+                <CCol xs={12} sm={6} lg={3}>
+                  <CFormLabel htmlFor="start-date">Start Date</CFormLabel>
                   <br />
-                  <Select
-                    options={reportType?.value === 'chats_report' ? chatCategories : categories}
-                    value={category}
-                    onChange={(selectedOption) => setCategory(selectedOption)}
-                    placeholder="Select a category"
-                    id="category"
-                    isDisabled={reportType?.value == 'customer_report'}
+                  <DatePicker
+                    selected={startDate}
+                    onChange={date => {
+                      setStartDate(date);
+                      setValidationErrors(prev => {
+                        const newErrors = { ...prev };
+                        delete newErrors.startDate;
+                        return newErrors;
+                      });
+                    }}
+                    className="form-control full-width"
+                    placeholderText="Select start date"
+                    id="start-date"
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    popperProps={{
+                      positionFixed: true,
+                      modifiers: [
+                        {
+                          name: 'preventOverflow',
+                          options: {
+                            boundary: 'viewport'
+                          }
+                        }
+                      ]
+                    }}
                   />
-                  {validationErrors.category && (
-                    <div className="text-danger">{validationErrors.category}</div>
+                  {validationErrors.startDate && (
+                    <div className="text-danger">{validationErrors.startDate}</div>
                   )}
                 </CCol>
-              )}
-              <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
-                {['generate all report', 'all accounts access'].some((permission) =>
-                  userData?.permissions?.includes(permission),
-                ) && (
-                  <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
-                    Generate Report
-                  </CButton>
-                )}
-              </CCol>
-            </CRow>
-
-            {(reportType?.value === 'main_orders_report' ||
-              reportType?.value === 'orders_report' ||
-              reportType?.value === 'driver_allocation') && (
-              <CRow className="mt-3">
-                <CCol xs={12}>
-                  <CFormLabel htmlFor="date-type" style={{ fontWeight: 'bold' }}>
-                    Date Type
-                  </CFormLabel>
+                <CCol xs={12} sm={6} lg={3}>
+                  <CFormLabel htmlFor="end-date">End Date</CFormLabel>
                   <br />
-                  <CFormCheck
-                    inline
-                    type="radio"
-                    id="service_date"
-                    name="dateType"
-                    value="service_date"
-                    label="Service Date"
-                    checked={dateType === 'service_date'}
-                    onChange={() => setDateType('service_date')}
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => {
+                      setEndDate(date)
+                      setValidationErrors(prev => {
+                        const newErrors = { ...prev }
+                        delete newErrors.endDate
+                        return newErrors
+                      })
+                    }}
+                    className="form-control full-width"
+                    placeholderText="Select end date"
+                    id="end-date"
+                    minDate={startDate}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    popperProps={{
+                      positionFixed: true,
+                      modifiers: [
+                        {
+                          name: 'preventOverflow',
+                          options: {
+                            boundary: 'viewport'
+                          }
+                        }
+                      ]
+                    }}
                   />
-                  <CFormCheck
-                    inline
-                    type="radio"
-                    id="booking_date"
-                    name="dateType"
-                    value="booking_date"
-                    label="Booking Date"
-                    checked={dateType === 'booking_date'}
-                    onChange={() => setDateType('booking_date')}
+                  {validationErrors.endDate && (
+                    <div className="text-danger">{validationErrors.endDate}</div>
+                  )}
+                </CCol>
+                <CCol xs={12} sm={6} lg={2}>
+                  <CFormLabel htmlFor="report-type">Report Type</CFormLabel>
+                  <br />
+                  <Select
+                    options={reportTypes}
+                    value={reportType}
+                    onChange={(selectedOption) => {
+                      setReportType(selectedOption)
+                      setCategory([])
+                      setValidationErrors(prev => {
+                        const newErrors = { ...prev }
+                        delete newErrors.reportType
+                        return newErrors
+                      })
+                    }}
+                    placeholder="Select a Report Type"
+                    id="report-type"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: base => ({ ...base, zIndex: 9999 })
+                    }}
                   />
+                  {validationErrors.reportType && (
+                    <div className="text-danger">{validationErrors.reportType}</div>
+                  )}
+                </CCol>
+                {reportType?.value !== 'main_orders_report' && (
+                  <CCol xs={12} sm={6} lg={2}>
+                    <CFormLabel htmlFor="category">Category</CFormLabel>
+                    <br />
+                    <Select
+                      options={reportType?.value === 'chats_report' ? chatCategories : categories}
+                      value={category}
+                      onChange={(selectedOption) => {
+                        setCategory(selectedOption)
+                        setValidationErrors(prev => {
+                          const newErrors = { ...prev }
+                          delete newErrors.category
+                          return newErrors
+                        })
+                      }}
+                      placeholder="Select a category"
+                      id="category"
+                      isDisabled={reportType?.value == 'customer_report'}
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: base => ({ ...base, zIndex: 9999 })
+                      }}
+                    />
+                    {validationErrors.category && (
+                      <div className="text-danger">{validationErrors.category}</div>
+                    )}
+                  </CCol>
+                )}
+                <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
+                  {['generate all report', 'all accounts access'].some((permission) =>
+                    userData?.permissions?.includes(permission),
+                  ) && (
+                      <CButton color="dark" className="full-width" onClick={handleGenerateReport}>
+                        Generate Report
+                      </CButton>
+                    )}
                 </CCol>
               </CRow>
-            )}
-          </CCardBody>
-        </CCard>
-      </CCol>
 
-      {loading ? (
-        <LoaderPanel message="Report Data Fetching" />
-      ) : reportDataSet.length > 0 ? (
-        reportType?.value === 'main_orders_report' ? (
-          <MainOrderReport dataSet={reportDataSet} category={dateType} />
-        ) : reportType?.value === 'driver_allocation' ? (
-          <DriverAllocationData dataSet={reportDataSet} category={dateType} />
-        ) : // <p>Test</p>
-        reportType?.value === 'products_report' ? (
-          category.value == 3 ? (
-            <LifestylesCategoryData data={reportDataSet} />
-          ) : category.value == 1 || category.value == 2 ? (
-            <EssentialsCategoryData data={reportDataSet} category={category.value} />
-          ) : category.value == 5 ? (
-            <EducationCategoryData data={reportDataSet} />
-          ) : category.value == 4 ? (
-            <HotelsCategoryData data={reportDataSet} />
-          ) : null
-        ) : reportType.value === 'customer_report' ? (
-          <CustomersData dataSet={reportDataSet} category={category.value} />
-        ) : reportType?.value === 'chats_report' ? (
-          <ChatReportData dataSet={reportDataSet} category={category.value} />
-        ) : (
-          <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} dateType={dataSets.dateType} />
-        )
-      ) : dataEmptyState ? (
-        <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>
-      ) : null}
+              {(reportType?.value === 'main_orders_report' ||
+                reportType?.value === 'orders_report' ||
+                reportType?.value === 'driver_allocation') && (
+                  <CRow className="mt-3">
+                    <CCol xs={12}>
+                      <CFormLabel htmlFor="date-type" style={{ fontWeight: 'bold' }}>
+                        Date Type
+                      </CFormLabel>
+                      <br />
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        id="service_date"
+                        name="dateType"
+                        value="service_date"
+                        label="Service Date"
+                        checked={dateType === 'service_date'}
+                        onChange={() => setDateType('service_date')}
+                      />
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        id="booking_date"
+                        name="dateType"
+                        value="booking_date"
+                        label="Booking Date"
+                        checked={dateType === 'booking_date'}
+                        onChange={() => setDateType('booking_date')}
+                      />
+                    </CCol>
+                  </CRow>
+                )}
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </div>
+
+      {/* Report Content Container with lower z-index */}
+      <div className="report-content-container">
+        {loading ? (
+          <LoaderPanel message="Report Data Fetching" />
+        ) : reportDataSet.length > 0 ? (
+          reportType?.value === 'main_orders_report' ? (
+            <MainOrderReport dataSet={reportDataSet} category={dateType} />
+          ) : reportType?.value === 'driver_allocation' ? (
+            <DriverAllocationData dataSet={reportDataSet} category={dateType} />
+          ) : reportType?.value === 'products_report' ? (
+            category.value == 3 ? (
+              <LifestylesCategoryData data={reportDataSet} />
+            ) : category.value == 1 || category.value == 2 ? (
+              <EssentialsCategoryData data={reportDataSet} category={category.value} />
+            ) : category.value == 5 ? (
+              <EducationCategoryData data={reportDataSet} />
+            ) : category.value == 4 ? (
+              <HotelsCategoryData data={reportDataSet} />
+            ) : null
+          ) : reportType.value === 'customer_report' ? (
+            <CustomersData dataSet={reportDataSet} category={category.value} />
+          ) : reportType?.value === 'chats_report' ? (
+            <ChatReportData dataSet={reportDataSet} category={category.value} />
+          ) : (
+            <OrderCheckoutsReport dataSet={reportDataSet} category={category.value} dateType={dataSets.dateType} />
+          )
+        ) : dataEmptyState ? (
+          <h5 style={{ marginTop: 15 }}>Report Data is Empty</h5>
+        ) : null}
+      </div>
     </CContainer>
   )
 }

@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Formik, Field, Form } from 'formik'
 import * as Yup from 'yup'
 import { Editor } from 'react-draft-wysiwyg'
-import { EditorState } from 'draft-js'
+import { EditorState, ContentState } from 'draft-js'
 import { convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -42,6 +42,7 @@ const BlogMainPage = () => {
   const [submitting, setSubmitting] = useState(false)
   const { userData } = useContext(UserLoginContext);
   const [isLoading, setIsLoading] = useState(false)
+  const [hasVisibleContent, setHasVisibleContent] = useState(false)
 
   const styles = {
     formLabel: {
@@ -51,40 +52,16 @@ const BlogMainPage = () => {
     },
   }
 
-
-
-  // Custom link plugin
-  const linkPlugin = {
-    customLink: {
-      // This function adds the protocol if missing
-      addLink: (editorState, linkData) => {
-        let { url } = linkData;
-
-        // Check if URL has protocol, add https:// if missing
-        if (url && !/^https?:\/\//i.test(url)) {
-          url = 'https://' + url;
-        }
-
-        const contentState = editorState.getCurrentContent();
-        const contentStateWithEntity = contentState.createEntity(
-          'LINK',
-          'MUTABLE',
-          { url, targetOption: '_blank' }
-        );
-
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-        const newEditorState = EditorState.set(editorState, {
-          currentContent: contentStateWithEntity
-        });
-
-        return RichUtils.toggleLink(
-          newEditorState,
-          newEditorState.getSelection(),
-          entityKey
-        );
-      }
-    }
-  };
+  // Check if editor has visible content (not just formatting)
+  useEffect(() => {
+    const contentState = editorState.getCurrentContent();
+    const plainText = contentState.getPlainText();
+    
+    // Check if there's actual visible text content (not just empty blocks or formatting)
+    const hasRealContent = plainText.trim().length > 0;
+    
+    setHasVisibleContent(hasRealContent);
+  }, [editorState]);
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files)
@@ -144,10 +121,13 @@ const BlogMainPage = () => {
       errors.push('Title is required');
     }
 
-    // const contentHtml2 = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    // if (!contentHtml2 || contentHtml2 === '<p></p>') {
-    //   errors.push('Content is required');
-    // }
+    const contentHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    const contentText = editorState.getCurrentContent().getPlainText();
+    
+    // More accurate content validation
+    if (!contentText.trim() || contentHtml === '<p></p>' || contentHtml === '<p><br></p>') {
+      errors.push('Content is required');
+    }
 
     if (!values.summary) {
       errors.push('Summary is required');
@@ -168,9 +148,7 @@ const BlogMainPage = () => {
       return;
     }
 
-    const contentHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const formData = new FormData()
-    console.log("formData", formData)
     formData.append('title', values.title)
     formData.append('description', contentHtml)
     formData.append('summary', values.summary)
@@ -226,6 +204,34 @@ const BlogMainPage = () => {
 
   return (
     <CContainer>
+      <style>
+        {`
+          .hide-toolbar .rdw-editor-toolbar {
+            display: none !important;
+          }
+          .editor-wrapper {
+            position: relative;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+          }
+          .custom-placeholder {
+            position: absolute;
+            top: 45px;
+            left: 15px;
+            color: #6c757d;
+            pointer-events: none;
+            z-index: 1;
+          }
+          .has-content .custom-placeholder {
+            display: none;
+          }
+          .rdw-editor-main {
+            min-height: 200px;
+            padding: 12px;
+          }
+        `}
+      </style>
+      
       {isLoading ? <div className="d-flex justify-content-center"><CSpinner style={{ marginTop: "15%" }} /></div> :
         <div className="container-fluid">
           <div className="row justify-content-center">
@@ -308,29 +314,22 @@ const BlogMainPage = () => {
                           <label style={styles.formLabel} className="form-label">
                             Content*
                           </label>
-                          <Editor
-                        editorState={editorState}
-                        onEditorStateChange={handleEditorChange}
-                        wrapperClassName="border rounded"
-                        editorClassName="px-3 min-h-[200px]"
-                        toolbar={{
-                          options: ['inline', 'blockType', 'list', 'emoji'],
-                        }}
-                        placeholder="Write your blog content here..."
-                        required
-                      />
-                          {/* <Editor
-                            editorState={editorState}
-                            onEditorStateChange={handleEditorChange}
-                            wrapperClassName="border rounded"
-                            editorClassName="px-3 min-h-[200px]"
-                            toolbar={{
-                              options: ['inline', 'blockType', 'list', 'emoji'],
-                              
-                            }}
-                            plugins={[linkPlugin]}
-                            placeholder="Write your blog content here..."
-                          /> */}
+                          <div className={`editor-wrapper ${hasVisibleContent ? 'has-content' : 'hide-toolbar'}`}>
+                            <Editor
+                              editorState={editorState}
+                              onEditorStateChange={handleEditorChange}
+                              wrapperClassName=""
+                              editorClassName=""
+                              toolbar={{
+                                options: ['inline', 'blockType', 'list', 'emoji'],
+                              }}
+                            />
+                            {!hasVisibleContent && (
+                              <div className="custom-placeholder">
+                                Write your blog content here...
+                              </div>
+                            )}
+                          </div>
                         </div>
 
                         <div className="mb-3">
@@ -342,7 +341,7 @@ const BlogMainPage = () => {
                               type="button"
                               className="btn btn-outline-primary"
                               onClick={() => summarize(setFieldValue)}
-                              disabled={generatingSummery || submitting}
+                              disabled={generatingSummery || submitting || !hasVisibleContent}
                             >
                               {generatingSummery ? (
                                 <>
@@ -418,7 +417,6 @@ const BlogMainPage = () => {
         </div>
       }
     </CContainer>
-
   )
 }
 

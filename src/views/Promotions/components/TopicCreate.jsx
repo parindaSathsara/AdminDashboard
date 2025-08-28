@@ -100,7 +100,7 @@ function TopicCreate({ onTopicCreated }) {
             <CCol md={12} className="mb-4">
               <CFormSelect
                 name="topic"
-                label="Select Topic"
+                label="Select Topic *"
                 value={formData.topic}
                 onChange={handleChange}
                 required
@@ -123,7 +123,7 @@ function TopicCreate({ onTopicCreated }) {
             <CCol className="mb-3">
               <CFormTextarea
                 name="description"
-                label="Remarks"
+                label="Remarks *"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Enter detailed description"
