@@ -46,6 +46,7 @@ import {
   cilX,
   cilArrowTop,
   cilArrowBottom,
+  cilSwapVertical,
 } from '@coreui/icons'
 
 const CustomerJourney = () => {
@@ -64,7 +65,7 @@ const CustomerJourney = () => {
     page = 1,
     per_page = 10,
     order_by = '',
-    order_by_direction = 'asc',
+    order_by_direction = 'desc',
   ) => {
     try {
       setLoading(true)
@@ -78,6 +79,7 @@ const CustomerJourney = () => {
         params.order_by = order_by
         params.order_by_direction = order_by_direction
       }
+      console.log('Params', params)
 
       const response = await axios.get(`customer/analytics/all`, {
         params: params,
@@ -195,10 +197,24 @@ const CustomerJourney = () => {
 
   // Get sort icon for column
   const getSortIcon = (column) => {
-    if (sortBy !== column) {
+    const sortableColumns = [
+      'session_count',
+      'total_screens_visited',
+      'total_session_duration',
+      'last_visit',
+      'user_id',
+    ]
+
+    if (!sortableColumns.includes(column)) {
       return null
     }
-    return sortDirection === 'asc' ? cilArrowTop : cilArrowBottom
+
+    if (sortBy === column) {
+      return sortDirection === 'asc' ? cilArrowTop : cilArrowBottom
+    }
+
+    // Show both-way icon for sortable columns by default
+    return cilSwapVertical
   }
 
   if (loading) {
@@ -351,9 +367,7 @@ const CustomerJourney = () => {
                     >
                       <div className="d-flex align-items-center">
                         Customer
-                        {getSortIcon('user_id') && (
-                          <CIcon icon={getSortIcon('user_id')} className="ms-1" size="sm" />
-                        )}
+                        <CIcon icon={getSortIcon('user_id')} className="ms-1" size="sm" />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell
@@ -362,9 +376,7 @@ const CustomerJourney = () => {
                     >
                       <div className="d-flex align-items-center">
                         Sessions
-                        {getSortIcon('session_count') && (
-                          <CIcon icon={getSortIcon('session_count')} className="ms-1" size="sm" />
-                        )}
+                        <CIcon icon={getSortIcon('session_count')} className="ms-1" size="sm" />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell
@@ -373,13 +385,11 @@ const CustomerJourney = () => {
                     >
                       <div className="d-flex align-items-center">
                         Screens Visited
-                        {getSortIcon('total_screens_visited') && (
-                          <CIcon
-                            icon={getSortIcon('total_screens_visited')}
-                            className="ms-1"
-                            size="sm"
-                          />
-                        )}
+                        <CIcon
+                          icon={getSortIcon('total_screens_visited')}
+                          className="ms-1"
+                          size="sm"
+                        />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell
@@ -388,13 +398,11 @@ const CustomerJourney = () => {
                     >
                       <div className="d-flex align-items-center">
                         Total Duration
-                        {getSortIcon('total_session_duration') && (
-                          <CIcon
-                            icon={getSortIcon('total_session_duration')}
-                            className="ms-1"
-                            size="sm"
-                          />
-                        )}
+                        <CIcon
+                          icon={getSortIcon('total_session_duration')}
+                          className="ms-1"
+                          size="sm"
+                        />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell>Avg Session</CTableHeaderCell>
@@ -405,9 +413,7 @@ const CustomerJourney = () => {
                     >
                       <div className="d-flex align-items-center">
                         Last Visit
-                        {getSortIcon('last_visit') && (
-                          <CIcon icon={getSortIcon('last_visit')} className="ms-1" size="sm" />
-                        )}
+                        <CIcon icon={getSortIcon('last_visit')} className="ms-1" size="sm" />
                       </div>
                     </CTableHeaderCell>
                     <CTableHeaderCell>Actions</CTableHeaderCell>
