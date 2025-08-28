@@ -921,7 +921,7 @@ const CustomerJourney = () => {
                                     <CBadge
                                       key={routeIndex}
                                       color="outline-primary"
-                                      className="me-1 mb-1"
+                                      className="me-1 mb-1 text-dark"
                                     >
                                       {route.route_name} ({route.visits})
                                     </CBadge>
