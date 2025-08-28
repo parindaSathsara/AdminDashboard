@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 import VervotechTabs from './VervotechTabs'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faGear,
@@ -48,6 +49,7 @@ const HotelInitialMapping = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [creating, setCreating] = useState(false)
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
   const [total, setTotal] = useState(0)
@@ -76,18 +78,36 @@ const HotelInitialMapping = () => {
     fetchList()
   }, [])
 
-  const onCreate = (e) => {
+  const onCreate = async (e) => {
     e.preventDefault()
     if (!provider) return
+    try {
+      setCreating(true)
+      // call create endpoint
+      const res = await axios.post('vervotech/mapping/create', { provider })
+      // show success swal
+      await Swal.fire({
+        icon: 'success',
+        title: 'Created',
+        text: 'Initial mapping created successfully',
+        timer: 1800,
+        showConfirmButton: false,
+      })
 
-    axios
-      .post('vervotech/mapping/create', { provider })
-      .then(() => {
-        console.log('Create initial mapping with provider:', provider)
+      // refresh list to include the newly created mapping
+      await fetchList()
+      // optionally reset provider selection
+      setProvider('')
+    } catch (err) {
+      console.error('Error creating mapping:', err)
+      Swal.fire({
+        icon: 'error',
+        title: 'Create failed',
+        text: err?.response?.data?.message || 'Could not create mapping',
       })
-      .catch((error) => {
-        console.error('Error creating mapping:', error)
-      })
+    } finally {
+      setCreating(false)
+    }
   }
 
   // helpers
