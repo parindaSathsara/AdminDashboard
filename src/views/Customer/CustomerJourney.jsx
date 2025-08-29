@@ -912,13 +912,16 @@ const CustomerJourney = () => {
                       <div className="rounded-circle bg-info bg-opacity-10 p-3 mb-3">
                         <CIcon icon={cilCalendar} size="xl" className="text-info" />
                       </div>
-                      <div className="fs-5 fw-bold text-info mb-1">
-                        {new Date(selectedCustomerDetails.stats.first_visit).toLocaleDateString()}
+                      <div className="fs-6 fw-bold text-center text-info mb-1">
+                        {new Date(selectedCustomerDetails.stats.first_visit).toLocaleDateString()}{' '}
+                        <br />
+                        {new Date(selectedCustomerDetails.stats.first_visit).toLocaleTimeString()}
                       </div>
                       <div className="text-muted mb-2">First Visit</div>
-                      <CBadge color="info" className="badge-subtle">
+                      <CBadge color="info" className="badge-subtle mt-auto">
                         Last:{' '}
-                        {new Date(selectedCustomerDetails.stats.last_visit).toLocaleDateString()}
+                        {new Date(selectedCustomerDetails.stats.last_visit).toLocaleDateString()}{' '}
+                        {new Date(selectedCustomerDetails.stats.last_visit).toLocaleTimeString()}
                       </CBadge>
                     </CCardBody>
                   </CCard>

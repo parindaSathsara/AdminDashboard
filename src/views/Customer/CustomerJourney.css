@@ -75,8 +75,9 @@
 
 .badge-subtle {
   background-color: #e9ecef;
-  color: #495057;
+  /* color: #495057; */
   font-weight: 500;
+  color: white;
 }
 
 .progress-thin {
