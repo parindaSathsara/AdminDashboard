@@ -301,23 +301,25 @@ const CustomerJourney = () => {
         <CCol>
           <CCard className="customer-details-card border-0 shadow-sm">
             <CCardBody className="p-4">
-              <div className="d-flex justify-content-between align-items-start">
-                <div className="d-flex">
-                  <div className="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center">
+                  <div className="rounded-circle bg-primary bg-opacity-10 p-3 me-3 d-flex align-items-center justify-content-center">
                     <CIcon icon={cilChartPie} size="xl" className="text-primary" />
                   </div>
                   <div>
-                    <h3 className="mb-1">Customer Journey Analytics</h3>
-                    <div className="text-muted">
+                    <h3 className="mb-1 text-dark fw-bold">Customer Journey Analytics</h3>
+                    <div className="text-muted fs-6">
                       Track customer engagement and behavior patterns across your platform
                     </div>
                   </div>
                 </div>
                 <div className="d-flex gap-3 align-items-center">
-                  <div className="border-end pe-3">
-                    <div className="text-muted small mb-1">Showing</div>
+                  <div className="d-flex align-items-center border-end pe-3">
+                    <div className="me-2">
+                      <div className="text-muted small">Showing</div>
+                    </div>
                     <CDropdown>
-                      <CDropdownToggle color="light" className="fw-medium">
+                      <CDropdownToggle color="light" className="fw-medium d-flex align-items-center">
                         <CIcon icon={cilSettings} className="me-2 text-primary" />
                         {perPage} entries
                       </CDropdownToggle>
@@ -339,7 +341,7 @@ const CustomerJourney = () => {
                   </div>
                   <CButton
                     color="primary"
-                    className="px-4"
+                    className="px-4 d-flex align-items-center"
                     onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
                   >
                     <CIcon icon={cilReload} className="me-2" />
