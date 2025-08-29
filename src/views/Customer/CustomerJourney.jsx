@@ -319,7 +319,10 @@ const CustomerJourney = () => {
                       <div className="text-muted small">Showing</div>
                     </div>
                     <CDropdown>
-                      <CDropdownToggle color="light" className="fw-medium d-flex align-items-center">
+                      <CDropdownToggle
+                        color="light"
+                        className="fw-medium d-flex align-items-center"
+                      >
                         <CIcon icon={cilSettings} className="me-2 text-primary" />
                         {perPage} entries
                       </CDropdownToggle>
