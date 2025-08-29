@@ -380,8 +380,7 @@ const CustomerJourney = () => {
                 <CIcon icon={cilScreenDesktop} size="xl" className="text-success" />
               </div>
               <div className="fs-2 fw-bold text-success mb-1">
-                {analyticsData?.data?.reduce((sum, customer) => sum + customer.session_count, 0) ||
-                  0}
+                {analyticsData?.total_sessions || 0}
               </div>
               <div className="text-muted mb-2">Total Sessions</div>
               <CBadge color="success" className="badge-subtle">
@@ -397,10 +396,7 @@ const CustomerJourney = () => {
                 <CIcon icon={cilScreenDesktop} size="xl" className="text-warning" />
               </div>
               <div className="fs-2 fw-bold text-warning mb-1">
-                {analyticsData?.data?.reduce(
-                  (sum, customer) => sum + parseInt(customer.total_screens_visited),
-                  0,
-                ) || 0}
+                {analyticsData?.total_screens_visited || 0}
               </div>
               <div className="text-muted mb-2">Screens Visited</div>
               <CBadge color="warning" className="badge-subtle">
@@ -416,12 +412,7 @@ const CustomerJourney = () => {
                 <CIcon icon={cilClock} size="xl" className="text-info" />
               </div>
               <div className="fs-2 fw-bold text-info mb-1">
-                {formatDuration(
-                  analyticsData?.data?.reduce(
-                    (sum, customer) => sum + parseInt(customer.total_session_duration),
-                    0,
-                  ) || 0,
-                )}
+                {formatDuration(analyticsData?.total_session_duration || 0)}
               </div>
               <div className="text-muted mb-2">Total Time</div>
               <CBadge color="info" className="badge-subtle">
