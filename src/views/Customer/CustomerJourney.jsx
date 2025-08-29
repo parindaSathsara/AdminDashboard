@@ -61,8 +61,17 @@ const CustomerJourney = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null)
   const [selectedCustomerDetails, setSelectedCustomerDetails] = useState(null)
   const [modalLoading, setModalLoading] = useState(false)
+  const [imageError, setImageError] = useState({})
   const [sortBy, setSortBy] = useState('')
   const [sortDirection, setSortDirection] = useState('asc')
+
+  // Handle image load error
+  const handleImageError = (customerId) => {
+    setImageError((prev) => ({
+      ...prev,
+      [customerId]: true,
+    }))
+  }
 
   // Fetch customer analytics data
   const fetchAnalyticsData = async (
@@ -191,6 +200,7 @@ const CustomerJourney = () => {
     setSelectedCustomer(null)
     setSelectedCustomerDetails(null)
     setModalLoading(false)
+    setImageError({}) // Reset image errors when modal closes
   }
 
   // Handle column sorting
@@ -728,8 +738,9 @@ const CustomerJourney = () => {
                   <CCard className="customer-details-card border-0">
                     <CCardBody className="p-4">
                       <div className="d-flex align-items-center">
-                        <div className="avatar-wrapper me-4">
-                          {selectedCustomerDetails.customer.customer_profilepic ? (
+                        <div className="avatar-wrapper me-4" style={{ position: 'relative' }}>
+                          {selectedCustomerDetails.customer.customer_profilepic &&
+                          !imageError[selectedCustomerDetails.customer.customer_id] ? (
                             <img
                               src={selectedCustomerDetails.customer.customer_profilepic}
                               alt={selectedCustomerDetails.customer.customer_fname}
@@ -741,30 +752,38 @@ const CustomerJourney = () => {
                                 border: '4px solid #fff',
                                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                               }}
-                              onError={(e) => {
-                                e.target.style.display = 'none'
-                                e.target.nextSibling.style.display = 'flex'
-                              }}
+                              onError={() =>
+                                handleImageError(selectedCustomerDetails.customer.customer_id)
+                              }
                             />
-                          ) : null}
-                          <div
-                            className="avatar-initial rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                            style={{
-                              display: selectedCustomerDetails.customer.customer_profilepic
-                                ? 'none'
-                                : 'flex',
-                              width: '100px',
-                              height: '100px',
-                              fontSize: '40px',
-                              fontWeight: '600',
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            }}
-                          >
-                            {selectedCustomerDetails.customer.customer_fname.charAt(0)}
-                          </div>
+                          ) : (
+                            <div
+                              className="avatar-initial rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                              style={{
+                                width: '100px',
+                                height: '100px',
+                                fontSize: '40px',
+                                fontWeight: '600',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                              }}
+                            >
+                              {selectedCustomerDetails.customer.customer_fname
+                                ? selectedCustomerDetails.customer.customer_fname
+                                    .charAt(0)
+                                    .toUpperCase()
+                                : '?'}
+                            </div>
+                          )}
                           <div
                             className="avatar-status"
                             style={{
+                              position: 'absolute',
+                              bottom: '8px',
+                              right: '8px',
+                              width: '20px',
+                              height: '20px',
+                              borderRadius: '50%',
+                              border: '3px solid white',
                               backgroundColor:
                                 selectedCustomerDetails.customer.customer_status === 'Active'
                                   ? '#2eb85c'
