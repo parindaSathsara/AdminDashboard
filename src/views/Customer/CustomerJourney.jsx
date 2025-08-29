@@ -426,217 +426,284 @@ const CustomerJourney = () => {
       {/* Customer Analytics Table */}
       <CRow>
         <CCol>
-          <CCard className="customer-details-card border-0 shadow-sm">
-            <CCardHeader className="border-bottom bg-transparent p-4">
+          <CCard className="premium-analytics-table border-0 shadow-lg">
+            <CCardHeader className="border-0 p-4">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                  <div className="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
-                    <CIcon icon={cilUser} className="text-primary" />
+                  <div>
+                    <h4 className="mb-1 text-dark fw-bold">Customer Analytics Details</h4>
+                    <div className="text-dark text-opacity-90 fs-6">
+                      Comprehensive customer behavior insights and engagement metrics
+                    </div>
                   </div>
-                  <h5 className="mb-0">Customer Analytics Details</h5>
                 </div>
-                <CBadge color="primary" className="badge-subtle px-3">
-                  {analyticsData?.data?.length || 0} Customers
-                </CBadge>
               </div>
             </CCardHeader>
             <CCardBody className="p-0">
-              <CTable hover responsive className="align-middle mb-0">
-                <CTableHead className="bg-light border-bottom">
-                  <CTableRow>
-                    <CTableHeaderCell
-                      className="px-4 py-3"
-                      style={{ cursor: 'pointer', userSelect: 'none' }}
-                      onClick={() => handleSort('user_id')}
-                    >
-                      <div className="d-flex align-items-center">
-                        <span>Customer</span>
-                        <CIcon icon={getSortIcon('user_id')} className="ms-2" size="sm" />
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell
-                      className="py-3"
-                      style={{ cursor: 'pointer', userSelect: 'none' }}
-                      onClick={() => handleSort('session_count')}
-                    >
-                      <div className="d-flex align-items-center">
-                        <span>Sessions</span>
-                        <CIcon icon={getSortIcon('session_count')} className="ms-2" size="sm" />
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell
-                      className="py-3"
-                      style={{ cursor: 'pointer', userSelect: 'none' }}
-                      onClick={() => handleSort('total_screens_visited')}
-                    >
-                      <div className="d-flex align-items-center">
-                        <span>Screens Visited</span>
-                        <CIcon
-                          icon={getSortIcon('total_screens_visited')}
-                          className="ms-2"
-                          size="sm"
-                        />
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell
-                      className="py-3"
-                      style={{ cursor: 'pointer', userSelect: 'none' }}
-                      onClick={() => handleSort('total_session_duration')}
-                    >
-                      <div className="d-flex align-items-center">
-                        <span>Total Duration</span>
-                        <CIcon
-                          icon={getSortIcon('total_session_duration')}
-                          className="ms-2"
-                          size="sm"
-                        />
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="py-3">
-                      <div className="d-flex align-items-center">
-                        <span>Avg Session</span>
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="py-3">
-                      <div className="d-flex align-items-center">
-                        <span>Engagement</span>
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell
-                      className="py-3"
-                      style={{ cursor: 'pointer', userSelect: 'none' }}
-                      onClick={() => handleSort('last_visit')}
-                    >
-                      <div className="d-flex align-items-center">
-                        <span>Last Visit</span>
-                        <CIcon icon={getSortIcon('last_visit')} className="ms-2" size="sm" />
-                      </div>
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="py-3">
-                      <div className="d-flex align-items-center">
-                        <span>Actions</span>
-                      </div>
-                    </CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {analyticsData?.data?.map((customer) => {
-                    const engagement = getEngagementLevel(
-                      customer.session_count,
-                      parseInt(customer.total_session_duration),
-                    )
-                    const avgSessionDuration = Math.round(
-                      parseInt(customer.total_session_duration) / customer.session_count,
-                    )
+              <div className="table-responsive">
+                <CTable className="premium-table align-middle mb-0">
+                  <CTableHead>
+                    <CTableRow className="premium-table-header">
+                      <CTableHeaderCell
+                        className="premium-table-th px-4 py-4"
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => handleSort('user_id')}
+                      >
+                        <div className="d-flex align-items-center">
+                          <div className="premium-sort-label">
+                            <CIcon icon={cilUser} className="me-2 text-primary" size="sm" />
+                            <span className="fw-bold text-dark">Customer Profile</span>
+                          </div>
+                          <div className="premium-sort-icon ms-auto">
+                            <CIcon
+                              icon={getSortIcon('user_id')}
+                              className="text-primary"
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell
+                        className="premium-table-th py-4 text-center"
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => handleSort('session_count')}
+                      >
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div className="premium-sort-label">
+                            <CIcon
+                              icon={cilScreenDesktop}
+                              className="me-2 text-success"
+                              size="sm"
+                            />
+                            <span className="fw-bold text-dark">Sessions</span>
+                          </div>
+                          <div className="premium-sort-icon ms-2">
+                            <CIcon
+                              icon={getSortIcon('session_count')}
+                              className="text-success"
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell
+                        className="premium-table-th py-4 text-center"
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => handleSort('total_screens_visited')}
+                      >
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div className="premium-sort-label">
+                            <CIcon icon={cilScreenDesktop} className="me-2 text-info" size="sm" />
+                            <span className="fw-bold text-dark">Page Views</span>
+                          </div>
+                          <div className="premium-sort-icon ms-2">
+                            <CIcon
+                              icon={getSortIcon('total_screens_visited')}
+                              className="text-info"
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell
+                        className="premium-table-th py-4 text-center"
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => handleSort('total_session_duration')}
+                      >
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div className="premium-sort-label">
+                            <CIcon icon={cilClock} className="me-2 text-warning" size="sm" />
+                            <span className="fw-bold text-dark">Total Time</span>
+                          </div>
+                          <div className="premium-sort-icon ms-2">
+                            <CIcon
+                              icon={getSortIcon('total_session_duration')}
+                              className="text-warning"
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell className="premium-table-th py-4 text-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <CIcon icon={cilClock} className="me-2 text-secondary" size="sm" />
+                          <span className="fw-bold text-dark">Avg Session</span>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell className="premium-table-th py-4 text-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <CIcon icon={cilChartPie} className="me-2 text-purple" size="sm" />
+                          <span className="fw-bold text-dark">Engagement Level</span>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell
+                        className="premium-table-th py-4 text-center"
+                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => handleSort('last_visit')}
+                      >
+                        <div className="d-flex align-items-center justify-content-center">
+                          <div className="premium-sort-label">
+                            <CIcon icon={cilCalendar} className="me-2 text-danger" size="sm" />
+                            <span className="fw-bold text-dark">Last Activity</span>
+                          </div>
+                          <div className="premium-sort-icon ms-2">
+                            <CIcon
+                              icon={getSortIcon('last_visit')}
+                              className="text-danger"
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      </CTableHeaderCell>
+                      <CTableHeaderCell className="premium-table-th py-4 text-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <CIcon icon={cilSettings} className="me-2 text-dark" size="sm" />
+                          <span className="fw-bold text-dark">Actions</span>
+                        </div>
+                      </CTableHeaderCell>
+                    </CTableRow>
+                  </CTableHead>
+                  <CTableBody>
+                    {analyticsData?.data?.map((customer, index) => {
+                      const engagement = getEngagementLevel(
+                        customer.session_count,
+                        parseInt(customer.total_session_duration),
+                      )
+                      const avgSessionDuration = Math.round(
+                        parseInt(customer.total_session_duration) / customer.session_count,
+                      )
 
-                    return (
-                      <CTableRow key={customer.user_id}>
-                        <CTableDataCell>
-                          <div className="d-flex align-items-center">
-                            <div className="avatar avatar-md me-3">
-                              {customer.profile_picture ? (
-                                <img
-                                  src={customer.profile_picture}
-                                  alt={customer.user_name}
-                                  className="avatar-img rounded-circle"
+                      return (
+                        <CTableRow key={customer.user_id} className="premium-table-row">
+                          <CTableDataCell className="px-4 py-4">
+                            <div className="d-flex align-items-center">
+                              <div className="premium-avatar-wrapper me-3">
+                                {customer.profile_picture ? (
+                                  <img
+                                    src={customer.profile_picture}
+                                    alt={customer.user_name}
+                                    className="premium-avatar-img"
+                                    onError={(e) => {
+                                      e.target.style.display = 'none'
+                                      e.target.nextSibling.style.display = 'flex'
+                                    }}
+                                  />
+                                ) : null}
+                                <div
+                                  className="premium-avatar-initial"
                                   style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    objectFit: 'cover',
-                                    border: '2px solid #e4e4e7',
+                                    display: customer.profile_picture ? 'none' : 'flex',
                                   }}
-                                  onError={(e) => {
-                                    e.target.style.display = 'none'
-                                    e.target.nextSibling.style.display = 'flex'
-                                  }}
-                                />
-                              ) : null}
-                              <div
-                                className="avatar-initial rounded-circle bg-primary text-white"
-                                style={{
-                                  display: customer.profile_picture ? 'none' : 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  width: '40px',
-                                  height: '40px',
-                                  fontSize: '16px',
-                                  fontWeight: '600',
-                                }}
-                              >
-                                {customer.user_name.charAt(0)}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="fw-semibold">{customer.user_name}</div>
-                              <div className="text-muted small">ID: {customer.user_id}</div>
-                              {customer.email && (
-                                <div className="text-muted small d-flex align-items-center mt-1">
-                                  <CIcon icon={cilEnvelopeClosed} size="sm" className="me-1" />
-                                  <span className="text-truncate" style={{ maxWidth: '200px' }}>
-                                    {customer.email}
-                                  </span>
+                                >
+                                  {customer.user_name.charAt(0).toUpperCase()}
                                 </div>
-                              )}
-                            </div>
-                          </div>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CBadge color="info" shape="rounded-pill">
-                            {customer.session_count}
-                          </CBadge>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <span className="fw-semibold">{customer.total_screens_visited}</span>
-                          <div className="text-muted small">
-                            {Math.round(customer.total_screens_visited / customer.session_count)}{' '}
-                            per session
-                          </div>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <span className="fw-semibold">
-                            {formatDuration(parseInt(customer.total_session_duration))}
-                          </span>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <span className="fw-semibold">{formatDuration(avgSessionDuration)}</span>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <div className="mb-1">
-                            <CBadge color={engagement.color}>{engagement.level}</CBadge>
-                          </div>
-                          <CProgress height={4}>
-                            <CProgressBar color={engagement.color} value={engagement.percentage} />
-                          </CProgress>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <div className="d-flex align-items-center">
-                            <CIcon icon={cilCalendar} className="me-1 text-muted" />
-                            <div>
-                              <div className="small">
-                                {new Date(customer.last_visit).toLocaleDateString()}
+                                <div className="premium-avatar-status"></div>
                               </div>
-                              <div className="text-muted smaller">
+                              <div className="premium-customer-info">
+                                <div className="premium-customer-name">{customer.user_name}</div>
+                                <div className="premium-customer-id">ID: {customer.user_id}</div>
+                                {customer.email && (
+                                  <div className="premium-customer-email">
+                                    <CIcon icon={cilEnvelopeClosed} size="sm" className="me-1" />
+                                    <span className="text-truncate" style={{ maxWidth: '180px' }}>
+                                      {customer.email}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <div className="premium-metric-container">
+                              <div className="premium-metric-badge premium-sessions-badge">
+                                {customer.session_count}
+                              </div>
+                              <div className="premium-metric-label">Total Sessions</div>
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <div className="premium-metric-container">
+                              <div className="premium-metric-value">
+                                {customer.total_screens_visited}
+                              </div>
+                              <div className="premium-metric-sub">
+                                {Math.round(
+                                  customer.total_screens_visited / customer.session_count,
+                                )}{' '}
+                                per session
+                              </div>
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <div className="premium-metric-container">
+                              <div className="premium-metric-value premium-time-value">
+                                {formatDuration(parseInt(customer.total_session_duration))}
+                              </div>
+                              <div className="premium-metric-label">Total Duration</div>
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <div className="premium-metric-container">
+                              <div className="premium-metric-value premium-avg-value">
+                                {formatDuration(avgSessionDuration)}
+                              </div>
+                              <div className="premium-metric-label">Per Session</div>
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <div className="premium-engagement-container">
+                              <div className="premium-engagement-badge">
+                                <CBadge
+                                  color={engagement.color}
+                                  className="premium-engagement-level"
+                                >
+                                  {engagement.level}
+                                </CBadge>
+                              </div>
+                              <div className="premium-progress-container mt-2">
+                                <CProgress className="premium-progress" height={6}>
+                                  <CProgressBar
+                                    color={engagement.color}
+                                    value={engagement.percentage}
+                                    className="premium-progress-bar"
+                                  />
+                                </CProgress>
+                                <div className="premium-progress-label">
+                                  {engagement.percentage}% engaged
+                                </div>
+                              </div>
+                            </div>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <div className="premium-date-container">
+                              <div className="premium-date-value">
+                                {new Date(customer.last_visit).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })}
+                              </div>
+                              <div className="premium-date-relative">
                                 {getTimeSinceLastVisit(customer.last_visit)}
                               </div>
                             </div>
-                          </div>
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CButton
-                            color="primary"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleViewCustomer(customer)}
-                            title="View Customer Details"
-                          >
-                            <FontAwesomeIcon icon={faEye} />
-                          </CButton>
-                        </CTableDataCell>
-                      </CTableRow>
-                    )
-                  })}
-                </CTableBody>
-              </CTable>
+                          </CTableDataCell>
+                          <CTableDataCell className="py-4 text-center">
+                            <CButton
+                              className="premium-action-btn"
+                              onClick={() => handleViewCustomer(customer)}
+                              title="View Detailed Analytics"
+                            >
+                              <FontAwesomeIcon icon={faEye} className="me-2" />
+                              <span>View Details</span>
+                            </CButton>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )
+                    })}
+                  </CTableBody>
+                </CTable>
+              </div>
             </CCardBody>
           </CCard>
         </CCol>
