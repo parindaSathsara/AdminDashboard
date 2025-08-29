@@ -968,11 +968,13 @@ const CustomerJourney = () => {
                             <div className="d-flex gap-4 text-muted small">
                               <div>
                                 <CIcon icon={cilCalendar} size="sm" className="me-1 text-primary" />
-                                First: {new Date(device.first_seen).toLocaleDateString()}
+                                First: {new Date(device.first_seen).toLocaleDateString()}{' '}
+                                {new Date(device.first_seen).toLocaleTimeString()}
                               </div>
                               <div>
                                 <CIcon icon={cilClock} size="sm" className="me-1 text-primary" />
-                                Last: {new Date(device.last_seen).toLocaleDateString()}
+                                Last: {new Date(device.last_seen).toLocaleDateString()}{' '}
+                                {new Date(device.last_seen).toLocaleTimeString()}
                               </div>
                             </div>
                           </div>
