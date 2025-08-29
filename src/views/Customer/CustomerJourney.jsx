@@ -709,57 +709,98 @@ const CustomerJourney = () => {
         </CCol>
       </CRow>
 
-      {/* Pagination */}
+      {/* Premium Pagination */}
       {analyticsData && analyticsData.last_page > 1 && (
-        <CRow className="mt-4">
+        <CRow className="mt-1">
           <CCol>
-            <CCard className="customer-details-card border-0 shadow-sm">
-              <CCardBody className="p-3">
+            <CCard className="premium-pagination-card border-0">
+              <CCardBody className="p-4">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex align-items-center">
-                    <div className="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
-                      <CIcon icon={cilUser} className="text-primary" />
+                    <div className="premium-pagination-icon">
+                      <CIcon icon={cilUser} className="text-white" />
                     </div>
-                    <div className="text-muted">
-                      Showing <span className="fw-medium">{analyticsData.from}</span> to{' '}
-                      <span className="fw-medium">{analyticsData.to}</span> of{' '}
-                      <span className="fw-medium">{analyticsData.total}</span> results
+                    <div className="premium-pagination-info">
+                      <div className="premium-pagination-text">
+                        Showing{' '}
+                        <span className="premium-pagination-highlight">{analyticsData.from}</span>{' '}
+                        to <span className="premium-pagination-highlight">{analyticsData.to}</span>{' '}
+                        of{' '}
+                        <span className="premium-pagination-highlight">{analyticsData.total}</span>{' '}
+                        results
+                      </div>
+                      <div className="premium-pagination-subtext">
+                        Page {currentPage} of {analyticsData.last_page}
+                      </div>
                     </div>
                   </div>
-                  <CPagination className="mb-0">
+                  <CPagination className="premium-pagination mb-0">
                     <CPaginationItem
                       disabled={!analyticsData.prev_page_url}
                       onClick={() => handlePageChange(currentPage - 1)}
-                      className="px-3"
+                      className="premium-pagination-item premium-pagination-prev"
                     >
+                      <CIcon
+                        icon={cilArrowTop}
+                        className="me-2"
+                        style={{ transform: 'rotate(-90deg)' }}
+                      />
                       Previous
                     </CPaginationItem>
 
-                    {Array.from({ length: analyticsData.last_page }, (_, i) => i + 1).map(
-                      (page) => (
+                    {Array.from({ length: Math.min(analyticsData.last_page, 5) }, (_, i) => {
+                      let pageNum
+                      if (analyticsData.last_page <= 5) {
+                        pageNum = i + 1
+                      } else {
+                        const start = Math.max(1, currentPage - 2)
+                        const end = Math.min(analyticsData.last_page, start + 4)
+                        pageNum = start + i
+                        if (pageNum > end) return null
+                      }
+
+                      return (
                         <CPaginationItem
-                          key={page}
-                          active={page === currentPage}
-                          onClick={() => handlePageChange(page)}
-                          style={{
-                            backgroundColor:
-                              page === currentPage ? 'var(--cui-primary)' : 'transparent',
-                            color: page === currentPage ? '#fff' : 'var(--cui-primary)',
-                            borderColor: 'var(--cui-primary)',
-                            fontWeight: '500',
-                          }}
+                          key={pageNum}
+                          active={pageNum === currentPage}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`premium-pagination-item premium-pagination-number ${
+                            pageNum === currentPage ? 'premium-pagination-active' : ''
+                          }`}
                         >
-                          {page}
+                          {pageNum}
                         </CPaginationItem>
-                      ),
+                      )
+                    })}
+
+                    {analyticsData.last_page > 5 && currentPage < analyticsData.last_page - 2 && (
+                      <>
+                        <CPaginationItem
+                          className="premium-pagination-item premium-pagination-dots"
+                          disabled
+                        >
+                          ...
+                        </CPaginationItem>
+                        <CPaginationItem
+                          onClick={() => handlePageChange(analyticsData.last_page)}
+                          className="premium-pagination-item premium-pagination-number"
+                        >
+                          {analyticsData.last_page}
+                        </CPaginationItem>
+                      </>
                     )}
 
                     <CPaginationItem
                       disabled={!analyticsData.next_page_url}
                       onClick={() => handlePageChange(currentPage + 1)}
-                      className="px-3"
+                      className="premium-pagination-item premium-pagination-next"
                     >
                       Next
+                      <CIcon
+                        icon={cilArrowTop}
+                        className="ms-2"
+                        style={{ transform: 'rotate(90deg)' }}
+                      />
                     </CPaginationItem>
                   </CPagination>
                 </div>
