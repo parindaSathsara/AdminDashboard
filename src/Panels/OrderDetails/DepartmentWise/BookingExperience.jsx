@@ -950,241 +950,134 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
       },
     },
 
-    {
-      field: 'status',
-      title: 'Order Status',
-      align: 'left',
-      // hidden: rowData => console.log(rowData?.supplier_status, "Row Data"),
-      render: (e) => {
-        var status = e?.data?.status
-        var supplier_status = e?.data?.supplier_status
+  
 
-        console.log(e?.data, 'Provider Value is')
+{
+  field: 'status',
+  title: 'Order Status',
+  align: 'left',
+  render: (e) => {
+    var status = e?.data?.status;
+    var supplier_status = e?.data?.supplier_status;
+    var cancel_role = e?.data?.cancel_role;
+    var edit = e?.data?.edit_status;
 
-        var cancel_role = e?.data?.cancel_role
+    console.log('Cancellation role:', cancel_role); // Debug log
 
-        var edit = e?.data?.edit_status
+    if (edit == 'Edited') {
+      return (
+        <CCol style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <CBadge color="info" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: 14,
+            color: 'white',
+          }}>
+            <CCardText>Order Edit Requested</CCardText>
+          </CBadge>
+        </CCol>
+      );
+    } else {
+      // Handle different cancellation roles
+      if (cancel_role) {
+        let displayText = '';
+        let badgeColor = 'danger';
+        
+        switch (cancel_role.toLowerCase()) {
+          case 'supplier':
+            displayText = 'Supplier Cancelled';
+            break;
+          case 'admin':
+            displayText = 'Admin Cancelled';
+            break;
+          case 'customer':
+            displayText = 'Customer Cancelled';
+            break;
+          default:
+            displayText = `${cancel_role} Cancelled`;
+        }
+        
+        return (
+          <CCol style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            <CCardText color={badgeColor} style={{ 
+              fontSize: 13, 
+              fontWeight: '600', 
+              textAlign: 'center',
+              color: badgeColor === 'danger' ? '#dc3545' : '#ffc107'
+            }}>
+              {displayText}
+            </CCardText>
 
-        // console.log(edit, "Edit Coming Data Is")
+            <CButton color={badgeColor} style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: 14,
+              color: 'white',
+              marginTop: '5px'
+            }} onClick={() => handleMoreCancellationDetails(e)}>
+              <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
+              <CCardText>More Details</CCardText>
+            </CButton>
+          </CCol>
+        );
+      } else {
+        // Your existing code for non-cancelled orders
+        return (
+          <>
+            {e?.data?.Provider == 'hotelTbo' || e?.data?.Provider === 'hotelTboH' ? (
+              <CButton color="warning" style={{ fontSize: 11, color: 'white', marginBottom: 2 }} onClick={() => showBookingDataModal(e?.data)}>
+                View Booking Details
+              </CButton>
+            ) : ''}
 
-        if (edit == 'Edited') {
-          return (
-            <CCol
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <CBadge
-                color="info"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: 14,
-                  color: 'white',
-                }}
-              >
-                <CCardText>Order Edit Requested</CCardText>
-              </CBadge>
-            </CCol>
-          )
-        } else {
-          if (cancel_role == 'Supplier') {
-            return (
-              <CCol
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <CCardText
-                  color="danger"
-                  style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}
-                >
-                  Supplier Cancelled
-                </CCardText>
-
-                <CButton
-                  color="danger"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: 14,
-                    color: 'white',
-                  }}
-                  onClick={() => handleMoreCancellationDetails(e)}
-                >
-                  <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
-                  <CCardText>More Details</CCardText>
-                </CButton>
-              </CCol>
-            )
-          } else if (cancel_role == 'Admin') {
-            return (
-              <CCol
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <CCardText
-                  color="danger"
-                  style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}
-                >
-                  Admin Cancelled
-                </CCardText>
-
-                <CButton
-                  color="danger"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: 14,
-                    color: 'white',
-                  }}
-                  onClick={() => handleMoreCancellationDetails(e)}
-                >
-                  <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
-                  <CCardText>More Details</CCardText>
-                </CButton>
-              </CCol>
-            )
-          } else if (cancel_role == 'CUSTOMER') {
-            return (
-              <CCol
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <CCardText
-                  color="danger"
-                  style={{ fontSize: 13, fontWeight: '600', textAlign: 'center' }}
-                >
-                  Customer Cancelled
-                </CCardText>
-
-                <CButton
-                  color="danger"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: 14,
-                    color: 'white',
-                  }}
-                  onClick={() => handleMoreCancellationDetails(e)}
-                >
-                  <CIcon icon={cilInfo} size="xl" style={{ color: 'white', marginRight: 10 }} />
-                  <CCardText>More Details</CCardText>
-                </CButton>
-              </CCol>
-            )
-          } else {
-            return (
+            {e?.data?.checkoutID == clickedStatus && status == 'CustomerOrdered' ? (
+              <select className="form-select required" name="delivery_status" onChange={(value) => handleDelStatusChange(e, value)} value={selectedStatusCheckout} defaultValue={e?.data?.status}>
+                <option value="">Select</option>
+                <option value="Approved">Confirm</option>
+                <option value="Cancel">Cancel</option>
+              </select>
+            ) : (
               <>
-                {e?.data?.Provider == 'hotelTbo' || e?.data?.Provider === 'hotelTboH' ? (
-                  <CButton
-                    color="warning"
-                    style={{ fontSize: 11, color: 'white', marginBottom: 2 }}
-                    onClick={() => showBookingDataModal(e?.data)}
-                  >
-                    View Booking Details
-                  </CButton>
-                ) : (
-                  ''
-                )}
-
-                {e?.data?.checkoutID == clickedStatus && status == 'CustomerOrdered' ? (
-                  <select
-                    className="form-select required"
-                    name="delivery_status"
-                    onChange={(value) => handleDelStatusChange(e, value)}
-                    value={selectedStatusCheckout}
-                    defaultValue={e?.data?.status}
-                    // value={e?.data.status} // Set the selected value here
-                  >
-                    <option value="">Select</option>
-                    <option value="Approved">Confirm</option>
-                    <option value="Cancel">Cancel</option>
-                    {/* {e?.data?.Provider == "ratehawk" ? "": <option value="Cancel">Cancel</option>} */}
-                    {/* {e?.data?.Provider == "ratehawk" ? <option value="CancelRate">Cancel Ratehawk</option>:""} */}
-                    {/* {e?.data?.Provider !== 'ratehawk' && <option value="Cancel">Cancel</option>} */}
-
-                    {/* {e?.data?.Provider === 'ratehawk' && (
-                      <option value="CancelRate">Cancel Ratehawk</option>
-                    )} */}
-                  </select>
+                {status == 'Approved' ? (
+                  <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge>
+                ) : status == 'Completed' ? (
+                  <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
                 ) : (
                   <>
-                    {/* {status == "Approved" ?
-                      <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Admin Confirmed</CBadge> :
-                      status == "Completed" ?
-                        <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>Order Delivered</CBadge>
-
-                        :
-                        (["change booking order status"].some(permission => userData?.permissions?.includes(permission))) &&
-                        <CButton color={status == "Cancel" ? "danger" : "success"} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>Change Order Status</CButton>
-
-                    } */}
-                    {status == 'Approved' ? (
-                      <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>
-                        Admin Confirmed
-                      </CBadge>
-                    ) : status == 'Completed' ? (
-                      <CBadge color="success" style={{ padding: 8, fontSize: 12 }}>
-                        Order Delivered
-                      </CBadge>
-                    ) : (
+                    {['change booking order status'].some((permission) => userData?.permissions?.includes(permission)) && (
                       <>
-                        {['change booking order status'].some((permission) =>
-                          userData?.permissions?.includes(permission),
-                        ) && (
-                          <>
-                            {/* ✅ New Button Added Above */}
-                            {e?.data?.Provider == 'bridgify' || e?.data?.Provider == 'ratehawk2' ? (
-                              <CButton
-                                color="info"
-                                style={{ fontSize: 14, marginBottom: 8, color: 'white' }}
-                                onClick={() => handleModelShow(e?.data?.checkoutID)}
-                              >
-                                Booking Details
-                              </CButton>
-                            ) : (
-                              ''
-                            )}
-
-                            {/* ✅ Existing Button */}
-                            <CButton
-                              color={status == 'Cancel' ? 'danger' : 'success'}
-                              style={{ fontSize: 14, color: 'white' }}
-                              onClick={() => handleButtonClick(e?.data?.checkoutID)}
-                            >
-                              Change Order Status
-                            </CButton>
-                          </>
-                        )}
+                        {e?.data?.Provider == 'bridgify' || e?.data?.Provider == 'ratehawk2' ? (
+                          <CButton color="info" style={{ fontSize: 14, marginBottom: 8, color: 'white' }} onClick={() => handleModelShow(e?.data?.checkoutID)}>
+                            Booking Details
+                          </CButton>
+                        ) : ''}
+                        <CButton color={status == 'Cancel' ? 'danger' : 'success'} style={{ fontSize: 14, color: 'white' }} onClick={() => handleButtonClick(e?.data?.checkoutID)}>
+                          Change Order Status
+                        </CButton>
                       </>
                     )}
                   </>
                 )}
               </>
-            )
-          }
-        }
-      },
-    },
+            )}
+          </>
+        );
+      }
+    }
+  }
+},
   ]
   const { currencyData, setCurrencyData } = useContext(CurrencyContext)
 

@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import './AccountsDepartment.css'
 import {
   CCard,
@@ -8,7 +7,7 @@ import {
   CFormCheck,
   CRow,
 } from '@coreui/react'
-import { getAllCardData, getAllDataUserWise, getDashboardOrdersIdWise } from 'src/service/api_calls'
+import { getAllCardData, getAllDataUserWise } from 'src/service/api_calls'
 import MaterialTable from 'material-table'
 import { ThemeProvider, createTheme } from '@mui/material'
 import { Modal } from 'react-bootstrap'
@@ -34,6 +33,7 @@ const Dashboard = () => {
   })
   const [paymentDataSet, setPaymentDataSet] = useState([])
   const [progress, setProgress] = useState(0)
+  const [orderDetailsCache, setOrderDetailsCache] = useState({})
 
   const defaultMaterialTheme = createTheme()
 
@@ -42,26 +42,9 @@ const Dashboard = () => {
     
     const fetchAllData = async () => {
       try {
-        // Get initial order data
+        // Get initial order data only (without detailed data)
         const orderRes = await getAllDataUserWise()
-        
-        // Get detailed data for each order
-        const ordersWithDetails = await Promise.all(
-          orderRes.map(async (order) => {
-            try {
-              const detailedData = await getDashboardOrdersIdWise(order.OrderId)
-              return {
-                ...order,
-                detailedData: detailedData
-              }
-            } catch (error) {
-              console.error(`Error fetching details for order ${order.OrderId}:`, error)
-              return order // Return original order if details fetch fails
-            }
-          })
-        )
-        
-        setOrderData(ordersWithDetails)
+        setOrderData(orderRes)
         
         // Get card data
         const cardRes = await getAllCardData()
@@ -75,6 +58,28 @@ const Dashboard = () => {
     
     fetchAllData()
   }, [])
+
+  // Load order details only when needed (when viewing order)
+  const loadOrderDetails = useCallback(async (orderId) => {
+    if (orderDetailsCache[orderId]) {
+      return orderDetailsCache[orderId];
+    }
+
+    try {
+      const response = await axios.get(`/fetch_order_details/${orderId}`);
+      if (response.data.status === 200) {
+        // Cache the result
+        setOrderDetailsCache(prev => ({
+          ...prev,
+          [orderId]: response.data
+        }));
+        return response.data;
+      }
+    } catch (error) {
+      console.error(`Error fetching details for order ${orderId}:`, error);
+    }
+    return null;
+  }, [orderDetailsCache]);
 
   const pagePermission = [
     "all accounts access",
@@ -103,7 +108,6 @@ const Dashboard = () => {
       {
         title: 'Total Amount', field: 'total_amount', align: 'right', editable: 'never',
       },
-      
       {
         title: 'Paid Amount', field: 'paid_amount', align: 'right', editable: 'never',
       },
@@ -121,21 +125,9 @@ const Dashboard = () => {
       },
     ],
     rows: orderData?.map((value) => {
-      // Get data from first API
-      const mainData = value
-      
-      // Get data from second API if available
-      let paidAmountFromSecondAPI = mainData.paid_amount || 0
-      let discountAmount = 0
-      
-      if (value.detailedData && value.detailedData.lifestyleData && value.detailedData.lifestyleData.length > 0) {
-        const lifestyleItem = value.detailedData.lifestyleData[0]
-        paidAmountFromSecondAPI = parseFloat(lifestyleItem.paid_amount) || 0
-        
-        // Calculate discount amount (original total - discounted paid amount)
-        const originalTotalAmount = parseFloat(mainData.total_amount) || 0
-        discountAmount = originalTotalAmount - paidAmountFromSecondAPI
-      }
+      const discountAmount = parseFloat(value.order_discount_amount) || 0
+      const originalTotalAmount = parseFloat(value.total_amount) || 0
+      const finalAmount = originalTotalAmount - discountAmount
       
       return {
         data: value,
@@ -143,8 +135,8 @@ const Dashboard = () => {
         booking_date: value.checkout_date,
         pay_type: value.payment_type,
         pay_category: value.pay_category,
-        total_amount: value.ItemCurrency + " " + (value.total_amount?.toFixed(2) || "0.00"),
-        paid_amount: value.ItemCurrency + " " + (paidAmountFromSecondAPI.toFixed(2) || "0.00"),
+        total_amount: value.ItemCurrency + " " + (originalTotalAmount.toFixed(2) || "0.00"),
+        paid_amount: value.ItemCurrency + " " + (finalAmount.toFixed(2) || "0.00"),
         discount_amount: value.ItemCurrency + " " + (discountAmount.toFixed(2) || "0.00"),
         delivery_charge: value.ItemCurrency + " " + (value.delivery_charge?.toFixed(2) || "0.00"),
         refunding_amount: value.ItemCurrency + " " + (value.refundableAmount?.toFixed(2) || "0.00"),
@@ -161,12 +153,19 @@ const Dashboard = () => {
     })
   }
 
-  const handleModalOpen = (value, dataSet) => {
-    dataSet["oid"] = value
-    setOrderId(value)
-    setPaymentDataSet(dataSet)
-    setShowModal(true)
+  const handleModalOpen = async (value, dataSet) => {
+    setProgress(30);
+    // Load order details only when modal is opened
+    const detailedData = await loadOrderDetails(value);
+    
+    setProgress(100);
+    dataSet["oid"] = value;
+    dataSet["detailedData"] = detailedData;
+    setOrderId(value);
+    setPaymentDataSet(dataSet);
+    setShowModal(true);
   }
+
 
   const handleApprovePayment = () => {
     setProgress(0)
