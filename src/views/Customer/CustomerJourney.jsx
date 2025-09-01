@@ -143,9 +143,42 @@ const CustomerJourney = () => {
     }
   }
 
+  // Parse date string from backend with multiple format support
+  const parseBackendDate = (dateString) => {
+    if (!dateString) return new Date()
+
+    // Try different date formats from backend
+    // Format 1: "DD-MM-YYYY HH:mm:ss" (e.g., "28-08-2025 14:15:40")
+    // Format 2: "YYYY-MM-DD HH:mm:ss" (e.g., "2025-08-29 14:28:31")
+
+    try {
+      // Check if it's in DD-MM-YYYY format
+      if (dateString.match(/^\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}$/)) {
+        const [datePart, timePart] = dateString.split(' ')
+        const [day, month, year] = datePart.split('-')
+        // Convert to ISO format: YYYY-MM-DDTHH:mm:ss
+        const isoString = `${year}-${month}-${day}T${timePart}`
+        return new Date(isoString)
+      }
+
+      // Check if it's in YYYY-MM-DD format (standard)
+      if (dateString.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)) {
+        // Convert to ISO format by replacing space with T
+        const isoString = dateString.replace(' ', 'T')
+        return new Date(isoString)
+      }
+
+      // Fallback: try direct parsing
+      return new Date(dateString)
+    } catch (error) {
+      console.warn('Failed to parse date:', dateString, error)
+      return new Date() // Return current date as fallback
+    }
+  }
+
   // Calculate time since last visit
   const getTimeSinceLastVisit = (lastVisit) => {
-    const lastVisitDate = new Date(lastVisit)
+    const lastVisitDate = parseBackendDate(lastVisit)
     const now = new Date()
     const diffTime = Math.abs(now - lastVisitDate)
 
@@ -685,13 +718,13 @@ const CustomerJourney = () => {
                           <CTableDataCell className="py-4 text-center">
                             <div className="premium-date-container">
                               <div className="premium-date-value">
-                                {new Date(customer.last_visit).toLocaleDateString({
+                                {parseBackendDate(customer.last_visit).toLocaleDateString({
                                   month: 'short',
                                   day: 'numeric',
                                   year: 'numeric',
                                 })}
                                 {' at '}
-                                {new Date(customer.last_visit).toLocaleTimeString({
+                                {parseBackendDate(customer.last_visit).toLocaleTimeString({
                                   hour: 'numeric',
                                   minute: 'numeric',
                                   second: 'numeric',
@@ -917,7 +950,7 @@ const CustomerJourney = () => {
                               </h2>
                               <div className="text-muted fs-6 mb-3">
                                 Customer since{' '}
-                                {new Date(
+                                {parseBackendDate(
                                   selectedCustomerDetails.customer.created_at,
                                 ).toLocaleDateString()}
                               </div>
@@ -1031,15 +1064,23 @@ const CustomerJourney = () => {
                         <CIcon icon={cilCalendar} size="xl" className="text-info" />
                       </div>
                       <div className="fs-6 fw-bold text-center text-info mb-1">
-                        {new Date(selectedCustomerDetails.stats.first_visit).toLocaleDateString()}{' '}
+                        {parseBackendDate(
+                          selectedCustomerDetails.stats.first_visit,
+                        ).toLocaleDateString()}{' '}
                         <br />
-                        {new Date(selectedCustomerDetails.stats.first_visit).toLocaleTimeString()}
+                        {parseBackendDate(
+                          selectedCustomerDetails.stats.first_visit,
+                        ).toLocaleTimeString()}
                       </div>
                       <div className="text-muted mb-2">First Visit</div>
                       <CBadge color="info" className="badge-subtle mt-auto">
                         Last:{' '}
-                        {new Date(selectedCustomerDetails.stats.last_visit).toLocaleDateString()}{' '}
-                        {new Date(selectedCustomerDetails.stats.last_visit).toLocaleTimeString()}
+                        {parseBackendDate(
+                          selectedCustomerDetails.stats.last_visit,
+                        ).toLocaleDateString()}{' '}
+                        {parseBackendDate(
+                          selectedCustomerDetails.stats.last_visit,
+                        ).toLocaleTimeString()}
                       </CBadge>
                     </CCardBody>
                   </CCard>
@@ -1086,13 +1127,15 @@ const CustomerJourney = () => {
                             <div className="d-flex gap-4 text-muted small">
                               <div>
                                 <CIcon icon={cilCalendar} size="sm" className="me-1 text-primary" />
-                                First: {new Date(device.first_seen).toLocaleDateString()}{' '}
-                                {new Date(device.first_seen).toLocaleTimeString()}
+                                First: {parseBackendDate(
+                                  device.first_seen,
+                                ).toLocaleDateString()}{' '}
+                                {parseBackendDate(device.first_seen).toLocaleTimeString()}
                               </div>
                               <div>
                                 <CIcon icon={cilClock} size="sm" className="me-1 text-primary" />
-                                Last: {new Date(device.last_seen).toLocaleDateString()}{' '}
-                                {new Date(device.last_seen).toLocaleTimeString()}
+                                Last: {parseBackendDate(device.last_seen).toLocaleDateString()}{' '}
+                                {parseBackendDate(device.last_seen).toLocaleTimeString()}
                               </div>
                             </div>
                           </div>
@@ -1221,10 +1264,10 @@ const CustomerJourney = () => {
                                     </div>
                                     <div>
                                       <div className="fw-medium">
-                                        {new Date(session.created_at).toLocaleDateString()}
+                                        {parseBackendDate(session.created_at).toLocaleDateString()}
                                       </div>
                                       <div className="text-muted small">
-                                        {new Date(session.created_at).toLocaleTimeString()}
+                                        {parseBackendDate(session.created_at).toLocaleTimeString()}
                                       </div>
                                     </div>
                                   </div>
@@ -1345,11 +1388,11 @@ const CustomerJourney = () => {
                                     size="sm"
                                     className="text-primary me-2"
                                   />
-                                  {new Date(
+                                  {parseBackendDate(
                                     selectedCustomerDetails.customer.created_at,
                                   ).toLocaleDateString()}
                                   <small className="text-muted ms-2">
-                                    {new Date(
+                                    {parseBackendDate(
                                       selectedCustomerDetails.customer.created_at,
                                     ).toLocaleTimeString()}
                                   </small>
@@ -1359,11 +1402,11 @@ const CustomerJourney = () => {
                                 <div className="customer-info-label">Last Updated</div>
                                 <div className="customer-info-value d-flex align-items-center">
                                   <CIcon icon={cilClock} size="sm" className="text-primary me-2" />
-                                  {new Date(
+                                  {parseBackendDate(
                                     selectedCustomerDetails.customer.updated_at,
                                   ).toLocaleDateString()}
                                   <small className="text-muted ms-2">
-                                    {new Date(
+                                    {parseBackendDate(
                                       selectedCustomerDetails.customer.updated_at,
                                     ).toLocaleTimeString()}
                                   </small>
