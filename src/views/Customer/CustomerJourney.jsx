@@ -119,7 +119,7 @@ const CustomerJourney = () => {
   const formatDuration = (seconds) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = (seconds % 60).toFixed(2)
+    const secs = (seconds % 60).toFixed(0)
 
     if (hours > 0) {
       return `${hours}h ${minutes}m ${secs}s`
@@ -148,13 +148,21 @@ const CustomerJourney = () => {
     const lastVisitDate = new Date(lastVisit)
     const now = new Date()
     const diffTime = Math.abs(now - lastVisitDate)
-    const diffHours = Math.floor(diffTime / (1000 * 60 * 60))
-    const diffDays = Math.floor(diffHours / 24)
 
-    if (diffDays > 0) {
-      return `${diffDays} day(s) ago`
+    const diffMinutes = Math.floor(diffTime / (1000 * 60))
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60))
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+
+    const days = diffDays
+    const hours = diffHours % 24
+    const minutes = diffMinutes % 60
+
+    if (days > 0) {
+      return `${days} day(s) ${hours} hour(s) ${minutes} minute(s) ago`
+    } else if (hours > 0) {
+      return `${hours} hour(s) ${minutes} minute(s) ago`
     } else {
-      return `${diffHours} hour(s) ago`
+      return `${minutes} minute(s) ago`
     }
   }
 
@@ -677,10 +685,16 @@ const CustomerJourney = () => {
                           <CTableDataCell className="py-4 text-center">
                             <div className="premium-date-container">
                               <div className="premium-date-value">
-                                {new Date(customer.last_visit).toLocaleDateString('en-US', {
+                                {new Date(customer.last_visit).toLocaleDateString({
                                   month: 'short',
                                   day: 'numeric',
                                   year: 'numeric',
+                                })}
+                                {' at '}
+                                {new Date(customer.last_visit).toLocaleTimeString({
+                                  hour: 'numeric',
+                                  minute: 'numeric',
+                                  second: 'numeric',
                                 })}
                               </div>
                               <div className="premium-date-relative">
