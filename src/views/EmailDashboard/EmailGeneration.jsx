@@ -10,7 +10,8 @@ import {
   CRow,
   CFormInput,
   CSpinner,
-  CImage
+  CImage,
+  CBadge
 } from '@coreui/react';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
@@ -116,6 +117,7 @@ const EmailGeneration = () => {
   const [selectedOrderID, setSelectedOrderID] = useState({});
   const [selectedOrderIndexId, setSelectedOrderIndexId] = useState({});
   const [orderIndexIdVals, setOrderIndexIdVals] = useState([]);
+  const [orderIndexIDs, setOrderIndexIDs] = useState([]);
   const [checkoutIndexLoading, setCheckoutIndexLoading] = useState(false);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [internalEmail, setInternalEmail] = useState({});
@@ -250,6 +252,9 @@ const EmailGeneration = () => {
     }
     
     setFiles((prevFiles) => [...prevFiles, ...validFiles]);
+    
+    // Reset the input value to allow selecting the same file again
+    e.target.value = '';
   }, []);
   
   // Remove file
@@ -329,6 +334,9 @@ const EmailGeneration = () => {
         setSelectedCustomer('');
         setEditorState(EditorState.createEmpty());
         setFiles([]);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
         Swal.fire({
           icon: 'error',
@@ -543,6 +551,11 @@ const EmailGeneration = () => {
         <CCard className="mb-4">
           <CCardHeader className="d-flex justify-content-between align-items-center">
             <strong>Additional Attachments</strong>
+            {files.length > 0 && (
+              <CBadge color="info" shape="rounded-pill">
+                {files.length} file{files.length !== 1 ? 's' : ''} selected
+              </CBadge>
+            )}
           </CCardHeader>
           <CCardBody style={{ marginRight: "20px" }}>
             <CRow className="mb-3">
@@ -585,23 +598,60 @@ const EmailGeneration = () => {
               />
             </CRow>
             
-            <CRow className="mb-3">
-              <CFormLabel>Add Images or PDFs</CFormLabel>
+            <CRow className="mb-3 align-items-center">
               <CCol xs={12} sm={6} lg={8}>
-                <CFormInput
-                  type="file"
-                  multiple
-                  onChange={handleChange}
-                  accept="image/*,application/pdf"
-                  ref={fileInputRef}
-                />
+                <CFormLabel>Add Images or PDFs</CFormLabel>
+                
+                {/* Custom file input display */}
+                <div className="position-relative">
+                  <CFormInput
+                    type="file"
+                    multiple
+                    onChange={handleChange}
+                    accept="image/*,application/pdf"
+                    ref={fileInputRef}
+                    className="position-absolute"
+                    style={{ opacity: 0, zIndex: 2, cursor: 'pointer', height: '38px' }}
+                  />
+                  <div 
+                    className="border rounded p-2 d-flex align-items-center"
+                    style={{ 
+                      backgroundColor: '#f8f9fa', 
+                      minHeight: '38px',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <span className="text-muted">
+                      {files.length > 0 
+                        ? files.map(file => file.name).join(', ') 
+                        : 'Choose files...'
+                      }
+                    </span>
+                  </div>
+                </div>
+                
+                {files.length > 0 && (
+                  <div className="mt-2">
+                    <small className="text-muted">
+                      {files.length} file{files.length !== 1 ? 's' : ''} selected
+                    </small>
+                  </div>
+                )}
               </CCol>
-              <CCol xs={12} sm={4} lg={2}>
-                <CButton color="info" style={{ color: "white" }} onClick={clearFiles}>
+              
+              <CCol xs={12} sm={4} lg={2} className="mt-3 mt-sm-0">
+                <CButton 
+                  color="info" 
+                  style={{ color: "white" }} 
+                  onClick={clearFiles}
+                  disabled={files.length === 0}
+                >
                   Clear All Files
                 </CButton>
               </CCol>
-              <CCol xs={12} sm={2} lg={2} className="">
+              
+              <CCol xs={12} sm={2} lg={2} className="mt-3 mt-sm-0">
                 {userData?.permissions?.includes("generate email") && (
                   <CButton 
                     color="dark" 
@@ -616,28 +666,42 @@ const EmailGeneration = () => {
             </CRow>
             
             <CRow>
+              {/* Show file previews */}
               {files.map((file, index) => (
-                <CCol key={index} xs={12} sm={6} lg={3} className="mb-3">
-                  {file.type.startsWith('image/') ? (
-                    <CImage
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      thumbnail
-                      width={100}
-                      height={100}
-                    />
-                  ) : (
-                    <p>{file.name}</p>
-                  )}
-                  <CButton
-                    color="danger"
-                    size="sm"
-                    className="mt-2"
-                    style={{ color: "white" }}
-                    onClick={() => removeFile(index)}
-                  >
-                    Remove
-                  </CButton>
+                <CCol key={index} xs={12} sm={6} lg={4} className="mb-3">
+                  <div className="d-flex align-items-center p-2 border rounded">
+                    {file.type.startsWith('image/') ? (
+                      <CImage
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        thumbnail
+                        width={50}
+                        height={50}
+                        className="me-2"
+                      />
+                    ) : (
+                      <div className="bg-light p-2 me-2">
+                        <i className="cil-file"></i>
+                      </div>
+                    )}
+                    <div className="flex-grow-1">
+                      <div className="text-truncate" style={{ maxWidth: '150px' }} title={file.name}>
+                        {file.name}
+                      </div>
+                      <small className="text-muted">
+                        {(file.size / 1024).toFixed(1)} KB
+                      </small>
+                    </div>
+                    <CButton
+                      color="danger"
+                      size="sm"
+                      className="ms-2"
+                      style={{ color: "white" }}
+                      onClick={() => removeFile(index)}
+                    >
+                      Remove
+                    </CButton>
+                  </div>
                 </CCol>
               ))}
             </CRow>
