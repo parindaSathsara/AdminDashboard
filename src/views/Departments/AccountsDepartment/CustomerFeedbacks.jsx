@@ -90,83 +90,89 @@ function CustomerFeedbacks(props) {
   })
 
   const handleApprovePayment = () => {
-    if (!refundCustomerData.refund_type) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Please select refund type!",
-      });
-      return;
-    }
-
-    if (parseFloat(refundCustomerData.refunding_amount) > parseFloat(refundCustomerData.requestAmount) || parseFloat(refundCustomerData.refunding_amount) < 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Enter valid refund amount!",
-      });
-      return;
-    }
-
-    if (refundCustomerData.refund_type == "Partial Refund" && (parseFloat(refundCustomerData.refunding_amount) >= parseFloat(refundCustomerData.requestAmount) || parseFloat(refundCustomerData.refunding_amount) == 0)) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Enter valid refund amount!",
-      });
-      return;
-    }
-
+  if (!refundCustomerData.refund_type) {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You want to apply this changes",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#2eb85c",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes"
-    }).then((result) => {
-      if (result.isConfirmed) {
-
-        // console.log(refundCustomerData, "Refund")
-        const dataSet = {
-          refund_status: refundCustomerData.refund_status,
-          refund_type: refundCustomerData.refund_type,
-          refunding_amount: refundCustomerData.refunding_amount,
-        }
-
-        // console.log("Dataset", dataSet)
-
-        try {
-          axios.post(`/approveRefund/${props.orderId}`, dataSet).then(res => {
-            if (res.data.status === 200) {
-              props.onFeedback()
-                Swal.fire({
-                title: "Refund request accepted!",
-                text: `${dataSet.refund_type} has been accepted successfully`,
-                icon: "success"
-                });
-              props.closeModel()
-            } else {
-              alert('something got mistake')
-            }
-          })
-        } catch (error) {
-
-          Swal.fire({
-            title: "Error While Refunding",
-            icon: "error"
-          });
-          throw new Error(error)
-        }
-
-      }
+      icon: "error",
+      title: "Oops...",
+      text: "Please select refund type!",
     });
-
-    // // console.log("handle approve payment")
-    // // console.log("Handle Approve Payment")
-
+    return;
   }
+
+  const refundAmount = parseFloat(refundCustomerData.refunding_amount);
+
+  // 🚨 Check for empty or invalid number
+  if (isNaN(refundAmount) || refundCustomerData.refunding_amount === "") {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Refunding amount is required!",
+    });
+    return;
+  }
+
+  if (
+    refundAmount > parseFloat(refundCustomerData.requestAmount) ||
+    refundAmount < 0
+  ) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Enter valid refund amount!",
+    });
+    return;
+  }
+
+  if (
+    refundCustomerData.refund_type === "Partial Refund" &&
+    (refundAmount >= parseFloat(refundCustomerData.requestAmount) || refundAmount === 0)
+  ) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Enter valid refund amount for partial refund!",
+    });
+    return;
+  }
+
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You want to apply these changes",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#2eb85c",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const dataSet = {
+        refund_status: refundCustomerData.refund_status,
+        refund_type: refundCustomerData.refund_type,
+        refunding_amount: refundCustomerData.refunding_amount,
+      };
+
+      axios.post(`/approveRefund/${props.orderId}`, dataSet).then(res => {
+        if (res.data.status === 200) {
+          props.onFeedback();
+          Swal.fire({
+            title: "Refund request accepted!",
+            text: `${dataSet.refund_type} has been accepted successfully`,
+            icon: "success"
+          });
+          props.closeModel();
+        } else {
+          alert("Something went wrong");
+        }
+      }).catch(error => {
+        Swal.fire({
+          title: "Error While Refunding",
+          icon: "error"
+        });
+      });
+    }
+  });
+};
+
 
 
   const handleFormData = (e) => {
