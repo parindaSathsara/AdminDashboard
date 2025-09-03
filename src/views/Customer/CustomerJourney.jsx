@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useCallback  } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import './CustomerJourney.css'
@@ -37,6 +37,9 @@ import {
   CNavLink,
   CTabContent,
   CTabPane,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -54,6 +57,7 @@ import {
   cilArrowTop,
   cilArrowBottom,
   cilSwapVertical,
+  cilMagnifyingGlass // Add this to your existing icon imports
 } from '@coreui/icons'
 import { CChartLine, CChartBar, CChartDoughnut } from '@coreui/react-chartjs'
 
@@ -71,6 +75,8 @@ const CustomerJourney = () => {
   const [sortBy, setSortBy] = useState('')
   const [sortDirection, setSortDirection] = useState('asc')
   const [activeModalTab, setActiveModalTab] = useState('data')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
   // Handle image load error
   const handleImageError = (customerId) => {
@@ -79,48 +85,70 @@ const CustomerJourney = () => {
       [customerId]: true,
     }))
   }
+ useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // 500ms delay
 
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchTerm]);
   // Fetch customer analytics data
-  const fetchAnalyticsData = async (
+  const fetchAnalyticsData = useCallback(async (
     page = 1,
     per_page = 10,
     order_by = '',
     order_by_direction = 'desc',
+    search = ''
   ) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const params = {
         page: page,
         per_page: per_page,
-      }
+      };
 
       // Add sorting parameters if provided
       if (order_by) {
-        params.order_by = order_by
-        params.order_by_direction = order_by_direction
+        params.order_by = order_by;
+        params.order_by_direction = order_by_direction;
       }
-      console.log('Params', params)
+
+      if (search) {
+        params.search = search;
+      }
 
       const response = await axios.get(`customer/analytics/all`, {
         params: params,
-      })
+      });
 
       if (response.data.message === 'Customer analytics data retrieved successfully') {
-        setAnalyticsData(response.data.data)
-        setCurrentPage(response.data.data.current_page)
+        setAnalyticsData(response.data.data);
+        setCurrentPage(response.data.data.current_page);
       } else {
-        setError('Failed to fetch analytics data')
+        setError('Failed to fetch analytics data');
       }
     } catch (err) {
-      setError('Error fetching data: ' + err.message)
+      setError('Error fetching data: ' + err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
-    fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)
-  }, [currentPage, perPage, sortBy, sortDirection])
+    fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection, debouncedSearchTerm);
+  }, [currentPage, perPage, sortBy, sortDirection, debouncedSearchTerm, fetchAnalyticsData]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setCurrentPage(1);
+  };
 
   // Format duration to human readable format
   const formatDuration = (seconds) => {
@@ -342,9 +370,64 @@ const CustomerJourney = () => {
       </CRow>
     )
   }
+  const searchStyles = `
+    .enhanced-search-container {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .enhanced-search-input {
+      padding-left: 40px;
+      padding-right: 40px;
+      border-radius: 20px;
+      height: 40px;
+      border: 1px solid #ced4da;
+      transition: all 0.3s ease;
+    }
+    
+    .enhanced-search-input:focus {
+      border-color: #321fdb;
+      box-shadow: 0 0 0 0.2rem rgba(50, 31, 219, 0.25);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+      z-index: 5;
+    }
+    
+    .clear-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+      cursor: pointer;
+      z-index: 5;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+    
+    .clear-icon:hover {
+      opacity: 1;
+      color: #e55353;
+    }
+    
+    @media (max-width: 768px) {
+      .enhanced-search-container {
+        max-width: 100%;
+        margin-bottom: 1rem;
+      }
+    }
+  `;
 
   return (
     <div>
+         <style>{searchStyles}</style>
       {/* Header Section */}
       <CRow className="mb-4">
         <CCol>
@@ -363,6 +446,24 @@ const CustomerJourney = () => {
                   </div>
                 </div>
                 <div className="d-flex gap-3 align-items-center">
+                   <div className="d-flex align-items-center border-end pe-3 me-3">
+                    <div className="enhanced-search-container">
+                      <CIcon icon={cilMagnifyingGlass} className="search-icon" />
+                      <CFormInput
+                        className="enhanced-search-input"
+                        placeholder="Search by name or email"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                      />
+                      {searchTerm && (
+                        <CIcon 
+                          icon={cilX} 
+                          className="clear-icon" 
+                          onClick={clearSearch}
+                        />
+                      )}
+                    </div>
+                  </div>
                   <div className="d-flex align-items-center border-end pe-3">
                     <div className="me-2">
                       <div className="text-muted small">Showing</div>
@@ -394,7 +495,7 @@ const CustomerJourney = () => {
                   <CButton
                     color="primary"
                     className="px-4 d-flex align-items-center"
-                    onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection)}
+                    onClick={() => fetchAnalyticsData(currentPage, perPage, sortBy, sortDirection, debouncedSearchTerm)}
                   >
                     <CIcon icon={cilReload} className="me-2" />
                     Refresh Data
