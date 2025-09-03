@@ -1,19 +1,21 @@
 import axios from "axios"
 import Swal from "sweetalert2";
 
-const getOrderIDs = async () => {
+const getOrderIDs = async (search = "", page = 1, perPage = 20) => {
+  let dataSet = [];
+  await axios
+    .get("get_order_ids", {
+      params: { page, perPage, search }
+    })
+    .then((response) => {
+      if (response.data.status === 200) {
+        // pagination object -> take .data
+        dataSet = response.data.orderIds?.data || [];
+      }
+    });
+  return dataSet;
+};
 
-  var dataSet = [];
-
-  await axios.get("get_order_ids").then(response => {
-    if (response.data.status === 200) {
-      dataSet = response.data.orderIds
-    }
-  })
-
-
-  return dataSet
-}
 
 
 

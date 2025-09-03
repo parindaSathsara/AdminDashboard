@@ -107,16 +107,14 @@ const EmailDashboard = () => {
   // }, [])
   useEffect(() => {
     getOrderIDs().then((response) => {
-      const sorted = response.sort((a, b) => b.id - a.id) // descending sort
-
+      const sorted = response.sort((a, b) => b.id - a.id); // descending sort
       const dataSet = sorted.map((res) => ({
         value: res?.id,
         label: `AHS_ORD${res.id}`,
-      }))
-
-      setOrderIds(dataSet)
-    })
-  }, [])
+      }));
+      setOrderIds(dataSet);
+    });
+  }, []);
 
   //
 
@@ -204,12 +202,24 @@ const EmailDashboard = () => {
                 <br></br>
 
                 <Select
-                  options={orderIds}
                   value={selectedOrderID}
                   onChange={(selectedOption) => handleONCheckoutIDClick(selectedOption)}
-                  placeholder="Select a Order ID"
+                  placeholder="Search Order ID"
                   isSearchable
+                  onInputChange={(input) => {
+                    if (input.length >= 2) {
+                      getOrderIDs(input, 1, 20).then((response) => {
+                        const dataSet = response.map((res) => ({
+                          value: res?.id,
+                          label: `AHS_ORD${res.id}`,
+                        }));
+                        setOrderIds(dataSet);
+                      });
+                    }
+                  }}
+                  options={orderIds}
                 />
+
               </CCol>
 
               <CCol xs={12} sm={6} lg={2}>
