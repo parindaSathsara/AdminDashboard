@@ -14,6 +14,7 @@ import {
   CBadge,
   CButton,
   CFormInput,
+  CFormSelect,
   CInputGroup,
   CPagination,
   CPaginationItem,
@@ -40,16 +41,16 @@ const AdminSupplierReferrals = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10);
+  const [perPage, setPerPage] = useState(10);
 
   useEffect(() => {
     fetchSupplierReferrals();
-  }, [currentPage]);
+  }, [currentPage, perPage]);
 
   const fetchSupplierReferrals = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/supplier_referral', {
+      const response = await axios.get('/supplier_refferal', {
         params: { 
           page: currentPage, 
           per_page: perPage, 
@@ -75,7 +76,15 @@ const AdminSupplierReferrals = () => {
   };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    if (page >= 1 && page <= suppliers.last_page) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handlePerPageChange = (e) => {
+    const newPerPage = parseInt(e.target.value);
+    setPerPage(newPerPage);
+    setCurrentPage(1); // Reset to first page when changing items per page
   };
 
   const getStatusBadge = (count, type) => {
@@ -87,6 +96,90 @@ const AdminSupplierReferrals = () => {
     };
     
     return <CBadge color={colorMap[type]}>{count || 0}</CBadge>;
+  };
+
+  // Generate pagination items with proper boundaries
+  const renderPaginationItems = () => {
+    const items = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, suppliers.current_page - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(suppliers.last_page, startPage + maxVisiblePages - 1);
+    
+    // Adjust if we're near the beginning
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // Previous button
+    items.push(
+      <CPaginationItem 
+        key="prev"
+        disabled={suppliers.current_page === 1}
+        onClick={() => handlePageChange(suppliers.current_page - 1)}
+      >
+        Previous
+      </CPaginationItem>
+    );
+    
+    // First page and ellipsis if needed
+    if (startPage > 1) {
+      items.push(
+        <CPaginationItem
+          key={1}
+          active={1 === suppliers.current_page}
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </CPaginationItem>
+      );
+      
+      if (startPage > 2) {
+        items.push(<CPaginationItem key="ellipsis1" disabled>...</CPaginationItem>);
+      }
+    }
+    
+    // Page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <CPaginationItem
+          key={i}
+          active={i === suppliers.current_page}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </CPaginationItem>
+      );
+    }
+    
+    // Last page and ellipsis if needed
+    if (endPage < suppliers.last_page) {
+      if (endPage < suppliers.last_page - 1) {
+        items.push(<CPaginationItem key="ellipsis2" disabled>...</CPaginationItem>);
+      }
+      
+      items.push(
+        <CPaginationItem
+          key={suppliers.last_page}
+          active={suppliers.last_page === suppliers.current_page}
+          onClick={() => handlePageChange(suppliers.last_page)}
+        >
+          {suppliers.last_page}
+        </CPaginationItem>
+      );
+    }
+    
+    // Next button
+    items.push(
+      <CPaginationItem 
+        key="next"
+        disabled={suppliers.current_page === suppliers.last_page}
+        onClick={() => handlePageChange(suppliers.current_page + 1)}
+      >
+        Next
+      </CPaginationItem>
+    );
+    
+    return items;
   };
 
   return (
@@ -133,7 +226,7 @@ const AdminSupplierReferrals = () => {
         </CCol>
       </CRow>
 
-      {/* Search */}
+      {/* Search and Rows Per Page */}
       <CRow className="mb-4">
         <CCol md={6}>
           <CInputGroup>
@@ -148,13 +241,14 @@ const AdminSupplierReferrals = () => {
             </CButton>
           </CInputGroup>
         </CCol>
+       
       </CRow>
 
       {/* Suppliers Table */}
       <CRow>
         <CCol xs={12}>
           <CCard>
-            <CCardHeader>
+            <CCardHeader className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Referrals by Supplier</h5>
               <small className="text-muted">
                 Showing {suppliers.from || 0} to {suppliers.to || 0} of {suppliers.total || 0} suppliers
@@ -216,33 +310,32 @@ const AdminSupplierReferrals = () => {
                     </CTableBody>
                   </CTable>
                   
-                  {/* Pagination */}
-                  {suppliers.total > perPage && (
-                    <CPagination className="mt-3 justify-content-center">
-                      <CPaginationItem 
-                        disabled={suppliers.current_page === 1}
-                        onClick={() => handlePageChange(suppliers.current_page - 1)}
-                      >
-                        Previous
-                      </CPaginationItem>
+                  {/* Pagination - Fixed */}
+                  {suppliers.last_page > 1 && (
+                    <div className="d-flex justify-content-between align-items-center mt-3">
+                      <div>
+                        Showing {suppliers.from || 0} to {suppliers.to || 0} of {suppliers.total || 0} entries
+                      </div>
+                       <CCol md={6} className="d-flex justify-content-end align-items-center">
+          <div className="d-flex align-items-center">
+            <span className="me-2">Rows per page:</span>
+            <CFormSelect 
+              value={perPage} 
+              onChange={handlePerPageChange}
+              style={{ width: '80px' }}
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </CFormSelect>
+          </div>
+        </CCol>
+                      <CPagination className="mb-0">
+                        {renderPaginationItems()}
+                      </CPagination>
                       
-                      {[...Array(suppliers.last_page)].map((_, i) => (
-                        <CPaginationItem
-                          key={i + 1}
-                          active={i + 1 === suppliers.current_page}
-                          onClick={() => handlePageChange(i + 1)}
-                        >
-                          {i + 1}
-                        </CPaginationItem>
-                      ))}
-                      
-                      <CPaginationItem 
-                        disabled={suppliers.current_page === suppliers.last_page}
-                        onClick={() => handlePageChange(suppliers.current_page + 1)}
-                      >
-                        Next
-                      </CPaginationItem>
-                    </CPagination>
+                    </div>
                   )}
                 </>
               )}
