@@ -111,6 +111,7 @@ import PromotionTopicNotification from './views/Promotions/PromotionTopicNotific
 import Vervotech from './views/Services/Vervotech/Vervotech'
 import HotelInitialMapping from './views/Services/Vervotech/HotelInitialMapping'
 import HotelIncrementalMapping from './views/Services/Vervotech/HotelIncrementalMapping'
+import AdminSupplierReferrals from './views/SupplierRefferals/AdminSupplierReferrals'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -141,6 +142,7 @@ const routes = [
 
   { path: '/theme/chats', name: 'chats', element: ChatsHome, exact: true },
   { path: '/Chats', name: 'Chats', element: ChatsMeta, exact: true },
+  {path:'/admin/supplier-referrals', name: 'Supplier Referrals', element:AdminSupplierReferrals,exact:true},
 
   { path: '/reporting/accounts', name: 'Accounts Report', element: AccountReport },
   { path: '/reporting/all', name: 'All Report', element: ReportsMain },

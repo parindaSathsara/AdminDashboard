@@ -158,7 +158,7 @@ const AccountsRefunds = () => {
         oid: value.order_id,
         cid: value.checkout_id,
         reason_refund: value.reason_for_refund,
-        refund_amount: value.total_amount,
+        refund_amount: value.paid_amount,
         pay_type: value.pay_category,
         currency: value.currency,
         status: value.refund_type,

@@ -181,17 +181,17 @@ function CustomerFeedbacks(props) {
       switch (e.target.value) {
         case "Full Refund":
           setVisibleRefund(false);
-          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: orderData.total_amount, requestAmount: orderData.total_amount, refund_status: true })
+          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: orderData.paid_amount, requestAmount: orderData.paid_amount, refund_status: true })
           break;
         case "Reject Refund Request":
           setVisibleRefund(false);
-          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.total_amount, refund_status: true })
+          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.paid_amount, refund_status: true })
           break;
         case "Partial Refund":
           setVisibleRefund(true);
-          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.total_amount, refund_status: false })
+          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.paid_amount, refund_status: false })
         default:
-          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.total_amount, refund_status: false })
+          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.paid_amount, refund_status: false })
           break;
       }
     }
@@ -247,7 +247,7 @@ function CustomerFeedbacks(props) {
                 <CCol md={4}>
                   <CFormInput
                     type="number"
-                    defaultValue={orderData.total_amount}
+                    defaultValue={orderData.paid_amount}
                     name="refundAmount"
                     id="validationCustom06"
                     label={`Refund Request Amount (${orderData.currency})`}

@@ -8,6 +8,7 @@ import {
   cilUserPlus,
   cilGrain,
   cilUserX,
+  cilShare,
   cilCart,
   cilGarage,
   cilBook,
@@ -351,6 +352,12 @@ function getNavigationHook(permissions) {
       to: '/supplier/support',
       icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
     },
+    {
+  component: CNavItem,
+  name: 'Supplier Referrals',
+  to: '/admin/supplier-referrals',
+  icon: <CIcon icon={cilShare} customClassName="nav-icon" />, // Using share icon (for referrals)
+},
     {
       component: CNavItem,
       name: 'Access',
