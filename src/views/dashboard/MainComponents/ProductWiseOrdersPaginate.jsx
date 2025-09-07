@@ -90,7 +90,7 @@ export default function ProductWiseOrdersPaginate() {
               status: status,
             }
           });
-          
+
           if (response.data.status === 200) {
             counts[status] = response.data.pagination.total;
           }
@@ -134,7 +134,7 @@ export default function ProductWiseOrdersPaginate() {
 
   const handleMoreInfoModal = (row) => {
     setMoreOrderModalCategory(row?.info.catid);
-    
+
     if (row?.info?.catid === '3') {
       setMoreOrderDetails(row?.info?.lifestyle_booking_id);
     } else if (row?.info?.catid === '1') {
@@ -170,9 +170,9 @@ export default function ProductWiseOrdersPaginate() {
         const hasProductImage = row.original.product_image?.trim() !== "";
         const defaultImagePath = "https://play-lh.googleusercontent.com/qoEowqafsAPLEHj5pj-Tfgoj3XuehDt2cEBBe9vvRwyfaaMv3S2SzggQnbAmHx3eB6no=w240-h480-rw";
         const imageUrl = hasProductImage
-          ? (row.original.product_image?.split(",")[0]?.includes("http") 
-              ? row.original.product_image?.split(",")[0] 
-              : "https://supplier.aahaas.com/" + row.original.product_image?.split(",")[0])
+          ? (row.original.product_image?.split(",")[0]?.includes("http")
+            ? row.original.product_image?.split(",")[0]
+            : "https://supplier.aahaas.com/" + row.original.product_image?.split(",")[0])
           : defaultImagePath;
 
         return (
@@ -194,45 +194,50 @@ export default function ProductWiseOrdersPaginate() {
     { accessorKey: 'category', header: 'Category', enableColumnFilter: false },
     { accessorKey: 'service_location', header: 'Service Location', enableColumnFilter: false },
     { accessorKey: 'service_date', header: 'Service Date' },
-    { 
-      accessorKey: 'total_amount', 
-      header: 'Total Amount', 
+    {
+      accessorKey: 'total_amount',
+      header: 'Total Amount',
       enableColumnFilter: false,
       Cell: ({ row }) => CurrencyConverter(row.original.currency, row.original.total_amount, currencyData)
     },
-    { 
-      accessorKey: 'paid_amount', 
-      header: 'Paid Amount', 
+    {
+      accessorKey: 'paid_amount',
+      header: 'Paid Amount',
       enableColumnFilter: false,
       Cell: ({ row }) => CurrencyConverter(row.original.currency, row.original.paid_amount, currencyData)
     },
-    { 
-      accessorKey: 'balance_amount', 
-      header: 'Balance Amount', 
+    {
+      accessorKey: 'balance_amount',
+      header: 'Balance Amount',
       enableColumnFilter: false,
       Cell: ({ row }) => CurrencyConverter(row.original.currency, row.original.balance_amount, currencyData)
     },
     { accessorKey: 'booked_date', header: 'Booked Date', enableColumnFilter: false }
   ];
 
-  const data = useMemo(() => allOrdersProducts?.map((result, index) => ({
-    id: (pagination.pageIndex * pagination.pageSize) + index + 1,
-    product_id: result?.PID,
-    product_image: result?.product_image,
-    service_location: result?.location,
-    product_title: result?.product_title,
-    category: result?.category,
-    service_date: result?.service_date,
-    balance_amount: result?.balance_amount,
-    paid_amount: result?.paid_amount,
-    total_amount: result?.total_amount,
-    booked_date: result?.checkout_date,
-    info: result,
-    order_id: "AHS_" + result?.orderID,
-    currency: result?.currency,
-  })), [allOrdersProducts, pagination.pageIndex, pagination.pageSize]);
+  const data = useMemo(() => allOrdersProducts?.map((result, index) => {
+   const bookedDate = (result?.catid === '4')
+     ? result?.booked_date 
+     : result?.checkout_date; 
 
-    const rowStyle = (data) => {
+   return {
+     id: (pagination.pageIndex * pagination.pageSize) + index + 1,
+     product_id: result?.PID,
+     product_image: result?.product_image,
+     service_location: result?.location,
+     product_title: result?.product_title,
+     category: result?.category,
+     service_date: result?.service_date,
+     balance_amount: result?.balance_amount,
+     paid_amount: result?.paid_amount,
+     total_amount: result?.total_amount,
+     booked_date: bookedDate, 
+     info: result,
+     order_id: "AHS_" + result?.orderID,
+     currency: result?.currency,
+   };
+ }), [allOrdersProducts, pagination.pageIndex, pagination.pageSize]);
+  const rowStyle = (data) => {
 
     if (data?.info?.orderID == lastUpdatedId) {
       return ({
@@ -280,14 +285,30 @@ export default function ProductWiseOrdersPaginate() {
     rowCount: pagination.totalCount,
     onPaginationChange: setPagination,
     state: {
-     isLoading: loading,             // Add loading state
-    showProgressBars: loading,      // Show progress bars during loading
-    pagination,  
+      isLoading: loading,             // Add loading state
+      showProgressBars: loading,      // Show progress bars during loading
+      pagination,
     },
     muiTablePaginationProps: {
       rowsPerPageOptions: [10, 20, 25, 50, 100],
       showFirstLastPageButtons: true,
     },
+    muiTableHeadCellProps: ({ column }) => ({
+      title: column.getIsSorted()
+        ? `Sort by ${column.columnDef.header} ${column.getIsSorted() === 'asc' ? '(Ascending)' : '(Descending)'}`
+        : `Sort by ${column.columnDef.header}`,
+      sx: {
+        '&:hover': {
+          cursor: column.getCanSort() ? 'pointer' : 'default',
+        },
+        position: 'relative',
+        overflow: 'visible !important',
+        '& .MuiButton-root': {
+          position: 'relative',
+          zIndex: 11,
+        }
+      },
+    }),
     muiTableHeadProps: {
       sx: {
         background: '#070e1a',
@@ -297,7 +318,7 @@ export default function ProductWiseOrdersPaginate() {
         fontWeight: '500',
       },
     },
-      muiTableBodyRowProps: ({ row }) => ({
+    muiTableBodyRowProps: ({ row }) => ({
       sx: rowStyle(row.original), // Apply row style based on the data
     }),
     muiTableContainerProps: { sx: { maxHeight: '500px' } },
@@ -312,31 +333,31 @@ export default function ProductWiseOrdersPaginate() {
   return (
     <>
       <div className="mb-3 mt-2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-    <CInputGroup style={{ width: '300px' }}>
-      <CFormInput
-        placeholder="Search by Order ID..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-      {searchTerm && (
-        <CButton 
-          color="secondary" 
-          onClick={handleClearSearch}
-          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        >
-          <Clear />
-        </CButton>
-      )}
-      <CButton 
-        color="primary" 
-        onClick={handleSearch}
-        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-      >
-        <Search />
-      </CButton>
-    </CInputGroup>
-  </div>
+        <CInputGroup style={{ width: '300px' }}>
+          <CFormInput
+            placeholder="Search by Order ID..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          {searchTerm && (
+            <CButton
+              color="secondary"
+              onClick={handleClearSearch}
+              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+            >
+              <Clear />
+            </CButton>
+          )}
+          <CButton
+            color="primary"
+            onClick={handleSearch}
+            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+          >
+            <Search />
+          </CButton>
+        </CInputGroup>
+      </div>
 
       <MoreOrderView
         show={moreOrderModal}
@@ -345,16 +366,16 @@ export default function ProductWiseOrdersPaginate() {
         category={moreOrderModalCategory}
         productViewData
         productViewComponent={
-          <OrderDetails 
-            orderid={mainDataSet} 
-            orderData={mainDataSet} 
-            hideStatus={false} 
-            productViewData 
-            updatedData={() => fetchData(pagination.pageIndex, pagination.pageSize, currentFilters, searchTerm)} 
+          <OrderDetails
+            orderid={mainDataSet}
+            orderData={mainDataSet}
+            hideStatus={false}
+            productViewData
+            updatedData={() => fetchData(pagination.pageIndex, pagination.pageSize, currentFilters, searchTerm)}
           />
         }
         hotelsOrderView={hotelDataSet}
-        // style={{ zIndex: 10000 }} // Add this
+      // style={{ zIndex: 10000 }} // Add this
       />
 
       <Tabs
@@ -365,50 +386,50 @@ export default function ProductWiseOrdersPaginate() {
         onSelect={handleSelect}
         activeKey={currentFilters}
       >
-        <Tab 
-          eventKey="All" 
+        <Tab
+          eventKey="All"
           title={
             <span className="custom-tab-all">
               All Orders <CBadge color="primary" shape="rounded-pill">{statusCounts.All}</CBadge>
             </span>
-          } 
+          }
         />
-        <Tab 
-          eventKey="CustomerOrdered" 
+        <Tab
+          eventKey="CustomerOrdered"
           title={
             <span className="custom-tab-pending">
               Pending <CBadge color="secondary" shape="rounded-pill">{statusCounts.CustomerOrdered}</CBadge>
             </span>
-          } 
+          }
         />
-        <Tab 
-          eventKey="Approved" 
+        <Tab
+          eventKey="Approved"
           title={
             <span className="custom-tab-ongoing">
               Ongoing <CBadge color="warning" shape="rounded-pill">{statusCounts.Approved}</CBadge>
             </span>
-          } 
+          }
         />
-        <Tab 
-          eventKey="Completed" 
+        <Tab
+          eventKey="Completed"
           title={
             <span className="custom-tab-completed">
               Completed <CBadge color="success" shape="rounded-pill">{statusCounts.Completed}</CBadge>
             </span>
-          } 
+          }
         />
-        <Tab 
-          eventKey="Cancel" 
+        <Tab
+          eventKey="Cancel"
           title={
             <span className="custom-tab-cancel">
               Cancelled <CBadge color="danger" shape="rounded-pill">{statusCounts.Cancel}</CBadge>
             </span>
-          } 
+          }
         />
       </Tabs>
 
-        <MaterialReactTable table={table} />
-      
+      <MaterialReactTable table={table} />
+
     </>
   );
 }

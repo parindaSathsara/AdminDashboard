@@ -107,16 +107,14 @@ const EmailDashboard = () => {
   // }, [])
   useEffect(() => {
     getOrderIDs().then((response) => {
-      const sorted = response.sort((a, b) => b.id - a.id) // descending sort
-
+      const sorted = response.sort((a, b) => b.id - a.id); // descending sort
       const dataSet = sorted.map((res) => ({
         value: res?.id,
         label: `AHS_ORD${res.id}`,
-      }))
-
-      setOrderIds(dataSet)
-    })
-  }, [])
+      }));
+      setOrderIds(dataSet);
+    });
+  }, []);
 
   //
 
@@ -204,12 +202,24 @@ const EmailDashboard = () => {
                 <br></br>
 
                 <Select
-                  options={orderIds}
                   value={selectedOrderID}
                   onChange={(selectedOption) => handleONCheckoutIDClick(selectedOption)}
-                  placeholder="Select a Order ID"
+                  placeholder="Search Order ID"
                   isSearchable
+                  onInputChange={(input) => {
+                    if (input.length >= 2) {
+                      getOrderIDs(input, 1, 20).then((response) => {
+                        const dataSet = response.map((res) => ({
+                          value: res?.id,
+                          label: `AHS_ORD${res.id}`,
+                        }));
+                        setOrderIds(dataSet);
+                      });
+                    }
+                  }}
+                  options={orderIds}
                 />
+
               </CCol>
 
               <CCol xs={12} sm={6} lg={2}>
@@ -230,9 +240,10 @@ const EmailDashboard = () => {
               </CCol>
 
               {userData?.permissions?.includes('email resend') &&
-                (emailType.value === 'customer_invoice' ||
+                ((emailType.value === 'customer_invoice' && selectedOrderID?.value) ||
                   (emailType.value === 'supplier_voucher' &&
-                    selectedOrderIndexId?.provider == 'aahaas')) && (
+                    selectedOrderIndexId?.provider === 'aahaas' &&
+                    selectedOrderID?.value)) && (
                   <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
                     <CButton color="dark" className="full-width" onClick={handleEmailResend}>
                       Resend
@@ -240,10 +251,12 @@ const EmailDashboard = () => {
                     </CButton>
                   </CCol>
                 )}
+
               {userData?.permissions?.includes('download order receipt') &&
-                (emailType.value === 'customer_invoice' ||
+                ((emailType.value === 'customer_invoice' && selectedOrderID?.value) ||
                   (emailType.value === 'supplier_voucher' &&
-                    selectedOrderIndexId?.provider == 'aahaas')) && (
+                    selectedOrderIndexId?.provider === 'aahaas' &&
+                    selectedOrderID?.value)) && (
                   <CCol xs={12} sm={6} lg={2} className="d-flex justify-content-end mt-3">
                     <CButton color="dark" className="full-width" onClick={handleDownloadReceipt}>
                       Download
@@ -251,6 +264,7 @@ const EmailDashboard = () => {
                     </CButton>
                   </CCol>
                 )}
+
               {emailType.value === 'supplier_voucher' &&
                 selectedOrderIndexId?.provider &&
                 selectedOrderIndexId?.provider !== 'aahaas' && (

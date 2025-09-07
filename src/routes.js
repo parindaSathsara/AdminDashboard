@@ -24,6 +24,7 @@ import KpiDashboard from './views/KPIDashboard/KpiDashboard'
 import GlobalTarget from './views/KPIDashboard/GlobleTarget'
 import ChatAnalytics from './views/KPIDashboard/ChatAnalytics'
 import Settings from './views/Settings/Settings'
+import CustomerJourney from './views/Customer/CustomerJourney'
 
 // const Dashboard = React.lazy(() => import('./views/dashboard/Orders'))
 const Dashboard = React.lazy(() => import('./views/dashboard/OrdersNew'))
@@ -107,6 +108,9 @@ import Banners from './banners/Banners'
 import WhatsAppNotifications from './Panels/PushNotifications/WhatsAppNotifications'
 import PrpmotionTopics from './views/Promotions/PropotionTopics'
 import PromotionTopicNotification from './views/Promotions/PromotionTopicNotification'
+import Vervotech from './views/Services/Vervotech/Vervotech'
+import HotelInitialMapping from './views/Services/Vervotech/HotelInitialMapping'
+import HotelIncrementalMapping from './views/Services/Vervotech/HotelIncrementalMapping'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -171,6 +175,17 @@ const routes = [
 
   // services
   { path: '/services/bridgyfy', name: 'Bridgify', element: Bridgify },
+  { path: '/services/vervotech', name: 'Vervotech', element: Vervotech },
+  {
+    path: '/services/vervotech/hotel-initial-mapping',
+    name: 'Vervotech - Hotel Initial Mapping',
+    element: HotelInitialMapping,
+  },
+  {
+    path: '/services/vervotech/hotel-incremental-mapping',
+    name: 'Vervotech - Hotel Incremental Mapping',
+    element: HotelIncrementalMapping,
+  },
   { path: '/services/tbo', name: 'TBO', element: TBO },
   { path: '/services/ratehawk', name: 'RateHawk', element: RateHawk },
   { path: '/users/stats', name: 'User Stats', element: UserCountStats },
@@ -195,6 +210,13 @@ const routes = [
   },
   { path: '/banners', exact: true, name: 'Banners', element: Banners },
   { path: '/settings', exact: true, name: 'Settings', element: Settings },
+
+  {
+    path: '/customer-journey',
+    exact: true,
+    name: 'Customer Journey',
+    element: CustomerJourney,
+  },
 ]
 
 export default routes

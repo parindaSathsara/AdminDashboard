@@ -1,28 +1,55 @@
 import React, { useMemo, useCallback } from 'react';
+import { CCard, CCardBody, CCardHeader, CRow, CCol } from '@coreui/react';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { Box, Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
+import moment from 'moment';
 
-const OrderCheckoutsReport = ({ dataSet, category }) => {
-  const columns = [
-    { accessorKey: 'order_id', header: 'Order ID' },
-    { accessorKey: 'product_count', header: 'Product Count' },
-    { accessorKey: 'min_service_date', header: 'Min Service Date' },
-    { accessorKey: 'order_date', header: 'Order Date' },
-    { accessorKey: 'total_amount', header: 'Total Amount' },
-    { accessorKey: 'payment_type', header: 'Payment Type' },
-    { accessorKey: 'pay_category', header: 'Pay Category' },
-    { accessorKey: 'checkout_status', header: 'Checkout Status' },
-    { accessorKey: 'payment_status', header: 'Payment Status' },
-  ];
+const CartInsightsData = ({ dataSet, category }) => {
+  if (!dataSet || dataSet.length === 0) {
+    return <h5 style={{ marginTop: 15 }}>No Cart Insights data available</h5>;
+  }
 
-  const csvConfig = useMemo(() => mkConfig({
-    fieldSeparator: ',',
-    filename: `${category} Order Checkouts Report`,
-    useKeysAsHeaders: true,
-  }), [category]);
+  // Mapping of category IDs to names
+  const categoryMap = {
+    1: 'Essentials',
+    2: 'Non-Essentials',
+    3: 'Lifestyle',
+    4: 'Hotels',
+    5: 'Educations',
+  };
+
+  const columns = useMemo(() => [
+    { accessorKey: 'customer_fname', header: 'Customer Name' },
+    { accessorKey: 'contact_number', header: 'Contact Number' },
+    { accessorKey: 'customer_email', header: 'Email' },
+    {
+      accessorKey: 'main_category_id',
+      header: 'Category',
+      Cell: ({ cell }) => categoryMap[cell.getValue()] || 'Unknown',
+    },
+    {
+      accessorKey: 'cart_added_date',
+      header: 'Cart Added Date',
+      Cell: ({ cell }) => moment(cell.getValue()).format('YYYY-MM-DD'),
+    },
+    {
+      accessorKey: 'order_preffered_date',
+      header: 'Preferred Date',
+      Cell: ({ cell }) =>
+        cell.getValue() ? moment(cell.getValue()).format('YYYY-MM-DD') : 'N/A',
+    },
+  ], []);
+
+  const csvConfig = useMemo(() =>
+    mkConfig({
+      fieldSeparator: ',',
+      decimalSeparator: '.',
+      useKeysAsHeaders: true,
+      filename: 'Cart_Insights_Report',
+    }), []
+  );
 
   const handleExportRows = useCallback((rows, columns) => {
     const rowData = rows.map(row => {
@@ -51,9 +78,8 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
     enableColumnDragging: false,
     columnFilterDisplayMode: 'popover',
     paginationDisplayMode: 'pages',
-    positionToolbarAlertBanner: 'bottom',
     enableColumnActions: false,
-    state: {},
+    positionToolbarAlertBanner: 'bottom',
     renderTopToolbarCustomActions: ({ table }) => (
       <Box sx={{ display: 'flex', gap: '16px', padding: '8px', flexWrap: 'wrap' }}>
         <Button onClick={() => handleExportData(table)} startIcon={<FileDownloadIcon />}>
@@ -78,18 +104,20 @@ const OrderCheckoutsReport = ({ dataSet, category }) => {
   });
 
   return (
-    <div>
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardBody className='orderCheckoutDiv'>
-              <MaterialReactTable table={table} />
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
-    </div>
+    <CRow>
+      <CCol xs={12}>
+        <CCard className="mb-4">
+          <CCardHeader>
+            <strong>Cart Insights Report</strong>
+            {category && <span style={{ marginLeft: 10 }}>(Category ID: {category})</span>}
+          </CCardHeader>
+          <CCardBody>
+            <MaterialReactTable table={table} />
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
   );
 };
 
-export default OrderCheckoutsReport;
+export default CartInsightsData;
