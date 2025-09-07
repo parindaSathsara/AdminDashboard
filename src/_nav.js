@@ -370,11 +370,11 @@ function getNavigationHook(permissions) {
       to: '/services',
       icon: <CIcon icon={cilShieldAlt} customClassName="nav-icon" />,
       items: [
-        {
-          component: CNavItem,
-          name: 'Vervotech',
-          to: '/services/vervotech',
-        },
+        // {
+        //   component: CNavItem,
+        //   name: 'Vervotech',
+        //   to: '/services/vervotech',
+        // },
         {
           component: CNavItem,
           name: 'Bridgify',
