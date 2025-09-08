@@ -51,13 +51,13 @@ const AdminSupplierReferrals = () => {
     try {
       setLoading(true);
       const response = await axios.get('/supplier_refferal', {
-        params: { 
-          page: currentPage, 
-          per_page: perPage, 
-          search: searchTerm 
+        params: {
+          page: currentPage,
+          per_page: perPage,
+          search: searchTerm
         }
       });
-      
+
       if (response.data.status === 200) {
         setOverallStats(response.data.data.overall_stats);
         setSuppliers(response.data.data.suppliers);
@@ -94,7 +94,7 @@ const AdminSupplierReferrals = () => {
       pending: 'warning',
       rejected: 'danger'
     };
-    
+
     return <CBadge color={colorMap[type]}>{count || 0}</CBadge>;
   };
 
@@ -104,15 +104,15 @@ const AdminSupplierReferrals = () => {
     const maxVisiblePages = 5;
     let startPage = Math.max(1, suppliers.current_page - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(suppliers.last_page, startPage + maxVisiblePages - 1);
-    
+
     // Adjust if we're near the beginning
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
-    
+
     // Previous button
     items.push(
-      <CPaginationItem 
+      <CPaginationItem
         key="prev"
         disabled={suppliers.current_page === 1}
         onClick={() => handlePageChange(suppliers.current_page - 1)}
@@ -120,7 +120,7 @@ const AdminSupplierReferrals = () => {
         Previous
       </CPaginationItem>
     );
-    
+
     // First page and ellipsis if needed
     if (startPage > 1) {
       items.push(
@@ -132,12 +132,12 @@ const AdminSupplierReferrals = () => {
           1
         </CPaginationItem>
       );
-      
+
       if (startPage > 2) {
         items.push(<CPaginationItem key="ellipsis1" disabled>...</CPaginationItem>);
       }
     }
-    
+
     // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       items.push(
@@ -150,13 +150,13 @@ const AdminSupplierReferrals = () => {
         </CPaginationItem>
       );
     }
-    
+
     // Last page and ellipsis if needed
     if (endPage < suppliers.last_page) {
       if (endPage < suppliers.last_page - 1) {
         items.push(<CPaginationItem key="ellipsis2" disabled>...</CPaginationItem>);
       }
-      
+
       items.push(
         <CPaginationItem
           key={suppliers.last_page}
@@ -167,10 +167,10 @@ const AdminSupplierReferrals = () => {
         </CPaginationItem>
       );
     }
-    
+
     // Next button
     items.push(
-      <CPaginationItem 
+      <CPaginationItem
         key="next"
         disabled={suppliers.current_page === suppliers.last_page}
         onClick={() => handlePageChange(suppliers.current_page + 1)}
@@ -178,7 +178,7 @@ const AdminSupplierReferrals = () => {
         Next
       </CPaginationItem>
     );
-    
+
     return items;
   };
 
@@ -241,7 +241,7 @@ const AdminSupplierReferrals = () => {
             </CButton>
           </CInputGroup>
         </CCol>
-       
+
       </CRow>
 
       {/* Suppliers Table */}
@@ -309,32 +309,32 @@ const AdminSupplierReferrals = () => {
                       )}
                     </CTableBody>
                   </CTable>
-                  
+
                   {/* Pagination - Fixed */}
                   {suppliers.last_page > 1 && (
                     <div className="d-flex justify-content-between align-items-center mt-3">
                       <div>
                         Showing {suppliers.from || 0} to {suppliers.to || 0} of {suppliers.total || 0} entries
                       </div>
-                       <CCol md={6} className="d-flex justify-content-end align-items-center">
-          <div className="d-flex align-items-center">
-            <span className="me-2">Rows per page:</span>
-            <CFormSelect 
-              value={perPage} 
-              onChange={handlePerPageChange}
-              style={{ width: '80px' }}
-            >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </CFormSelect>
-          </div>
-        </CCol>
+                      <CCol md={6} className="d-flex justify-content-end align-items-center">
+                        <div className="d-flex align-items-center">
+                          <span className="me-2">Rows per page:</span>
+                          <CFormSelect
+                            value={perPage}
+                            onChange={handlePerPageChange}
+                            style={{ width: '80px' }}
+                          >
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                          </CFormSelect>
+                        </div>
+                      </CCol>
                       <CPagination className="mb-0">
                         {renderPaginationItems()}
                       </CPagination>
-                      
+
                     </div>
                   )}
                 </>

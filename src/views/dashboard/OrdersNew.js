@@ -9,8 +9,8 @@ import {
   CBadge,
   CFormInput,
   CInputGroup,
-  CInputGroupText,
-  CButton
+  CButton,
+  CFormSelect
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilNoteAdd, cilViewStream } from '@coreui/icons';
@@ -21,25 +21,22 @@ import CurrencyConverter from 'src/Context/CurrencyConverter';
 import OrderDetails from 'src/Panels/OrderDetails/OrderDetails';
 import LoaderPanel from 'src/Panels/LoaderPanel';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import { Fullscreen, FullscreenExit, Search, Clear } from '@material-ui/icons';
+import { Fullscreen, FullscreenExit, Search, Clear } from '@mui/icons-material';
 import DetailExpander from 'src/Panels/OrderDetails/Components/DetailExpander';
-import ProductWiseOrders from './MainComponents/ProductWiseOrders';
 import { Tab, Tabs } from 'react-bootstrap';
 import ProductWiseOrdersPaginate from './MainComponents/ProductWiseOrdersPaginate';
 import AdditionalData from 'src/Panels/AdditionalData/AdditionalData';
 import AdditionalInfoBox from 'src/Panels/AdditionalInfoBox/AdditionalInfoBox';
 
-
 const OrdersNew = () => {
   const { currencyData } = useContext(CurrencyContext);
-  console.log(currencyData, "Currency Data in OrdersNew");
   const [activeTab, setActiveTab] = useState('group');
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [detailExpander, setDetailExpander] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isTableFullscreen, setIsTableFullscreen] = useState(false); // Added fullscreen state
+  const [isTableFullscreen, setIsTableFullscreen] = useState(false);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     perPage: 10,
@@ -49,6 +46,7 @@ const OrdersNew = () => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showAdditionalModal, setShowAdditionalModal] = useState(false);
   const [orderid, setOrderId] = useState(null);
+
   const handleAdditionalModal = (id) => {
     setOrderId(id);
     setShowModalAdd(true);
@@ -58,17 +56,16 @@ const OrdersNew = () => {
     setOrderId(id);
     setShowAdditionalModal(true);
   };
+
   const handleFullScreen = (rowData) => {
     setSelectedOrderDetails(rowData);
     setDetailExpander(true);
   };
 
-  // Toggle table fullscreen
   const toggleTableFullscreen = () => {
     setIsTableFullscreen(!isTableFullscreen);
   };
 
-  // Fetch orders data with pagination and search
   const fetchOrders = async (page = 1, perPage = 10, search = '') => {
     try {
       !isTableFullscreen && setLoading(true);
@@ -100,24 +97,19 @@ const OrdersNew = () => {
     setActiveTab(key);
   };
 
-  // Handle search submission
   const handleSearch = () => {
     if (searchTerm.trim() === '') {
-      // If search term is empty, fetch all orders
       fetchOrders();
     } else {
-      // If search term exists, fetch with search
       fetchOrders(1, pagination.perPage, searchTerm);
     }
   };
 
-  // Handle clear search
   const handleClearSearch = () => {
     setSearchTerm('');
-    fetchOrders(); // Fetch all orders when clearing search
+    fetchOrders();
   };
 
-  // Handle Enter key press in search input
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -128,63 +120,101 @@ const OrdersNew = () => {
     fetchOrders();
   }, []);
 
+  const getRefundBadge = (row) => {
+    const refundAmount = row.original.refundableAmount;
+    const refundStatus = row.original.refundStatus;
+    const hasRefundRequest = row.original.hasRefundRequest;
+    const currency = row.original.ItemCurrency;
+
+    if (!hasRefundRequest && refundAmount <= 0) {
+      return <p>No Refund Request</p>;
+    }
+
+    let badgeColor = 'warning';
+    let badgeText = 'Refunding';
+    let tooltipText = 'Refund request pending';
+
+    if (hasRefundRequest) {
+      if (refundStatus === 1) {
+        badgeColor = 'success';
+        badgeText = 'Refunded';
+        tooltipText = 'Refund has been processed';
+      } else if (refundStatus === 2) {
+        badgeColor = 'danger';
+        badgeText = 'Refund Rejected';
+        tooltipText = 'Refund request was rejected';
+      } else if (refundStatus === 0) {
+        badgeColor = 'warning';
+        badgeText = 'Refund Pending';
+        tooltipText = 'Refund request is pending approval';
+      } else {
+        badgeColor = 'info';
+        badgeText = 'Refund Processing';
+        tooltipText = 'Refund is being processed';
+      }
+    }
+
+    return (
+      <Tooltip title={tooltipText}>
+        <CBadge color={badgeColor} className="ms-2" style={{ fontSize: 14 }}>
+          {badgeText}: {CurrencyConverter(currency, refundAmount, currencyData)}
+        </CBadge>
+      </Tooltip>
+    );
+  };
+
   const columns = [
-    { accessorKey: 'OrderId', header: 'Order ID' },
+    { 
+      accessorKey: 'OrderId', 
+      header: 'Order ID',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '120px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '120px', maxWidth: '150px', whiteSpace: 'nowrap' },
+      },
+    },
     {
       accessorKey: 'checkout_date',
       header: 'Booking Date',
       muiTableHeadCellProps: {
-        sx: { minWidth: '210px' },
+        sx: { minWidth: '150px' },
       },
       muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+        sx: { minWidth: '150px', maxWidth: '180px', whiteSpace: 'nowrap' },
       },
     },
-
     {
       accessorKey: 'refundableAmount',
-      header: 'Refunding Amount',
+      header: 'Refund Status',
       muiTableHeadCellProps: {
-        sx: { minWidth: '240px' },
-      },
-      muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
-      },
-      align: 'left',
-      Cell: ({ cell, row }) => { // Add row parameter here
-        if (cell?.getValue() > 0) {
-          return (
-            <CBadge color="danger" className="ms-2" style={{ fontSize: 14 }}>
-              Refunding {CurrencyConverter(
-                row.original.ItemCurrency, // Use the order's currency, not currencyData.base
-                cell.getValue(),
-                currencyData
-              )}
-            </CBadge>
-          )
-        } else {
-          return <p>No Refund Request</p>
-        }
-      }
-    },
-    {
-      accessorKey: 'min_service_date', header: 'Service Date', muiTableHeadCellProps: {
         sx: { minWidth: '200px' },
       },
       muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+        sx: { minWidth: '200px', maxWidth: '250px', whiteSpace: 'nowrap' },
+      },
+      align: 'left',
+      Cell: ({ row }) => getRefundBadge(row)
+    },
+    {
+      accessorKey: 'min_service_date', 
+      header: 'Service Date', 
+      muiTableHeadCellProps: {
+        sx: { minWidth: '150px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '150px', maxWidth: '180px', whiteSpace: 'nowrap' },
       },
     },
     {
       accessorKey: 'payment_type',
       header: 'Payment Type',
       muiTableHeadCellProps: {
-        sx: { minWidth: '210px' },
+        sx: { minWidth: '150px' },
       },
       muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+        sx: { minWidth: '150px', maxWidth: '180px', whiteSpace: 'nowrap' },
       },
-
       Cell: ({ cell }) => (
         <span style={{
           color: cell.getValue() === 'paid' ? 'green' : 'orange',
@@ -198,10 +228,10 @@ const OrdersNew = () => {
       accessorKey: 'total_amount',
       header: 'Total Amount',
       muiTableHeadCellProps: {
-        sx: { minWidth: '210px' },
+        sx: { minWidth: '150px' },
       },
       muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+        sx: { minWidth: '150px', maxWidth: '180px', whiteSpace: 'nowrap' },
       },
       Cell: ({ row }) => (
         <span>
@@ -217,10 +247,10 @@ const OrdersNew = () => {
       accessorKey: 'paid_amount',
       header: 'Paid Amount',
       muiTableHeadCellProps: {
-        sx: { minWidth: '210px' },
+        sx: { minWidth: '150px' },
       },
       muiTableBodyCellProps: {
-        sx: { minWidth: '160px', maxWidth: '200px', whiteSpace: 'nowrap' },
+        sx: { minWidth: '150px', maxWidth: '180px', whiteSpace: 'nowrap' },
       },
       Cell: ({ row }) => (
         <span>
@@ -235,6 +265,12 @@ const OrdersNew = () => {
     {
       accessorKey: 'balance_amount',
       header: 'Balance',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '120px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '120px', maxWidth: '150px', whiteSpace: 'nowrap' },
+      },
       Cell: ({ row }) => (
         <span style={{
           color: row.original.balance_amount > 0 ? 'red' : 'green'
@@ -250,6 +286,12 @@ const OrdersNew = () => {
     {
       accessorKey: 'additional_data',
       header: 'Additional Information',
+      muiTableHeadCellProps: {
+        sx: { minWidth: '180px' },
+      },
+      muiTableBodyCellProps: {
+        sx: { minWidth: '180px', maxWidth: '200px', whiteSpace: 'nowrap' },
+      },
       Cell: ({ row }) => (
         <div style={{ display: 'flex', gap: '5px' }}>
           <button
@@ -266,7 +308,6 @@ const OrdersNew = () => {
           </button>
         </div>
       ),
-      // You can disable sorting/filtering for this column if it's just for actions
       enableSorting: false,
       enableColumnFilter: false,
     },
@@ -301,7 +342,6 @@ const OrdersNew = () => {
         />
       </div>
     ),
-    // Add this configuration for sort tooltips
     muiTableHeadCellProps: ({ column }) => ({
       title: column.getIsSorted()
         ? `Sort by ${column.columnDef.header} ${column.getIsSorted() === 'asc' ? '(Ascending)' : '(Descending)'}`
@@ -361,24 +401,100 @@ const OrdersNew = () => {
     }
   };
 
+  const renderPaginationItems = () => {
+    const items = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, pagination.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(pagination.lastPage, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    items.push(
+      <CPaginationItem 
+        key="prev"
+        disabled={pagination.currentPage === 1}
+        onClick={() => handlePageChange(pagination.currentPage - 1)}
+      >
+        Previous
+      </CPaginationItem>
+    );
+    
+    if (startPage > 1) {
+      items.push(
+        <CPaginationItem
+          key={1}
+          active={1 === pagination.currentPage}
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </CPaginationItem>
+      );
+      
+      if (startPage > 2) {
+        items.push(<CPaginationItem key="ellipsis1" disabled>...</CPaginationItem>);
+      }
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <CPaginationItem
+          key={i}
+          active={i === pagination.currentPage}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </CPaginationItem>
+      );
+    }
+    
+    if (endPage < pagination.lastPage) {
+      if (endPage < pagination.lastPage - 1) {
+        items.push(<CPaginationItem key="ellipsis2" disabled>...</CPaginationItem>);
+      }
+      
+      items.push(
+        <CPaginationItem
+          key={pagination.lastPage}
+          active={pagination.lastPage === pagination.currentPage}
+          onClick={() => handlePageChange(pagination.lastPage)}
+        >
+          {pagination.lastPage}
+        </CPaginationItem>
+      );
+    }
+    
+    items.push(
+      <CPaginationItem 
+        key="next"
+        disabled={pagination.currentPage === pagination.lastPage}
+        onClick={() => handlePageChange(pagination.currentPage + 1)}
+      >
+        Next
+      </CPaginationItem>
+    );
+    
+    return items;
+  };
+
   if (loading) {
     return <LoaderPanel message="Loading orders..." />;
   }
 
-  // Fullscreen container styles
   const containerStyle = isTableFullscreen
     ? {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 1030,
-      backgroundColor: 'white',
-      padding: '20px',
-      overflow: 'auto',
-    }
-    : {}
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1030,
+        backgroundColor: 'white',
+        padding: '20px',
+        overflow: 'auto',
+      }
+    : {};
 
   return (
     <>
@@ -417,7 +533,6 @@ const OrdersNew = () => {
                           </CButton>
                         </CInputGroup>
 
-                        {/* Table Fullscreen Toggle Button */}
                         <Tooltip title={isTableFullscreen ? "Exit Fullscreen" : "Click Fullscreen"}>
                           <IconButton
                             onClick={toggleTableFullscreen}
@@ -445,94 +560,41 @@ const OrdersNew = () => {
                       <>
                         <MaterialReactTable table={table} />
 
-                        {/* Hide pagination when in fullscreen mode */}
-                        {
-                          <div className="mt-3 d-flex justify-content-between align-items-center">
-                            <div>
-                              Showing {((pagination.currentPage - 1) * pagination.perPage) + 1} to{' '}
-                              {Math.min(pagination.currentPage * pagination.perPage, pagination.total)} of{' '}
-                              {pagination.total} entries
-                              {searchTerm && (
-                                <span className="ms-2 text-muted">
-                                  (Filtered by: "{searchTerm}")
-                                </span>
-                              )}
-                            </div>
-                            <div className="d-flex align-items-center flex-wrap gap-2">
-                              <div className="d-flex align-items-center">
-                                <span className="me-2">Items per page:</span>
-                                <select
-                                  className="form-select form-select-sm"
-                                  style={{ width: '80px' }}
-                                  value={pagination.perPage}
-                                  onChange={(e) => {
-                                    const newPerPage = parseInt(e.target.value);
-                                    fetchOrders(1, newPerPage, searchTerm);
-                                  }}
-                                >
-                                  {[10, 20, 50, 100].map((size) => (
-                                    <option key={size} value={size}>
-                                      {size}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-
-                              <CPagination aria-label="Page navigation" className="m-0">
-                                <CPaginationItem
-                                  disabled={pagination.currentPage === 1}
-                                  onClick={() => handlePageChange(1)}
-                                >
-                                  First
-                                </CPaginationItem>
-                                <CPaginationItem
-                                  disabled={pagination.currentPage === 1}
-                                  onClick={() => handlePageChange(pagination.currentPage - 1)}
-                                >
-                                  Previous
-                                </CPaginationItem>
-
-                                {Array.from({ length: Math.min(5, pagination.lastPage) }, (_, i) => {
-                                  let pageNum;
-                                  if (pagination.lastPage <= 5) {
-                                    pageNum = i + 1;
-                                  } else if (pagination.currentPage <= 3) {
-                                    pageNum = i + 1;
-                                  } else if (pagination.currentPage >= pagination.lastPage - 2) {
-                                    pageNum = pagination.lastPage - 4 + i;
-                                  } else {
-                                    pageNum = pagination.currentPage - 2 + i;
-                                  }
-
-                                  return (
-                                    <CPaginationItem
-                                      key={pageNum}
-                                      active={pageNum === pagination.currentPage}
-                                      onClick={() => handlePageChange(pageNum)}
-                                    >
-                                      {pageNum}
-                                    </CPaginationItem>
-                                  );
-                                })}
-
-                                <CPaginationItem
-                                  disabled={pagination.currentPage === pagination.lastPage}
-                                  onClick={() => handlePageChange(pagination.currentPage + 1)}
-                                >
-                                  Next
-                                </CPaginationItem>
-                                <CPaginationItem
-                                  disabled={pagination.currentPage === pagination.lastPage}
-                                  onClick={() => handlePageChange(pagination.lastPage)}
-                                >
-                                  Last
-                                </CPaginationItem>
-                              </CPagination>
-                            </div>
+                        <div className="mt-3 d-flex justify-content-between align-items-center">
+                          <div>
+                            Showing {((pagination.currentPage - 1) * pagination.perPage) + 1} to{' '}
+                            {Math.min(pagination.currentPage * pagination.perPage, pagination.total)} of{' '}
+                            {pagination.total} entries
+                            {searchTerm && (
+                              <span className="ms-2 text-muted">
+                                (Filtered by: "{searchTerm}")
+                              </span>
+                            )}
                           </div>
+                          <div className="d-flex align-items-center flex-wrap gap-2">
+                            <div className="d-flex align-items-center">
+                              <span className="me-2">Items per page:</span>
+                              <CFormSelect
+                                value={pagination.perPage}
+                                onChange={(e) => {
+                                  const newPerPage = parseInt(e.target.value);
+                                  fetchOrders(1, newPerPage, searchTerm);
+                                }}
+                                style={{ width: '80px' }}
+                              >
+                                {[10, 20, 50, 100].map((size) => (
+                                  <option key={size} value={size}>
+                                    {size}
+                                  </option>
+                                ))}
+                              </CFormSelect>
+                            </div>
 
-
-                        }
+                            <CPagination aria-label="Page navigation" className="m-0">
+                              {renderPaginationItems()}
+                            </CPagination>
+                          </div>
+                        </div>
                       </>
                     ) : (
                       <div className="text-center py-5">
@@ -551,7 +613,6 @@ const OrdersNew = () => {
       </CRow>
 
       {selectedOrderDetails && (
-
         <DetailExpander
           show={detailExpander}
           onHide={() => setDetailExpander(false)}
@@ -567,7 +628,7 @@ const OrdersNew = () => {
             />
           }
           style={isTableFullscreen ? {
-            zIndex: 100000, // Higher than fullscreen z-index
+            zIndex: 100000,
             position: 'fixed',
             top: 0,
             left: 0,
