@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -12,26 +12,26 @@ import {
   CFormLabel,
   CListGroup,
   CListGroupItem,
-  CBadge
-} from '@coreui/react';
-import { Box, Typography, LinearProgress } from '@mui/material';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+  CBadge,
+} from '@coreui/react'
+import { Box, Typography, LinearProgress } from '@mui/material'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 function TopicCreate({ onTopicCreated }) {
-  const [progress, setProgress] = useState(0);
-  const [topicTitles, setTopicTitles] = useState([]);
-  const [showCustomTopicInput, setShowCustomTopicInput] = useState(false);
-  const [showUserSelection, setShowUserSelection] = useState(false);
-  const [userSearch, setUserSearch] = useState('');
-  const [userSuggestions, setUserSuggestions] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+  const [progress, setProgress] = useState(0)
+  const [topicTitles, setTopicTitles] = useState([])
+  const [showCustomTopicInput, setShowCustomTopicInput] = useState(false)
+  const [showUserSelection, setShowUserSelection] = useState(false)
+  const [userSearch, setUserSearch] = useState('')
+  const [userSuggestions, setUserSuggestions] = useState([])
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false)
   const [formData, setFormData] = useState({
     topic: '',
     customTopic: '',
     description: '',
-  });
+  })
 
   // Internal CSS styles
   const styles = {
@@ -73,116 +73,116 @@ function TopicCreate({ onTopicCreated }) {
       borderRadius: '50%',
       animation: 'spin 1s linear infinite',
     },
-  };
+  }
 
   const fetchTopicTitles = async () => {
     try {
-      const response = await axios.get('/promotions/topics-titles/all');
-      setTopicTitles(response?.data?.topic_titles || []);
+      const response = await axios.get('/promotions/topics-titles/all')
+      setTopicTitles(response?.data?.topic_titles || [])
     } catch (error) {
-      console.log('Error fetching notifications:', error);
+      console.log('Error fetching notifications:', error)
     }
-  };
+  }
 
   // Fetch user suggestions based on search input
   const fetchUserSuggestions = async (searchTerm) => {
-    setIsLoadingUsers(true);
+    setIsLoadingUsers(true)
     try {
-      console.log('Fetching users with search term:', searchTerm);
-      const response = await axios.get(`/users?search=${searchTerm}`);
-      console.log('User API response:', response.data);
-      
+      console.log('Fetching users with search term:', searchTerm)
+      const response = await axios.get(`/users?search=${searchTerm}`)
+      console.log('User API response:', response.data)
+
       // Check if the response has the expected structure
       if (response.data && response.data.users && response.data.users.data) {
-        setUserSuggestions(response.data.users.data);
+        setUserSuggestions(response.data.users.data)
       } else {
-        console.error('Unexpected API response structure:', response.data);
-        setUserSuggestions([]);
+        console.error('Unexpected API response structure:', response.data)
+        setUserSuggestions([])
         Swal.fire({
           title: 'API Error',
           text: 'Unexpected response format from server',
           icon: 'error',
           confirmButtonText: 'OK',
-        });
+        })
       }
     } catch (error) {
-      console.log('Error fetching users:', error);
-      setUserSuggestions([]);
+      console.log('Error fetching users:', error)
+      setUserSuggestions([])
       Swal.fire({
         title: 'Network Error',
         text: 'Could not fetch users. Please try again.',
         icon: 'error',
         confirmButtonText: 'OK',
-      });
+      })
     } finally {
-      setIsLoadingUsers(false);
+      setIsLoadingUsers(false)
     }
-  };
+  }
 
   // Debounce the user search to avoid too many API calls
   useEffect(() => {
     if (userSearch.trim() === '') {
-      setUserSuggestions([]);
-      return;
+      setUserSuggestions([])
+      return
     }
-    
-    const delayDebounceFn = setTimeout(() => {
-      fetchUserSuggestions(userSearch);
-    }, 500);
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [userSearch]);
+    const delayDebounceFn = setTimeout(() => {
+      fetchUserSuggestions(userSearch)
+    }, 500)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [userSearch])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    
+    const { name, value } = e.target
+
     if (name === 'topic') {
       // Show custom topic input if "Custom Topic" is selected
-      setShowCustomTopicInput(value === 'custom_topic');
-      setShowUserSelection(value === 'custom_topic');
-      
+      setShowCustomTopicInput(value === 'custom_topic')
+      setShowUserSelection(value === 'custom_topic')
+
       // Reset custom topic field if switching away from custom
       if (value !== 'custom_topic') {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           customTopic: '',
-          [name]: value
-        }));
-        setSelectedUsers([]);
+          [name]: value,
+        }))
+        setSelectedUsers([])
       } else {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          [name]: value
-        }));
+          [name]: value,
+        }))
       }
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
-      }));
+        [name]: value,
+      }))
     }
-  };
+  }
 
   const handleUserSearch = (e) => {
-    setUserSearch(e.target.value);
-  };
+    setUserSearch(e.target.value)
+  }
 
   const handleUserSelect = (user) => {
     // Check if user is already selected
-    if (!selectedUsers.some(u => u.id === user.id)) {
-      setSelectedUsers(prev => [...prev, user]);
+    if (!selectedUsers.some((u) => u.id === user.id)) {
+      setSelectedUsers((prev) => [...prev, user])
     }
-    setUserSearch('');
-    setUserSuggestions([]);
-  };
+    setUserSearch('')
+    setUserSuggestions([])
+  }
 
   const handleRemoveUser = (userId) => {
-    setSelectedUsers(prev => prev.filter(user => user.id !== userId));
-  };
+    setSelectedUsers((prev) => prev.filter((user) => user.id !== userId))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     // Validate form
     if (formData.topic === 'custom_topic' && !formData.customTopic.trim()) {
       Swal.fire({
@@ -190,10 +190,10 @@ function TopicCreate({ onTopicCreated }) {
         text: 'Please enter a custom topic name',
         icon: 'error',
         confirmButtonText: 'OK',
-      });
-      return;
+      })
+      return
     }
-    
+
     // Validate users if custom topic is selected
     if (formData.topic === 'custom_topic' && selectedUsers.length === 0) {
       Swal.fire({
@@ -201,82 +201,82 @@ function TopicCreate({ onTopicCreated }) {
         text: 'Please select at least one user for the custom topic',
         icon: 'error',
         confirmButtonText: 'OK',
-      });
-      return;
+      })
+      return
     }
-    
-    // Use custom topic if selected, otherwise use the selected topic
-    const finalTopic = formData.topic === 'custom_topic' ? formData.customTopic : formData.topic;
-    
-    // Prepare user IDs for submission
-    const userIds = formData.topic === 'custom_topic' ? selectedUsers.map(user => user.id) : [];
-    
+
+    // Prepare submission data based on topic type
     const submissionData = {
-      topic: finalTopic,
       description: formData.description,
       index: 1,
-      users: userIds
-    };
-    
-    console.log('Submitting data:', submissionData);
-    
-    let max_requests = 1;
+      topic: formData.topic, // This will be either the selected topic or "custom_topic"
+    }
+
+    // Add topic_name and user_ids if custom topic is selected
+    if (formData.topic === 'custom_topic') {
+      submissionData.topic_name = formData.customTopic
+      submissionData.user_ids = selectedUsers.map((user) => user.id)
+    }
+
+    console.log('Submitting data:', submissionData)
+
+    let max_requests = 1
     while (submissionData.index <= max_requests) {
       try {
         const response = await axios.post('/promotions/create_topic', submissionData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        });
-        max_requests = response?.data?.max_requests ?? 1;
-        let progress = ((submissionData.index / max_requests) * 100).toFixed(2);
-        setProgress(parseInt(progress));
-        submissionData.index += 1;
+        })
+        max_requests = response?.data?.max_requests ?? 1
+        let progress = ((submissionData.index / max_requests) * 100).toFixed(2)
+        setProgress(parseInt(progress))
+        submissionData.index += 1
       } catch (error) {
         Swal.fire({
           title: 'Error',
           text: error?.response?.data?.message ?? error.message,
           icon: 'error',
           confirmButtonText: 'OK',
-        });
-        return;
+        })
+        return
       }
     }
-    
+
     setFormData({
       topic: '',
       customTopic: '',
       description: '',
-    });
-    setShowCustomTopicInput(false);
-    setShowUserSelection(false);
-    setSelectedUsers([]);
-    setProgress(0);
-    onTopicCreated();
+    })
+    setShowCustomTopicInput(false)
+    setShowUserSelection(false)
+    setSelectedUsers([])
+    setProgress(0)
+    onTopicCreated()
     Swal.fire({
       title: 'Success',
       text: 'Promotion topic created successfully!',
       icon: 'success',
       confirmButtonText: 'OK',
-    });
-  };
+    })
+  }
 
   const handleClear = () => {
     setFormData({
       topic: '',
       customTopic: '',
       description: '',
-    });
-    setShowCustomTopicInput(false);
-    setShowUserSelection(false);
-    setSelectedUsers([]);
-    setUserSearch('');
-    setUserSuggestions([]);
-  };
+    })
+    setShowCustomTopicInput(false)
+    setShowUserSelection(false)
+    setSelectedUsers([])
+    setUserSearch('')
+    setUserSuggestions([])
+  }
 
   useEffect(() => {
-    fetchTopicTitles();
-  }, []);
+    fetchTopicTitles()
+  }, [])
 
   return (
     <CCard className="shadow-sm border-0">
@@ -298,18 +298,18 @@ function TopicCreate({ onTopicCreated }) {
                 {topicTitles.map((title) => {
                   const formattedTitle = title
                     .replace(/_/g, ' ')
-                    .replace(/\b\w/g, (char) => char.toUpperCase());
+                    .replace(/\b\w/g, (char) => char.toUpperCase())
                   return (
                     <option key={title} value={title}>
                       {formattedTitle}
                     </option>
-                  );
+                  )
                 })}
                 <option value="custom_topic">+ Custom Topic</option>
               </CFormSelect>
             </CCol>
           </CRow>
-          
+
           {showCustomTopicInput && (
             <>
               <CRow>
@@ -326,7 +326,7 @@ function TopicCreate({ onTopicCreated }) {
                   />
                 </CCol>
               </CRow>
-              
+
               {showUserSelection && (
                 <CRow>
                   <CCol md={12} className="mb-4">
@@ -345,21 +345,22 @@ function TopicCreate({ onTopicCreated }) {
                           <div style={styles.loadingSpinner}></div>
                         </div>
                       )}
-                      
+
                       {userSuggestions.length > 0 && (
                         <div style={styles.suggestionsDropdown}>
                           <CListGroup>
-                            {userSuggestions.map(user => (
-                              <CListGroupItem 
-                                key={user.id} 
-                                action 
+                            {userSuggestions.map((user) => (
+                              <CListGroupItem
+                                key={user.id}
+                                action
                                 onClick={() => handleUserSelect(user)}
                                 style={styles.suggestionItem}
                                 onMouseEnter={(e) => {
-                                  e.target.style.backgroundColor = styles.suggestionItemHover.backgroundColor;
+                                  e.target.style.backgroundColor =
+                                    styles.suggestionItemHover.backgroundColor
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.target.style.backgroundColor = '';
+                                  e.target.style.backgroundColor = ''
                                 }}
                               >
                                 <div>
@@ -372,21 +373,21 @@ function TopicCreate({ onTopicCreated }) {
                           </CListGroup>
                         </div>
                       )}
-                      
+
                       {selectedUsers.length > 0 && (
                         <div className="selected-users mt-3">
                           <h6>Selected Users:</h6>
                           <div className="d-flex flex-wrap gap-2">
-                            {selectedUsers.map(user => (
-                              <CBadge 
-                                key={user.id} 
-                                color="primary" 
+                            {selectedUsers.map((user) => (
+                              <CBadge
+                                key={user.id}
+                                color="primary"
                                 className="p-2 d-flex align-items-center"
                                 style={styles.userBadge}
                               >
                                 {user.username} ({user.email})
-                                <button 
-                                  type="button" 
+                                <button
+                                  type="button"
                                   className="btn-close btn-close-white ms-2"
                                   aria-label="Close"
                                   onClick={() => handleRemoveUser(user.id)}
@@ -403,7 +404,7 @@ function TopicCreate({ onTopicCreated }) {
               )}
             </>
           )}
-          
+
           <CRow>
             <CCol className="mb-3">
               <CFormTextarea
@@ -417,7 +418,7 @@ function TopicCreate({ onTopicCreated }) {
               />
             </CCol>
           </CRow>
-          
+
           {progress > 0 && (
             <CRow>
               <Box sx={{ mt: 3, mb: 3 }}>
@@ -450,7 +451,7 @@ function TopicCreate({ onTopicCreated }) {
         </CForm>
       </CCardBody>
     </CCard>
-  );
+  )
 }
 
-export default TopicCreate;
+export default TopicCreate
