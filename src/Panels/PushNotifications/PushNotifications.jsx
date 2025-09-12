@@ -10,7 +10,8 @@ import SentNotifications from './SentNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { app } from "firebase/app";
+import { app } from "src/firebase"; // adjust path as needed
+
 
 
 const data = {
