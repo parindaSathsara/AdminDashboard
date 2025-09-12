@@ -29,44 +29,24 @@ function TopicList(props) {
     }))
   }
 
+  const handleEdit = (topic) => {
+    console.log('Editing custom topic:', topic)
+    Swal.fire({
+      title: 'Edit Custom Topic',
+      text: `Editing custom topic: ${topic.topic}`,
+      icon: 'info',
+      confirmButtonText: 'OK'
+    })
+    // Here you can implement your edit functionality
+  }
+
   const handleUpdate = async (topic_id) => {
     setUpdatingIds((prev) => [...prev, topic_id])
-    // updateProgress(topic_id, 1, 'Removing current users from the topic...')
-
-    // let unsubscribe_index = 1
-    // let unsubscribe_max_requests = 1
-    // while (unsubscribe_index <= unsubscribe_max_requests) {
-    //   try {
-    //     const response = await axios.post(
-    //       '/promotions/unsubscribe_from_topics',
-    //       {
-    //         topic_id: topic_id,
-    //         index: unsubscribe_index,
-    //       },
-    //       {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //         },
-    //       },
-    //     )
-    //     unsubscribe_max_requests = response?.data?.max_requests ?? 1
-    //     let progress = ((unsubscribe_index / unsubscribe_max_requests) * 50).toFixed(2)
-    //     updateProgress(topic_id, parseInt(progress), 'Removing current users from the topic...')
-    //     unsubscribe_index += 1
-    //   } catch (error) {
-    //     Swal.fire({
-    //       title: 'Error',
-    //       text: error?.response?.data?.message ?? error.message,
-    //       icon: 'error',
-    //       confirmButtonText: 'OK',
-    //     })
-    //     return
-    //   }
-    // }
-
+    
     let update_index = 1
     let update_max_requests = 1
     updateProgress(topic_id, 0, 'Adding new users to the topic...')
+    
     while (update_index <= update_max_requests) {
       try {
         const response = await axios.post(
@@ -98,6 +78,7 @@ function TopicList(props) {
     updateProgress(topic_id, 0, '')
     setUpdatingIds((prev) => prev.filter((num) => num !== topic_id))
   }
+
   useEffect(() => {
     fetchTopics()
   }, [props.isTopicCreated, updatingIds])
@@ -121,7 +102,12 @@ function TopicList(props) {
                   <CCardBody>
                     <div className="d-flex justify-content-between align-items-start mb-2">
                       <h5 className="fw-bold mb-0 topic-title">{topic.topic}</h5>
-                      <CBadge color={typeColors[topic.status]}>{topic.status}</CBadge>
+                      <div>
+                        <CBadge color={typeColors[topic.status]}>{topic.status}</CBadge>
+                        {topic.type === 'custom_topic' && (
+                          <CBadge color="info" className="ms-1">Custom</CBadge>
+                        )}
+                      </div>
                     </div>
 
                     <p className="text-muted small mb-3">{topic.description}</p>
@@ -142,42 +128,59 @@ function TopicList(props) {
                     </div>
 
                     <div className="d-flex gap-2 mt-3">
-                      <CButton
-                        size="sm"
-                        color="primary"
-                        variant="outline"
-                        disabled={updatingIds.includes(topic.id)} // disable while loading
-                        onClick={() => handleUpdate(topic.id)}
-                      >
-                        {updatingIds.includes(topic.id) ? (
-                          <>
-                            <CSpinner size="sm" className="me-2" /> Loading...
-                          </>
-                        ) : (
-                          <>
-                            <i className="fa fa-refresh" aria-hidden="true"></i> Refresh
-                          </>
-                        )}
-                      </CButton>
+                      {/* Show Edit button for custom topics */}
+                      {topic.type === 'custom_topic' && (
+                        <CButton
+                          size="sm"
+                          color="info"
+                          variant="outline"
+                          onClick={() => handleEdit(topic)}
+                        >
+                          <i className="fa fa-edit" aria-hidden="true"></i> Edit
+                        </CButton>
+                      )}
+
+                      {/* Show Refresh button for regular topics */}
+                      {topic.type !== 'custom_topic' && (
+                        <CButton
+                          size="sm"
+                          color="primary"
+                          variant="outline"
+                          disabled={updatingIds.includes(topic.id)}
+                          onClick={() => handleUpdate(topic.id)}
+                        >
+                          {updatingIds.includes(topic.id) ? (
+                            <>
+                              <CSpinner size="sm" className="me-2" /> Loading...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa fa-refresh" aria-hidden="true"></i> Refresh
+                            </>
+                          )}
+                        </CButton>
+                      )}
                     </div>
+
                     <div className="text-muted small mt-2">
                       Last updated at:{' '}
                       {topic.updated_at ? new Date(topic.updated_at).toLocaleString() : 'Never'}
                     </div>
-                    {updatingIds.includes(topic.id) && progressByTopic[topic.id].progress > 0 && (
+
+                    {updatingIds.includes(topic.id) && progressByTopic[topic.id]?.progress > 0 && (
                       <CRow>
                         <Box sx={{ mt: 3, mb: 3 }}>
                           <Typography variant="body2" color="text.secondary" gutterBottom>
-                            {progressByTopic[topic.id].message}
+                            {progressByTopic[topic.id]?.message}
                           </Typography>
                           <LinearProgress
                             variant="determinate"
-                            value={progressByTopic[topic.id].progress}
+                            value={progressByTopic[topic.id]?.progress}
                             sx={{ height: 3, borderRadius: 5 }}
                           />
                           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                             <Typography variant="body2" color="text.secondary">
-                              {progressByTopic[topic.id].progress}%
+                              {progressByTopic[topic.id]?.progress}%
                             </Typography>
                           </Box>
                         </Box>
