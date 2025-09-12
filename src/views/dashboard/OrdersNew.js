@@ -121,47 +121,36 @@ const OrdersNew = () => {
   }, []);
 
   const getRefundBadge = (row) => {
-    const refundAmount = row.original.refundableAmount;
-    const refundStatus = row.original.refundStatus;
-    const hasRefundRequest = row.original.hasRefundRequest;
-    const currency = row.original.ItemCurrency;
+  const refundAmount = row.original.refundableAmount;
+  const refundStatus = row.original.refundStatus;
+  const hasRefundRequest = row.original.hasRefundRequest;
+  const currency = row.original.ItemCurrency;
 
-    if (!hasRefundRequest && refundAmount <= 0) {
-      return <p>No Refund Request</p>;
-    }
-
-    let badgeColor = 'warning';
-    let badgeText = 'Refunding';
-    let tooltipText = 'Refund request pending';
-
-    if (hasRefundRequest) {
-      if (refundStatus === 1) {
-        badgeColor = 'success';
-        badgeText = 'Refunded';
-        tooltipText = 'Refund has been processed';
-      } else if (refundStatus === 2) {
-        badgeColor = 'danger';
-        badgeText = 'Refund Rejected';
-        tooltipText = 'Refund request was rejected';
-      } else if (refundStatus === 0) {
-        badgeColor = 'warning';
-        badgeText = 'Refund Pending';
-        tooltipText = 'Refund request is pending approval';
-      } else {
-        badgeColor = 'info';
-        badgeText = 'Refund Processing';
-        tooltipText = 'Refund is being processed';
-      }
-    }
-
+  // If no refund request, show "No Refund Request"
+  if (!hasRefundRequest) {
     return (
-      <Tooltip title={tooltipText}>
-        <CBadge color={badgeColor} className="ms-2" style={{ fontSize: 14 }}>
-          {badgeText}: {CurrencyConverter(currency, refundAmount, currencyData)}
-        </CBadge>
-      </Tooltip>
+      <span style={{ color: '#6c757d', fontStyle: 'italic' }}>
+        No Refund Request
+      </span>
     );
-  };
+  }
+
+  // If refund is completed (status 1)
+  if (refundStatus === 1) {
+    return (
+      <CBadge color="danger" style={{ fontSize: 14, padding: '4px 8px' }}>
+        Refunded: {CurrencyConverter(currency, refundAmount, currencyData)}
+      </CBadge>
+    );
+  }
+
+  // If refund is in process (any other status)
+  return (
+    <CBadge color="warning" style={{ fontSize: 14, padding: '4px 8px' }}>
+      Refunding: {CurrencyConverter(currency, refundAmount, currencyData)}
+    </CBadge>
+  );
+};
 
   const columns = [
     { 

@@ -9,124 +9,127 @@ import SentNotifications from './SentNotifications';
 // import './PushNotifications.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { app } from "firebase/app";
+
 
 const data = {
     "navigators": [
-      {
-        "name": "HomeNavigator",
-        "screens": []
-      },
-      {
-        "name": "LoginNavigator",
-        "screens": [
-          { "name": "LoginMainPage", "component": "LoginMainPage" },
-          { "name": "LoginPage", "component": "LoginNew" },
-          { "name": "SignInUsingPassword", "component": "SignInUsingPassword" },
-          { "name": "MobileLogin", "component": "MobileLogin" },
-          { "name": "OneTimePass", "component": "OneTimePass" },
-          { "name": "MobileNumberLogin", "component": "MobileNumberLogin" },
-          { "name": "ForgotPassword", "component": "ForgotPassword" },
-          { "name": "VerifyCodeAndResetPass", "component": "VerifyCodeAndResetPass" },
-          { "name": "ProfileLogin", "component": "ProfileLogin" },
-          { "name": "OnboardingScreen", "component": "OnboardingScreen" }
-        ]
-      },
-      {
-        "name": "MessageNavigator",
-        "screens": [
-          { "name": "CustomerChatMain", "component": "CustomerChatMain" },
-          { "name": "ChatPage", "component": "ChatPage" }
-        ]
-      },
-      {
-        "name": "MainNavigatorStack",
-        "screens": [
-          { "name": "Home", "component": "HomeMeta" },
-          { "name": "Order Edit", "component": "OrderEdit" },
-          { "name": "WebXMainPortal", "component": "WebXMainPortal" },
-          { "name": "Lets Plan...", "component": "LetsPlanHome" },
-          { "name": "OnboardingScreen", "component": "OnboardingScreen" },
-          { "name": "FlightOrderCard", "component": "FlightOrderCard" },
-          { "name": "SearchMeta", "component": "SearchMeta" },
-          { "name": "NotificationPage", "component": "NotificationMainPage" },
-          { "name": "VoiceRecognitionComponent", "component": "VoiceRecognitionComponent" },
-          { "name": "DataSorter", "component": "DataSorters" },
-          { "name": "HotelRoomAllocation", "component": "HotelRoomAllocation" },
-          { "name": "ItineraryPage", "component": "ItineraryPage" },
-          { "name": "EssentialDetailsMeta", "component": "EssentialDetailsMeta" },
-          { "name": "MyCalendar", "component": "MyCalendar" },
-          { "name": "SelectLocation", "component": "SelectLocation" },
-          { "name": "FlightsMainPageMeta", "component": "FlightsMainPageMeta" },
-          { "name": "FlightsBookingReviewMeta", "component": "FlightsBookingReviewMeta" },
-          { "name": "FlightsDetailsPage", "component": "FlightsDetailsPage" },
-          { "name": "FlightsPassengerDetails", "component": "FlightsPassengerDetails" },
-          { "name": "PaymentSuccess", "component": "PaymentSuccessMeta" },
-          { "name": "FlightsMainCard", "component": "FlightsMainCard" },
-          { "name": "SeatMapping", "component": "SeatMapping" },
-          { "name": "Cart", "component": "Cart" },
-          { "name": "CustomerMainPage", "component": "CustomerMainPage" },
-          { "name": "HotelsSearch", "component": "HotelsSearch" },
-          { "name": "HotelMainForm", "component": "HotelMainForm" },
-          { "name": "HotelDetails", "component": "HotelDetails" },
-          { "name": "BudgetPage", "component": "BudgetPage" },
-          { "name": "LifestyleMain", "component": "LifestyleMain" },
-          { "name": "DatePage", "component": "DatePage" },
-          { "name": "ToPage", "component": "ToPage" },
-          { "name": "PaxCount", "component": "PaxCount" },
-          { "name": "Completed Orders", "component": "CompletedPage" },
-          { "name": "VoiceSearch", "component": "VoiceInput" },
-          { "name": "OnlineTransfer", "component": "OnlineTransferPage" },
-          { "name": "HotelsMainSearchResults", "component": "HotelsMainSearchResults" },
-          { "name": "HotelsMainPage", "component": "HotelsMainPage" },
-          { "name": "SplashScreenLogout", "component": "SplashScreenLogout" },
-          { "name": "JoinClass", "component": "Joinclass" },
-          { "name": "MainProfile", "component": "MainProfile" },
-          { "name": "FlightsMainPage", "component": "FlightsMainPage" },
-          { "name": "MoreAddress", "component": "MoreAddress" },
-          { "name": "StripeScreen", "component": "StripeScreen" },
-          { "name": "EssentialDetails", "component": "EssentialDetails" },
-          { "name": "FlightsBookingReviewPage", "component": "FlightsBookingReviewPage" },
-          { "name": "ZoomSDK", "component": "ZoomLessons" },
-          { "name": "Deals", "component": "Deals" },
-          { "name": "CartSelectContainer", "component": "CartSelectContainer" },
-          { "name": "PaymentSelection", "component": "PaymentsSelectionPage" },
-          { "name": "Summary", "component": "Summary" },
-          { "name": "OrderHistory", "component": "OrderHistory" },
-          { "name": "MainSearch", "component": "MainSearch" },
-          { "name": "VendorStore", "component": "VendorStore" },
-          { "name": "LifestyleDetail", "component": "LifestyleDetail" },
-          { "name": "EducationDetail", "component": "EducationDetail" },
-          { "name": "Login", "component": "Login" },
-          { "name": "HotelDetail", "component": "HotelDetail" },
-          { "name": "HotelAvailabilityCheck", "component": "HotelAvailabilityCheck" },
-          { "name": "Register", "component": "Register" },
-          { "name": "EssentialDetail", "component": "EssentialDetail" },
-          { "name": "FlightSearchComponent", "component": "FlightSearchComponent" },
-          { "name": "FlightsSearchPage", "component": "FlightsSearchPage" },
-          { "name": "FlightSearch", "component": "FlightSearch" },
-          { "name": "FlightsPackagesPage", "component": "FlightsPackagesPage" },
-          { "name": "flightsMoreDetails", "component": "FlightsMoreDetailsPage" },
-          { "name": "multiCityRoundTripDetails", "component": "MultiCityRoundTripMoreDetails" },
-          { "name": "About", "component": "About" },
-          { "name": "NewOrder", "component": "NewOrder" },
-          { "name": "Notifications", "component": "Notifications" },
-          { "name": "NonEssentials", "component": "NonEssentials" },
-          { "name": "Essentials", "component": "Essentials" },
-          { "name": "Education", "component": "Education" },
-          { "name": "Lifestyle", "component": "Lifestyle" },
-          { "name": "Hotels", "component": "Hotels" },
-          { "name": "Flights", "component": "Flights" }
-        ]
-      },
-      {
-        "name": "CartNavigatorStack",
-        "screens": [
-          { "name": "My Carts", "component": "MyCartHome" }
-        ]
-      }
+        {
+            "name": "HomeNavigator",
+            "screens": []
+        },
+        {
+            "name": "LoginNavigator",
+            "screens": [
+                { "name": "LoginMainPage", "component": "LoginMainPage" },
+                { "name": "LoginPage", "component": "LoginNew" },
+                { "name": "SignInUsingPassword", "component": "SignInUsingPassword" },
+                { "name": "MobileLogin", "component": "MobileLogin" },
+                { "name": "OneTimePass", "component": "OneTimePass" },
+                { "name": "MobileNumberLogin", "component": "MobileNumberLogin" },
+                { "name": "ForgotPassword", "component": "ForgotPassword" },
+                { "name": "VerifyCodeAndResetPass", "component": "VerifyCodeAndResetPass" },
+                { "name": "ProfileLogin", "component": "ProfileLogin" },
+                { "name": "OnboardingScreen", "component": "OnboardingScreen" }
+            ]
+        },
+        {
+            "name": "MessageNavigator",
+            "screens": [
+                { "name": "CustomerChatMain", "component": "CustomerChatMain" },
+                { "name": "ChatPage", "component": "ChatPage" }
+            ]
+        },
+        {
+            "name": "MainNavigatorStack",
+            "screens": [
+                { "name": "Home", "component": "HomeMeta" },
+                { "name": "Order Edit", "component": "OrderEdit" },
+                { "name": "WebXMainPortal", "component": "WebXMainPortal" },
+                { "name": "Lets Plan...", "component": "LetsPlanHome" },
+                { "name": "OnboardingScreen", "component": "OnboardingScreen" },
+                { "name": "FlightOrderCard", "component": "FlightOrderCard" },
+                { "name": "SearchMeta", "component": "SearchMeta" },
+                { "name": "NotificationPage", "component": "NotificationMainPage" },
+                { "name": "VoiceRecognitionComponent", "component": "VoiceRecognitionComponent" },
+                { "name": "DataSorter", "component": "DataSorters" },
+                { "name": "HotelRoomAllocation", "component": "HotelRoomAllocation" },
+                { "name": "ItineraryPage", "component": "ItineraryPage" },
+                { "name": "EssentialDetailsMeta", "component": "EssentialDetailsMeta" },
+                { "name": "MyCalendar", "component": "MyCalendar" },
+                { "name": "SelectLocation", "component": "SelectLocation" },
+                { "name": "FlightsMainPageMeta", "component": "FlightsMainPageMeta" },
+                { "name": "FlightsBookingReviewMeta", "component": "FlightsBookingReviewMeta" },
+                { "name": "FlightsDetailsPage", "component": "FlightsDetailsPage" },
+                { "name": "FlightsPassengerDetails", "component": "FlightsPassengerDetails" },
+                { "name": "PaymentSuccess", "component": "PaymentSuccessMeta" },
+                { "name": "FlightsMainCard", "component": "FlightsMainCard" },
+                { "name": "SeatMapping", "component": "SeatMapping" },
+                { "name": "Cart", "component": "Cart" },
+                { "name": "CustomerMainPage", "component": "CustomerMainPage" },
+                { "name": "HotelsSearch", "component": "HotelsSearch" },
+                { "name": "HotelMainForm", "component": "HotelMainForm" },
+                { "name": "HotelDetails", "component": "HotelDetails" },
+                { "name": "BudgetPage", "component": "BudgetPage" },
+                { "name": "LifestyleMain", "component": "LifestyleMain" },
+                { "name": "DatePage", "component": "DatePage" },
+                { "name": "ToPage", "component": "ToPage" },
+                { "name": "PaxCount", "component": "PaxCount" },
+                { "name": "Completed Orders", "component": "CompletedPage" },
+                { "name": "VoiceSearch", "component": "VoiceInput" },
+                { "name": "OnlineTransfer", "component": "OnlineTransferPage" },
+                { "name": "HotelsMainSearchResults", "component": "HotelsMainSearchResults" },
+                { "name": "HotelsMainPage", "component": "HotelsMainPage" },
+                { "name": "SplashScreenLogout", "component": "SplashScreenLogout" },
+                { "name": "JoinClass", "component": "Joinclass" },
+                { "name": "MainProfile", "component": "MainProfile" },
+                { "name": "FlightsMainPage", "component": "FlightsMainPage" },
+                { "name": "MoreAddress", "component": "MoreAddress" },
+                { "name": "StripeScreen", "component": "StripeScreen" },
+                { "name": "EssentialDetails", "component": "EssentialDetails" },
+                { "name": "FlightsBookingReviewPage", "component": "FlightsBookingReviewPage" },
+                { "name": "ZoomSDK", "component": "ZoomLessons" },
+                { "name": "Deals", "component": "Deals" },
+                { "name": "CartSelectContainer", "component": "CartSelectContainer" },
+                { "name": "PaymentSelection", "component": "PaymentsSelectionPage" },
+                { "name": "Summary", "component": "Summary" },
+                { "name": "OrderHistory", "component": "OrderHistory" },
+                { "name": "MainSearch", "component": "MainSearch" },
+                { "name": "VendorStore", "component": "VendorStore" },
+                { "name": "LifestyleDetail", "component": "LifestyleDetail" },
+                { "name": "EducationDetail", "component": "EducationDetail" },
+                { "name": "Login", "component": "Login" },
+                { "name": "HotelDetail", "component": "HotelDetail" },
+                { "name": "HotelAvailabilityCheck", "component": "HotelAvailabilityCheck" },
+                { "name": "Register", "component": "Register" },
+                { "name": "EssentialDetail", "component": "EssentialDetail" },
+                { "name": "FlightSearchComponent", "component": "FlightSearchComponent" },
+                { "name": "FlightsSearchPage", "component": "FlightsSearchPage" },
+                { "name": "FlightSearch", "component": "FlightSearch" },
+                { "name": "FlightsPackagesPage", "component": "FlightsPackagesPage" },
+                { "name": "flightsMoreDetails", "component": "FlightsMoreDetailsPage" },
+                { "name": "multiCityRoundTripDetails", "component": "MultiCityRoundTripMoreDetails" },
+                { "name": "About", "component": "About" },
+                { "name": "NewOrder", "component": "NewOrder" },
+                { "name": "Notifications", "component": "Notifications" },
+                { "name": "NonEssentials", "component": "NonEssentials" },
+                { "name": "Essentials", "component": "Essentials" },
+                { "name": "Education", "component": "Education" },
+                { "name": "Lifestyle", "component": "Lifestyle" },
+                { "name": "Hotels", "component": "Hotels" },
+                { "name": "Flights", "component": "Flights" }
+            ]
+        },
+        {
+            "name": "CartNavigatorStack",
+            "screens": [
+                { "name": "My Carts", "component": "MyCartHome" }
+            ]
+        }
     ]
-  };
-  
+};
+
 
 function PushNotifications() {
     const [receivers, setReceiver] = useState('1');
@@ -148,7 +151,48 @@ function PushNotifications() {
     const [selectedScreen, setSelectedScreen] = useState(
         data.navigators.find((navigator) => navigator.name === "HomeNavigator")?.screens[0] || null
     );
+       useEffect(() => {
+        const initializeFCM = async () => {
+            try {
+                if (!('Notification' in window)) {
+                    console.log('This browser does not support notifications');
+                    return;
+                }
 
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    console.log('Notification permission granted');
+
+                    const messaging = getMessaging(app);
+                    
+                    // ✅ REMOVED VAPID KEY - Firebase will handle it automatically
+                    const token = await getToken(messaging);
+                    
+                    if (token) {
+                        await axios.post('/save-fcm-token', { 
+                            token,
+                            token_status: "LoggedIn"
+                        });
+                        console.log('FCM token saved to server');
+                    } else {
+                        console.log('No registration token available.');
+                    }
+
+                    onMessage(messaging, (payload) => {
+                        console.log('Message received:', payload);
+                        const { title, body } = payload.notification;
+                        new Notification(title, { body });
+                    });
+                } else {
+                    console.log('Unable to get permission to notify');
+                }
+            } catch (error) {
+                console.error('Error initializing FCM:', error);
+            }
+        };
+
+        initializeFCM();
+    }, []);
 
     // Add refs for intersection observer
     const loadingRef = useRef(null);
@@ -631,4 +675,4 @@ function PushNotifications() {
     );
 }
 
-export default PushNotifications;
+export default PushNotifications;   

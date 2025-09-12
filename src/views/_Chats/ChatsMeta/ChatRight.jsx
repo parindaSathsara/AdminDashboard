@@ -1,8 +1,6 @@
 import React from 'react'
-
 import { CButton, CCol, CRow, CTooltip } from '@coreui/react'
 import { useContext, useEffect, useRef, useState } from 'react'
-
 import {
   addDoc,
   arrayRemove,
@@ -20,7 +18,6 @@ import {
   where,
   getDocs,
 } from 'firebase/firestore'
-// import { assignEmployeeToChat,getAllEmployees} from 'src/service/order_allocation_services';
 import {
   assignEmployeeToChat,
   checkUpdateDoc,
@@ -32,11 +29,9 @@ import {
 } from './services/chatServices'
 import Select from 'react-select'
 import axios from 'axios'
-
 import { db } from 'src/firebase'
 import aahaaslogo from '../../../assets/brand/aahaslogo.png'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faXmark,
@@ -62,8 +57,9 @@ import {
   faPlay,
   faInfo,
   faInfoCircle,
+  faBars,
+  faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons'
-
 import { Tooltip } from '@material-ui/core'
 import { UserLoginContext } from 'src/Context/UserLoginContext'
 import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons'
@@ -90,23 +86,24 @@ import moment from 'moment'
 import AiSuggestionModal from './AiSuggestionModal'
 import ChatAnalyticsModal from './ChatAnalyticsModal'
 
-export default function ChatRight({ chatOpenedData, handlePin, chatPinned }) {
+export default function ChatRight({ chatOpenedData, handlePin, chatPinned, onCloseChat, isMobileView }) {
   console.log('Chat Opened Data is', chatOpenedData)
   const [lastMessages, setLastMessages] = useState([])
   const [lastMessageContent, setLastMessageContent] = useState([])
-  const [recommenderModalOpen, setRecommenderModalOpen] = useState(false) // Recommender Modal Open State
-  const [recommendations, setRecommendations] = useState([]) // Recommendations according to the chat State
-  const [loadingRecommendations, setLoadingRecommendations] = useState(false) // Loading State for Recommendations
+  const [recommenderModalOpen, setRecommenderModalOpen] = useState(false)
+  const [recommendations, setRecommendations] = useState([])
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false)
   const [selectedTab, setSelectedTab] = useState('home')
+  
   const handleSearchBar = ({ status }) => {
     setSearchBarStatus({
       ...searchBarStatus,
       status: status,
     })
   }
+  
   const [showChatModal, setShowChatModal] = useState(false);
-const [orderData, setOrderData] = useState(null);
-
+  const [orderData, setOrderData] = useState(null);
 
   const handleChatSearch = (keyword) => {
     if (keyword == '') {
@@ -129,23 +126,12 @@ const [orderData, setOrderData] = useState(null);
     }
   }
 
-  const handleCloseChat = () => {}
-
-  // const getDateAndtime = (data) => {
-  //     console.log("Input",data);
-  //     const formattedDate = moment(data.seconds).format('HH:mm:ss');
-  //     console.log("Output",formattedDate); // Output: 2025-01-11 16:08:09
-  //     return formattedDate;
-  // }
-
   const getDateAndtime = (timestamp) => {
     if (timestamp && timestamp.seconds) {
       return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000)
     }
     return null
   }
-
-  const handleScrollToMessage = () => {}
 
   const { userData } = useContext(UserLoginContext)
 
@@ -197,19 +183,15 @@ const [orderData, setOrderData] = useState(null);
       sendPushNotificationsOnChats(chatOpenDetails, value)
 
       console.log('handleSendMessage function called')
-      // await getChatContent({ chatId: chatOpenDetails, updateState: true });
     }
   }
 
   const getChatContent = async ({ chatId, updateState = false }) => {
-    // Clear any existing listener before creating a new one
     if (getChatContent.unsubscribe) {
-      getChatContent.unsubscribe() // Unsubscribe from previous snapshot listener
+      getChatContent.unsubscribe()
     }
 
     const q = query(collection(db, 'chat-updated/chats/' + chatId.id), orderBy('createdAt', 'desc'))
-
-    // bimindu code
 
     const getmessages = onSnapshot(q, async (QuerySnapshot) => {
       const fetchedMessages = []
@@ -230,7 +212,6 @@ const [orderData, setOrderData] = useState(null);
       })
       setLastMessages(fetchedMessages.slice(0, 10).reverse())
 
-      // Update lastMessageContent with new messages
       const messageContent = fetchedMessages.map((message) => ({
         role: message.role,
         text: message.text,
@@ -242,42 +223,11 @@ const [orderData, setOrderData] = useState(null);
 
       const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt)
       setMessages(sortedMessages)
-      // console.log('Messages:', sortedMessages)
+      
       const docRef = doc(db, 'customer-chat-lists', chatId.id)
       await updateDoc(docRef, { admin_unreads: 0 })
     })
 
-    // Working new code
-
-    // const getmessages = onSnapshot(q, async (QuerySnapshot) => {
-    //   const fetchedMessages = []
-    //   const batch = writeBatch(db)
-
-    //   QuerySnapshot.forEach((doc) => {
-    //     const docData = doc.data()
-    //     fetchedMessages.push({ ...docData, id: doc.id })
-
-    //     if (docData.adminReadStatus?.status === 'Unread') {
-    //       batch.update(doc.ref, {
-    //         adminReadStatus: {
-    //           status: 'Read',
-    //           readAt: serverTimestamp(),
-    //         },
-    //       })
-    //     }
-    //     // console.log(doc.id, "Doc ID is");
-    //   })
-
-    //   await batch.commit()
-
-    //   const sortedMessages = fetchedMessages.sort((a, b) => a.createdAt - b.createdAt)
-    //   setMessages(sortedMessages)
-    //   console.log('Messages:', sortedMessages)
-    //   const docRef = doc(db, 'customer-chat-lists', chatId.id)
-    //   await updateDoc(docRef, { admin_unreads: 0 })
-    // })
-
-    // Save the unsubscribe function to `getChatContent` itself
     getChatContent.unsubscribe = getmessages
 
     if (!updateState) {
@@ -346,36 +296,27 @@ const [orderData, setOrderData] = useState(null);
   }
 
   const [adminMessage, setAdminMessage] = useState('')
-
   const [searchBarStatus, setSearchBarStatus] = useState({
     status: false,
     searchKeyword: '',
     searchResuts: false,
     searchResultChats: [],
   })
-
   const [pinnedChats, setPinnedChats] = useState([])
-
   const [messages, setMessages] = useState([])
-
   const [chatOpened, setChatOpened] = useState(false)
-
   const [chatOpenDetails, setChatOpenDetails] = useState([])
-
   const messageContailerRef = useRef()
-
   const [loader, setLoader] = useState(false)
 
   const handleOpenChat = async (chatData) => {
-    // console.log('handleOpenChat function called');
     setChatOpened(true)
     setChatOpenDetails(chatData)
     console.log('chatData', chatData)
-      console.log(userData, 'User Data is');
+    console.log(userData, 'User Data is');
 
     setLoader(true)
     await getChatContent({ chatId: chatData, updateState: false })
-
     setLoader(false)
   }
 
@@ -429,7 +370,6 @@ const [orderData, setOrderData] = useState(null);
   }
 
   const [clickedMssage, setclickedMssage] = useState('')
-
   const [messageClipBoard, setMessageClipBoard] = useState(false)
   const chatRefs = useRef([])
 
@@ -452,19 +392,6 @@ const [orderData, setOrderData] = useState(null);
   const handleStopTyping = () => {
     setIsTyping(false)
   }
-
-  const suggestions = [
-    'Hello! How can I assist you today?',
-    'Could you please provide more details?',
-    'I’m here to help with any questions.',
-    'Let me know if you need further assistance.',
-    'Thank you for reaching out!',
-    'Feel free to share any specific concerns.',
-    "I'll get back to you as soon as possible.",
-    "Is there anything else you'd like to know?",
-    'Let me check that for you.',
-    'I appreciate your patience.',
-  ]
 
   useEffect(() => {
     let typingTimeout
@@ -493,8 +420,6 @@ const [orderData, setOrderData] = useState(null);
     }
   }, [adminMessage, isTyping])
 
-  // console.log(chatOpenDetails, "Chat Open Details Are Data is")
-
   const [autoSuggestionBox, setAutoSuggestionBox] = useState(false)
 
   const handleAutoSuggestionModal = () => {
@@ -522,21 +447,12 @@ const [orderData, setOrderData] = useState(null);
 
   const [showModal, setShowModal] = useState(false)
   const handleAssignEmployee = (data) => {
-    // Implement the function to handle the assignment of the employee
-    // // console.log("Assigned Employee:", selectedEmployee, "to Row:", selectedRow);
-    // handleCloseModal();
-
     console.log(data)
-
-    // setSelectedRow(rowData?.info);
     setShowModal(true)
   }
   const handleCloseModal = () => {
     setShowModal(false)
     setSelectedEmployee(null)
-
-    // setSelectedRow([]);
-    // setSelectedEmployee(null);
   }
 
   const [availableEmployees, setAvailableEmployees] = useState([])
@@ -557,8 +473,6 @@ const [orderData, setOrderData] = useState(null);
       getAllEmployees()
         .then((response) => {
           setAvailableEmployees(response)
-
-          // console.log("Available Employees: ", response);
         })
         .catch((error) => {
           console.error('Error fetching available employees: ', error)
@@ -573,9 +487,6 @@ const [orderData, setOrderData] = useState(null);
   }, [])
 
   const handleAllocateEmployee = async () => {
-    // console.log(selectedEmployee, "Selected Employee Name iss");
-
-    // Show confirmation message
     const confirmation = await Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to assign employees to chat?',
@@ -591,9 +502,6 @@ const [orderData, setOrderData] = useState(null);
 
       assignEmployeeToChat(chatOpenDetails.id, selectedEmployee)
         .then((res) => {
-          // getRows();
-          // handleCloseModal();
-          // console.log("Employee Assigned to Chat: ", res);
           var errorVal = res[0]
 
           if (errorVal === 400) {
@@ -661,17 +569,6 @@ const [orderData, setOrderData] = useState(null);
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        // var newDataSet = selectedRow?.allocatedUser?.filter(resFilter => resFilter.allotId !== value);
-
-        // handleDeleteData(selectedRow?.checkoutID, userData?.id)
-
-        // setSelectedRow({
-        //     ...selectedRow,
-        //     allocatedUser: newDataSet
-        // });
-
-        // getRows();
-
         const docRef = doc(db, 'customer-chat-lists', value)
 
         updateDoc(docRef, { assign_employee: null, assign_employee_name: null })
@@ -691,9 +588,8 @@ const [orderData, setOrderData] = useState(null);
 
   const [moreData, setMoreData] = useState([])
   const [moreProductsModal, setMoreProductModal] = useState(false)
-
   const [chatStatus, setChatStatus] = useState(chatOpenDetails?.status)
-  // Fetch chat status when component mounts or chatOpenDetails changes
+
   useEffect(() => {
     const fetchChatStatus = async () => {
       if (!chatOpenDetails?.id) return
@@ -706,7 +602,6 @@ const [orderData, setOrderData] = useState(null);
           const data = docSnap.data()
           setChatStatus(data.status)
 
-          // Update parent component if needed
           if (typeof onStatusUpdate === 'function') {
             onStatusUpdate(data)
           }
@@ -718,8 +613,6 @@ const [orderData, setOrderData] = useState(null);
 
     fetchChatStatus()
   }, [chatOpenDetails?.id])
-
-  // stop chat status
 
   const handleChatControl = (data) => {
     console.log('Attempting to control chat with data:', data)
@@ -754,16 +647,6 @@ const [orderData, setOrderData] = useState(null);
         }
 
         try {
-          // const docRef = doc(db, 'customer-chat-lists', data.id)
-
-          // await updateDoc(docRef, {
-          //   status: newStatus,
-          //   updatedAt: serverTimestamp(),
-          // })
-
-          // // Fetch updated status after successful update
-          // const updatedDoc = await getDoc(docRef)
-          // check the updatedoc
           const updatedDoc = await checkUpdateDoc(db, data, newStatus)
           console.log(updatedDoc)
 
@@ -774,14 +657,6 @@ const [orderData, setOrderData] = useState(null);
               onStatusUpdate(updatedDoc)
             }
           }
-          // if (updatedDoc.exists()) {
-          //   const updatedData = updatedDoc.data()
-          //   setChatStatus(updatedData.status)
-
-          //   if (typeof onStatusUpdate === 'function') {
-          //     onStatusUpdate(updatedData)
-          //   }
-          // }
 
           console.log(`Chat ${actionText}ed successfully.`)
           await Swal.fire({
@@ -806,57 +681,8 @@ const [orderData, setOrderData] = useState(null);
     })
   }
 
-  //   const handleChatControl = (data) => {
-  //     return handleOperation({
-  //       operation: async () => {
-  //         const isStopAction = data.status === 'Active' || data.status === 'Pending'
-  //         const actionText = isStopAction ? 'stop' : 'pause'
-  //         const newStatus = isStopAction ? 'End' : 'Pending'
-
-  //         // Show confirmation dialog
-  //         const confirmed = await dialogUtils.showConfirmation({
-  //           title: 'Are you sure?',
-  //           text: `Do you really want to ${actionText} this chat?`,
-  //         })
-
-  //         if (!confirmed) {
-  //           return [400, 'User cancelled the operation']
-  //         }
-
-  //         // Update chat status
-  //         const docRef = await firebaseOperations.updateDocument('customer-chat-lists', data.id, {
-  //           status: newStatus,
-  //         })
-
-  //         // Fetch updated data
-  //         const updatedDoc = await firebaseOperations.fetchDocument(docRef)
-  //         // Fetch updated status after successful update
-  //         // const updatedDoc = await getDoc(docRef)
-  //         if (updatedDoc.exists()) {
-  //           const updatedData = updatedDoc.data()
-  //           setChatStatus(updatedData.status)
-
-  //           if (typeof onStatusUpdate === 'function') {
-  //             onStatusUpdate(updatedData)
-  //           }
-  //         }
-
-  //         return [200, `Chat ${actionText}ed successfully`]
-  //       },
-  //       validationFn: () => !!data.id,
-  //       successMessage: 'Operation completed successfully',
-  //       errorMessage: 'Failed to control chat',
-  //       onSuccess: async (result) => {
-  //         if (typeof onStatusUpdate === 'function') {
-  //           onStatusUpdate(result)
-  //         }
-  //       },
-  //     })
-  //   }
-
   const handleOnClick = (data) => {
     console.log(data, 'chamod')
-    // console.log(data)
     let product_id = data.product_id
 
     const categories = [
@@ -874,35 +700,8 @@ const [orderData, setOrderData] = useState(null);
       }
     }
 
-    
-    // console.log(data, 'chamod')
     setMoreProductModal(true)
-    // // setMoreData({
-    // //     "product_title": "Hompton by the Beach Penang",
-    // //     "product_description": "Hompton by the Beach Penang is a 4-star hotel along the strategic Tanjung Tokong seafront that embodies both business and pleasure, offering travellers a home away from home. At Hompton, we set ourselves apart by offering guests an unforgettable experience that reminisce the irreplaceable comfort of home, upped with attentive service and a panoramic vista of the calm turquoise sea.",
-    // //     "product_image": "https://lh3.googleusercontent.com/p/AF1QipOzbXb60DfxgJ27Deryvflw4LmYItI4sq2PSL6j=s680-w680-h510",
-    // //     "category": "Hotels",
-    // //     "created_date": "2025-12-19",
-    // //     "product_id": 757,
-    // //     "tableData": {
-    // //         "id": 0
-    // //     }
-    // // })
-    // let data1 = {
-    //   category: 'Hotels',
-    //   product_id: '1467876',
-    //   provider:'hoteltbo'
-    // }
-
-    // if(data.provider == "bridgify"){
-
-    // }else if(data.provider == "hotelTbo"){
-
-    // }else{
-
-    // }
     setMoreData(data)
-    
   }
 
   async function getRecommendations() {
@@ -922,11 +721,6 @@ const [orderData, setOrderData] = useState(null);
         'Error fetching recommendations:--------------------------------------------------------',
         error,
       )
-      // Swal.fire({
-      //   icon: 'error',
-      //   title: 'Error',
-      //   text: 'Failed to fetch recommendations. Please try again later.',
-      // })
     } finally {
       setLoadingRecommendations(false)
     }
@@ -953,346 +747,322 @@ const [orderData, setOrderData] = useState(null);
   }
 
   const handleCustomerDataModal = (customerId) => {
-  console.log('Customer Data Modal Data:', customerId);
+    console.log('Customer Data Modal Data:', customerId);
 
-  axios.post('getChatOrderDetails', { customer_id: customerId })
-    .then(res => {
-      console.log('Order Details Response:', res.data);
-      if (res.data.status === 'success') {
-        setOrderData(res.data);
-        setShowChatModal(true);
-      }
-    })
-    .catch(err => {
-      console.error('Error fetching order details:', err);
-    });
-};
+    axios.post('getChatOrderDetails', { customer_id: customerId })
+      .then(res => {
+        console.log('Order Details Response:', res.data);
+        if (res.data.status === 'success') {
+          setOrderData(res.data);
+          setShowChatModal(true);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching order details:', err);
+      });
+  };
 
+  // Mobile back button handler
+  const handleMobileBack = () => {
+    if (isMobileView && onCloseChat) {
+      onCloseChat();
+    }
+  };
 
   return (
     <>
-      {autoSuggestionBox ? (
+      {autoSuggestionBox && (
         <SuggestionModal
           show={autoSuggestionBox}
           onHide={() => onHide()}
           messageList={messages.slice(-5)}
           chatDetails={chatOpenDetails}
           onMessageSelect={onMessageSelect}
-        ></SuggestionModal>
-      ) : null}
+        />
+      )}
 
-      {productAutoSuggestion ? (
+      {productAutoSuggestion && (
         <ProductSuggestionModal
           show={autoSuggestionBox}
           onHide={() => onHide()}
           messageList={messages.slice(-5)}
           chatDetails={chatOpenDetails}
           onMessageSelect={onMessageSelectProductSuggest}
-        ></ProductSuggestionModal>
-      ) : null}
+        />
+      )}
 
-      <CCol lg={9} className="chat-list-right-sidebar">
+      <CCol lg={9} className={`chat-list-right-sidebar ${isMobileView ? 'mobile-view' : ''}`}>
         {chatOpened ? (
           <>
-            <>
-              <div className="chat-details-head">
-                <LazyLoadImage
-                  className="chat-details-head-avatar mr-2"
-                  placeholderSrc={aahaaslogo}
-                  src={aahaaslogo}
+            {/* Mobile Header */}
+            {isMobileView && (
+              <div className="mobile-chat-header">
+                <button className="mobile-back-btn" onClick={handleMobileBack}>
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
+                <h6 className="mobile-chat-title">
+                  {chatOpenDetails?.chat_name || 'Chat'}
+                </h6>
+                <div style={{width: '40px'}}></div>
+              </div>
+            )}
+            
+            <div className="chat-details-head" style={isMobileView ? {display: 'none'} : {}}>
+              <LazyLoadImage
+                className="chat-details-head-avatar mr-2"
+                placeholderSrc={aahaaslogo}
+                src={aahaaslogo}
+              />
+              <div className="d-flex flex-column">
+                <h6 className="chat-details-head-name">{chatOpenDetails?.chat_name}</h6>
+                <h6 className="chat-details-head-related-with">
+                  {chatOpenDetails?.chat_related}
+                </h6>
+              </div>
+              <div
+                className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}
+              >
+                <FontAwesomeIcon
+                  icon={faThumbtack}
+                  onClick={() => handlePinChats(chatOpenDetails)}
+                  style={{ color: chatPinned ? '#ffd00f' : 'white' }}
                 />
-                <div className="d-flex flex-column">
-                  <h6 className="chat-details-head-name">{chatOpenDetails?.chat_name}</h6>
-                  <h6 className="chat-details-head-related-with">
-                    {chatOpenDetails?.chat_related}
-                  </h6>
-                </div>
-                {/* <div className={searchBarStatus.status ? 'search-bar-open' : 'search-bar-close'}>
-                                    <input type="text" placeholder="Search your messages.." value={searchBarStatus.searchKeyword} onChange={(e) => handleChatSearch(e.target.value)} />
-                                    <FontAwesomeIcon icon={faXmark} onClick={() => handleSearchBar({ status: false })} />
-                                </div> */}
-                <div
-                  className={searchBarStatus.status ? 'chat-more-items' : 'chat-more-items ms-auto'}
-                >
-                  {/* <FontAwesomeIcon icon={faMagnifyingGlass} style={{ display: searchBarStatus.status ? 'none' : 'block', color: 'white' }} onClick={() => handleSearchBar({ status: true })} /> */}
+                {chatOpenedData?.comments?.product_id && (
                   <FontAwesomeIcon
-                    icon={faThumbtack}
-                    onClick={() => handlePinChats(chatOpenDetails)}
-                    style={{ color: chatPinned ? '#ffd00f' : 'white' }}
+                    icon={faEye}
+                    onClick={() => handleOnClick(chatOpenedData?.comments)}
+                    style={{ color: '#2bfd3c' }}
                   />
-                  {/* <FontAwesomeIcon icon={faEye} onClick={() => handleOnClick(chatOpenDetails)} style={{ color: '#2bfd3c' }} /> */}
-                  {chatOpenedData?.comments?.product_id && (
+                )}
+                {
+                  <CTooltip
+                    content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
+                    placement="auto"
+                  >
                     <FontAwesomeIcon
-                      icon={faEye}
-                      onClick={() => handleOnClick(chatOpenedData?.comments)}
-                      style={{ color: '#2bfd3c' }}
-                    />
-                  )}
-                  {/* the end chat icon */}
-                  {
-                    <CTooltip
-                      content={chatStatus === 'End' ? 'Chat is Stopped' : 'Click to Stop Chat'}
-                      placement="auto"
-                    >
-                      <FontAwesomeIcon
-                        icon={chatStatus === 'End' ? faStop : faPause}
-                        onClick={() => {
-                          if (chatStatus !== 'End') {
-                            handleChatControl({
-                              ...chatOpenDetails,
-                              status: chatStatus,
-                            })
-                          }
-                        }}
-                        style={{
-                          color: chatStatus === 'End' ? '#ff0000' : '#ffe400',
-                          cursor: chatStatus === 'End' ? 'pointer' : 'pointer',
-                          pointerEvents: chatStatus === 'End' ? 'auto' : 'auto',
-                        }}
-                      />
-                    </CTooltip>
-
-                    // <FontAwesomeIcon icon={faStop} onClick={() => handleStopChat(chatOpenDetails)} style={{ color: '#2bfd3c' }} />
-                  }
-
-                  {/* {[
-                    'assign employer to chat',
-                    'remove employer from chat',
-                    'view assign employer chat',
-                  ].some((permission) => userData?.permissions?.includes(permission)) && (
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      className="icon-style"
+                      icon={chatStatus === 'End' ? faStop : faPause}
                       onClick={() => {
-                        handleAssignEmployee('Employee Asaign')
-                      }}
-                      style={{ color: '#03e5fd' }}
-                    />
-                  )} */}
-                  <CTooltip content={'Chat Analytics'} placement="auto">
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      onClick={() => {
-                        handleChatAnalytics()
+                        if (chatStatus !== 'End') {
+                          handleChatControl({
+                            ...chatOpenDetails,
+                            status: chatStatus,
+                          })
+                        }
                       }}
                       style={{
-                        color: '#ffff',
+                        color: chatStatus === 'End' ? '#ff0000' : '#ffe400',
+                        cursor: chatStatus === 'End' ? 'pointer' : 'pointer',
+                        pointerEvents: chatStatus === 'End' ? 'auto' : 'auto',
                       }}
                     />
                   </CTooltip>
-                  {/* <FontAwesomeIcon icon={faXmark} onClick={() => handleCloseChat()} /> */}
-                </div>
+                }
+                <CTooltip content={'Chat Analytics'} placement="auto">
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    onClick={() => {
+                      handleChatAnalytics()
+                    }}
+                    style={{
+                      color: '#ffff',
+                    }}
+                  />
+                </CTooltip>
               </div>
-              <div className="chat-details-main-content">
-                <div className="chat-content">
-                  {!loader ? (
-                    <div
-                      ref={messageContailerRef}
-                      className={
-                        searchBarStatus.status
-                          ? 'chat-message-messages-open'
-                          : 'chat-message-messages-close'
-                      }
-                    >
-                      <p className="chat-notice">
-                        <FontAwesomeIcon icon={faCircleInfo} />{' '}
-                        {chatOpenDetails?.customer_name !== ''
-                          ? chatOpenDetails?.customer_name + ', the customer'
-                          : 'The Admin'}{' '}
-                        has initiated the chat for {chatOpenDetails?.chat_related}.
-                      </p>
-                      {messages?.length === 0 ? (
-                        <p className="chat-notice">
-                          <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />
-                          Please start responding to resolve their issue as soon as possible.
-                        </p>
-                      ) : (
-                        messages?.map((value, index) => (
-                          <div className={value.role === 'Admin' ? 'textingsfhvflhsjdbx' : ''}>
-                            {/* <div style={{ display: value.role !== 'Admin' ? 'none' : '' }} className="more-items" onClick={() => { messageClipBoard === value.id ? setMessageClipBoard() : setMessageClipBoard(value.id) }}>
-                                                                <FontAwesomeIcon icon={faClipboard} className="chat-message-input-icon" style={{ color: clipBoardStatus ? 'black' : 'inherit' }} />
-                                                            </div> */}
-                            <div
-                              ref={(el) => (chatRefs.current[index] = el)}
-                              key={index}
-                              className={` ${
-                                value.role === 'Admin'
-                                  ? 'chat-content-admin'
-                                  : 'chat-content-customer'
-                              } `}
-                              style={{
-                                backgroundColor: clickedMssage === value.id ? 'lightgray' : '',
-                              }}
-                            >
-                              <LazyLoadImage
-                                placeholderSrc={aahaaslogo}
-                                src={aahaaslogo}
-                                className="chat-content-image"
-                              />
-                              {messageClipBoard === value.id ? (
-                                <pre className="chat-content-text">{value.text}</pre>
-                              ) : (
-                                <p className="chat-content-text">{value.text}</p>
-                              )}
-                              <p className="chat-content-personname">
-                                at{' '}
-                                {moment(getDateAndtime(value.createdAt)).format(
-                                  'MMMM D, YYYY h:mm A',
-                                )}
-                              </p>
-                              {console.log(value)}
-                              {/* <p className="chat-content-time">
-                                by{' '}
-                                {value?.name != ''
-                                  ? value.name.slice(0, 7)
-                                  : value?.role.toLowerCase()}{' '}
-                              </p> */}
-{value.role === 'Customer' ? (
-  <button
-    className="chat-content-time customer-button"
-    onClick={() => handleCustomerDataModal(value.uid)}
-    style={{
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      border: 'none',
-      borderRadius: '15px',
-      color: 'white',
-      padding: '4px 10px',
-      fontSize: '11px',
-      fontWeight: '500',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 2px 6px rgba(102, 126, 234, 0.25)',
-      outline: 'none',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '3px',
-      textTransform: 'none',
-      letterSpacing: '0.2px',
-      minWidth: 'auto',
-      width: 'auto',
-      whiteSpace: 'nowrap'
-    }}
-    onMouseEnter={(e) => {
-      e.target.style.transform = 'translateY(-1px)';
-      e.target.style.boxShadow = '0 3px 12px rgba(102, 126, 234, 0.35)';
-      e.target.style.background = 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)';
-    }}
-    onMouseLeave={(e) => {
-      e.target.style.transform = 'translateY(0)';
-      e.target.style.boxShadow = '0 2px 6px rgba(102, 126, 234, 0.25)';
-      e.target.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-    }}
-    onMouseDown={(e) => {
-      e.target.style.transform = 'translateY(0) scale(0.98)';
-    }}
-    onMouseUp={(e) => {
-      e.target.style.transform = 'translateY(-1px) scale(1)';
-    }}
-  >
-    <svg 
-      width="10" 
-      height="10" 
-      viewBox="0 0 24 24" 
-      fill="currentColor"
-      style={{ flexShrink: 0 }}
-    >
-      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-    </svg>
-    <span style={{ 
-      overflow: 'hidden', 
-      textOverflow: 'ellipsis',
-      maxWidth: '130px'
-    }}>
-      by {value?.name !== '' ? value.name.slice(0, 20) : 'customer'}
-    </span>
-  </button>
-) : (
-  <p
-    className="chat-content-time"
-    style={{
-      cursor: 'default',
-      backgroundColor: 'transparent',
-      color: '#6c757d',
-      fontSize: '11px',
-      fontStyle: 'italic',
-      margin: 0,
-      padding: '4px 0'
-    }}
-  >
-    by {value?.name !== '' ? value.name.slice(0, 20) : value?.role.toLowerCase()}
-  </p>
-)}
-
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  ) : (
-                    <div className={'chat-message-messages-close'}>
-                      <p className="chat-notice" style={{ fontSize: 16, marginTop: 20 }}>
-                        <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />
-                        Hold On Your Chat is Loading
-                      </p>
-                    </div>
-                  )}
-                </div>
-
+            </div>
+            <div className="chat-details-main-content">
+              <div className="chat-content">
                 {!loader ? (
-                  <div className="chat-message-input">
-                    {clipBoardStatus && <p className="clipBoard-status">clip borad was on</p>}
-                    <FontAwesomeIcon
-                      icon={faStore}
-                      className="chat-message-input-icon auto-suggestion-box"
-                      style={{ color: 'black', cursor: 'pointer' }}
-                      onClick={() => handleProductRecommendation()}
-                    />
-                    <FontAwesomeIcon
-                      icon={faClipboard}
-                      className="chat-message-input-icon"
-                      style={{ color: clipBoardStatus ? 'black' : 'inherit' }}
-                      onClick={() => handleOpenClipBoardOpen()}
-                    />
-                    <FontAwesomeIcon
-                      icon={faMagicWandSparkles}
-                      className="chat-message-input-icon auto-suggestion-box"
-                      style={{ color: 'black' }}
-                      onClick={() => handleAutoSuggestionModal()}
-                    />
-
-                    {/* <FontAwesomeIcon icon={faMagnet} className="chat-message-input-icon auto-suggestion-box" style={{ color: 'black' }} onClick={() => handleProductSuggestions()} /> */}
-
-                    <textarea
-                      value={adminMessage}
-                      onKeyUp={handleKeyUp}
-                      onChange={(e) => handleTyping(e)}
-                      placeholder="Enter your message"
-                      className="chat-message-input-form"
-                      rows={4}
-                      style={{
-                        width: '100%',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        borderColor: '#ccc',
-                        resize: 'vertical',
-                        overflowY: 'auto',
-                        minHeight: '64px',
-                        maxHeight: '200px',
-                        fontSize: 15,
-                      }}
-                    />
-                    <FontAwesomeIcon
-                      icon={faPaperPlane}
-                      className="chat-message-input-icon-send"
-                      onClick={() => handleSendMessage(adminMessage)}
-                    />
-                    {/* <Tooltip title={'Under developement'}>
-                      <FontAwesomeIcon icon={faLink} className="chat-message-input-icon" />
-                    </Tooltip> */}
+                  <div
+                    ref={messageContailerRef}
+                    className={
+                      searchBarStatus.status
+                        ? 'chat-message-messages-open'
+                        : 'chat-message-messages-close'
+                    }
+                  >
+                    <p className="chat-notice">
+                      <FontAwesomeIcon icon={faCircleInfo} />{' '}
+                      {chatOpenDetails?.customer_name !== ''
+                        ? chatOpenDetails?.customer_name + ', the customer'
+                        : 'The Admin'}{' '}
+                      has initiated the chat for {chatOpenDetails?.chat_related}.
+                    </p>
+                    {messages?.length === 0 ? (
+                      <p className="chat-notice">
+                        <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />
+                        Please start responding to resolve their issue as soon as possible.
+                      </p>
+                    ) : (
+                      messages?.map((value, index) => (
+                        <div className={value.role === 'Admin' ? 'textingsfhvflhsjdbx' : ''}>
+                          <div
+                            ref={(el) => (chatRefs.current[index] = el)}
+                            key={index}
+                            className={` ${
+                              value.role === 'Admin'
+                                ? 'chat-content-admin'
+                                : 'chat-content-customer'
+                            } `}
+                            style={{
+                              backgroundColor: clickedMssage === value.id ? 'lightgray' : '',
+                            }}
+                          >
+                            <LazyLoadImage
+                              placeholderSrc={aahaaslogo}
+                              src={aahaaslogo}
+                              className="chat-content-image"
+                            />
+                            {messageClipBoard === value.id ? (
+                              <pre className="chat-content-text">{value.text}</pre>
+                            ) : (
+                              <p className="chat-content-text">{value.text}</p>
+                            )}
+                            <p className="chat-content-personname">
+                              at{' '}
+                              {moment(getDateAndtime(value.createdAt)).format(
+                                'MMMM D, YYYY h:mm A',
+                              )}
+                            </p>
+                            {value.role === 'Customer' ? (
+                              <button
+                                className="chat-content-time customer-button"
+                                onClick={() => handleCustomerDataModal(value.uid)}
+                                style={{
+                                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                  border: 'none',
+                                  borderRadius: '15px',
+                                  color: 'white',
+                                  padding: '4px 10px',
+                                  fontSize: '11px',
+                                  fontWeight: '500',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  boxShadow: '0 2px 6px rgba(102, 126, 234, 0.25)',
+                                  outline: 'none',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
+                                  textTransform: 'none',
+                                  letterSpacing: '0.2px',
+                                  minWidth: 'auto',
+                                  width: 'auto',
+                                  whiteSpace: 'nowrap'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.target.style.transform = 'translateY(-1px)';
+                                  e.target.style.boxShadow = '0 3px 12px rgba(102, 126, 234, 0.35)';
+                                  e.target.style.background = 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.target.style.transform = 'translateY(0)';
+                                  e.target.style.boxShadow = '0 2px 6px rgba(102, 126, 234, 0.25)';
+                                  e.target.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                                }}
+                                onMouseDown={(e) => {
+                                  e.target.style.transform = 'translateY(0) scale(0.98)';
+                                }}
+                                onMouseUp={(e) => {
+                                  e.target.style.transform = 'translateY(-1px) scale(1)';
+                                }}
+                              >
+                                <svg 
+                                  width="10" 
+                                  height="10" 
+                                  viewBox="0 0 24 24" 
+                                  fill="currentColor"
+                                  style={{ flexShrink: 0 }}
+                                >
+                                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                <span style={{ 
+                                  overflow: 'hidden', 
+                                  textOverflow: 'ellipsis',
+                                  maxWidth: '130px'
+                                }}>
+                                  by {value?.name !== '' ? value.name.slice(0, 20) : 'customer'}
+                                </span>
+                              </button>
+                            ) : (
+                              <p
+                                className="chat-content-time"
+                                style={{
+                                  cursor: 'default',
+                                  backgroundColor: 'transparent',
+                                  color: '#6c757d',
+                                  fontSize: '11px',
+                                  fontStyle: 'italic',
+                                  margin: 0,
+                                  padding: '4px 0'
+                                }}
+                              >
+                                by {value?.name !== '' ? value.name.slice(0, 20) : value?.role.toLowerCase()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
-                ) : null}
+                ) : (
+                  <div className={'chat-message-messages-close'}>
+                    <p className="chat-notice" style={{ fontSize: 16, marginTop: 20 }}>
+                      <FontAwesomeIcon icon={faCircleInfo} style={{ marginRight: '5px' }} />
+                      Hold On Your Chat is Loading
+                    </p>
+                  </div>
+                )}
               </div>
-            </>
+
+              {!loader ? (
+                <div className="chat-message-input">
+                  {clipBoardStatus && <p className="clipBoard-status">clip borad was on</p>}
+                  <FontAwesomeIcon
+                    icon={faStore}
+                    className="chat-message-input-icon auto-suggestion-box"
+                    style={{ color: 'black', cursor: 'pointer' }}
+                    onClick={() => handleProductRecommendation()}
+                  />
+                  <FontAwesomeIcon
+                    icon={faClipboard}
+                    className="chat-message-input-icon"
+                    style={{ color: clipBoardStatus ? 'black' : 'inherit' }}
+                    onClick={() => handleOpenClipBoardOpen()}
+                  />
+                  <FontAwesomeIcon
+                    icon={faMagicWandSparkles}
+                    className="chat-message-input-icon auto-suggestion-box"
+                    style={{ color: 'black' }}
+                    onClick={() => handleAutoSuggestionModal()}
+                  />
+
+                  <textarea
+                    value={adminMessage}
+                    onKeyUp={handleKeyUp}
+                    onChange={(e) => handleTyping(e)}
+                    placeholder="Enter your message"
+                    className="chat-message-input-form"
+                    rows={4}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      borderRadius: '8px',
+                      borderColor: '#ccc',
+                      resize: 'vertical',
+                      overflowY: 'auto',
+                      minHeight: '64px',
+                      maxHeight: '200px',
+                      fontSize: 15,
+                    }}
+                  />
+                  <FontAwesomeIcon
+                    icon={faPaperPlane}
+                    className="chat-message-input-icon-send"
+                    onClick={() => handleSendMessage(adminMessage)}
+                  />
+                </div>
+              ) : null}
+            </div>
           </>
         ) : (
           <div className="chat-not-open-screen">
@@ -1328,10 +1098,6 @@ const [orderData, setOrderData] = useState(null);
 
           {assignedEmployee?.id !== '' ? (
             <>
-              {/* <CAlert color="info">
-                                {selectedRow?.allocatedUser?.length} Employee(s) Already Allocated
-                            </CAlert> */}
-
               <CTable>
                 <CTableHead>
                   <CTableRow>
@@ -1341,7 +1107,6 @@ const [orderData, setOrderData] = useState(null);
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {/* {selectedRow?.allocatedUser?.map((response, index) => ( */}
                   <CTableRow key={1}>
                     <CTableDataCell>{assignedEmployee.name}</CTableDataCell>
                     <CTableDataCell>{assignedEmployee.allotStatus}</CTableDataCell>
@@ -1361,7 +1126,6 @@ const [orderData, setOrderData] = useState(null);
                       )}
                     </CTableDataCell>
                   </CTableRow>
-                  {/* ))} */}
                 </CTableBody>
               </CTable>
             </>
@@ -1378,419 +1142,322 @@ const [orderData, setOrderData] = useState(null);
         </Modal.Footer>
       </Modal>
 
-<Modal 
-  show={showChatModal} 
-  onHide={() => setShowChatModal(false)} 
-  size="lg" 
-  centered
-  style={{ fontFamily: 'Arial, sans-serif' }}
->
-  <Modal.Header 
-    closeButton 
-    style={{ 
-      backgroundColor: '#f8f9fa', 
-      borderBottom: '2px solid #e9ecef',
-      padding: '20px 30px'
-    }}
-  >
-    <Modal.Title style={{ 
-      color: '#343a40', 
-      fontSize: '1.5rem', 
-      fontWeight: '600',
-      margin: 0
-    }}>
-      Customer Order Summary
-    </Modal.Title>
-  </Modal.Header>
-  
-  <Modal.Body style={{ padding: '30px', backgroundColor: '#ffffff' }}>
-    {orderData ? (
-      <div style={{ color: '#495057' }}>
-        {/* Customer Information Section */}
-        <div style={{ 
-          backgroundColor: '#f8f9fa', 
-          padding: '20px', 
-          borderRadius: '8px',
-          marginBottom: '25px',
-          border: '1px solid #e9ecef'
-        }}>
-          <h5 style={{ 
-            color: '#495057', 
-            marginBottom: '15px', 
-            fontSize: '1.1rem',
-            fontWeight: '600'
+      <Modal 
+        show={showChatModal} 
+        onHide={() => setShowChatModal(false)} 
+        size="lg" 
+        centered
+        style={{ fontFamily: 'Arial, sans-serif' }}
+      >
+        <Modal.Header 
+          closeButton 
+          style={{ 
+            backgroundColor: '#f8f9fa', 
+            borderBottom: '2px solid #e9ecef',
+            padding: '20px 30px'
+          }}
+        >
+          <Modal.Title style={{ 
+            color: '#343a40', 
+            fontSize: '1.5rem', 
+            fontWeight: '600',
+            margin: 0
           }}>
-            Customer Information
-          </h5>
-          
-          <CRow className="g-3">
-            <CCol md={4}>
-              <div style={{ marginBottom: '10px' }}>
-                <span style={{ 
-                  fontWeight: '500', 
-                  color: '#6c757d',
-                  fontSize: '0.9rem',
-                  display: 'block',
-                  marginBottom: '4px'
-                }}>
-                  Customer ID
-                </span>
-                <span style={{ 
-                  fontWeight: '600', 
-                  color: '#343a40',
-                  fontSize: '1rem'
-                }}>
-                  {orderData.customer_id}
-                </span>
-              </div>
-            </CCol>
-            
-            <CCol md={4}>
-              <div style={{ marginBottom: '10px' }}>
-                <span style={{ 
-                  fontWeight: '500', 
-                  color: '#6c757d',
-                  fontSize: '0.9rem',
-                  display: 'block',
-                  marginBottom: '4px'
-                }}>
-                  Email Address
-                </span>
-                <span style={{ 
-                  fontWeight: '600', 
-                  color: '#343a40',
-                  fontSize: '1rem',
-                  wordBreak: 'break-word'
-                }}>
-                  {orderData.email || 'Not provided'}
-                </span>
-              </div>
-            </CCol>
-            
-            <CCol md={4}>
-              <div style={{ marginBottom: '10px' }}>
-                <span style={{ 
-                  fontWeight: '500', 
-                  color: '#6c757d',
-                  fontSize: '0.9rem',
-                  display: 'block',
-                  marginBottom: '4px'
-                }}>
-                  Phone Number
-                </span>
-                <span style={{ 
-                  fontWeight: '600', 
-                  color: '#343a40',
-                  fontSize: '1rem'
-                }}>
-                  {orderData.passenger_tele || 'Not provided'}
-                </span>
-              </div>
-            </CCol>
-          </CRow>
-        </div>
-
-        {/* Order Summary Section */}
-        <div style={{ 
-          backgroundColor: '#fff', 
-          padding: '20px', 
-          borderRadius: '8px',
-          border: '1px solid #e9ecef'
-        }}>
-          <h5 style={{ 
-            color: '#495057', 
-            marginBottom: '20px', 
-            fontSize: '1.1rem',
-            fontWeight: '600'
-          }}>
-            Order Summary
-          </h5>
-          
-          <CRow className="g-4">
-            <CCol md={6}>
-              <div style={{
-                textAlign: 'center',
-                padding: '20px',
-                backgroundColor: '#e3f2fd',
+            Customer Order Summary
+          </Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body style={{ padding: '30px', backgroundColor: '#ffffff' }}>
+          {orderData ? (
+            <div style={{ color: '#495057' }}>
+              {/* Customer Information Section */}
+              <div style={{ 
+                backgroundColor: '#f8f9fa', 
+                padding: '20px', 
                 borderRadius: '8px',
-                border: '1px solid #bbdefb'
+                marginBottom: '25px',
+                border: '1px solid #e9ecef'
               }}>
-                <div style={{ 
-                  fontSize: '2rem', 
-                  fontWeight: '700', 
-                  color: '#1976d2',
-                  marginBottom: '8px'
+                <h5 style={{ 
+                  color: '#495057', 
+                  marginBottom: '15px', 
+                  fontSize: '1.1rem',
+                  fontWeight: '600'
                 }}>
-                  {orderData.total_orders}
-                </div>
-                <div style={{ 
-                  fontSize: '0.9rem', 
-                  color: '#546e7a',
-                  fontWeight: '500'
-                }}>
-                  Total Orders
-                </div>
-              </div>
-            </CCol>
-            
-            <CCol md={6}>
-              <div style={{
-                textAlign: 'center',
-                padding: '20px',
-                backgroundColor: '#e8f5e8',
-                borderRadius: '8px',
-                border: '1px solid #c8e6c9'
-              }}>
-                <div style={{ 
-                  fontSize: '2rem', 
-                  fontWeight: '700', 
-                  color: '#388e3c',
-                  marginBottom: '8px'
-                }}>
-                  Rs.  {orderData.total_amount?.toFixed(2)}
-                </div>
-                <div style={{ 
-                  fontSize: '0.9rem', 
-                  color: '#546e7a',
-                  fontWeight: '500'
-                }}>
-                  Total Amount
-                </div>
-              </div>
-            </CCol>
-          </CRow>
-        </div>
-
-        {/* Optional: Orders List Section (if you want to show individual orders) */}
-        {/* {orderData.orders && orderData.orders.length > 0 && (
-          <div style={{ 
-            marginTop: '25px',
-            backgroundColor: '#fff', 
-            padding: '20px', 
-            borderRadius: '8px',
-            border: '1px solid #e9ecef'
-          }}>
-            <h5 style={{ 
-              color: '#495057', 
-              marginBottom: '15px', 
-              fontSize: '1.1rem',
-              fontWeight: '600'
-            }}>
-              Order Details
-            </h5>
-            
-            <div style={{ 
-              backgroundColor: '#f8f9fa',
-              borderRadius: '6px',
-              padding: '12px 15px',
-              marginBottom: '10px',
-              fontWeight: '600',
-              fontSize: '0.9rem',
-              color: '#495057'
-            }}>
-              <CRow>
-                <CCol md={4}>Order ID</CCol>
-                <CCol md={4}>Item Count</CCol>
-                <CCol md={4}>Amount</CCol>
-              </CRow>
-            </div>
-            
-            {orderData.orders.map((order, index) => (
-              <div 
-                key={index} 
-                style={{ 
-                  padding: '12px 15px',
-                  borderBottom: index < orderData.orders.length - 1 ? '1px solid #e9ecef' : 'none',
-                  fontSize: '0.95rem'
-                }}
-              >
-                <CRow>
-                  <CCol md={4} style={{ color: '#495057', fontWeight: '500' }}>
-                    {order.checkout_id}
+                  Customer Information
+                </h5>
+                
+                <CRow className="g-3">
+                  <CCol md={4}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        color: '#6c757d',
+                        fontSize: '0.9rem',
+                        display: 'block',
+                        marginBottom: '4px'
+                      }}>
+                        Customer ID
+                      </span>
+                      <span style={{ 
+                        fontWeight: '600', 
+                        color: '#343a40',
+                        fontSize: '1rem'
+                      }}>
+                        {orderData.customer_id}
+                      </span>
+                    </div>
                   </CCol>
-                  <CCol md={4} style={{ color: '#6c757d' }}>
-                    {order.item_count} items
+                  
+                  <CCol md={4}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        color: '#6c757d',
+                        fontSize: '0.9rem',
+                        display: 'block',
+                        marginBottom: '4px'
+                      }}>
+                        Email Address
+                      </span>
+                      <span style={{ 
+                        fontWeight: '600', 
+                        color: '#343a40',
+                        fontSize: '1rem',
+                        wordBreak: 'break-word'
+                      }}>
+                        {orderData.email || 'Not provided'}
+                      </span>
+                    </div>
                   </CCol>
-                  <CCol md={4} style={{ color: '#388e3c', fontWeight: '600' }}>
-                    Rs. {order.total_order_amount}
+                  
+                  <CCol md={4}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        color: '#6c757d',
+                        fontSize: '0.9rem',
+                        display: 'block',
+                        marginBottom: '4px'
+                      }}>
+                        Phone Number
+                      </span>
+                      <span style={{ 
+                        fontWeight: '600', 
+                        color: '#343a40',
+                        fontSize: '1rem'
+                      }}>
+                        {orderData.passenger_tele || 'Not provided'}
+                      </span>
+                    </div>
                   </CCol>
                 </CRow>
               </div>
-            ))}
-          </div>
-        )} */}
-         {/* Order IDs Section - Horizontal Layout */}
-        {orderData.orders && orderData.orders.length > 0 && (
-          <div style={{ 
-            marginTop: '25px',
-            backgroundColor: '#fff', 
-            padding: '20px', 
-            borderRadius: '8px',
-            border: '1px solid #e9ecef'
-          }}>
-            {/* <h5 style={{ 
-              color: '#495057', 
-              marginBottom: '15px', 
-              fontSize: '1.1rem',
-              fontWeight: '600'
-            }}>
-              Order IDs
-            </h5>
-            
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
-              marginBottom: '20px'
-            }}>
-              {orderData.orders.map((order, index) => (
-                <div
-                  key={index}
-                  style={{
-                    backgroundColor: '#e3f2fd',
-                    color: '#1565c0',
-                    padding: '8px 15px',
-                    borderRadius: '20px',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    border: '1px solid #bbdefb',
-                    display: 'inline-block',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {order.checkout_id}
-                </div>
-              ))}
-            </div> */}
 
-            {/* Order Details Table */}
-            <h6 style={{ 
-              color: '#495057', 
-              marginBottom: '12px', 
-              fontSize: '1rem',
-              fontWeight: '600'
-            }}>
-              Order Details
-            </h6>
-            
-            <div style={{ 
-              backgroundColor: '#f8f9fa',
-              borderRadius: '6px',
-              padding: '12px 15px',
-              marginBottom: '10px',
-              fontWeight: '600',
-              fontSize: '0.9rem',
-              color: '#495057'
-            }}>
-              <CRow>
-                <CCol md={4}>Order ID</CCol>
-                <CCol md={4}>Item Count</CCol>
-                <CCol md={4}>Amount</CCol>
-              </CRow>
-            </div>
-            
-            <div style={{
-              maxHeight: '200px',
-              overflowY: 'auto',
-              border: '1px solid #e9ecef',
-              borderRadius: '6px'
-            }}>
-              {orderData.orders.map((order, index) => (
-                <div 
-                  key={index} 
-                  style={{ 
+              {/* Order Summary Section */}
+              <div style={{ 
+                backgroundColor: '#fff', 
+                padding: '20px', 
+                borderRadius: '8px',
+                border: '1px solid #e9ecef'
+              }}>
+                <h5 style={{ 
+                  color: '#495057', 
+                  marginBottom: '20px', 
+                  fontSize: '1.1rem',
+                  fontWeight: '600'
+                }}>
+                  Order Summary
+                </h5>
+                
+                <CRow className="g-4">
+                  <CCol md={6}>
+                    <div style={{
+                      textAlign: 'center',
+                      padding: '20px',
+                      backgroundColor: '#e3f2fd',
+                      borderRadius: '8px',
+                      border: '1px solid #bbdefb'
+                    }}>
+                      <div style={{ 
+                        fontSize: '2rem', 
+                        fontWeight: '700', 
+                        color: '#1976d2',
+                        marginBottom: '8px'
+                      }}>
+                        {orderData.total_orders}
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.9rem', 
+                        color: '#546e7a',
+                        fontWeight: '500'
+                      }}>
+                        Total Orders
+                      </div>
+                    </div>
+                  </CCol>
+                  
+                  <CCol md={6}>
+                    <div style={{
+                      textAlign: 'center',
+                      padding: '20px',
+                      backgroundColor: '#e8f5e8',
+                      borderRadius: '8px',
+                      border: '1px solid #c8e6c9'
+                    }}>
+                      <div style={{ 
+                        fontSize: '2rem', 
+                        fontWeight: '700', 
+                        color: '#388e3c',
+                        marginBottom: '8px'
+                      }}>
+                        Rs.  {orderData.total_amount?.toFixed(2)}
+                      </div>
+                      <div style={{ 
+                        fontSize: '0.9rem', 
+                        color: '#546e7a',
+                        fontWeight: '500'
+                      }}>
+                        Total Amount
+                      </div>
+                    </div>
+                  </CCol>
+                </CRow>
+              </div>
+
+              {/* Order IDs Section */}
+              {orderData.orders && orderData.orders.length > 0 && (
+                <div style={{ 
+                  marginTop: '25px',
+                  backgroundColor: '#fff', 
+                  padding: '20px', 
+                  borderRadius: '8px',
+                  border: '1px solid #e9ecef'
+                }}>
+                  <h6 style={{ 
+                    color: '#495057', 
+                    marginBottom: '12px', 
+                    fontSize: '1rem',
+                    fontWeight: '600'
+                  }}>
+                    Order Details
+                  </h6>
+                  
+                  <div style={{ 
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '6px',
                     padding: '12px 15px',
-                    borderBottom: index < orderData.orders.length - 1 ? '1px solid #e9ecef' : 'none',
-                    fontSize: '0.95rem',
-                    backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa'
-                  }}
-                >
-                  <CRow>
-                    <CCol md={4} style={{ color: '#495057', fontWeight: '500' }}>
-                      {order.checkout_id}
-                    </CCol>
-                    <CCol md={4} style={{ color: '#6c757d' }}>
-                      {order.item_count} items
-                    </CCol>
-                    <CCol md={4} style={{ color: '#388e3c', fontWeight: '600' }}>
-                      Rs. {order.total_order_amount}
-                    </CCol>
-                  </CRow>
+                    marginBottom: '10px',
+                    fontWeight: '600',
+                    fontSize: '0.9rem',
+                    color: '#495057'
+                  }}>
+                    <CRow>
+                      <CCol md={4}>Order ID</CCol>
+                      <CCol md={4}>Item Count</CCol>
+                      <CCol md={4}>Amount</CCol>
+                    </CRow>
+                  </div>
+                  
+                  <div style={{
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    border: '1px solid #e9ecef',
+                    borderRadius: '6px'
+                  }}>
+                    {orderData.orders.map((order, index) => (
+                      <div 
+                        key={index} 
+                        style={{ 
+                          padding: '12px 15px',
+                          borderBottom: index < orderData.orders.length - 1 ? '1px solid #e9ecef' : 'none',
+                          fontSize: '0.95rem',
+                          backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8f9fa'
+                        }}
+                      >
+                        <CRow>
+                          <CCol md={4} style={{ color: '#495057', fontWeight: '500' }}>
+                            {order.checkout_id}
+                          </CCol>
+                          <CCol md={4} style={{ color: '#6c757d' }}>
+                            {order.item_count} items
+                          </CCol>
+                          <CCol md={4} style={{ color: '#388e3c', fontWeight: '600' }}>
+                            Rs. {order.total_order_amount}
+                          </CCol>
+                        </CRow>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
+              )}
             </div>
-          </div>
-        )}
-    
-      </div>
-    ) : (
-      <div style={{ 
-        textAlign: 'center', 
-        padding: '40px 20px',
-        color: '#6c757d'
-      }}>
-        <div style={{ 
-          marginBottom: '15px',
-          fontSize: '1.1rem'
+          ) : (
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '40px 20px',
+              color: '#6c757d'
+            }}>
+              <div style={{ 
+                marginBottom: '15px',
+                fontSize: '1.1rem'
+              }}>
+                Loading customer information...
+              </div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                border: '4px solid #f3f3f3',
+                borderTop: '4px solid #007bff',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+                margin: '0 auto'
+              }}></div>
+            </div>
+          )}
+        </Modal.Body>
+        
+        <Modal.Footer style={{ 
+          backgroundColor: '#f8f9fa', 
+          borderTop: '1px solid #e9ecef',
+          padding: '15px 30px'
         }}>
-          Loading customer information...
-        </div>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #007bff',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          margin: '0 auto'
-        }}></div>
-      </div>
-    )}
-  </Modal.Body>
-  
-  <Modal.Footer style={{ 
-    backgroundColor: '#f8f9fa', 
-    borderTop: '1px solid #e9ecef',
-    padding: '15px 30px'
-  }}>
-    <CButton 
-      color="light" 
-      onClick={() => setShowChatModal(false)}
-      style={{
-        padding: '10px 25px',
-        fontWeight: '500',
-        border: '1px solid #ced4da',
-        borderRadius: '6px',
-        transition: 'all 0.2s ease'
-      }}
-      onMouseOver={(e) => {
-        e.target.style.backgroundColor = '#e2e6ea';
-        e.target.style.borderColor = '#adb5bd';
-      }}
-      onMouseOut={(e) => {
-        e.target.style.backgroundColor = '#f8f9fa';
-        e.target.style.borderColor = '#ced4da';
-      }}
-    >
-      Close
-    </CButton>
-  </Modal.Footer>
-  
-  <style jsx>{`
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  `}</style>
-</Modal>
-
-
+          <CButton 
+            color="light" 
+            onClick={() => setShowChatModal(false)}
+            style={{
+              padding: '10px 25px',
+              fontWeight: '500',
+              border: '1px solid #ced4da',
+              borderRadius: '6px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = '#e2e6ea';
+              e.target.style.borderColor = '#adb5bd';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#f8f9fa';
+              e.target.style.borderColor = '#ced4da';
+            }}
+          >
+            Close
+          </CButton>
+        </Modal.Footer>
+        
+        <style jsx>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </Modal>
 
       <MoreProductView
         show={moreProductsModal}
         onHide={() => setMoreProductModal(false)}
         productData={moreData}
-      ></MoreProductView>
+      />
 
       <ChatAnalyticsModal
         show={viewChatAnalytics}

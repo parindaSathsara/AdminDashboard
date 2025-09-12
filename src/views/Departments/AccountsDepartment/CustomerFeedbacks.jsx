@@ -189,7 +189,8 @@ function CustomerFeedbacks(props) {
           break;
         case "Partial Refund":
           setVisibleRefund(true);
-          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.paid_amount, refund_status: false })
+          setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.paid_amount, refund_status: true })
+          break;
         default:
           setRefundCustomerData({ refundCustomerData, refund_type: e.target.value, refunding_amount: 0.00, requestAmount: orderData.paid_amount, refund_status: false })
           break;
