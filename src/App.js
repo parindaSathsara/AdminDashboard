@@ -374,6 +374,18 @@ function App() {
       },
     ])
   }
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('SW registered: ', registration);
+        })
+        .catch((registrationError) => {
+          console.log('SW registration failed: ', registrationError);
+        });
+    }
+  }, []);
+
 
   const useChatNotifications = () => {
     const q = query(collection(db, 'customer-chat-lists'), orderBy('updatedAt', 'desc'))
