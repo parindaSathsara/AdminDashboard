@@ -240,39 +240,45 @@ function ChatsMeta() {
     })
   }
 
-  const getChatRelatedtypes = async (dataset) => {
-    const result = []
-    dataset.forEach((value) => {
-      const existingItem = result.find((item) => item.label_name === value.chat_related)
-      if (existingItem) {
-        existingItem.items += 1
-      } else {
-        result.push({
-          filtertype: 'chat_related',
-          label_name: value.chat_related,
-          items: 1,
-        })
-      }
-    })
-    return result
-  }
+const getChatRelatedtypes = async (dataset) => {
+  const result = []
+  dataset.forEach((value) => {
+    // Handle null/undefined chat_related values
+    const chatRelatedValue = value.chat_related || 'Unknown';
+    
+    const existingItem = result.find((item) => item.label_name === chatRelatedValue)
+    if (existingItem) {
+      existingItem.items += 1
+    } else {
+      result.push({
+        filtertype: 'chat_related',
+        label_name: chatRelatedValue,
+        items: 1,
+      })
+    }
+  })
+  return result
+}
 
-  const getChatsStatus = async (dataset) => {
-    const result = []
-    dataset.forEach((value) => {
-      const existingItem = result.find((item) => item.label_name === value.status)
-      if (existingItem) {
-        existingItem.items += 1
-      } else {
-        result.push({
-          filtertype: 'status',
-          label_name: value.status,
-          items: 1,
-        })
-      }
-    })
-    return result
-  }
+const getChatsStatus = async (dataset) => {
+  const result = []
+  dataset.forEach((value) => {
+    // Handle null/undefined status values
+    const statusValue = value.status || 'Pending'; // Default to 'Pending' if status is missing
+    
+    const existingItem = result.find((item) => item.label_name === statusValue)
+    if (existingItem) {
+      existingItem.items += 1
+    } else {
+      result.push({
+        filtertype: 'status',
+        label_name: statusValue,
+        items: 1,
+      })
+    }
+  })
+  return result
+}
 
   const getChatlists = async () => {
     const q = query(collection(db, 'customer-chat-lists'), orderBy('updatedAt', 'desc'))

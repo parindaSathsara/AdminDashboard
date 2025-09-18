@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import './CancellationModal.css'
 
 export default function CancellationModal({ show, onHide, onConfirm }) {
-
-
     const [reason, setReason] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [validationError, setValidationError] = useState('');
@@ -12,14 +9,8 @@ export default function CancellationModal({ show, onHide, onConfirm }) {
     const handleConfirm = async () => {
         if (!reason || !reason.trim()) {
             setValidationError('Reason is required');
-            console.log("Reason is required")
             return;
         }
-
-        // if (!reason.trim()) {
-        //     setValidationError('Reason is required and cannot be empty spaces');
-        //     return;
-        // }
 
         setValidationError('');
         setIsSubmitting(true);
@@ -35,14 +26,33 @@ export default function CancellationModal({ show, onHide, onConfirm }) {
         }
     };
 
-
-    const modalStyle = {
-        backgroundColor: 'rgba(52, 58, 64, 0.5)', // Dark background with 90% opacity
+    const handleClose = () => {
+        setReason('');
+        setValidationError('');
+        onHide();
     };
 
+    // Inline styles for centering
+    const modalStyles = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    };
+
+    const dialogStyles = {
+        margin: '0 auto',
+        maxWidth: '500px'
+    };
 
     return (
-        <Modal show={show} onHide={onHide} size="md" dialogClassName="d-flex align-items-center custom-modal" style={modalStyle}>
+        <Modal 
+            show={show} 
+            onHide={handleClose} 
+            size="md" 
+            centered
+            style={modalStyles}
+            dialogStyle={dialogStyles}
+        >
             <Modal.Header closeButton>
                 <Modal.Title>Cancellation Details</Modal.Title>
             </Modal.Header>
@@ -55,6 +65,7 @@ export default function CancellationModal({ show, onHide, onConfirm }) {
                             placeholder="Enter reason"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
+                            isInvalid={!!validationError}
                         />
                         {validationError && (
                             <Form.Text className="text-danger">
@@ -65,7 +76,7 @@ export default function CancellationModal({ show, onHide, onConfirm }) {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={() => { onHide(); }}>
+                <Button variant="secondary" onClick={handleClose}>
                     No
                 </Button>
                 <Button
@@ -77,6 +88,5 @@ export default function CancellationModal({ show, onHide, onConfirm }) {
                 </Button>
             </Modal.Footer>
         </Modal>
-
     )
 }
