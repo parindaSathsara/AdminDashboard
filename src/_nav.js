@@ -353,11 +353,11 @@ function getNavigationHook(permissions) {
       icon: <CIcon icon={cilUserX} customClassName="nav-icon" />,
     },
     {
-  component: CNavItem,
-  name: 'Supplier Referrals',
-  to: '/admin/supplier-referrals',
-  icon: <CIcon icon={cilShare} customClassName="nav-icon" />, // Using share icon (for referrals)
-},
+      component: CNavItem,
+      name: 'Supplier Referrals',
+      to: '/admin/supplier-referrals',
+      icon: <CIcon icon={cilShare} customClassName="nav-icon" />, // Using share icon (for referrals)
+    },
     {
       component: CNavItem,
       name: 'Access',
@@ -399,6 +399,12 @@ function getNavigationHook(permissions) {
         },
       ],
     },
+    {
+  component: CNavItem,
+  name: 'WhatsApp Messages',
+  to: '/whatsapp-messages',
+  icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
+},
     {
       component: CNavItem,
       name: 'Settings',

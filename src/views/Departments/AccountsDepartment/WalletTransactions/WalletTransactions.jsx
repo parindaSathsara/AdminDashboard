@@ -1110,68 +1110,77 @@ const handleExport = async () => {
           ) : null}
 
           {/* Compact Bulk Actions */}
-          {selectedRequests.length > 0 && activeTab === 'requests' && (
-            <CAlert
-              color="primary"
-              className="d-flex justify-content-between align-items-center py-2"
-            >
-              <small>{selectedRequests.length} requests selected</small>
-              <CButton color="success" size="sm" onClick={() => setShowBulkModal(true)}>
-                <Check2Circle size={14} className="me-1" />
-                Bulk Approve
-              </CButton>
-            </CAlert>
-          )}
+         {selectedRequests.length > 0 && activeTab === 'requests' && (
+        <CAlert
+          color="primary"
+          className="d-flex justify-content-between align-items-center py-2"
+        >
+          <small>{selectedRequests.length} pending requests selected</small>
+          <CButton color="success" size="sm" onClick={() => setShowBulkModal(true)}>
+            <Check2Circle size={14} className="me-1" />
+            Bulk Approve
+          </CButton>
+        </CAlert>
+      )}
 
           {/* Material Table with disabled pagination */}
-          <ThemeProvider theme={defaultMaterialTheme}>
-            <MaterialTable
-              title=""
-              data={activeTab === 'requests' ? topUpRequestsTableData.rows : walletsTableData.rows}
-              columns={
-                activeTab === 'requests' ? topUpRequestsTableData.columns : walletsTableData.columns
+           <ThemeProvider theme={defaultMaterialTheme}>
+        <MaterialTable
+          title=""
+          data={activeTab === 'requests' ? topUpRequestsTableData.rows : walletsTableData.rows}
+          columns={
+            activeTab === 'requests' ? topUpRequestsTableData.columns : walletsTableData.columns
+          }
+          options={{
+            sorting: true,
+            search: false,
+            filtering: false,
+            paging: false,
+            exportButton: false,
+            selection: activeTab === 'requests',
+            showSelectAllCheckbox: false, // Disable select all since we have conditional checkboxes
+            grouping: false,
+            columnsButton: false,
+            minBodyHeight: 'auto',
+            maxBodyHeight: 'none',
+            tableLayout: 'auto',
+            headerStyle: {
+              background: '#f8f9fa',
+              padding: '12px 16px',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#495057',
+            },
+            rowStyle: (rowData) => ({
+              fontSize: '14px',
+              padding: '8px 16px',
+              backgroundColor:
+                rowData.status === 'rejected'
+                  ? '#fef2f2'
+                  : rowData.status === 'approved'
+                  ? '#f0fdf4'
+                  : rowData.status === 'utilized'
+                  ? '#f0f9ff'
+                  : '#ffffff',
+            }),
+            toolbar: false,
+            emptyRowsWhenPaging: false,
+            doubleHorizontalScroll: false,
+            // Add custom selection condition
+            selectionProps: (rowData) => ({
+              disabled: rowData.status !== 'pending',
+              style: {
+                display: rowData.status !== 'pending' ? 'none' : 'inline-block'
               }
-              options={{
-                sorting: true,
-                search: false,
-                filtering: false,
-                paging: false, // Disable Material Table pagination
-                exportButton: false,
-                selection: activeTab === 'requests',
-                showSelectAllCheckbox: activeTab === 'requests',
-                grouping: false,
-                columnsButton: false,
-                minBodyHeight: 'auto',
-                maxBodyHeight: 'none',
-                tableLayout: 'auto',
-                headerStyle: {
-                  background: '#f8f9fa',
-                  padding: '12px 16px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: '#495057',
-                },
-                rowStyle: (rowData) => ({
-                  fontSize: '14px',
-                  padding: '8px 16px',
-                  backgroundColor:
-                    rowData.status === 'rejected'
-                      ? '#fef2f2'
-                      : rowData.status === 'approved'
-                      ? '#f0fdf4'
-                      : rowData.status === 'utilized'
-                      ? '#f0f9ff'
-                      : '#ffffff',
-                }),
-                toolbar: false,
-                emptyRowsWhenPaging: false,
-                doubleHorizontalScroll: false,
-              }}
-              onSelectionChange={(rows) => {
-                setSelectedRequests(rows.map((row) => row.id))
-              }}
-            />
-          </ThemeProvider>
+            })
+          }}
+          onSelectionChange={(rows) => {
+            // Only select pending requests
+            const pendingRequests = rows.filter(row => row.status === 'pending');
+            setSelectedRequests(pendingRequests.map((row) => row.id))
+          }}
+        />
+      </ThemeProvider>
 
           {/* Custom Pagination */}
           <CustomPagination

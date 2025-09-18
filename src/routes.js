@@ -112,6 +112,7 @@ import Vervotech from './views/Services/Vervotech/Vervotech'
 import HotelInitialMapping from './views/Services/Vervotech/HotelInitialMapping'
 import HotelIncrementalMapping from './views/Services/Vervotech/HotelIncrementalMapping'
 import AdminSupplierReferrals from './views/SupplierRefferals/AdminSupplierReferrals'
+import WhatsAppMessages from './views/WhatsappMessages/WhatsAppMessages'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -212,7 +213,7 @@ const routes = [
   },
   { path: '/banners', exact: true, name: 'Banners', element: Banners },
   { path: '/settings', exact: true, name: 'Settings', element: Settings },
-
+  {path:'/whatsapp-messages', exact:true, name:'WhatsApp Messages', element:WhatsAppMessages},
   {
     path: '/customer-journey',
     exact: true,

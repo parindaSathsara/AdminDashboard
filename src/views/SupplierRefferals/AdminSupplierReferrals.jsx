@@ -18,7 +18,12 @@ import {
   CInputGroup,
   CPagination,
   CPaginationItem,
-  CSpinner
+  CSpinner,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
+  CModalTitle
 } from '@coreui/react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -39,13 +44,18 @@ const AdminSupplierReferrals = () => {
     to: 0
   });
   const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [showReferralsModal, setShowReferralsModal] = useState(false);
+  const [referrals, setReferrals] = useState([]);
+  const [referralsLoading, setReferralsLoading] = useState(false);
 
   useEffect(() => {
     fetchSupplierReferrals();
-  }, [currentPage, perPage]);
+  }, [currentPage, perPage, searchTerm]);
 
   const fetchSupplierReferrals = async () => {
     try {
@@ -70,9 +80,77 @@ const AdminSupplierReferrals = () => {
     }
   };
 
+  const fetchSupplierReferralDetails = async (supplierId) => {
+    try {
+      setReferralsLoading(true);
+      const response = await axios.get(`/supplier-referrals/${supplierId}`);
+
+      if (response.data.status === 200) {
+        setReferrals(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching referral details:', error);
+      Swal.fire('Error', 'Failed to load referral details', 'error');
+    } finally {
+      setReferralsLoading(false);
+    }
+  };
+
+  const viewSupplierReferrals = async (supplier) => {
+    setSelectedSupplier(supplier);
+    await fetchSupplierReferralDetails(supplier.id);
+    setShowReferralsModal(true);
+  };
+
+  const handleApprove = async (referralId) => {
+    try {
+      setProcessing(true);
+      const response = await axios.post(`/supplier-referrals/${referralId}/approve`);
+
+      if (response.data.status === 200) {
+        Swal.fire('Success', 'Referral approved successfully', 'success');
+        // Refresh both the main list and the modal data
+        fetchSupplierReferrals();
+        if (selectedSupplier) {
+          fetchSupplierReferralDetails(selectedSupplier.id);
+        }
+      } else {
+        Swal.fire('Error', response.data.message, 'error');
+      }
+    } catch (error) {
+      console.error('Error approving referral:', error);
+      Swal.fire('Error', error.response?.data?.message || 'Failed to approve referral', 'error');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleReject = async (referralId) => {
+    try {
+      setProcessing(true);
+      const response = await axios.post(`/supplier-referrals/${referralId}/reject`);
+
+      if (response.data.status === 200) {
+        Swal.fire('Success', 'Referral rejected successfully', 'success');
+        // Refresh both the main list and the modal data
+        fetchSupplierReferrals();
+        if (selectedSupplier) {
+          fetchSupplierReferralDetails(selectedSupplier.id);
+        }
+      } else {
+        Swal.fire('Error', response.data.message, 'error');
+      }
+    } catch (error) {
+      console.error('Error rejecting referral:', error);
+      Swal.fire('Error', error.response?.data?.message || 'Failed to reject referral', 'error');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const handleSearch = () => {
     setCurrentPage(1);
-    fetchSupplierReferrals();
+    // fetchSupplierReferrals();
   };
 
   const handlePageChange = (page) => {
@@ -84,7 +162,7 @@ const AdminSupplierReferrals = () => {
   const handlePerPageChange = (e) => {
     const newPerPage = parseInt(e.target.value);
     setPerPage(newPerPage);
-    setCurrentPage(1); // Reset to first page when changing items per page
+    setCurrentPage(1);
   };
 
   const getStatusBadge = (count, type) => {
@@ -98,19 +176,26 @@ const AdminSupplierReferrals = () => {
     return <CBadge color={colorMap[type]}>{count || 0}</CBadge>;
   };
 
-  // Generate pagination items with proper boundaries
+  const getReferralStatusBadge = (status) => {
+    const colorMap = {
+      accepted: 'success',
+      pending: 'warning',
+      rejected: 'danger'
+    };
+
+    return <CBadge color={colorMap[status]}>{status}</CBadge>;
+  };
+
   const renderPaginationItems = () => {
     const items = [];
     const maxVisiblePages = 5;
     let startPage = Math.max(1, suppliers.current_page - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(suppliers.last_page, startPage + maxVisiblePages - 1);
 
-    // Adjust if we're near the beginning
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    // Previous button
     items.push(
       <CPaginationItem
         key="prev"
@@ -121,7 +206,6 @@ const AdminSupplierReferrals = () => {
       </CPaginationItem>
     );
 
-    // First page and ellipsis if needed
     if (startPage > 1) {
       items.push(
         <CPaginationItem
@@ -138,7 +222,6 @@ const AdminSupplierReferrals = () => {
       }
     }
 
-    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       items.push(
         <CPaginationItem
@@ -151,7 +234,6 @@ const AdminSupplierReferrals = () => {
       );
     }
 
-    // Last page and ellipsis if needed
     if (endPage < suppliers.last_page) {
       if (endPage < suppliers.last_page - 1) {
         items.push(<CPaginationItem key="ellipsis2" disabled>...</CPaginationItem>);
@@ -168,7 +250,6 @@ const AdminSupplierReferrals = () => {
       );
     }
 
-    // Next button
     items.push(
       <CPaginationItem
         key="next"
@@ -236,13 +317,28 @@ const AdminSupplierReferrals = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
+
+            {/* Show X mark only if there's a searchTerm */}
+            {searchTerm && (
+              <CButton
+                color="dark"
+                variant="outline"
+                onClick={() => {
+                  setSearchTerm('');
+                  setCurrentPage(1); // reset to first page
+                }}
+              >
+                ✕
+              </CButton>
+            )}
+
             <CButton color="primary" onClick={handleSearch}>
               Search
             </CButton>
           </CInputGroup>
         </CCol>
-
       </CRow>
+
 
       {/* Suppliers Table */}
       <CRow>
@@ -271,6 +367,7 @@ const AdminSupplierReferrals = () => {
                         <CTableHeaderCell className="text-center">Accepted</CTableHeaderCell>
                         <CTableHeaderCell className="text-center">Pending</CTableHeaderCell>
                         <CTableHeaderCell className="text-center">Rejected</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center">Actions</CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -298,11 +395,21 @@ const AdminSupplierReferrals = () => {
                             <CTableDataCell className="text-center">
                               {getStatusBadge(supplier.rejected_referrals, 'rejected')}
                             </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                              <CButton
+                                color="info"
+                                size="sm"
+                                onClick={() => viewSupplierReferrals(supplier)}
+                                disabled={supplier.total_referrals === 0}
+                              >
+                                View Referrals
+                              </CButton>
+                            </CTableDataCell>
                           </CTableRow>
                         ))
                       ) : (
                         <CTableRow>
-                          <CTableDataCell colSpan={7} className="text-center py-4">
+                          <CTableDataCell colSpan={8} className="text-center py-4">
                             {searchTerm ? 'No suppliers found matching your search' : 'No suppliers with referrals found'}
                           </CTableDataCell>
                         </CTableRow>
@@ -310,7 +417,7 @@ const AdminSupplierReferrals = () => {
                     </CTableBody>
                   </CTable>
 
-                  {/* Pagination - Fixed */}
+                  {/* Pagination */}
                   {suppliers.last_page > 1 && (
                     <div className="d-flex justify-content-between align-items-center mt-3">
                       <div>
@@ -334,7 +441,6 @@ const AdminSupplierReferrals = () => {
                       <CPagination className="mb-0">
                         {renderPaginationItems()}
                       </CPagination>
-
                     </div>
                   )}
                 </>
@@ -343,6 +449,89 @@ const AdminSupplierReferrals = () => {
           </CCard>
         </CCol>
       </CRow>
+
+      {/* Referrals Modal */}
+      <CModal visible={showReferralsModal} onClose={() => setShowReferralsModal(false)} size="xl">
+        <CModalHeader>
+          <CModalTitle>
+            Referrals for {selectedSupplier?.first_name} {selectedSupplier?.last_name}
+          </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {referralsLoading ? (
+            <div className="text-center py-4">
+              <CSpinner />
+            </div>
+          ) : (
+            <CTable striped hover responsive>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell>Referral ID</CTableHeaderCell>
+                  {/* <CTableHeaderCell>Referrer</CTableHeaderCell> */}
+                  <CTableHeaderCell>Status</CTableHeaderCell>
+                  <CTableHeaderCell>Date</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Actions</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {referrals.length > 0 ? (
+                  referrals.map((referral) => (
+                    <CTableRow key={referral.id}>
+                      <CTableDataCell>#{referral.id}</CTableDataCell>
+                      {/* <CTableDataCell>
+                        {referral.referrer_name || 'Unknown'}
+                      </CTableDataCell> */}
+                      <CTableDataCell>
+                        {getReferralStatusBadge(referral.status)}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {new Date(referral.created_at).toLocaleDateString()}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {referral.status === 'pending' && (
+                          <>
+                            <CButton
+                              color="success"
+                              size="sm"
+                              className="me-2"
+                              onClick={() => handleApprove(referral.id)}
+                              disabled={processing}
+                            >
+                              Approve
+                            </CButton>
+                            <CButton
+                              color="danger"
+                              size="sm"
+                              onClick={() => handleReject(referral.id)}
+                              disabled={processing}
+                            >
+                              Reject
+                            </CButton>
+                          </>
+                        )}
+                        {referral.status !== 'pending' && (
+                          <span className="text-muted">Processed</span>
+                        )}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                ) : (
+                  <CTableRow>
+                    <CTableDataCell colSpan={5} className="text-center py-4">
+                      No referrals found for this supplier
+                    </CTableDataCell>
+                  </CTableRow>
+                )}
+              </CTableBody>
+            </CTable>
+          )}
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setShowReferralsModal(false)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </div>
   );
 };
