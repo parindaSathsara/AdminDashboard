@@ -907,7 +907,7 @@ const Bridgify = () => {
                       {/* Cancellation Information Dropdown */}
                       <CRow className="mt-3">
                         <CCol>
-                          <div className="d-flex justify-content-between align-items-center">
+                          {/* <div className="d-flex justify-content-between align-items-center">
                             <CButton
                               color="info"
                               variant="outline"
@@ -916,9 +916,9 @@ const Bridgify = () => {
                             >
                               Cancellation Information
                             </CButton>
-                          </div>
+                          </div> */}
 
-                          <div className="collapse mt-2" id={`cancellationInfo${index}`}>
+                          {/* <div className="collapse mt-2" id={`cancellationInfo${index}`}>
                             <CCard className="border-0 bg-light">
                               <CCardBody>
                                 {cancellationLoading[index] ? (
@@ -928,7 +928,6 @@ const Bridgify = () => {
                                   </div>
                                 ) : cancellationInfo[orderId] &&
                                   cancellationInfo[orderId].length > 0 ? (
-                                  // Render actual cancellation info from API
                                   <CRow>
                                     {cancellationInfo[orderId].map((info, infoIndex) => (
                                       <CCol sm={12} key={infoIndex}>
@@ -943,13 +942,12 @@ const Bridgify = () => {
                                         <p>
                                           <strong>Deadline:</strong> {info.deadline || 'N/A'}
                                         </p>
-                                        {/* Add more fields as per your API response */}
+                                       
                                       </CCol>
                                     ))}
                                   </CRow>
                                 ) : cancellationInfo[orderId] &&
                                   cancellationInfo[orderId].length === 0 ? (
-                                  // Show not found message
                                   <CAlert color="warning">
                                     <div className="d-flex align-items-center">
                                       <i
@@ -967,10 +965,10 @@ const Bridgify = () => {
                                     </div>
                                   </CAlert>
                                 ) : (
-                                  // Show mock data if API hasn't been called yet
+                                  
                                   <CRow>
                                     {(() => {
-                                      // Generate mock data based on the current item
+                                     
                                       const mockData = getMockCancellationInfo(item)
                                       return (
                                         <>
@@ -1009,7 +1007,7 @@ const Bridgify = () => {
                                 )}
                               </CCardBody>
                             </CCard>
-                          </div>
+                          </div> */}
                         </CCol>
                       </CRow>
                     </CCardBody>
