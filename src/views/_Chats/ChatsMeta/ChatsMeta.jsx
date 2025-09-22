@@ -2,7 +2,6 @@ import { CButton, CCol, CRow } from '@coreui/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { Pagination } from 'react-bootstrap';
 
-
 import {
   addDoc,
   arrayRemove,
@@ -32,6 +31,7 @@ import {
   faCircleInfo,
   faComment,
   faThumbtack,
+  faBars,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { UserLoginContext } from 'src/Context/UserLoginContext'
@@ -54,6 +54,7 @@ function ChatsMeta() {
   const [openFilter, setOpenFilter] = useState(false)
   const [clipBoardStatus, setClipBoardStatus] = useState(false)
   const [messageClipBoard, setMessageClipBoard] = useState(false)
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false)
 
   const [searchBarStatus, setSearchBarStatus] = useState({
     status: false,
@@ -93,12 +94,6 @@ function ChatsMeta() {
 
   const handleFilterchat = (value, dataset) => {
     setSearchChat(value)
-    // if (value === '') {
-    //     setchatListFiltered(chatList);
-    // } else {
-    //     let filtered = dataset.filter((chatValue) => { return (chatValue.chat_name + " " + chatValue.customer_name).toString().toLowerCase().includes(value.toLowerCase()) })
-    //     setchatListFiltered(filtered);
-    // }
   }
 
   const formatDate = (timestamp) => {
@@ -134,6 +129,10 @@ function ChatsMeta() {
     setChatOpened(false)
     setChatOpenDetails([])
     await removeExisting({ chatID: chatOpenDetails.id, adminId: userData.name })
+    // On mobile, also close the chat view and show the list
+    if (window.innerWidth <= 768) {
+      setShowMobileSidebar(true)
+    }
   }
 
   const updatePinnedChats = () => {
@@ -170,25 +169,6 @@ function ChatsMeta() {
     })
   }
 
-  // const handleUpdateAdminStats = async ({ chatID, customerStatus, adminStatus, supplierStatus, adminId, updateState }) => {
-  //     const chatDocRef = doc(db, "customer-chat-lists/", chatID);
-  //     const chatDocSnap = await getDoc(chatDocRef);
-  //     if (chatDocSnap.exists()) {
-  //         const updateData = {
-  //             notifyCustomer: customerStatus,
-  //             notifyAdmin: adminStatus,
-  //             notifySupplier: supplierStatus,
-  //         };
-  //         if (updateState === false) {
-  //             updateData.admin_reading = arrayUnion(adminId);
-  //         } else {
-  //             updateData.admin_reading = arrayRemove(adminId);
-  //             updateData.admin_included = arrayUnion(adminId);
-  //         }
-  //         await updateDoc(chatDocRef, updateData);
-  //     }
-  // }
-
   const removeExisting = async ({ chatID, adminId }) => {
     if (chatID !== undefined) {
       const chatDocRef = doc(db, 'customer-chat-lists/', chatID)
@@ -217,11 +197,14 @@ function ChatsMeta() {
       }
     }
 
-
-
     console.log('handleOpenChat function calledopened', chatData)
     setChatOpened(true)
     setChatOpenDetails(chatData)
+    
+    // On mobile, hide the sidebar and show the chat
+    if (window.innerWidth <= 768) {
+      setShowMobileSidebar(false)
+    }
   }
 
   const location = useLocation()
@@ -232,18 +215,17 @@ function ChatsMeta() {
     if (location?.state?.createdChatData) {
       setChatOpened(true)
       setChatOpenDetails(location?.state?.createdChatData)
+      
+      // On mobile, hide the sidebar and show the chat
+      if (window.innerWidth <= 768) {
+        setShowMobileSidebar(false)
+      }
     }
   }, [location?.state?.createdChatData])
 
   const handleOpenClipBoardOpen = () => {
     setClipBoardStatus(!clipBoardStatus)
   }
-
-  // const handleKeyUp = (event) => {
-  //     if (event.key === "Enter" && !clipBoardStatus) {
-  //         handleSendMessage(adminMessage);
-  //     }
-  // };
 
   const handleFilterBoxes = (name, value) => {
     const newItem = { name, value }
@@ -258,39 +240,45 @@ function ChatsMeta() {
     })
   }
 
-  const getChatRelatedtypes = async (dataset) => {
-    const result = []
-    dataset.forEach((value) => {
-      const existingItem = result.find((item) => item.label_name === value.chat_related)
-      if (existingItem) {
-        existingItem.items += 1
-      } else {
-        result.push({
-          filtertype: 'chat_related',
-          label_name: value.chat_related,
-          items: 1,
-        })
-      }
-    })
-    return result
-  }
+const getChatRelatedtypes = async (dataset) => {
+  const result = []
+  dataset.forEach((value) => {
+    // Handle null/undefined chat_related values
+    const chatRelatedValue = value.chat_related || 'Unknown';
+    
+    const existingItem = result.find((item) => item.label_name === chatRelatedValue)
+    if (existingItem) {
+      existingItem.items += 1
+    } else {
+      result.push({
+        filtertype: 'chat_related',
+        label_name: chatRelatedValue,
+        items: 1,
+      })
+    }
+  })
+  return result
+}
 
-  const getChatsStatus = async (dataset) => {
-    const result = []
-    dataset.forEach((value) => {
-      const existingItem = result.find((item) => item.label_name === value.status)
-      if (existingItem) {
-        existingItem.items += 1
-      } else {
-        result.push({
-          filtertype: 'status',
-          label_name: value.status,
-          items: 1,
-        })
-      }
-    })
-    return result
-  }
+const getChatsStatus = async (dataset) => {
+  const result = []
+  dataset.forEach((value) => {
+    // Handle null/undefined status values
+    const statusValue = value.status || 'Pending'; // Default to 'Pending' if status is missing
+    
+    const existingItem = result.find((item) => item.label_name === statusValue)
+    if (existingItem) {
+      existingItem.items += 1
+    } else {
+      result.push({
+        filtertype: 'status',
+        label_name: statusValue,
+        items: 1,
+      })
+    }
+  })
+  return result
+}
 
   const getChatlists = async () => {
     const q = query(collection(db, 'customer-chat-lists'), orderBy('updatedAt', 'desc'))
@@ -302,7 +290,6 @@ function ChatsMeta() {
 
       if (JSON.stringify(fetchedMessages) !== JSON.stringify(chatList)) {
         setchatList(fetchedMessages)
-        // console.log('Fetched messagesssssss', fetchedMessages)
         setchatListFiltered(fetchedMessages)
 
         let relatedResposne = await getChatRelatedtypes(fetchedMessages)
@@ -332,22 +319,6 @@ function ChatsMeta() {
   useEffect(() => {
     updatePinnedChats()
   }, [chatList])
-
-  // useEffect(() => {
-  //   if (chatList.length > 0 && filterCheckBoxes.length > 0) {
-  //     const filteredChatList = chatList.filter((chat) =>
-  //       filterCheckBoxes.some((filter) => chat[filter.name] === filter.value),
-  //     )
-  //     if (searchChat === '') {
-  //       setchatListFiltered(filteredChatList)
-  //     } else {
-  //       handleFilterchat(searchChat, filteredChatList)
-  //     }
-  //   } else {
-  //     handleFilterchat(searchChat, chatList)
-  //   }
-  // }, [filterCheckBoxes, chatList])
-
 
   useEffect(() => {
     if (chatList.length > 0) {
@@ -389,8 +360,6 @@ function ChatsMeta() {
   useEffect(() => {
     getChatlists()
   }, [])
-
-  const [lentChatList, setLentChatList] = useState(0)
 
   const getFilteredChats = (filterType) => {
     // Handle pinned chats
@@ -458,43 +427,6 @@ function ChatsMeta() {
     }
   };
 
-  //   const getFilteredChats = (pinState) => {
-  //     if (pinState == 'pinned') {
-  //       return chatListFiltered
-  //         .filter((value) => pinnedChats.includes(value.id))
-  //         .filter(
-  //           (value) =>
-  //             !searchChat ||
-  //             `${value.chat_name} by ${value.customer_name}`
-  //               .toLowerCase()
-  //               .includes(searchChat.toLowerCase()),
-  //         )
-  //     } else if (pinState == 'assigned') {
-  //       const data = chatListFiltered
-  //         .filter((value) => !pinnedChats.includes(value.id))
-  //         .filter(
-  //           (value) =>
-  //             !searchChat ||
-  //             `${value.chat_name} by ${value.customer_name}`
-  //               .toLowerCase()
-  //               .includes(searchChat.toLowerCase()),
-  //         )
-  //         .filter((value) => value?.assign_employee === userData.id)
-
-  //       return data
-  //     } else {
-  //       return chatListFiltered
-  //         .filter((value) => !pinnedChats.includes(value.id))
-  //         .filter(
-  //           (value) =>
-  //             !searchChat ||
-  //             `${value.chat_name} by ${value.customer_name}`
-  //               .toLowerCase()
-  //               .includes(searchChat.toLowerCase()),
-  //         )
-  //     }
-  //   }
-
   const [currentFilters, setCurrentFilters] = useState('All')
   const handleSelect = (key) => {
     setCurrentFilters(key)
@@ -526,10 +458,32 @@ function ChatsMeta() {
     }
   };
 
+  // Mobile back button handler
+  const handleMobileBack = () => {
+    setShowMobileSidebar(true);
+    setChatOpened(false);
+  };
+
   return (
     <div className="container-fluid chat_main_row_container">
+      {/* Mobile header */}
+      {window.innerWidth <= 768 && !showMobileSidebar && (
+        <div className="mobile-chat-header">
+          <button className="mobile-back-btn" onClick={handleMobileBack}>
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+          <h6 className="mobile-chat-title">
+            {chatOpenDetails.chat_name || 'Chat'}
+          </h6>
+          <div style={{width: '40px'}}></div> {/* Spacer for balance */}
+        </div>
+      )}
+      
       <CRow className="h-100">
-        <CCol lg={3} className="chat-list-left-sidebar">
+        <CCol 
+          lg={3} 
+          className={`chat-list-left-sidebar ${showMobileSidebar || window.innerWidth > 768 ? 'mobile-visible' : 'mobile-hidden'}`}
+        >
           <div className="chat-search-input-main">
             <input
               placeholder="Search chats"
@@ -559,7 +513,6 @@ function ChatsMeta() {
           <div className={openFilter ? 'filter-open' : 'filter-close'}>
             <div className="d-flex justify-content-between align-items-center">
               <p className="mb-0">Filter by groups</p>
-              {/* <CButton size="sm" onClick={()=>{clearAllFilters()}}>Clear all</CButton> */}
               {filterCheckBoxes.length > 0 && (
                 <CButton
                   size="sm"
@@ -594,7 +547,7 @@ function ChatsMeta() {
             {pinnedChats.length > 0 && (
               <>
                 <p className="chatWise-heading">My pinned chats</p>
-                {getPaginatedChats(getFilteredChats('pinned').map((value, key) => (
+                {getPaginatedChats(getFilteredChats('pinned')).map((value, key) => (
                   <div
                     key={key}
                     className="chat-head"
@@ -644,9 +597,7 @@ function ChatsMeta() {
                       {value.notifyAdmin.toString() === 'true' && <FontAwesomeIcon icon={faComment} />}
                     </div>
                   </div>
-                )))}
-
-                {/* <p className="chatWise-heading">All chats</p> */}
+                ))}
 
                 {/* Responsive Pagination */}
                 {getFilteredChats('pinned').length > pagination.itemsPerPage && (
@@ -763,7 +714,7 @@ function ChatsMeta() {
                 ) : searchChat === '' && chatListFiltered.length === 0 ? (
                   <p className="chat-lists-note">There are no chats initiated from customer</p>
                 ) : (
-                  getPaginatedChats(getFilteredChats('notPinned').map((value, key) => (
+                  getPaginatedChats(getFilteredChats('notPinned')).map((value, key) => (
                     <div
                       key={key}
                       className="chat-head"
@@ -836,7 +787,7 @@ function ChatsMeta() {
                       </div>
                     </div>
                   ))
-                  ))}
+                )}
                 {/* Pagination controls */}
                 {/* Responsive Pagination */}
                 {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
@@ -1038,7 +989,7 @@ function ChatsMeta() {
                 ) : searchChat === '' && chatListFiltered.length === 0 ? (
                   <p className="chat-lists-note">There are no chats initiated from customer</p>
                 ) : (
-                  getPaginatedChats(getFilteredChats('Pending').map((value, key) => (
+                  getPaginatedChats(getFilteredChats('Pending')).map((value, key) => (
                     <div
                       key={key}
                       className="chat-head"
@@ -1111,7 +1062,7 @@ function ChatsMeta() {
                       </div>
                     </div>
                   ))
-                  ))}
+                )}
                 {/* Pagination controls */}
                 {/* Responsive Pagination */}
                 {getFilteredChats('Pending').length > pagination.itemsPerPage && (
@@ -1222,7 +1173,7 @@ function ChatsMeta() {
                 ) : searchChat === '' && chatListFiltered.length === 0 ? (
                   <p className="chat-lists-note">There are no chats initiated from customer</p>
                 ) : (
-                  getPaginatedChats(getFilteredChats('End').map((value, key) => (
+                  getPaginatedChats(getFilteredChats('End')).map((value, key) => (
                     <div
                       key={key}
                       className="chat-head"
@@ -1295,7 +1246,7 @@ function ChatsMeta() {
                       </div>
                     </div>
                   ))
-                  ))}
+                )}
                 {/* Responsive Pagination */}
                 {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
                   <div className="d-flex justify-content-center mt-3">
@@ -1405,6 +1356,8 @@ function ChatsMeta() {
           chatOpenedData={chatOpenDetails}
           handlePin={handlePinChats}
           chatPinned={pinnedChats?.includes(chatOpenDetails?.id)}
+          onCloseChat={handleCloseChat}
+          className={!showMobileSidebar && window.innerWidth <= 768 ? 'mobile-visible' : 'mobile-hidden'}
         ></ChatRight>
       </CRow>
     </div>

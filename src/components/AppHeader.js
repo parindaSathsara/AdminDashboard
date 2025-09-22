@@ -18,6 +18,10 @@ import {
   COffcanvasBody,
   CCloseButton,
   CBadge,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilBell, cilMenu, cilHeadphones } from '@coreui/icons';
@@ -41,28 +45,21 @@ const AppHeader = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow);
   const navigate = useNavigate();
   const { userLogin, setUserLogin, userData, setUserData } = useContext(UserLoginContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    // Clear all user sessions
-
-
     await axios
       .get('/user_logout')
       .then((res) => {
         sessionStorage.clear();
         localStorage.clear();
-
         setUserLogin(false);
         navigate('/login');
       })
       .catch((err) => {
         throw new Error(err)
       })
-
-
-
-
-
   };
 
   const [switchState, setSwitchState] = useState(false);
@@ -76,51 +73,34 @@ const AppHeader = () => {
     adminToggleStatus(status, userData.id);
   };
 
-
-
-
-
   const location = useLocation();
+  
   useEffect(() => {
-
-  console.log('xwnwekCurrent pathname:', location.pathname);
-  console.log('xwnwekSearch params:', location.search);
-  console.log('xwnwekHash:', location.hash);
-  console.log('xwnwekState:', location.state);
-
     const userActive = JSON.parse(localStorage.getItem('userActive'));
     setSwitchState(userActive);
+    
+    // Handle window resize for mobile detection
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-
-
 
   const [unReadCount, setUnReadCount] = useState(0)
   const [newHotList, setNewHotList] = useState([])
 
   useEffect(() => {
     const fetchNotifications = () => {
-      // fetchInAppNotificationsCount(userData?.id).then(response => {
-      //   console.log(response, "Read Notification")
-      //   setUnReadCount(response);
-
-      // });
       readInAppNotificationsOrderWise().then(response => {
-        // console.log(response?.data?.data?.notifications, "Read Notification")
         setUnReadCount(response?.data?.data?.unread_count);
         setNewHotList(response?.data?.data?.notifications);
       });
     };
 
-    fetchNotifications(); // Initial call
-
-    // const intervalId = setInterval(fetchNotifications, 10000); // Call every 10 seconds
-
-    // Cleanup interval on component unmount
-    // return () => clearInterval(intervalId);
+    fetchNotifications();
   }, [userData?.id]);
-
-
 
   const [hotListSide, setHotListSide] = useState(false)
   const [hotList, setHotList] = useState([])
@@ -128,15 +108,11 @@ const AppHeader = () => {
   const [supportReqests, setSupportReqests] = useState([]);
   const [supportSidebarVisible, setSupportSidebarVisible] = useState(false);
 
-
   const getHotList = () => {
     fetchInAppNotifications(userData?.id).then(res => {
-      console.log(res, "Hotlist")
       setHotList(res)
-
     })
   }
-
 
   const getHelpCount = () => {
     axios.get("/helpcount").then((res) => {
@@ -147,7 +123,7 @@ const AppHeader = () => {
       })
   }
 
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       getHelpCount();
       fetchSupportReq();
@@ -156,34 +132,15 @@ const AppHeader = () => {
     return () => clearInterval(interval);
   }, []);
 
-
   const fetchSupportReq = () => {
     axios.get("/help").then((res) => {
       setSupportReqests(res.data);
     })
-    // .
-    // catch((err) => {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Oops...",
-    //     text: "Error fetching data!"
-    //   });
-    //   throw new Error(err)
-    // })
   }
-
 
   const handleSupportReqClick = () => {
     setSupportSidebarVisible(true);
-
   }
-
-
-
-
-
-
-
 
   const handleNotificationOnClick = () => {
     setHotListSide(!hotListSide)
@@ -191,25 +148,21 @@ const AppHeader = () => {
     readInAppNotifications(userData?.id)
 
     fetchInAppNotificationsCount(userData?.id).then(response => {
-
       setUnReadCount(response);
-
     });
-    // userData?.id
   }
-
-
-
 
   const handleIncreaseNotification = () => {
-
+    // Notification increase handler
   }
 
+  // Mobile menu toggle
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-
-
     <>
-
       <COffcanvas backdrop={true} placement="end" visible={hotListSide} dark >
         <COffcanvasHeader>
           <COffcanvasTitle>Hotlist</COffcanvasTitle>
@@ -220,7 +173,7 @@ const AppHeader = () => {
         </COffcanvasBody>
       </COffcanvas>
 
-      <CHeader position="sticky" className="mb-4">
+      <CHeader position="sticky" className="mb-4 app-header">
         <CContainer fluid>
           <CHeaderToggler
             className="ps-1"
@@ -233,61 +186,113 @@ const AppHeader = () => {
             <img src={logo} height={30} alt="Logo" />
           </CHeaderBrand>
 
+          {/* Mobile menu button - only shows on mobile */}
+          {isMobile && (
+            <CHeaderToggler
+              className="mobile-menu-toggler ms-auto"
+              onClick={toggleMobileMenu}
+            >
+              <CIcon icon={cilMenu} size="lg" />
+            </CHeaderToggler>
+          )}
+
           <CHeaderNav className="d-none d-md-flex me-auto" />
 
-          <CHeaderNav>
-            <CRow className="align-items-center">
+          {/* Desktop header content */}
+          {!isMobile && (
+            <CHeaderNav>
+              <CRow className="align-items-center">
+                <CCol className="d-flex align-items-center justify-content-center currency-col">
+                  {location.pathname === '/orders' && <CurrencyController />}
+                </CCol>
+                
+                <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleSupportReqClick()}>
+                  {supportRequestCount === 0 ?
+                    null
+                    :
+                    <CBadge color="danger" shape="rounded-pill" className="notification-badge">
+                      {supportRequestCount}
+                    </CBadge>
+                  }
+                  <CIcon style={{ color: 'black', marginTop: '5px' }} icon={cilHeadphones} size="lg" />
+                </CCol>
 
+                <CCol className="d-flex align-items-center justify-content-center">
+                  <CFormSwitch
+                    size="xl"
+                    label={switchState ? 'Active' : 'Inactive'}
+                    id="formSwitchCheckDefaultXL"
+                    onChange={handleToggleOnChange}
+                    checked={switchState}
+                  />
+                </CCol>
 
-             <CCol className="d-flex align-items-center justify-content-center currency-col">
-              {location.pathname === '/orders' && <CurrencyController />}
-              </CCol>
-              {/* <CCol className="d-flex align-items-center justify-content-center currency-col">
-              <div className="supportCenter" style={{color:'black'}}><CIcon icon={cilHeadphones} /></div>
-              </CCol> */}
-              <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleSupportReqClick()}>
-                {supportRequestCount === 0 ?
-                  null
-                  :
-                  <CBadge color="danger" shape="rounded-pill" style={{ position: 'absolute', top: 10, marginLeft: 20 }}>
-                    {supportRequestCount}
-                  </CBadge>
-                }
-                <CIcon style={{ color: 'black', marginTop: '5px' }} icon={cilHeadphones} size="lg" />
-              </CCol>
-
-
-              <CCol className="d-flex align-items-center justify-content-center">
-                <CFormSwitch
-                  size="xl"
-                  label={switchState ? 'Active' : 'Inactive'}
-                  id="formSwitchCheckDefaultXL"
-                  onChange={handleToggleOnChange}
-                  checked={switchState}
-                />
-              </CCol>
-
-
-              <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleNotificationOnClick()}>
-                {unReadCount == 0 ?
-                  null
-                  :
-
-                  <CBadge color="danger" shape="rounded-pill" style={{ position: 'absolute', top: 10, marginLeft: 20 }}>
-                    {unReadCount}
-                  </CBadge>
-                }
-
-                <CIcon icon={cilBell} size="lg" />
-              </CCol>
-
-            </CRow>
-          </CHeaderNav>
+                <CCol className="d-flex align-items-center justify-content-center header-notification-bell" onClick={() => handleNotificationOnClick()}>
+                  {unReadCount == 0 ?
+                    null
+                    :
+                    <CBadge color="danger" shape="rounded-pill" className="notification-badge">
+                      {unReadCount}
+                    </CBadge>
+                  }
+                  <CIcon icon={cilBell} size="lg" />
+                </CCol>
+              </CRow>
+            </CHeaderNav>
+          )}
 
           <CHeaderNav className="ms-3">
             <AppHeaderDropdown handleLogout={handleLogout} userData={userData} />
           </CHeaderNav>
 
+          {/* Mobile menu dropdown */}
+          {isMobile && mobileMenuOpen && (
+            <CDropdown variant="nav-item" popper={false} visible={mobileMenuOpen} className="mobile-menu-dropdown">
+              <CDropdownMenu placement="bottom-end" className="mobile-dropdown-menu">
+                {location.pathname === '/orders' && (
+                  <CDropdownItem className="mobile-menu-item">
+                    <CurrencyController mobileView={true} />
+                  </CDropdownItem>
+                )}
+                
+                <CDropdownItem className="mobile-menu-item" onClick={() => { handleSupportReqClick(); setMobileMenuOpen(false); }}>
+                  <div className="menu-icon-wrapper">
+                    <CIcon icon={cilHeadphones} />
+                    {supportRequestCount > 0 && (
+                      <CBadge color="danger" shape="rounded-pill" className="mobile-notification-badge">
+                        {supportRequestCount}
+                      </CBadge>
+                    )}
+                  </div>
+                  <span>Support Center</span>
+                </CDropdownItem>
+                
+                <CDropdownItem className="mobile-menu-item">
+                  <div className="status-toggle-mobile">
+                    <span className="status-label">Status: {switchState ? 'Active' : 'Inactive'}</span>
+                    <CFormSwitch
+                      size="lg"
+                      id="mobileStatusSwitch"
+                      onChange={handleToggleOnChange}
+                      checked={switchState}
+                    />
+                  </div>
+                </CDropdownItem>
+                
+                <CDropdownItem className="mobile-menu-item" onClick={() => { handleNotificationOnClick(); setMobileMenuOpen(false); }}>
+                  <div className="menu-icon-wrapper">
+                    <CIcon icon={cilBell} />
+                    {unReadCount > 0 && (
+                      <CBadge color="danger" shape="rounded-pill" className="mobile-notification-badge">
+                        {unReadCount}
+                      </CBadge>
+                    )}
+                  </div>
+                  <span>Notifications</span>
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          )}
         </CContainer>
 
         <CHeaderDivider />
@@ -296,17 +301,13 @@ const AppHeader = () => {
           <AppBreadcrumb />
         </CContainer>
       </CHeader>
-      {/* <SupportSidebar
-      visible={supportSidebarVisible}
-      onClose={() => setSupportSidebarVisible(false)}
-    /> */}
+      
       <SupportSidebar
         show={supportSidebarVisible}
         onHide={() => setSupportSidebarVisible(false)}
         getHelpCount={getHelpCount}
       />
     </>
-
   );
 };
 

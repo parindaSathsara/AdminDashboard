@@ -8,6 +8,7 @@ import {
   cilUserPlus,
   cilGrain,
   cilUserX,
+  cilShare,
   cilCart,
   cilGarage,
   cilBook,
@@ -353,6 +354,12 @@ function getNavigationHook(permissions) {
     },
     {
       component: CNavItem,
+      name: 'Supplier Referrals',
+      to: '/admin/supplier-referrals',
+      icon: <CIcon icon={cilShare} customClassName="nav-icon" />, // Using share icon (for referrals)
+    },
+    {
+      component: CNavItem,
       name: 'Access',
       to: '/user/access/manage',
       icon: <CIcon icon={cilFingerprint} customClassName="nav-icon" />,
@@ -392,6 +399,12 @@ function getNavigationHook(permissions) {
         },
       ],
     },
+    {
+  component: CNavItem,
+  name: 'WhatsApp Messages',
+  to: '/whatsapp-messages',
+  icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
+},
     {
       component: CNavItem,
       name: 'Settings',

@@ -423,6 +423,14 @@ const Banners = () => {
                 </div>
               )}
             </div>
+              <style>
+    {`
+      .modal-body .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+      }
+    `}
+  </style>
 
             <div className="mb-3">
               <CFormLabel>Route <span className="text-danger">*</span></CFormLabel>
@@ -434,6 +442,7 @@ const Banners = () => {
                 placeholder="Route name"
                 disabled={loading}
                 className={errors.route ? 'is-invalid' : ''}
+                
               />
               {errors.route && <div className="invalid-feedback">{errors.route}</div>}
             </div>
@@ -481,6 +490,7 @@ const Banners = () => {
                 placeholder="Banner title"
                 disabled={loading}
                 className={errors.title ? 'is-invalid' : ''}
+                
               />
               {errors.title && <div className="invalid-feedback">{errors.title}</div>}
             </div>
