@@ -407,7 +407,6 @@ const formatRelativeTime = (dateString) => {
       return 'Invalid date';
     }
     
-    // Convert to local time by adjusting for timezone offset
     const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     const now = new Date();
     
@@ -434,7 +433,6 @@ const formatRelativeTime = (dateString) => {
     return phone.replace('whatsapp:', '');
   };
 
-  // Get status display (WhatsApp-style double ticks)
   const renderStatusIndicator = (status) => {
     switch (status) {
       case 'sent':
@@ -473,7 +471,6 @@ const formatRelativeTime = (dateString) => {
 };
 
 
-  // Get status color
   const getStatusColor = (status) => {
     switch (status) {
       case 'read':

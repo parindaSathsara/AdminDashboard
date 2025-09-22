@@ -7,7 +7,7 @@ import { Box, Typography, LinearProgress } from '@mui/material'
 import './TopicList.css'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import TopicEditModal from './TopicEditModal' // We'll create this component
+import TopicEditModal from './TopicEditModal'
 
 function TopicList(props) {
   const [topics, setTopics] = useState([])
@@ -25,9 +25,18 @@ function TopicList(props) {
     }
   }
 
+  const updateProgress = (topicId, progress, message) => {
+    setProgressByTopic(prev => ({
+      ...prev,
+      [topicId]: {
+        progress,
+        message
+      }
+    }))
+  }
+
   const handleEdit = async (topic) => {
     try {
-      // Fetch topic details with user information
       const response = await axios.get(`/promotions/topic/${topic.id}`)
       
       if (response.data.success) {
@@ -50,8 +59,8 @@ function TopicList(props) {
         Swal.fire('Success', 'Topic updated successfully!', 'success')
         setEditModalVisible(false)
         setEditingTopic(null)
-        fetchTopics() // Refresh the list
-        props.onTopicUpdated?.() // Notify parent if needed
+        fetchTopics()
+        props.onTopicUpdated?.()
       } else {
         Swal.fire('Error', response.data.message, 'error')
       }
@@ -150,7 +159,6 @@ function TopicList(props) {
                       </div>
 
                       <div className="d-flex gap-2 mt-3">
-                        {/* Show Edit button for custom topics */}
                         {topic.type === 'custom_topic' && (
                           <CButton
                             size="sm"
@@ -162,7 +170,6 @@ function TopicList(props) {
                           </CButton>
                         )}
 
-                        {/* Show Refresh button for regular topics */}
                         {topic.type !== 'custom_topic' && (
                           <CButton
                             size="sm"
@@ -219,7 +226,6 @@ function TopicList(props) {
         </CCardBody>
       </CCard>
 
-      {/* Edit Modal */}
       {editingTopic && (
         <TopicEditModal
           visible={editModalVisible}
