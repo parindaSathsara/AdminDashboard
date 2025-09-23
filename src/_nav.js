@@ -173,6 +173,12 @@ function getNavigationHook(permissions) {
           name: 'Customer Journey',
           to: '/customer-journey',
         },
+        {
+          component: CNavItem,
+          name: 'Uninstalled Users',
+          to: '/uninstalled-user',
+           exact: true 
+        },  
       ],
     },
     {
@@ -186,12 +192,12 @@ function getNavigationHook(permissions) {
       name: 'Promotions',
       icon: <CIcon icon={cilBullhorn} customClassName="nav-icon" />,
       items: [
-        {
-          component: CNavItem,
-          name: 'Push Notifications',
-          to: '/promotions/push-notifications', // Changed to /promotions
-          // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
-        },
+        // {
+        //   component: CNavItem,
+        //   name: 'Push Notifications',
+        //   to: '/promotions/push-notifications', // Changed to /promotions
+        //   // icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+        // },
         {
           component: CNavItem,
           name: 'Create Topics',

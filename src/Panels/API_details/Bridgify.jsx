@@ -378,41 +378,42 @@ const Bridgify = () => {
     }
   }
 
-  const fetchCancellationInfo = async (shortUuid, index) => {
-    try {
-      setCancellationLoading((prevState) => ({
+  const fetchCancellationInfo = async (shortUuid, index, checkoutId) => {
+  try {
+    setCancellationLoading((prevState) => ({
+      ...prevState,
+      [index]: true,
+    }))
+
+    // Use the checkoutId parameter instead of the state variable
+    const response = await axios.get(`/bridgify/carts/cancelation/${checkoutId}`)
+
+    if (response.data.success && response.data.data) {
+      setCancellationInfo((prevState) => ({
         ...prevState,
-        [index]: true,
+        [shortUuid]: response.data.data['cancellation-info'],
       }))
-
-      const response = await axios.get(`/bridgify/carts/cancelation/${checkoutId}`)
-
-      if (response.data.success && response.data.data) {
-        setCancellationInfo((prevState) => ({
-          ...prevState,
-          [shortUuid]: response.data.data['cancellation-info'],
-        }))
-        console.log('Cancellation Info:', response.data.data)
-      } else {
-        console.log('API Response:', response.data)
-        setCancellationInfo((prevState) => ({
-          ...prevState,
-          [shortUuid]: [],
-        }))
-      }
-    } catch (error) {
-      console.error('Error fetching cancellation info:', error)
+      console.log('Cancellation Info:', response.data.data)
+    } else {
+      console.log('API Response:', response.data)
       setCancellationInfo((prevState) => ({
         ...prevState,
         [shortUuid]: [],
       }))
-    } finally {
-      setCancellationLoading((prevState) => ({
-        ...prevState,
-        [index]: false,
-      }))
     }
+  } catch (error) {
+    console.error('Error fetching cancellation info:', error)
+    setCancellationInfo((prevState) => ({
+      ...prevState,
+      [shortUuid]: [],
+    }))
+  } finally {
+    setCancellationLoading((prevState) => ({
+      ...prevState,
+      [index]: false,
+    }))
   }
+}
 
   const handleCancellationRequest = async (shortUuid, cartItemUuid) => {
     try {
@@ -467,18 +468,18 @@ const Bridgify = () => {
     setCheckoutId(checkout_id)
   }
 
-  const toggleCancellationInfo = (shortUuid, index) => {
-    const collapseElement = document.getElementById(`cancellationInfo${index}`)
-    if (collapseElement) {
-      const isShowing = collapseElement.classList.contains('show')
-      collapseElement.classList.toggle('show')
+ const toggleCancellationInfo = (shortUuid, index, checkoutId) => {
+  const collapseElement = document.getElementById(`cancellationInfo${index}`)
+  if (collapseElement) {
+    const isShowing = collapseElement.classList.contains('show')
+    collapseElement.classList.toggle('show')
 
-      // Fetch cancellation info if opening and haven't fetched it yet
-      if (!isShowing && !cancellationInfo[shortUuid]) {
-        fetchCancellationInfo(shortUuid, index)
-      }
+    // Fetch cancellation info if opening and haven't fetched it yet
+    if (!isShowing && !cancellationInfo[shortUuid]) {
+      fetchCancellationInfo(shortUuid, index, checkoutId)
     }
   }
+}
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A'
@@ -904,112 +905,109 @@ const Bridgify = () => {
                         </CRow>
                       )}
 
-                      {/* Cancellation Information Dropdown */}
-                      <CRow className="mt-3">
-                        <CCol>
-                          {/* <div className="d-flex justify-content-between align-items-center">
-                            <CButton
-                              color="info"
-                              variant="outline"
-                              className="text-left"
-                              onClick={() => toggleCancellationInfo(orderId, index)}
-                            >
-                              Cancellation Information
-                            </CButton>
-                          </div> */}
+                     {/* Cancellation Information Dropdown */}
+<CRow className="mt-3">
+  <CCol>
+    <div className="d-flex justify-content-between align-items-center">
+      <CButton
+        color="info"
+        variant="outline"
+        className="text-left"
+        onClick={() => toggleCancellationInfo(orderId, index, checkoutId)}
+      >
+        Cancellation Information
+      </CButton>
+    </div>
 
-                          {/* <div className="collapse mt-2" id={`cancellationInfo${index}`}>
-                            <CCard className="border-0 bg-light">
-                              <CCardBody>
-                                {cancellationLoading[index] ? (
-                                  <div className="text-center py-3">
-                                    <CSpinner color="primary" size="sm" />
-                                    <p className="mt-2 mb-0">Loading cancellation information...</p>
-                                  </div>
-                                ) : cancellationInfo[orderId] &&
-                                  cancellationInfo[orderId].length > 0 ? (
-                                  <CRow>
-                                    {cancellationInfo[orderId].map((info, infoIndex) => (
-                                      <CCol sm={12} key={infoIndex}>
-                                        <p>
-                                          <strong>Cancellation Policy:</strong>{' '}
-                                          {info.policy || 'Standard policy applies'}
-                                        </p>
-                                        <p>
-                                          <strong>Refund Amount:</strong>{' '}
-                                          {info.refund_amount || 'N/A'} {info.currency || ''}
-                                        </p>
-                                        <p>
-                                          <strong>Deadline:</strong> {info.deadline || 'N/A'}
-                                        </p>
-                                       
-                                      </CCol>
-                                    ))}
-                                  </CRow>
-                                ) : cancellationInfo[orderId] &&
-                                  cancellationInfo[orderId].length === 0 ? (
-                                  <CAlert color="warning">
-                                    <div className="d-flex align-items-center">
-                                      <i
-                                        className="cil-warning mr-2"
-                                        style={{ fontSize: '1.5rem', marginRight: '10px' }}
-                                      ></i>
-                                      <div>
-                                        <h6 className="mb-1">
-                                          No Cancellation Information Available
-                                        </h6>
-                                        <p className="mb-0">
-                                          Cancellation details could not be found for this booking.
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </CAlert>
-                                ) : (
-                                  
-                                  <CRow>
-                                    {(() => {
-                                     
-                                      const mockData = getMockCancellationInfo(item)
-                                      return (
-                                        <>
-                                          <CCol sm={6}>
-                                            <p>
-                                              <strong>Cancellation Deadline:</strong>{' '}
-                                              {mockData.cancellation_deadline}
-                                            </p>
-                                            <p>
-                                              <strong>Refund Amount:</strong>{' '}
-                                              {mockData.refund_amount} {mockData.currency} (
-                                              {mockData.refund_percentage})
-                                            </p>
-                                            <p>
-                                              <strong>Cancellation Fee:</strong>{' '}
-                                              {mockData.cancellation_fee} {mockData.currency} (
-                                              {mockData.cancellation_fee_percentage})
-                                            </p>
-                                          </CCol>
-                                          <CCol sm={6}>
-                                            <p>
-                                              <strong>Eligibility:</strong>{' '}
-                                              {mockData.cancellation_eligible
-                                                ? 'Eligible for cancellation'
-                                                : 'Not eligible for cancellation'}
-                                            </p>
-                                          </CCol>
-                                          <CCol sm={12} className="mt-2">
-                                            <h6>Policy:</h6>
-                                            <p>{mockData.cancellation_policy}</p>
-                                          </CCol>
-                                        </>
-                                      )
-                                    })()}
-                                  </CRow>
-                                )}
-                              </CCardBody>
-                            </CCard>
-                          </div> */}
-                        </CCol>
-                      </CRow>
+    <div className="collapse mt-2" id={`cancellationInfo${index}`}>
+      <CCard className="border-0 bg-light">
+        <CCardBody>
+          {cancellationLoading[index] ? (
+            <div className="text-center py-3">
+              <CSpinner color="primary" size="sm" />
+              <p className="mt-2 mb-0">Loading cancellation information...</p>
+            </div>
+          ) : cancellationInfo[orderId] &&
+            cancellationInfo[orderId].length > 0 ? (
+            <CRow>
+              {cancellationInfo[orderId].map((info, infoIndex) => (
+                <CCol sm={12} key={infoIndex}>
+                  <p>
+                    <strong>Cancellation Policy:</strong>{' '}
+                    {info.policy || 'Standard policy applies'}
+                  </p>
+                  <p>
+                    <strong>Refund Amount:</strong>{' '}
+                    {info.refund_amount || 'N/A'} {info.currency || ''}
+                  </p>
+                  <p>
+                    <strong>Deadline:</strong> {info.deadline || 'N/A'}
+                  </p>
+                </CCol>
+              ))}
+            </CRow>
+          ) : cancellationInfo[orderId] &&
+            cancellationInfo[orderId].length === 0 ? (
+            <CAlert color="warning">
+              <div className="d-flex align-items-center">
+                <i
+                  className="cil-warning mr-2"
+                  style={{ fontSize: '1.5rem', marginRight: '10px' }}
+                ></i>
+                <div>
+                  <h6 className="mb-1">
+                    No Cancellation Information Available
+                  </h6>
+                  <p className="mb-0">
+                    Cancellation details could not be found for this booking.
+                  </p>
+                </div>
+              </div>
+            </CAlert>
+          ) : (
+            <CRow>
+              {(() => {
+                const mockData = getMockCancellationInfo(item)
+                return (
+                  <>
+                    <CCol sm={6}>
+                      <p>
+                        <strong>Cancellation Deadline:</strong>{' '}
+                        {mockData.cancellation_deadline}
+                      </p>
+                      <p>
+                        <strong>Refund Amount:</strong>{' '}
+                        {mockData.refund_amount} {mockData.currency} (
+                        {mockData.refund_percentage})
+                      </p>
+                      <p>
+                        <strong>Cancellation Fee:</strong>{' '}
+                        {mockData.cancellation_fee} {mockData.currency} (
+                        {mockData.cancellation_fee_percentage})
+                      </p>
+                    </CCol>
+                    <CCol sm={6}>
+                      <p>
+                        <strong>Eligibility:</strong>{' '}
+                        {mockData.cancellation_eligible
+                          ? 'Eligible for cancellation'
+                          : 'Not eligible for cancellation'}
+                      </p>
+                    </CCol>
+                    <CCol sm={12} className="mt-2">
+                      <h6>Policy:</h6>
+                      <p>{mockData.cancellation_policy}</p>
+                    </CCol>
+                  </>
+                )
+              })()}
+            </CRow>
+          )}
+        </CCardBody>
+      </CCard>
+    </div>
+  </CCol>
+</CRow>
                     </CCardBody>
                   </CCard>
                 ))

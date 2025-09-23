@@ -113,6 +113,7 @@ import HotelInitialMapping from './views/Services/Vervotech/HotelInitialMapping'
 import HotelIncrementalMapping from './views/Services/Vervotech/HotelIncrementalMapping'
 import AdminSupplierReferrals from './views/SupplierRefferals/AdminSupplierReferrals'
 import WhatsAppMessages from './views/WhatsappMessages/WhatsAppMessages'
+import UninstalledUsersAnalytics from './views/Customer/UninstalledUsersAnalytics'
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -219,6 +220,13 @@ const routes = [
     exact: true,
     name: 'Customer Journey',
     element: CustomerJourney,
+  },
+
+  {
+    path:'/uninstalled-user',
+    exact:true,
+    name:'Uninstalled Users',
+    element:UninstalledUsersAnalytics
   },
 ]
 
