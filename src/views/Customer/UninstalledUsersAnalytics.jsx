@@ -71,7 +71,7 @@ const UninstalledUsersAnalytics = () => {
       };
 
       const response = await axios.get('/customer/analytics/uninstalled-users', { params });
-      
+
       if (response.data.success) {
         setData(response.data.data);
       }
@@ -129,7 +129,6 @@ const UninstalledUsersAnalytics = () => {
     }
   };
 
-  // Chart data functions (same as before)
   const createCompleteDateRange = () => {
     if (!filters.startDate || !filters.endDate) return [];
     const start = startOfDay(filters.startDate);
@@ -142,17 +141,23 @@ const UninstalledUsersAnalytics = () => {
         count: 0
       }));
     } else if (filters.groupBy === 'week') {
-      return eachWeekOfInterval({ start, end }, { weekStartsOn: 1 }).map(date => {
-        const weekStart = startOfWeek(date, { weekStartsOn: 1 });
-        const weekEnd = endOfWeek(date, { weekStartsOn: 1 });
+      const weeks = eachWeekOfInterval({ start, end }, { weekStartsOn: 1 });
+      return weeks.map(weekStart => {
+        const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
+        // Get ISO week number
+        const weekNumber = format(weekStart, 'w');
+        const year = weekStart.getFullYear();
+
         return {
           date: format(weekStart, 'yyyy-MM-dd'),
-          display: `${format(weekStart, 'MMM dd')} - ${format(weekEnd, 'MMM dd')}`,
+          display: `Week ${weekNumber}, ${year}`,
           count: 0
         };
       });
     } else {
-      return eachMonthOfInterval({ start, end }).map(date => ({
+      // Monthly
+      const months = eachMonthOfInterval({ start, end });
+      return months.map(date => ({
         date: format(date, 'yyyy-MM-01'),
         display: format(date, 'MMM yyyy'),
         count: 0
@@ -161,6 +166,7 @@ const UninstalledUsersAnalytics = () => {
   };
 
   const getChartData = () => {
+    // If no analytics data, show empty chart with complete date range
     if (!data.analytics || !Array.isArray(data.analytics)) {
       const completeRange = createCompleteDateRange();
       return {
@@ -175,24 +181,64 @@ const UninstalledUsersAnalytics = () => {
       };
     }
 
-    const completeRange = createCompleteDateRange();
-    const mergedData = completeRange.map(rangeItem => {
-      const foundItem = data.analytics.find(analyticsItem => analyticsItem.date === rangeItem.date);
-      return { ...rangeItem, count: foundItem ? foundItem.count : 0 };
-    });
+    try {
+      // Create complete date range for the selected period
+      const completeRange = createCompleteDateRange();
 
-    mergedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // Map analytics data to the complete range
+      const mergedData = completeRange.map(rangeItem => {
+        let foundItem = null;
 
-    return {
-      labels: mergedData.map(item => item.display),
-      datasets: [{
-        label: `Uninstalls per ${filters.groupBy.charAt(0).toUpperCase() + filters.groupBy.slice(1)}`,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 2,
-        data: mergedData.map(item => item.count)
-      }]
-    };
+        if (filters.groupBy === 'week') {
+          // For weekly data, find matching week
+          const rangeWeek = parseInt(rangeItem.display.match(/Week (\d+)/)?.[1]);
+          const rangeYear = parseInt(rangeItem.display.match(/, (\d+)/)?.[1]);
+          foundItem = data.analytics.find(item =>
+            item.year === rangeYear && item.week === rangeWeek
+          );
+        } else if (filters.groupBy === 'month') {
+          // For monthly data, find matching month
+          const rangeYear = parseInt(rangeItem.display.match(/(\d+)$/)?.[1]);
+          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          const rangeMonth = monthNames.indexOf(rangeItem.display.split(' ')[0]) + 1;
+          foundItem = data.analytics.find(item =>
+            item.year === rangeYear && item.month === rangeMonth
+          );
+        } else {
+          // For daily data, find matching date
+          foundItem = data.analytics.find(item => item.date === rangeItem.date);
+        }
+
+        return {
+          ...rangeItem,
+          count: foundItem ? foundItem.count : 0
+        };
+      });
+
+      return {
+        labels: mergedData.map(item => item.display),
+        datasets: [{
+          label: `Uninstalls per ${filters.groupBy.charAt(0).toUpperCase() + filters.groupBy.slice(1)}`,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 2,
+          data: mergedData.map(item => item.count)
+        }]
+      };
+    } catch (error) {
+      console.error('Error preparing chart data:', error);
+      return {
+        labels: ['Error Loading Data'],
+        datasets: [{
+          label: 'Uninstalls',
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 2,
+          data: [0]
+        }]
+      };
+    }
   };
 
   const handlePageChange = (page) => {
@@ -210,9 +256,7 @@ const UninstalledUsersAnalytics = () => {
                 {format(filters.startDate, 'MMM dd, yyyy')} to {format(filters.endDate, 'MMM dd, yyyy')}
               </p>
             </div>
-            <CButton color="success" onClick={exportToExcel} disabled={exporting}>
-              {exporting ? <CSpinner size="sm" /> : 'Export to Excel'}
-            </CButton>
+
           </div>
         </CCol>
       </CRow>
