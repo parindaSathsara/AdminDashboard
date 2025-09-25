@@ -45,11 +45,10 @@ const WhatsAppMessages = () => {
   const [replyText, setReplyText] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
   const [conversationLoading, setConversationLoading] = useState(false);
-  
+
   const messagesEndRef = useRef(null);
   const refreshIntervalRef = useRef(null);
 
-  // Scroll to bottom of chat
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -58,7 +57,6 @@ const WhatsAppMessages = () => {
     scrollToBottom();
   }, [conversationMessages]);
 
-  // Clean up interval on component unmount
   useEffect(() => {
     return () => {
       if (refreshIntervalRef.current) {
@@ -67,137 +65,103 @@ const WhatsAppMessages = () => {
     };
   }, []);
 
-  // Validate dates
   const validateDates = () => {
     setValidationError('');
-    
+
     if (filters.date_after && filters.date_before) {
       const startDate = new Date(filters.date_after);
       const endDate = new Date(filters.date_before);
-      
+
       if (endDate <= startDate) {
         setValidationError('End date must be after start date');
         return false;
       }
     }
-    
+
     return true;
   };
 
-  // Group messages by conversation (sender) and apply pagination
-  const processConversations = (messages, page = 1, perPage = 20) => {
-    const conversationsMap = {};
-    
-    messages.forEach(message => {
-      const phoneNumber = message.from;
-      
-      if (!conversationsMap[phoneNumber]) {
-        conversationsMap[phoneNumber] = {
-          phoneNumber,
-          messages: [message],
-          lastMessage: message
-        };
-      } else {
-        conversationsMap[phoneNumber].messages.push(message);
-        // Update if this is the most recent message
-        if (new Date(message.date_sent) > new Date(conversationsMap[phoneNumber].lastMessage.date_sent)) {
-          conversationsMap[phoneNumber].lastMessage = message;
-        }
-      }
-    });
-    
-    const allConversations = Object.values(conversationsMap).sort((a, b) => 
-      new Date(b.lastMessage.date_sent) - new Date(a.lastMessage.date_sent)
-    );
-    
-    // Calculate pagination
-    const totalItems = allConversations.length;
-    const totalPages = Math.ceil(totalItems / perPage);
-    
-    // Apply pagination
-    const startIndex = (page - 1) * perPage;
-    const paginatedConversations = allConversations.slice(startIndex, startIndex + perPage);
-    
-    return {
-      conversations: paginatedConversations,
-      pagination: {
-        currentPage: page,
-        perPage,
-        totalItems,
-        totalPages
-      }
-    };
-  };
-
-  // Fetch only recent messages for better performance
   const fetchMessages = async (page = 1) => {
     if (!validateDates()) return;
-    
+
     setLoading(true);
     setError('');
     setValidationError('');
-    
+
     try {
-      const requestData = { 
-        ...filters, 
+      const requestData = {
+        ...filters,
         page,
-        limit: 20
+        per_page: filters.limit, // match backend param
       };
-      
+
       const response = await axios.post('/getInboundMessages', requestData);
-      
+
       if (response.data && response.data.success) {
-        const messages = response.data.messages || [];
-        
-        // For each conversation, get only the last message from chat history
-        const enhancedMessages = [...messages];
-        
-        // Set up auto-refresh for new messages
-        if (!refreshIntervalRef.current) {
-          refreshIntervalRef.current = setInterval(() => {
-            refreshConversationList();
-          }, 10000);
-        }
-        
-        const { conversations: processedConversations, pagination: newPagination } = 
-          processConversations(enhancedMessages, page, pagination.perPage);
-        
-        setConversations(processedConversations);
-        setPagination(newPagination);
+        const messages = response.data.data.messages || [];
+        const paginationData = response.data.data.pagination || {};
+
+        const conversationsMap = {};
+        messages.forEach(message => {
+          const phoneNumber = message.from;
+          if (!conversationsMap[phoneNumber]) {
+            conversationsMap[phoneNumber] = {
+              phoneNumber,
+              lastMessage: message,
+            };
+          } else {
+            if (new Date(message.date_sent) > new Date(conversationsMap[phoneNumber].lastMessage.date_sent)) {
+              conversationsMap[phoneNumber].lastMessage = message;
+            }
+          }
+        });
+
+        const conversationList = Object.values(conversationsMap)
+          .sort((a, b) => new Date(b.lastMessage.date_sent) - new Date(a.lastMessage.date_sent));
+
+        setConversations(conversationList);
+        setPagination({
+          currentPage: paginationData.current_page || 1,
+          perPage: paginationData.per_page || filters.limit,
+          totalItems: paginationData.total || conversationList.length,
+          totalPages: paginationData.total_pages || 1,
+        });
       } else {
         setError(response.data?.error || 'Failed to fetch messages');
+        setConversations([]);
       }
     } catch (err) {
-      console.error('Full error:', err);
-      setError(err.response?.data?.error || err.message || 'An error occurred while fetching messages');
+      console.error(err);
+      setError(err.response?.data?.error || err.message || 'An error occurred');
+      setConversations([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Refresh conversation list without full reload
+
   const refreshConversationList = async () => {
     try {
-      const requestData = { 
-        ...filters, 
+      const requestData = {
+        ...filters,
         page: pagination.currentPage,
         limit: 20
       };
-      
+
       const response = await axios.post('/getInboundMessages', requestData);
-      
+
       if (response.data && response.data.success) {
         const newMessages = response.data.messages || [];
-        
+
         // Update conversations with new messages
         setConversations(prev => {
           const updatedConversations = [...prev];
-          
+
           newMessages.forEach(newMessage => {
             const existingConvIndex = updatedConversations.findIndex(
               conv => conv.phoneNumber === newMessage.from
             );
-            
+
             if (existingConvIndex !== -1) {
               // Update existing conversation
               const existingConv = updatedConversations[existingConvIndex];
@@ -216,8 +180,8 @@ const WhatsAppMessages = () => {
               });
             }
           });
-          
-          return updatedConversations.sort((a, b) => 
+
+          return updatedConversations.sort((a, b) =>
             new Date(b.lastMessage.date_sent) - new Date(a.lastMessage.date_sent)
           );
         });
@@ -245,29 +209,31 @@ const WhatsAppMessages = () => {
     fetchMessages(1);
   };
 
-  // Load conversation messages
   const loadConversation = async (phoneNumber) => {
     setConversationLoading(true);
     try {
       const response = await axios.post('/chat-history', {
         phone_number: phoneNumber,
-        limit: 50
+        page: 1,
+        per_page: 50,
       });
-      
+
       if (response.data && response.data.success) {
+        const messages = response.data.data.messages || [];
+
         // Sort messages by timestamp (oldest first)
-        const sortedMessages = response.data.chat_history.sort((a, b) => 
+        const sortedMessages = messages.sort((a, b) =>
           new Date(a.date_sent) - new Date(b.date_sent)
         );
-        
+
         setConversationMessages(sortedMessages);
         setSelectedConversation(phoneNumber);
-        
-        // Update the last message in the conversation list with the actual last message from chat history
+
+        // Update last message in conversation list
         if (sortedMessages.length > 0) {
           const lastMessage = sortedMessages[sortedMessages.length - 1];
-          setConversations(prev => prev.map(conv => 
-            conv.phoneNumber === phoneNumber 
+          setConversations(prev => prev.map(conv =>
+            conv.phoneNumber === phoneNumber
               ? { ...conv, lastMessage }
               : conv
           ));
@@ -282,6 +248,7 @@ const WhatsAppMessages = () => {
       setConversationLoading(false);
     }
   };
+
 
   // Send reply
   const sendReply = async () => {
@@ -308,57 +275,56 @@ const WhatsAppMessages = () => {
         // Create a properly formatted timestamp for the new message
         const now = new Date();
         const formattedDate = now.toISOString();
-        
+
         // Add the sent message to the conversation immediately
         const newMessage = {
           sid: response.data.conversation.reply_message.sid || `temp-${Date.now()}`,
           from: response.data.conversation.reply_message.from || "whatsapp:+14155238886",
           to: response.data.conversation.reply_message.to || selectedConversation,
           body: replyText,
-          date_sent: formattedDate,
+          date_sent: now.toString(), // use local time string
           status: 'sent',
           direction: 'outbound',
           timestamp: now.getTime()
         };
-        
+
         setConversationMessages(prev => [...prev, newMessage]);
         setReplyText('');
-        
-        // Update the conversation list with the new message as the last message
-        setConversations(prev => prev.map(conv => 
-          conv.phoneNumber === selectedConversation 
-            ? { 
-                ...conv, 
-                lastMessage: newMessage,
-                messages: [...conv.messages, newMessage]
-              }
+
+        setConversations(prev => prev.map(conv =>
+          conv.phoneNumber === selectedConversation
+            ? {
+              ...conv,
+              lastMessage: newMessage,
+              messages: [...(conv.messages || []), newMessage]
+            }
             : conv
         ));
-        
-        // Simulate delivery status update after 2 seconds
+
+
         setTimeout(() => {
-          setConversationMessages(prev => 
-            prev.map(msg => 
-              msg.sid === newMessage.sid 
-                ? { ...msg, status: 'delivered' } 
+          setConversationMessages(prev =>
+            prev.map(msg =>
+              msg.sid === newMessage.sid
+                ? { ...msg, status: 'delivered' }
                 : msg
             )
           );
-          
+
           // Update status in conversations list too
-          setConversations(prev => prev.map(conv => 
-            conv.phoneNumber === selectedConversation 
-              ? { 
-                  ...conv, 
-                  lastMessage: {
-                    ...conv.lastMessage,
-                    status: 'delivered'
-                  }
+          setConversations(prev => prev.map(conv =>
+            conv.phoneNumber === selectedConversation
+              ? {
+                ...conv,
+                lastMessage: {
+                  ...conv.lastMessage,
+                  status: 'delivered'
                 }
+              }
               : conv
           ));
         }, 2000);
-        
+
       } else {
         setError(response.data.error || 'Failed to send reply');
       }
@@ -370,62 +336,54 @@ const WhatsAppMessages = () => {
     }
   };
 
-const formatTime = (dateString) => {
-  if (!dateString) return '';
-
-  try {
-    // Force parse as UTC
-    const utcDate = new Date(dateString);
-    // Convert to local time manually
-    const localDate = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60000);
-
-    return localDate.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  } catch (error) {
-    console.error('Error formatting time:', error, dateString);
-    return '';
-  }
-};
-
-// Format relative time for conversation list - CORRECTED VERSION
-const formatRelativeTime = (dateString) => {
-  if (!dateString) return '';
-  
-  try {
-    // Parse the date string as UTC
-    let date = new Date(dateString);
-    
-    // If the date is invalid, try adding Z for UTC
-    if (isNaN(date.getTime())) {
-      date = new Date(dateString + 'Z');
+  const formatTime = (dateString) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return '';
     }
-    
-    if (isNaN(date.getTime())) {
-      return 'Invalid date';
+  };
+
+
+  // Format relative time for conversation list - CORRECTED VERSION
+  const formatRelativeTime = (dateString) => {
+    if (!dateString) return '';
+
+    try {
+      // Parse the date string as UTC
+      let date = new Date(dateString);
+
+      // If the date is invalid, try adding Z for UTC
+      if (isNaN(date.getTime())) {
+        date = new Date(dateString + 'Z');
+      }
+
+      if (isNaN(date.getTime())) {
+        return 'Invalid date';
+      }
+
+      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      const now = new Date();
+
+      const diffInMs = now - localDate;
+      const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+      if (diffInMinutes < 1) return 'Just now';
+      if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+      if (diffInHours < 24) return `${diffInHours}h ago`;
+      if (diffInDays < 7) return `${diffInDays}d ago`;
+
+      return localDate.toLocaleDateString();
+    } catch (error) {
+      console.error('Error formatting relative time:', error, dateString);
+      return '';
     }
-    
-    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    const now = new Date();
-    
-    const diffInMs = now - localDate;
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInDays < 7) return `${diffInDays}d ago`;
-    
-    return localDate.toLocaleDateString();
-  } catch (error) {
-    console.error('Error formatting relative time:', error, dateString);
-    return '';
-  }
-};
+  };
 
   // Format phone number
   const formatPhoneNumber = (phone) => {
@@ -448,27 +406,27 @@ const formatRelativeTime = (dateString) => {
     }
   };
   const formatChatDate = (dateString) => {
-  const date = new Date(dateString);
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-  if (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  ) {
-    return 'Today';
-  } else if (
-    date.getDate() === yesterday.getDate() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getFullYear() === yesterday.getFullYear()
-  ) {
-    return 'Yesterday';
-  } else {
-    return date.toLocaleDateString();
-  }
-};
+    if (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    ) {
+      return 'Today';
+    } else if (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    ) {
+      return 'Yesterday';
+    } else {
+      return date.toLocaleDateString();
+    }
+  };
 
 
   const getStatusColor = (status) => {
@@ -527,23 +485,23 @@ const formatRelativeTime = (dateString) => {
     const maxVisiblePages = 5;
     let startPage = Math.max(1, pagination.currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(pagination.totalPages, startPage + maxVisiblePages - 1);
-    
+
     // Adjust if we're near the end
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
-    
+
     // Previous button
     items.push(
-      <CPaginationItem 
-        key="prev" 
+      <CPaginationItem
+        key="prev"
         disabled={pagination.currentPage === 1}
         onClick={() => changePage(pagination.currentPage - 1)}
       >
         <CIcon icon={cilChevronLeft} />
       </CPaginationItem>
     );
-    
+
     // First page and ellipsis if needed
     if (startPage > 1) {
       items.push(
@@ -555,12 +513,12 @@ const formatRelativeTime = (dateString) => {
         items.push(<CPaginationItem key="ellipsis1" disabled>...</CPaginationItem>);
       }
     }
-    
+
     // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       items.push(
-        <CPaginationItem 
-          key={i} 
+        <CPaginationItem
+          key={i}
           active={i === pagination.currentPage}
           onClick={() => changePage(i)}
         >
@@ -568,33 +526,33 @@ const formatRelativeTime = (dateString) => {
         </CPaginationItem>
       );
     }
-    
+
     // Last page and ellipsis if needed
     if (endPage < pagination.totalPages) {
       if (endPage < pagination.totalPages - 1) {
         items.push(<CPaginationItem key="ellipsis2" disabled>...</CPaginationItem>);
       }
       items.push(
-        <CPaginationItem 
-          key={pagination.totalPages} 
+        <CPaginationItem
+          key={pagination.totalPages}
           onClick={() => changePage(pagination.totalPages)}
         >
           {pagination.totalPages}
         </CPaginationItem>
       );
     }
-    
+
     // Next button
     items.push(
-      <CPaginationItem 
-        key="next" 
+      <CPaginationItem
+        key="next"
         disabled={pagination.currentPage === pagination.totalPages}
         onClick={() => changePage(pagination.currentPage + 1)}
       >
         <CIcon icon={cilChevronRight} />
       </CPaginationItem>
     );
-    
+
     return items;
   };
 
@@ -658,9 +616,9 @@ const formatRelativeTime = (dateString) => {
                     </CFormSelect>
                   </div>
                   <div className="col-12 d-flex gap-2 mt-2">
-                    <CButton 
-                      color="primary" 
-                      size="sm" 
+                    <CButton
+                      color="primary"
+                      size="sm"
                       onClick={applyFilters}
                       disabled={isDateRangeInvalid()}
                       className="flex-fill"
@@ -707,16 +665,16 @@ const formatRelativeTime = (dateString) => {
                       {Math.min(pagination.currentPage * pagination.perPage, pagination.totalItems)} of{' '}
                       {pagination.totalItems} conversations
                     </div>
-                    
+
                     <CListGroup>
                       {conversations.map((conversation) => (
-                        <CListGroupItem 
+                        <CListGroupItem
                           key={conversation.phoneNumber}
                           className={`d-flex justify-content-between align-items-center cursor-pointer ${selectedConversation === conversation.phoneNumber ? 'active' : ''}`}
                           onClick={() => loadConversation(conversation.phoneNumber)}
-                          style={{ 
+                          style={{
                             cursor: 'pointer',
-                           backgroundColor: selectedConversation === conversation.phoneNumber ? '#321fdb' : '#fff'
+                            backgroundColor: selectedConversation === conversation.phoneNumber ? '#321fdb' : '#fff'
                           }}
                         >
                           <div className="d-flex align-items-center">
@@ -774,11 +732,11 @@ const formatRelativeTime = (dateString) => {
                   <small className="text-muted">{conversationMessages.length} messages</small>
                 </div>
               </CCardHeader>
-              
+
               {/* Messages Container with Fixed Height and Scroll */}
-              <div 
-                className="flex-fill p-3" 
-                style={{ 
+              <div
+                className="flex-fill p-3"
+                style={{
                   overflowY: 'auto',
                   minHeight: 0,
                   maxHeight: 'calc(100vh - 150px)',
@@ -791,51 +749,50 @@ const formatRelativeTime = (dateString) => {
                     <div className="mt-2">Loading conversation...</div>
                   </div>
                 ) : (
-                 <div className="d-flex flex-column">
-  {conversationMessages.map((message, index) => {
-    const prevMsg = conversationMessages[index - 1];
-    const currentDate = new Date(message.date_sent).toDateString();
-    const prevDate = prevMsg ? new Date(prevMsg.date_sent).toDateString() : null;
+                  <div className="d-flex flex-column">
+                    {conversationMessages.map((message, index) => {
+                      const prevMsg = conversationMessages[index - 1];
+                      const currentDate = new Date(message.date_sent).toDateString();
+                      const prevDate = prevMsg ? new Date(prevMsg.date_sent).toDateString() : null;
 
-    const showDateSeparator = currentDate !== prevDate;
+                      const showDateSeparator = currentDate !== prevDate;
 
-    return (
-      <React.Fragment key={index}>
-        {showDateSeparator && (
-          <div className="text-center my-2">
-            <span className="badge bg-secondary">
-              {formatChatDate(message.date_sent)}
-            </span>
-          </div>
-        )}
+                      return (
+                        <React.Fragment key={index}>
+                          {showDateSeparator && (
+                            <div className="text-center my-2">
+                              <span className="badge bg-secondary">
+                                {formatChatDate(message.date_sent)}
+                              </span>
+                            </div>
+                          )}
 
-        <div
-          className={`d-flex mb-3 ${message.direction === 'inbound' ? 'justify-content-start' : 'justify-content-end'}`}
-        >
-          <div
-            className={`p-3 rounded ${message.direction === 'inbound' ? 'bg-white border' : 'bg-primary text-white'}`}
-            style={{ maxWidth: '70%', minWidth: '120px' }}
-          >
-            <div className="message-text mb-1">{message.body}</div>
-            <div
-              className={`small ${
-                message.direction === 'inbound' ? 'text-muted' : 'text-white-50'
-              } d-flex justify-content-between align-items-center`}
-            >
-              <span>{formatTime(message.date_sent)}</span>
-              {message.direction === 'outbound' && (
-                <span className={`ms-2 text-${getStatusColor(message.status)}`}>
-                  {renderStatusIndicator(message.status)}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
-    );
-  })}
-  <div ref={messagesEndRef} />
-</div>
+                          <div
+                            className={`d-flex mb-3 ${message.direction === 'inbound' ? 'justify-content-start' : 'justify-content-end'}`}
+                          >
+                            <div
+                              className={`p-3 rounded ${message.direction === 'inbound' ? 'bg-white border' : 'bg-primary text-white'}`}
+                              style={{ maxWidth: '70%', minWidth: '120px' }}
+                            >
+                              <div className="message-text mb-1">{message.body}</div>
+                              <div
+                                className={`small ${message.direction === 'inbound' ? 'text-muted' : 'text-white-50'
+                                  } d-flex justify-content-between align-items-center`}
+                              >
+                                <span>{formatTime(message.date_sent)}</span>
+                                {message.direction === 'outbound' && (
+                                  <span className={`ms-2 text-${getStatusColor(message.status)}`}>
+                                    {renderStatusIndicator(message.status)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                    <div ref={messagesEndRef} />
+                  </div>
 
                 )}
               </div>
@@ -857,8 +814,8 @@ const formatRelativeTime = (dateString) => {
                     }}
                     style={{ resize: 'none' }}
                   />
-                  <CButton 
-                    color="primary" 
+                  <CButton
+                    color="primary"
                     onClick={sendReply}
                     disabled={sendingReply || !replyText.trim() || conversationLoading}
                   >
