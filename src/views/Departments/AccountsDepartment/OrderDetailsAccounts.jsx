@@ -37,29 +37,20 @@ function OrderDetailsAccounts(props) {
         // })
     }, [props.paymentDataSet, props.orderid])
 
-    // Calculate values based on data from both APIs
     const calculateValues = () => {
-        // Default values from first API
-        let paidAmount = paymentDataSet.paid_amount || 0
-        let discountAmount = 0
-        
-        // If we have detailed data from second API, use those values
-        if (detailedData && detailedData.lifestyleData && detailedData.lifestyleData.length > 0) {
-            const lifestyleItem = detailedData.lifestyleData[0]
-            paidAmount = parseFloat(lifestyleItem.paid_amount) || 0
-            
-            // Calculate discount amount (original total - discounted paid amount)
-            const originalTotalAmount = parseFloat(paymentDataSet.total_amount) || 0
-            discountAmount = originalTotalAmount - paidAmount
-        }
-        
-        const totalAmount = parseFloat(paymentDataSet.total_amount) || 0
-        const balanceAmount = parseFloat(paymentDataSet.balance_amount) || 0
-        const deliveryCharge = parseFloat(paymentDataSet.delivery_charge) || 0
+        // Get discount amount DIRECTLY from backend response
+        const discountAmount = detailedData?.lifestyleData?.[0]?.discount_amount || 
+                              detailedData?.essNEssData?.[0]?.discount_amount || 
+                              detailedData?.hotelData?.[0]?.discount_amount || 0;
+
+        const totalAmount = parseFloat(paymentDataSet.total_amount) || 0;
+        const paidAmount = parseFloat(paymentDataSet.paid_amount) || 0;
+        const balanceAmount = parseFloat(paymentDataSet.balance_amount) || 0;
+        const deliveryCharge = parseFloat(paymentDataSet.delivery_charge) || 0;
         
         return {
             paidAmount,
-            discountAmount,
+            discountAmount: Number(discountAmount) || 0, // Ensure it's a number
             totalAmount,
             balanceAmount,
             deliveryCharge

@@ -1110,59 +1110,77 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
         {' '}
       </CancellationModal>
 
-      <COffcanvas
-        backdrop="static"
-        placement="end"
-        visible={cancellationModalState}
-        onHide={() => setCancellationModalState(false)}
-      >
-        <COffcanvasHeader>
-          <COffcanvasTitle style={{ fontWeight: 'bold' }}>
-            Order Cancellation Details
-          </COffcanvasTitle>
-          <CCloseButton className="text-reset" onClick={() => setCancellationModalState(false)} />
-        </COffcanvasHeader>
-        <COffcanvasBody>
-          <CCol>
-            <CCardTitle>Product Name</CCardTitle>
-            <CCardSubtitle>{selectedCancellationModal?.product_title}</CCardSubtitle>
-          </CCol>
+      // Update the cancellation modal section
+<COffcanvas
+  backdrop="static"
+  placement="end"
+  visible={cancellationModalState}
+  onHide={() => setCancellationModalState(false)}
+>
+  <COffcanvasHeader>
+    <COffcanvasTitle style={{ fontWeight: 'bold' }}>
+      Order Cancellation Details
+    </COffcanvasTitle>
+    <CCloseButton className="text-reset" onClick={() => setCancellationModalState(false)} />
+  </COffcanvasHeader>
+  <COffcanvasBody>
+    <CCol>
+      <CCardTitle>Product Name</CCardTitle>
+      <CCardSubtitle>{selectedCancellationModal?.product_title}</CCardSubtitle>
+    </CCol>
 
-          <br></br>
+    <br></br>
 
-          {selectedCancellationModal?.cancel_order_remarks ? (
-            <CCol>
-              <CCardTitle>Cancel Order Remarks</CCardTitle>
-              <CCardSubtitle>{selectedCancellationModal?.cancel_order_remarks}</CCardSubtitle>
-              <br></br>
-            </CCol>
-          ) : null}
+    {/* NEW: Cancellation Timestamp */}
+    {selectedCancellationModal?.cancel_created_at && (
+      <CCol>
+        <CCardTitle>Cancellation Time</CCardTitle>
+        <CCardSubtitle>
+          {new Date(selectedCancellationModal.cancel_created_at).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          })}
+        </CCardSubtitle>
+        <br></br>
+      </CCol>
+    )}
 
-          <CCol>
-            <CCardTitle>Cancel Order Reason</CCardTitle>
-            <CCardSubtitle>{selectedCancellationModal?.cancel_reason}</CCardSubtitle>
-          </CCol>
+    {selectedCancellationModal?.cancel_order_remarks ? (
+      <CCol>
+        <CCardTitle>Cancel Order Remarks</CCardTitle>
+        <CCardSubtitle>{selectedCancellationModal?.cancel_order_remarks}</CCardSubtitle>
+        <br></br>
+      </CCol>
+    ) : null}
 
-          <br></br>
+    <CCol>
+      <CCardTitle>Cancel Order Reason</CCardTitle>
+      <CCardSubtitle>{selectedCancellationModal?.cancel_reason}</CCardSubtitle>
+    </CCol>
 
-          {selectedCancellationModal?.cancel_ref_image != '' ? (
-            <CCol>
-              <CCardTitle>Cancellation Reference Image</CCardTitle>
+    <br></br>
 
-              <img
-                src={axios.defaults.imageUrl + selectedCancellationModal?.cancel_ref_image}
-                fluid
-                style={{
-                  width: '100%',
-                  height: '50%',
-                  objectFit: 'cover',
-                  marginTop: 10,
-                }}
-              />
-            </CCol>
-          ) : null}
-        </COffcanvasBody>
-      </COffcanvas>
+    {selectedCancellationModal?.cancel_ref_image != '' ? (
+      <CCol>
+        <CCardTitle>Cancellation Reference Image</CCardTitle>
+        <img
+          src={axios.defaults.imageUrl + selectedCancellationModal?.cancel_ref_image}
+          fluid
+          style={{
+            width: '100%',
+            height: '50%',
+            objectFit: 'cover',
+            marginTop: 10,
+          }}
+        />
+      </CCol>
+    ) : null}
+  </COffcanvasBody>
+</COffcanvas>
 
       <MaterialTable
         title="Booking Experience"
