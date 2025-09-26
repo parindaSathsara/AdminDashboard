@@ -26,6 +26,7 @@ function NotificationCreate({ onNotificationCreated }) {
   const [userSuggestions, setUserSuggestions] = useState([])
   const [selectedUsers, setSelectedUsers] = useState([])
   const [isLoadingUsers, setIsLoadingUsers] = useState(false)
+  const [selectedOptionLabel, setSelectedOptionLabel] = useState('Select Notification Type *')
 
   const [formData, setFormData] = useState({
     topic_id: '',
@@ -84,9 +85,20 @@ function NotificationCreate({ onNotificationCreated }) {
       const isDirectNotification = value === 'direct'
       setShowUserSelection(isDirectNotification)
       
+      // Update the selected option label
+      if (value === 'direct') {
+        setSelectedOptionLabel('Direct Notification *')
+      } else if (value === '') {
+        setSelectedOptionLabel('Select Notification Type *')
+      } else {
+        // Find the selected topic name
+        const selectedTopic = topics.find(topic => topic.id == value)
+        setSelectedOptionLabel(selectedTopic ? `${selectedTopic.topic} *` : 'Select Notification Type *')
+      }
+      
       setFormData({
         ...formData,
-        [name]: value === 'direct' ? '' : value, // Set to empty string for direct notification
+        [name]: value === 'direct' ? 'direct' : value, // Keep 'direct' value for display
       })
       
       // Clear selected users when switching away from direct notification
@@ -154,7 +166,7 @@ function NotificationCreate({ onNotificationCreated }) {
     e.preventDefault()
     
     // Check if Direct Notification is selected
-    const isDirectNotification = formData.topic_id === ''
+    const isDirectNotification = formData.topic_id === 'direct'
     
     if (isDirectNotification) {
       // For direct notification: validate title, content, and users
@@ -180,7 +192,7 @@ function NotificationCreate({ onNotificationCreated }) {
     // Add topic_id for topic notifications or user_ids for direct notifications
     if (isDirectNotification) {
       submissionData.user_ids = selectedUsers.map((user) => user.id)
-      // topic_id will be null/empty for direct notifications (falls into the 'case null:' in your backend)
+      submissionData.topic_id = '' // Empty for backend's case null: logic
     } else {
       submissionData.topic_id = parseInt(formData.topic_id) // Ensure it's an integer
     }
@@ -220,6 +232,7 @@ function NotificationCreate({ onNotificationCreated }) {
     })
     setSelectedUsers([])
     setShowUserSelection(false)
+    setSelectedOptionLabel('Select Notification Type *')
     onNotificationCreated()
     Swal.fire('Success', `Notification sent successfully to ${total_users} users.`, 'success')
   }
@@ -234,6 +247,7 @@ function NotificationCreate({ onNotificationCreated }) {
     setShowUserSelection(false)
     setUserSearch('')
     setUserSuggestions([])
+    setSelectedOptionLabel('Select Notification Type *')
   }
 
   useEffect(() => {
@@ -259,7 +273,7 @@ function NotificationCreate({ onNotificationCreated }) {
           <CRow className="mb-3">
             <CCol md={12}>
               <CFormSelect
-                label="Select Notification Type *"
+                label={selectedOptionLabel}
                 name="topic_id"
                 value={formData.topic_id}
                 onChange={handleChange}
