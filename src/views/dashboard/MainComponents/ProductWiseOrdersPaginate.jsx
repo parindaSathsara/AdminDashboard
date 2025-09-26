@@ -44,7 +44,6 @@ export default function ProductWiseOrdersPaginate() {
     Cancel: 0
   });
 
-  // Fetch data with debounce
   const fetchData = async (pageIndex, pageSize, statusFilter, search = '') => {
     setLoading(true);
     try {
@@ -61,10 +60,26 @@ export default function ProductWiseOrdersPaginate() {
       const response = await axios.get("fetch_all_orders_product_wise", { params });
 
       if (response.data.status === 200) {
-        setAllOrdersProducts(response.data.productData);
+        const products = response.data.productData;
+        const paginationData = response.data.pagination;
+
+        setAllOrdersProducts(products);
+
+        let totalCount;
+
+        if (search.trim() !== '') {
+          if (products.length < pageSize) {
+            totalCount = products.length;
+          } else {
+            totalCount = paginationData?.total || products.length;
+          }
+        } else {
+          totalCount = paginationData?.total || products.length;
+        }
+
         setPagination(prev => ({
           ...prev,
-          totalCount: response.data.pagination.total,
+          totalCount,
         }));
       }
     } catch (error) {
@@ -74,13 +89,12 @@ export default function ProductWiseOrdersPaginate() {
     }
   };
 
-  // Fetch status counts
+
   const fetchStatusCounts = async () => {
     try {
       const statusTypes = ['All', 'CustomerOrdered', 'Approved', 'Completed', 'Cancel'];
       const counts = { All: 0, CustomerOrdered: 0, Approved: 0, Completed: 0, Cancel: 0 };
 
-      // Fetch count for each status
       for (const status of statusTypes) {
         try {
           const response = await axios.get('fetch_all_orders_product_wise', {
@@ -216,27 +230,27 @@ export default function ProductWiseOrdersPaginate() {
   ];
 
   const data = useMemo(() => allOrdersProducts?.map((result, index) => {
-   const bookedDate = (result?.catid === '4')
-     ? result?.booked_date 
-     : result?.checkout_date; 
+    const bookedDate = (result?.catid === '4')
+      ? result?.booked_date
+      : result?.checkout_date;
 
-   return {
-     id: (pagination.pageIndex * pagination.pageSize) + index + 1,
-     product_id: result?.PID,
-     product_image: result?.product_image,
-     service_location: result?.location,
-     product_title: result?.product_title,
-     category: result?.category,
-     service_date: result?.service_date,
-     balance_amount: result?.balance_amount,
-     paid_amount: result?.paid_amount,
-     total_amount: result?.total_amount,
-     booked_date: bookedDate, 
-     info: result,
-     order_id: "AHS_" + result?.orderID,
-     currency: result?.currency,
-   };
- }), [allOrdersProducts, pagination.pageIndex, pagination.pageSize]);
+    return {
+      id: (pagination.pageIndex * pagination.pageSize) + index + 1,
+      product_id: result?.PID,
+      product_image: result?.product_image,
+      service_location: result?.location,
+      product_title: result?.product_title,
+      category: result?.category,
+      service_date: result?.service_date,
+      balance_amount: result?.balance_amount,
+      paid_amount: result?.paid_amount,
+      total_amount: result?.total_amount,
+      booked_date: bookedDate,
+      info: result,
+      order_id: "AHS_" + result?.orderID,
+      currency: result?.currency,
+    };
+  }), [allOrdersProducts, pagination.pageIndex, pagination.pageSize]);
   const rowStyle = (data) => {
 
     if (data?.info?.orderID == lastUpdatedId) {

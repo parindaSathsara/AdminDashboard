@@ -289,6 +289,7 @@
     justify-content: start;
     align-items: center;
     padding-right: 20px;
+    margin-top: 61px;
 }
 
 .search-bar-open {
@@ -359,7 +360,7 @@
 }
 
 .chat-details-main-content {
-    height: calc(100% - 80px);
+    height:70%;
     margin: 0;
     background-color: #e3e8ec;
     border-radius: 8px;

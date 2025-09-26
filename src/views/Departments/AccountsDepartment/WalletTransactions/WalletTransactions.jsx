@@ -219,7 +219,6 @@ const WalletTransactions = () => {
 
         setTopUpRequests(paginationData.data || [])
         setTotalRequests(paginationData.total || 0)
-        setCurrentPage(paginationData.current_page || 1)
         setTotalPages(paginationData.last_page || 1)
       }
     } catch (error) {
@@ -240,7 +239,6 @@ const WalletTransactions = () => {
 
         setWallets(paginationData.data || [])
         setTotalWallets(paginationData.total || 0)
-        setCurrentWalletPage(paginationData.current_page || 1)
         setTotalWalletPages(paginationData.last_page || 1)
       }
     } catch (error) {

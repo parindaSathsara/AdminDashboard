@@ -1110,7 +1110,6 @@ updateDeliveryStatus(e.checkoutID, targetvalue, '')
         {' '}
       </CancellationModal>
 
-      // Update the cancellation modal section
 <COffcanvas
   backdrop="static"
   placement="end"

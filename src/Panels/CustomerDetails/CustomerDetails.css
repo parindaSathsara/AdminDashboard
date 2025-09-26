@@ -11,3 +11,36 @@
 .btnCOffColor {
     color: red !important;
 }
+/* Ensure modal appears properly */
+.modal.show {
+  display: block !important;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  z-index: 1060;
+}
+
+.modal-backdrop {
+  z-index: 1050;
+}
+
+/* Fix table header z-index */
+.MuiTableHead-root {
+  z-index: 1 !important;
+}
+
+.MuiTableContainer-root {
+  z-index: 1 !important;
+}
+
+/* Button styling */
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.btn-success:hover {
+  background-color: #157347;
+  border-color: #146c43;
+}
