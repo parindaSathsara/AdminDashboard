@@ -3,14 +3,16 @@ import './CustomerDetails.css';
 import MaterialTable from 'material-table';
 import { 
   CButton, 
-  CFormSelect, 
   CFormTextarea, 
   CModal, 
   CModalBody, 
   CModalHeader, 
   CModalTitle,
   CModalFooter,
-  CTooltip 
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem
 } from '@coreui/react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -21,9 +23,17 @@ function CustomerDetails(props) {
     suggestion: "",
     reach_type: ""
   });
+  const [suggestionDropdownOpen, setSuggestionDropdownOpen] = useState(false);
+  const [reachTypeDropdownOpen, setReachTypeDropdownOpen] = useState(false);
 
-  const handleOnSelect = (e) => {
-    setContactDetail({ ...contactDetails, [e.target.name]: e.target.value });
+  const handleSuggestionSelect = (value, label) => {
+    setContactDetail({ ...contactDetails, suggestion: value });
+    setSuggestionDropdownOpen(false);
+  };
+
+  const handleReachTypeSelect = (value) => {
+    setContactDetail({ ...contactDetails, reach_type: value });
+    setReachTypeDropdownOpen(false);
   };
 
   const handleSendMessage = async () => {
@@ -68,11 +78,11 @@ function CustomerDetails(props) {
     },
     { 
       value: 'For uninterrupted communication, kindly update your email address in your account preferences.', 
-      label: 'For uninterrupted communication...',
+      label: 'For uninterrupted communication, kindly update your email address in your account preferences.',
     },
     { 
       value: 'To receive timely updates, kindly update your mobile number in your account settings.', 
-      label: 'To receive timely updates...',
+      label: 'To receive timely updates, kindly update your mobile number in your account settings.',
     }
   ];
 
@@ -85,6 +95,17 @@ function CustomerDetails(props) {
       disabled: props.dataset?.customer_email === "-",
     }
   ];
+
+  // Get display label for selected values
+  const getSelectedSuggestionLabel = () => {
+    const selected = suggestionOptions.find(opt => opt.value === contactDetails.suggestion);
+    return selected ? selected.label : 'Select Option';
+  };
+
+  const getSelectedReachTypeLabel = () => {
+    const selected = reachOptions.find(opt => opt.value === contactDetails.reach_type);
+    return selected ? selected.label : 'Select Option';
+  };
 
   const data = {
     columns: [
@@ -117,29 +138,49 @@ function CustomerDetails(props) {
 
   return (
     <div>
-      {/* Simple Modal - This should work */}
       <CModal 
         visible={visible} 
         onClose={() => setVisible(false)}
         size="lg"
+        className="custom-dropdown-modal reach-customer-modal"
       >
         <CModalHeader>
           <CModalTitle>Reach Customer</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          {/* Suggestion Dropdown */}
           <div className="mb-3">
             <label className="form-label">Suggestion</label>
-            <CFormSelect
-              name="suggestion"
-              value={contactDetails.suggestion}
-              onChange={handleOnSelect}
+            <CDropdown
+              show={suggestionDropdownOpen}
+              onToggle={(show) => setSuggestionDropdownOpen(show)}
+              className="w-100"
             >
-              {suggestionOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </CFormSelect>
+              <CDropdownToggle 
+                color="outline-secondary" 
+                className="w-100 text-start dropdown-toggle-custom"
+                style={{ 
+                  textAlign: 'left',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <span className="dropdown-text">{getSelectedSuggestionLabel()}</span>
+              </CDropdownToggle>
+              <CDropdownMenu className="w-100 dropdown-menu-custom">
+                {suggestionOptions.map((option) => (
+                  <CDropdownItem 
+                    key={option.value} 
+                    onClick={() => handleSuggestionSelect(option.value, option.label)}
+                    active={contactDetails.suggestion === option.value}
+                    className="dropdown-item-custom"
+                  >
+                    {option.label}
+                  </CDropdownItem>
+                ))}
+              </CDropdownMenu>
+            </CDropdown>
           </div>
 
           <div className="mb-3">
@@ -149,26 +190,44 @@ function CustomerDetails(props) {
               value={contactDetails.suggestion}
               onChange={(e) => setContactDetail({...contactDetails, suggestion: e.target.value})}
               placeholder="Type your message here..."
+              className="message-textarea"
             />
           </div>
 
+          {/* Reach Type Dropdown */}
           <div className="mb-3">
             <label className="form-label">Reach Type</label>
-            <CFormSelect
-              name="reach_type"
-              value={contactDetails.reach_type}
-              onChange={handleOnSelect}
+            <CDropdown
+              show={reachTypeDropdownOpen}
+              onToggle={(show) => setReachTypeDropdownOpen(show)}
+              className="w-100"
             >
-              {reachOptions.map((option) => (
-                <option 
-                  key={option.value} 
-                  value={option.value}
-                  disabled={option.disabled}
-                >
-                  {option.label}
-                </option>
-              ))}
-            </CFormSelect>
+              <CDropdownToggle 
+                color="outline-secondary" 
+                className="w-100 text-start dropdown-toggle-custom"
+                style={{ 
+                  textAlign: 'left',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <span className="dropdown-text">{getSelectedReachTypeLabel()}</span>
+              </CDropdownToggle>
+              <CDropdownMenu className="w-100 dropdown-menu-custom">
+                {reachOptions.map((option) => (
+                  <CDropdownItem 
+                    key={option.value} 
+                    onClick={() => !option.disabled && handleReachTypeSelect(option.value)}
+                    active={contactDetails.reach_type === option.value}
+                    disabled={option.disabled}
+                    className={`dropdown-item-custom ${option.disabled ? 'disabled-item' : ''}`}
+                  >
+                    {option.label}
+                  </CDropdownItem>
+                ))}
+              </CDropdownMenu>
+            </CDropdown>
           </div>
         </CModalBody>
         <CModalFooter>
