@@ -93,8 +93,8 @@ const SupplierSupport = () => {
             search: true,
             headerStyle: {
               fontSize: '15px',
-              backgroundColor: '#626f75',
-              color: '#FFF'
+             
+              
             },
             cellStyle: {
               fontSize: '14px',

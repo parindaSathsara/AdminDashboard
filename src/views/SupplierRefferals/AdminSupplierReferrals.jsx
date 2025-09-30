@@ -52,10 +52,13 @@ const AdminSupplierReferrals = () => {
   const [showReferralsModal, setShowReferralsModal] = useState(false);
   const [referrals, setReferrals] = useState([]);
   const [referralsLoading, setReferralsLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(''); // '' = all
+
+  
 
   useEffect(() => {
     fetchSupplierReferrals();
-  }, [currentPage, perPage, searchTerm]);
+  }, [currentPage, perPage, searchTerm,selectedStatus]);
 
   const fetchSupplierReferrals = async () => {
     try {
@@ -64,7 +67,8 @@ const AdminSupplierReferrals = () => {
         params: {
           page: currentPage,
           per_page: perPage,
-          search: searchTerm
+          search: searchTerm,
+           status: selectedStatus,
         }
       });
 
@@ -79,6 +83,7 @@ const AdminSupplierReferrals = () => {
       setLoading(false);
     }
   };
+
 
   const fetchSupplierReferralDetails = async (supplierId) => {
     try {
@@ -337,6 +342,21 @@ const AdminSupplierReferrals = () => {
             </CButton>
           </CInputGroup>
         </CCol>
+        <CCol md={3}>
+  <CFormSelect
+    value={selectedStatus}
+    onChange={(e) => {
+      setSelectedStatus(e.target.value);
+      setCurrentPage(1); // reset to first page
+    }}
+  >
+    <option value="">All Status</option>
+    <option value="pending">Pending</option>
+    <option value="accepted">Accepted</option>
+    <option value="rejected">Rejected</option>
+  </CFormSelect>
+</CCol>
+
       </CRow>
 
 
@@ -419,29 +439,32 @@ const AdminSupplierReferrals = () => {
 
                   {/* Pagination */}
                   {suppliers.last_page > 1 && (
-                    <div className="d-flex justify-content-between align-items-center mt-3">
+                    <div className="d-flex justify-content-between align-items-center mt-3 flex-nowrap">
                       <div>
                         Showing {suppliers.from || 0} to {suppliers.to || 0} of {suppliers.total || 0} entries
                       </div>
-                      <CCol md={6} className="d-flex justify-content-end align-items-center">
-                        <div className="d-flex align-items-center">
-                          <span className="me-2">Rows per page:</span>
-                          <CFormSelect
-                            value={perPage}
-                            onChange={handlePerPageChange}
-                            style={{ width: '80px' }}
-                          >
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                          </CFormSelect>
-                        </div>
-                      </CCol>
-                      <CPagination className="mb-0">
-                        {renderPaginationItems()}
-                      </CPagination>
+
+                      <div className="d-flex align-items-center ms-3">
+                        <span className="me-2">Rows per page:</span>
+                        <CFormSelect
+                          value={perPage}
+                          onChange={handlePerPageChange}
+                          style={{ width: '80px' }}
+                        >
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </CFormSelect>
+                      </div>
+
+                      <div className="ms-3">
+                        <CPagination className="mb-0 flex-nowrap">
+                          {renderPaginationItems()}
+                        </CPagination>
+                      </div>
                     </div>
+
                   )}
                 </>
               )}
@@ -451,99 +474,99 @@ const AdminSupplierReferrals = () => {
       </CRow>
 
       {/* Referrals Modal */}
-    {/* Referrals Modal */}
-<CModal visible={showReferralsModal} onClose={() => setShowReferralsModal(false)} size="xl">
-  <CModalHeader>
-    <CModalTitle>
-      Referrals for {selectedSupplier?.first_name} {selectedSupplier?.last_name}
-    </CModalTitle>
-  </CModalHeader>
-  <CModalBody>
-    {referralsLoading ? (
-      <div className="text-center py-4">
-        <CSpinner />
-      </div>
-    ) : (
-      <CTable striped hover responsive>
-        <CTableHead>
-          <CTableRow>
-            <CTableHeaderCell>Referral ID</CTableHeaderCell>
-            <CTableHeaderCell>Referred Vendor</CTableHeaderCell>
-            <CTableHeaderCell>Email</CTableHeaderCell>
-            <CTableHeaderCell>Company</CTableHeaderCell>
-            <CTableHeaderCell>Status</CTableHeaderCell>
-            <CTableHeaderCell>Date</CTableHeaderCell>
-            <CTableHeaderCell className="text-center">Actions</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          {referrals.length > 0 ? (
-            referrals.map((referral) => (
-              <CTableRow key={referral.id}>
-                <CTableDataCell>#{referral.id}</CTableDataCell>
-                <CTableDataCell>
-                  {referral.referred_vendor_first_name || referral.referred_vendor_last_name 
-                    ? `${referral.referred_vendor_first_name || ''} ${referral.referred_vendor_last_name || ''}`.trim()
-                    : 'N/A'
-                  }
-                </CTableDataCell>
-                <CTableDataCell>
-                  {referral.referred_vendor_email || 'N/A'}
-                </CTableDataCell>
-                <CTableDataCell>
-                  {referral.referred_vendor_company || 'N/A'}
-                </CTableDataCell>
-                <CTableDataCell>
-                  {getReferralStatusBadge(referral.status)}
-                </CTableDataCell>
-                <CTableDataCell>
-                  {new Date(referral.created_at).toLocaleDateString()}
-                </CTableDataCell>
-                <CTableDataCell className="text-center">
-                  {referral.status === 'pending' && (
-                    <>
-                      <CButton
-                        color="success"
-                        size="sm"
-                        className="me-2"
-                        onClick={() => handleApprove(referral.id)}
-                        disabled={processing}
-                      >
-                        Approve
-                      </CButton>
-                      <CButton
-                        color="danger"
-                        size="sm"
-                        onClick={() => handleReject(referral.id)}
-                        disabled={processing}
-                      >
-                        Reject
-                      </CButton>
-                    </>
-                  )}
-                  {referral.status !== 'pending' && (
-                    <span className="text-muted">Processed</span>
-                  )}
-                </CTableDataCell>
-              </CTableRow>
-            ))
+      {/* Referrals Modal */}
+      <CModal visible={showReferralsModal} onClose={() => setShowReferralsModal(false)} size="xl">
+        <CModalHeader>
+          <CModalTitle>
+            Referrals for {selectedSupplier?.first_name} {selectedSupplier?.last_name}
+          </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {referralsLoading ? (
+            <div className="text-center py-4">
+              <CSpinner />
+            </div>
           ) : (
-            <CTableRow>
-              <CTableDataCell colSpan={7} className="text-center py-4">
-                No referrals found for this supplier
-              </CTableDataCell>
-            </CTableRow>
+            <CTable striped hover responsive>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell>Referral ID</CTableHeaderCell>
+                  <CTableHeaderCell>Referred Vendor</CTableHeaderCell>
+                  <CTableHeaderCell>Email</CTableHeaderCell>
+                  <CTableHeaderCell>Company</CTableHeaderCell>
+                  <CTableHeaderCell>Status</CTableHeaderCell>
+                  <CTableHeaderCell>Date</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Actions</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {referrals.length > 0 ? (
+                  referrals.map((referral) => (
+                    <CTableRow key={referral.id}>
+                      <CTableDataCell>#{referral.id}</CTableDataCell>
+                      <CTableDataCell>
+                        {referral.referred_vendor_first_name || referral.referred_vendor_last_name
+                          ? `${referral.referred_vendor_first_name || ''} ${referral.referred_vendor_last_name || ''}`.trim()
+                          : 'N/A'
+                        }
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {referral.referred_vendor_email || 'N/A'}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {referral.referred_vendor_company || 'N/A'}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {getReferralStatusBadge(referral.status)}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {new Date(referral.created_at).toLocaleDateString()}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {referral.status === 'pending' && (
+                          <>
+                            <CButton
+                              color="success"
+                              size="sm"
+                              className="me-2"
+                              onClick={() => handleApprove(referral.id)}
+                              disabled={processing}
+                            >
+                              Approve
+                            </CButton>
+                            <CButton
+                              color="danger"
+                              size="sm"
+                              onClick={() => handleReject(referral.id)}
+                              disabled={processing}
+                            >
+                              Reject
+                            </CButton>
+                          </>
+                        )}
+                        {referral.status !== 'pending' && (
+                          <span className="text-muted">Processed</span>
+                        )}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                ) : (
+                  <CTableRow>
+                    <CTableDataCell colSpan={7} className="text-center py-4">
+                      No referrals found for this supplier
+                    </CTableDataCell>
+                  </CTableRow>
+                )}
+              </CTableBody>
+            </CTable>
           )}
-        </CTableBody>
-      </CTable>
-    )}
-  </CModalBody>
-  <CModalFooter>
-    <CButton color="secondary" onClick={() => setShowReferralsModal(false)}>
-      Close
-    </CButton>
-  </CModalFooter>
-</CModal>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setShowReferralsModal(false)}>
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </div>
   );
 };

@@ -215,7 +215,7 @@ const WhatsAppMessages = () => {
           from: response.data.conversation.reply_message.from || "whatsapp:+14155238886",
           to: response.data.conversation.reply_message.to || selectedConversation,
           body: replyText,
-          date_sent: now.toString(),
+          date_sent: now.toISOString(),
           status: 'sent',
           direction: 'outbound',
           timestamp: now.getTime()
@@ -321,7 +321,7 @@ const WhatsAppMessages = () => {
 
     if (date.toDateString() === today.toDateString()) return 'Today';
     if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
-    
+
     return date.toLocaleDateString();
   };
 
