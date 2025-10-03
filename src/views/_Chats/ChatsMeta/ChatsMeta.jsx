@@ -1164,189 +1164,192 @@ const getChatsStatus = async (dataset) => {
                   </div>
                 )}
               </Tab>
-              <Tab eventKey="End" title="End Chats" itemID="tabEnd">
-                {/* Content for End Chats can be added later */}
-                {searchChat !== '' && chatListFiltered.length === 0 ? (
-                  <p className="chat-lists-note">
-                    There are no chats with your search keywords try with different keywords
-                  </p>
-                ) : searchChat === '' && chatListFiltered.length === 0 ? (
-                  <p className="chat-lists-note">There are no chats initiated from customer</p>
-                ) : (
-                  getPaginatedChats(getFilteredChats('End')).map((value, key) => (
-                    <div
-                      key={key}
-                      className="chat-head"
-                      style={{
-                        backgroundColor:
-                          value.id === chatOpenDetails.id
-                            ? '#f2f2f2'
-                            : value?.admin_unreads
-                              ? '#b9e4ff'
-                              : '',
-                      }}
-                      onClick={() => handleOpenChat(value)}
-                    >
-                      <LazyLoadImage
-                        className="chat-avatar"
-                        placeholderSrc={aahaaslogo}
-                        src={aahaaslogo}
-                      />
-                      <h6 className="chat-name ellipsis-2-lines">
-                        {value.chat_name}
-                        {value.customer_name ? ` by ${value.customer_name}` : ''}
-                        {value?.assign_employee_name
-                          ? `( handle by ${value?.assign_employee_name})`
-                          : ''}
-                      </h6>
+             <Tab eventKey="End" title="End Chats" itemID="tabEnd">
+  {/* Content for End Chats can be added later */}
+  {searchChat !== '' && chatListFiltered.length === 0 ? (
+    <p className="chat-lists-note">
+      There are no chats with your search keywords try with different keywords
+    </p>
+  ) : searchChat === '' && chatListFiltered.length === 0 ? (
+    <p className="chat-lists-note">There are no chats initiated from customer</p>
+  ) : getFilteredChats('End').length === 0 ? (
+    <p className="chat-lists-note">There are no ended chats</p>
+  ) : (
+    getPaginatedChats(getFilteredChats('End')).map((value, key) => (
+      <div
+        key={key}
+        className="chat-head"
+        style={{
+          backgroundColor:
+            value.id === chatOpenDetails.id
+              ? '#f2f2f2'
+              : value?.admin_unreads
+                ? '#b9e4ff'
+                : '',
+        }}
+        onClick={() => handleOpenChat(value)}
+      >
+        <LazyLoadImage
+          className="chat-avatar"
+          placeholderSrc={aahaaslogo}
+          src={aahaaslogo}
+        />
+        <h6 className="chat-name ellipsis-2-lines">
+          {value.chat_name}
+          {value.customer_name ? ` by ${value.customer_name}` : ''}
+          {value?.assign_employee_name
+            ? `( handle by ${value?.assign_employee_name})`
+            : ''}
+        </h6>
 
-                      <p className="chat-created-date">
-                        Initiate at {formatDate(value.createdAt)} -{' '}
-                        {value?.admin_included?.length === undefined
-                          ? 'No active admins'
-                          : `Active admins x ${value?.admin_included?.length}`}
-                      </p>
+        <p className="chat-created-date">
+          Initiate at {formatDate(value.createdAt)} -{' '}
+          {value?.admin_included?.length === undefined
+            ? 'No active admins'
+            : `Active admins x ${value?.admin_included?.length}`}
+        </p>
 
-                      <div className="reading-admins">
-                        {value?.admin_included === undefined ||
-                          value?.admin_included?.length == 0 ? (
-                          <span className="chat-admin">Yet to be replied</span>
-                        ) : (
-                          <span className="chat-admin">
-                            {value?.admin_included?.length} admin are in chat
-                          </span>
-                        )}
-                        <span>-</span>
-                        {value?.admin_reading === undefined ||
-                          value?.admin_reading?.length === 0 ? (
-                          <span className="read-admin">No one is reading</span>
-                        ) : (
-                          <span className="read-admin">
-                            {value?.admin_reading?.length} are reading
-                          </span>
-                        )}
-                      </div>
-                      <div className="chat-notify">
-                        {value?.admin_unreads != 0 ? (
-                          <h6
-                            style={{
-                              backgroundColor: '#616161',
-                              borderRadius: 50,
-                              paddingRight: 5,
-                              paddingLeft: 5,
-                              fontSize: 12,
-                              color: 'white',
-                              paddingTop: 3,
-                              paddingBottom: 3,
-                            }}
-                          >
-                            {value?.admin_unreads}
-                          </h6>
-                        ) : null}
-                      </div>
-                    </div>
-                  ))
-                )}
-                {/* Responsive Pagination */}
-                {getFilteredChats('notPinned').length > pagination.itemsPerPage && (
-                  <div className="d-flex justify-content-center mt-3">
-                    <Pagination className="flex-wrap justify-content-center">
-                      <Pagination.Prev
-                        onClick={() => {
-                          setPagination(prev => ({
-                            ...prev,
-                            currentPage: Math.max(1, prev.currentPage - 1)
-                          }));
-                          scrollToTop();
-                        }}
-                        disabled={pagination.currentPage === 1}
-                        className="mx-1"
-                      />
+        <div className="reading-admins">
+          {value?.admin_included === undefined ||
+            value?.admin_included?.length == 0 ? (
+            <span className="chat-admin">Yet to be replied</span>
+          ) : (
+            <span className="chat-admin">
+              {value?.admin_included?.length} admin are in chat
+            </span>
+          )}
+          <span>-</span>
+          {value?.admin_reading === undefined ||
+            value?.admin_reading?.length === 0 ? (
+            <span className="read-admin">No one is reading</span>
+          ) : (
+            <span className="read-admin">
+              {value?.admin_reading?.length} are reading
+            </span>
+          )}
+        </div>
+        <div className="chat-notify">
+          {value?.admin_unreads != 0 ? (
+            <h6
+              style={{
+                backgroundColor: '#616161',
+                borderRadius: 50,
+                paddingRight: 5,
+                paddingLeft: 5,
+                fontSize: 12,
+                color: 'white',
+                paddingTop: 3,
+                paddingBottom: 3,
+              }}
+            >
+              {value?.admin_unreads}
+            </h6>
+          ) : null}
+        </div>
+      </div>
+    ))
+  )}
+  
+  {/* CORRECTED PAGINATION - Use 'End' filter type */}
+  {getFilteredChats('End').length > 0 && getFilteredChats('End').length > pagination.itemsPerPage && (
+    <div className="d-flex justify-content-center mt-3">
+      <Pagination className="flex-wrap justify-content-center">
+        <Pagination.Prev
+          onClick={() => {
+            setPagination(prev => ({
+              ...prev,
+              currentPage: Math.max(1, prev.currentPage - 1)
+            }));
+            scrollToTop();
+          }}
+          disabled={pagination.currentPage === 1}
+          className="mx-1"
+        />
 
-                      {/* First Page */}
-                      {pagination.currentPage > 2 && (
-                        <Pagination.Item
-                          key={1}
-                          onClick={() => {
-                            setPagination(prev => ({ ...prev, currentPage: 1 }));
-                            scrollToTop();
-                          }}
-                          className="mx-1 d-none d-sm-block"
-                        >
-                          1
-                        </Pagination.Item>
-                      )}
+        {/* First Page */}
+        {pagination.currentPage > 2 && (
+          <Pagination.Item
+            key={1}
+            onClick={() => {
+              setPagination(prev => ({ ...prev, currentPage: 1 }));
+              scrollToTop();
+            }}
+            className="mx-1 d-none d-sm-block"
+          >
+            1
+          </Pagination.Item>
+        )}
 
-                      {/* Ellipsis for far pages */}
-                      {pagination.currentPage > 3 && (
-                        <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
-                      )}
+        {/* Ellipsis for far pages */}
+        {pagination.currentPage > 3 && (
+          <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
+        )}
 
-                      {/* Current page and neighbors */}
-                      {Array.from({ length: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) })
-                        .map((_, index) => {
-                          const page = index + 1;
-                          if ((page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)) {
-                            return (
-                              <Pagination.Item
-                                key={page}
-                                active={page === pagination.currentPage}
-                                onClick={() => {
-                                  setPagination(prev => ({ ...prev, currentPage: page }));
-                                  scrollToTop();
-                                }}
-                                className="mx-1"
-                              >
-                                {page}
-                              </Pagination.Item>
-                            );
-                          }
-                          return null;
-                        })}
+        {/* Current page and neighbors */}
+        {Array.from({ length: Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) })
+          .map((_, index) => {
+            const page = index + 1;
+            if ((page >= pagination.currentPage - 1 && page <= pagination.currentPage + 1)) {
+              return (
+                <Pagination.Item
+                  key={page}
+                  active={page === pagination.currentPage}
+                  onClick={() => {
+                    setPagination(prev => ({ ...prev, currentPage: page }));
+                    scrollToTop();
+                  }}
+                  className="mx-1"
+                >
+                  {page}
+                </Pagination.Item>
+              );
+            }
+            return null;
+          })}
 
-                      {/* Ellipsis for far pages */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 2 && (
-                        <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
-                      )}
+        {/* Ellipsis for far pages */}
+        {pagination.currentPage < Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) - 2 && (
+          <Pagination.Ellipsis className="mx-1 d-none d-md-block" />
+        )}
 
-                      {/* Last Page */}
-                      {pagination.currentPage < Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage) - 1 && (
-                        <Pagination.Item
-                          key={Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
-                          onClick={() => {
-                            setPagination(prev => ({
-                              ...prev,
-                              currentPage: Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
-                            }));
-                            scrollToTop();
-                          }}
-                          className="mx-1 d-none d-sm-block"
-                        >
-                          {Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)}
-                        </Pagination.Item>
-                      )}
+        {/* Last Page */}
+        {pagination.currentPage < Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage) - 1 && (
+          <Pagination.Item
+            key={Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)}
+            onClick={() => {
+              setPagination(prev => ({
+                ...prev,
+                currentPage: Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)
+              }));
+              scrollToTop();
+            }}
+            className="mx-1 d-none d-sm-block"
+          >
+            {Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)}
+          </Pagination.Item>
+        )}
 
-                      <Pagination.Next
-                        onClick={() => {
-                          setPagination(prev => ({
-                            ...prev,
-                            currentPage: Math.min(
-                              Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage),
-                              prev.currentPage + 1
-                            )
-                          }));
-                          scrollToTop();
-                        }}
-                        disabled={
-                          pagination.currentPage ===
-                          Math.ceil(getFilteredChats('notPinned').length / pagination.itemsPerPage)
-                        }
-                        className="mx-1"
-                      />
-                    </Pagination>
-                  </div>
-                )}
-              </Tab>
+        <Pagination.Next
+          onClick={() => {
+            setPagination(prev => ({
+              ...prev,
+              currentPage: Math.min(
+                Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage),
+                prev.currentPage + 1
+              )
+            }));
+            scrollToTop();
+          }}
+          disabled={
+            pagination.currentPage ===
+            Math.ceil(getFilteredChats('End').length / pagination.itemsPerPage)
+          }
+          className="mx-1"
+        />
+      </Pagination>
+    </div>
+  )}
+</Tab>
             </Tabs>
           </div>
         </CCol>
