@@ -911,15 +911,11 @@ const CustomerJourney = () => {
                           </div>
                           <CPagination className="premium-pagination mb-0">
                             <CPaginationItem
-                              disabled={!analyticsData.prev_page_url}
+                              disabled={currentPage === 1}
                               onClick={() => handlePageChange(currentPage - 1)}
                               className="premium-pagination-item premium-pagination-prev"
                             >
-                              <CIcon
-                                icon={cilArrowTop}
-                                className="me-2"
-                                style={{ transform: 'rotate(-90deg)' }}
-                              />
+                              <CIcon icon={cilArrowTop} className="me-2" style={{ transform: 'rotate(-90deg)' }} />
                               Previous
                             </CPaginationItem>
                             {Array.from({ length: Math.min(analyticsData.last_page, 5) }, (_, i) => {
@@ -937,9 +933,8 @@ const CustomerJourney = () => {
                                   key={pageNum}
                                   active={pageNum === currentPage}
                                   onClick={() => handlePageChange(pageNum)}
-                                  className={`premium-pagination-item premium-pagination-number ${
-                                    pageNum === currentPage ? 'premium-pagination-active' : ''
-                                  }`}
+                                  className={`premium-pagination-item premium-pagination-number ${pageNum === currentPage ? 'premium-pagination-active' : ''
+                                    }`}
                                 >
                                   {pageNum}
                                 </CPaginationItem>
@@ -962,16 +957,12 @@ const CustomerJourney = () => {
                               </>
                             )}
                             <CPaginationItem
-                              disabled={!analyticsData.next_page_url}
+                              disabled={currentPage === analyticsData.last_page}
                               onClick={() => handlePageChange(currentPage + 1)}
                               className="premium-pagination-item premium-pagination-next"
                             >
                               Next
-                              <CIcon
-                                icon={cilArrowTop}
-                                className="ms-2"
-                                style={{ transform: 'rotate(90deg)' }}
-                              />
+                              <CIcon icon={cilArrowTop} className="ms-2" style={{ transform: 'rotate(90deg)' }} />
                             </CPaginationItem>
                           </CPagination>
                         </div>
@@ -1039,7 +1030,7 @@ const CustomerJourney = () => {
                               <div className="d-flex align-items-center">
                                 <div className="avatar-wrapper me-4" style={{ position: 'relative' }}>
                                   {selectedCustomerDetails.customer.customer_profilepic &&
-                                  !imageError[selectedCustomerDetails.customer.customer_id] ? (
+                                    !imageError[selectedCustomerDetails.customer.customer_id] ? (
                                     <img
                                       src={selectedCustomerDetails.customer.customer_profilepic}
                                       alt={selectedCustomerDetails.customer.customer_fname}
@@ -1068,8 +1059,8 @@ const CustomerJourney = () => {
                                     >
                                       {selectedCustomerDetails.customer.customer_fname
                                         ? selectedCustomerDetails.customer.customer_fname
-                                            .charAt(0)
-                                            .toUpperCase()
+                                          .charAt(0)
+                                          .toUpperCase()
                                         : '?'}
                                     </div>
                                   )}
@@ -1181,7 +1172,7 @@ const CustomerJourney = () => {
                               <CBadge color="success" className="badge-subtle">
                                 {Math.round(
                                   selectedCustomerDetails.stats.total_screens_visited /
-                                    selectedCustomerDetails.stats.session_count,
+                                  selectedCustomerDetails.stats.session_count,
                                 )}{' '}
                                 per session
                               </CBadge>
@@ -1338,7 +1329,7 @@ const CustomerJourney = () => {
                                           {Math.round(
                                             (route.total_visits /
                                               selectedCustomerDetails.stats.total_screens_visited) *
-                                              100,
+                                            100,
                                           )}
                                           %
                                         </div>
@@ -1604,7 +1595,7 @@ const CustomerJourney = () => {
                             </CCardHeader>
                             <CCardBody className="p-4">
                               {selectedCustomerDetails.sessions &&
-                              selectedCustomerDetails.sessions.length > 0 ? (
+                                selectedCustomerDetails.sessions.length > 0 ? (
                                 <CChartLine
                                   data={{
                                     labels: selectedCustomerDetails.sessions.map((s) =>
@@ -1656,7 +1647,7 @@ const CustomerJourney = () => {
                             </CCardHeader>
                             <CCardBody className="p-4">
                               {selectedCustomerDetails.routes &&
-                              selectedCustomerDetails.routes.length > 0 ? (
+                                selectedCustomerDetails.routes.length > 0 ? (
                                 <CChartBar
                                   data={{
                                     labels: selectedCustomerDetails.routes.map((r) => r.route_name),
@@ -1704,7 +1695,7 @@ const CustomerJourney = () => {
                             </CCardHeader>
                             <CCardBody className="p-4">
                               {selectedCustomerDetails.devices &&
-                              selectedCustomerDetails.devices.length > 0 ? (
+                                selectedCustomerDetails.devices.length > 0 ? (
                                 <CChartDoughnut
                                   data={{
                                     labels: selectedCustomerDetails.devices.map(
@@ -1753,7 +1744,7 @@ const CustomerJourney = () => {
         </CTabPane>
         <CTabPane role="tabpanel" visible={activeTab === 'analytics'}>
           {/* This is where your new Analytics component will go */}
-          <AnalyticsTab/>
+          <AnalyticsTab />
         </CTabPane>
       </CTabContent>
     </div>

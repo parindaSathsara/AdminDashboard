@@ -43,69 +43,27 @@ export default function TravellerExperience(props) {
     '--cui-popover-body-padding-y': '.5rem',
   }
 
-  // const productData = props.dataset;
-
   const [productData, setProductData] = useState([])
-  // const [discountData, setDiscountData] = useState(false)
-
-  // useEffect(() => {
-  //   setProductData(props.dataset)
-  //   console.log(props.dataset, "Product Data")
-  //   // if (props.dataset[0].discountData = []) {
-  //   //   setDiscountData(true)
-  //   // }
-  // }, [props.dataset])
-
-  const [discountData, setDiscountData] = useState(false);
-  const [discountDataSet, setDiscountDataSet] = useState([]);
+  const [discountData, setDiscountData] = useState(false)
+  const [discountDataSet, setDiscountDataSet] = useState([])
 
   useEffect(() => {
-    setProductData(props.dataset);
-    console.log(props.dataset, "Product Data");
+    setProductData(props.dataset)
+    console.log(props.dataset, "Product Data")
 
     if (props.dataset && props.dataset[0]?.discountData !== null) {
-      setDiscountData(true);
-      setDiscountDataSet(props.dataset[0]?.discountData);
-      console.log(props.dataset[0]?.discountData, "Discount Data");
-      console.log(discountDataSet, "Discount Data Set");
-
-
+      setDiscountData(true)
+      setDiscountDataSet(props.dataset[0]?.discountData)
+      console.log(props.dataset[0]?.discountData, "Discount Data")
     } else {
-      setDiscountData(false); // optional, in case it should reset
+      setDiscountData(false)
     }
-  }, [props.dataset]);
+  }, [props.dataset])
 
   // Create a function to determine if a row has discount data
   const hasDiscountData = (rowData) => {
-    return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined;
-  };
-
-  useEffect(() => {
-    setProductData(props.dataset);
-    console.log(props.dataset, "Product Data");
-
-    if (props.dataset && props.dataset[0]?.discountData) {
-      setDiscountData(true);
-      setDiscountDataSet(props.dataset[0]?.discountData);
-      console.log(props.dataset[0]?.discountData, "Discount Data");
-      console.log(discountDataSet, "Discount Data Set");
-
-
-    } else {
-      setDiscountData(false); // optional, in case it should reset
-    }
-  }, [props.dataset]);
-
-
-  // newly added end
-
-
-  // useEffect(() => {
-  //   setProductData(props.dataset)
-  // }, [props.dataset])
-
-
-  // console.log(productData, "Productttttttt")
+    return rowData?.data?.discountData !== null && rowData?.data?.discountData !== undefined
+  }
 
   const [driverAllocationStatus, setDriverAllocationStatus] = useState({
     status: false,
@@ -122,29 +80,8 @@ export default function TravellerExperience(props) {
   })
 
   const handleInputFields = (name, value) => {
-    // console.log([name, value], 'hjhjhjhjhjh');
     setTravellerData({ ...travellerData, [name]: value })
-    // console.log(travellerData.reconfirmationDate);
   }
-
-  // const createTravellerExperience = async (travellerData) => {
-
-  //     console.log(travellerData, 'traveller new data');
-  //     var returnData = []
-
-  //     await axios.post(`/create_traveller_experience`, travellerData).then((res) => {
-  // console.log(res, 'traveller Experience')
-  //         if (res.data.status === 200) {
-  //             returnData = res.data
-  //         }
-
-  //     }).catch((err) => {
-  //         throw new Error(err);
-  //     })
-
-  //     // return returnData
-
-  // }
 
   const createTravellerExperience = async (rowData, idx) => {
     const data = {
@@ -157,7 +94,6 @@ export default function TravellerExperience(props) {
     }
 
     console.log(data, "Data values areeeee1233123123123")
-
 
     if (!data.reconfirmation_date || !data.qc || !data.delivery_status) {
       Swal.fire({
@@ -173,13 +109,14 @@ export default function TravellerExperience(props) {
         text: 'Submitting traveller experience...',
         allowOutsideClick: false,
         didOpen: () => {
-          Swal.showLoading();
+          Swal.showLoading()
         },
-      });
+      })
 
       setTimeout(() => {
-        Swal.close(); // or Swal.hideLoading() if you want to keep modal open
-      }, 5000);
+        Swal.close()
+      }, 5000)
+      
       const response = await axios.post(`/create_traveller`, data)
       if (response.data.status == 200) {
         await axios
@@ -189,7 +126,6 @@ export default function TravellerExperience(props) {
           )
           .then((res) => {
             Swal.hideLoading()
-            // console.log('res',res.data)
 
             if (res.data.status === 200) {
               Swal.fire({
@@ -219,14 +155,11 @@ export default function TravellerExperience(props) {
         })
       }
     } catch (error) {
-      // console.error('Error creating traveller experience:', error);
-      throw error // Rethrow the error to handle it at a higher level if necessary
+      throw error
     }
   }
 
   const QuantityContainer = ({ data }) => {
-    // console.log(data, "Data Value is")
-
     if (data.category == 'Education') {
       return (
         <CCol style={{ width: '320px' }}>
@@ -347,10 +280,8 @@ export default function TravellerExperience(props) {
   const deliveryStatusValues = ['Delivered', 'Pending']
 
   const [mapView, setMapView] = useState(false)
-
   const [mapViewData, setMapViewData] = useState([])
-
-  const [allocateProductData, setAllocateProductData] = useState({});
+  const [allocateProductData, setAllocateProductData] = useState({})
 
   const getMapView = async (data) => {
     setMapView(true)
@@ -359,22 +290,20 @@ export default function TravellerExperience(props) {
 
   const [driverId, setDriverId] = useState('')
   const handleClickDriverAllocation = (dataset) => {
-    setAllocateProductData(dataset?.data);
+    setAllocateProductData(dataset?.data)
     if (dataset.data.category === 'Lifestyles') {
-      setDriverId(dataset.data.vehicle_driver_id);
+      setDriverId(dataset.data.vehicle_driver_id)
 
       // Pass country to filter drivers
-      const country = dataset.data.country;
-      setDriverAllocationStatus({ status: true, data: dataset });
-      getAllExistingDeivers(country);
+      const country = dataset.data.country
+      setDriverAllocationStatus({ status: true, data: dataset })
+      getAllExistingDeivers(country)
     } else {
-      alert('Driver allocation is available only for lifestyle products');
+      alert('Driver allocation is available only for lifestyle products')
     }
-  };
+  }
 
   const getDisableStatus = (rowData) => {
-    // console.log(rowData, "Rowwwww")
-
     if (
       rowData?.data?.status == 'Cancel' ||
       rowData?.data?.status == 'CustomerOrdered' ||
@@ -408,7 +337,6 @@ export default function TravellerExperience(props) {
 
   const downloadPdf = async () => {
     try {
-      // console.log(productData?.[0].checkoutID, "chechout id")
       const url = `${axios.defaults.baseURL}/pnl/order-product/${productData?.[0].checkoutID}/pdf`
       console.log('Opening URL:', url)
       window.open(url, '_blank')
@@ -422,8 +350,6 @@ export default function TravellerExperience(props) {
     setCurrenctOrderId('')
     setProductPNLReport([])
   }
-
-  // console.log(value, 'fgf');
 
   // Function to disable all dates except today and yesterday
   const isDateSelectable = (date) => {
@@ -451,48 +377,79 @@ export default function TravellerExperience(props) {
   }
 
   const [dateChanging, setDateChanging] = useState(false)
-  // Add this component to render the discount row
-  const DiscountRow = () => {
-    return (
-      <div style={{
-        backgroundColor: '#e8f5e9',
-        padding: '16px',
-        marginTop: '16px',
-        border: '1px solid #c8e6c9',
-        borderRadius: '4px'
-      }}>
-        <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>Special Discount Offer</h5>
-        {/* <p>{discountDataSet}</p> */}
-      </div>
-    );
-  };
+
+  // Custom export handlers
+  const handleExportCsv = () => {
+    const exportData = productData.map((value, index) => ({
+      'PID': value?.PID,
+      'Delivery Date': value?.service_date,
+      'Reconfirmation Date': value?.reconfirmationDate || value?.reconfirmation_date,
+      'QC': value?.qc,
+      'Delivery Status': value?.deliveryStatus || value?.delivery_status,
+      'Location': value?.location,
+    }))
+    
+    downloadCsv(exportData, 'traveller_experience.csv')
+  }
+
+  const handleExportPdf = () => {
+    const exportData = productData.map((value, index) => ({
+      'PID': value?.PID,
+      'Delivery Date': value?.service_date,
+      'Reconfirmation Date': value?.reconfirmationDate || value?.reconfirmation_date,
+      'QC': value?.qc,
+      'Delivery Status': value?.deliveryStatus || value?.delivery_status,
+      'Location': value?.location,
+    }))
+    
+    // For PDF, you can use the same download approach or implement actual PDF generation
+    const url = `${axios.defaults.baseURL}/export-traveller-experience-pdf`
+    window.open(url, '_blank')
+  }
+
+  // CSV download utility
+  const downloadCsv = (data, filename) => {
+    if (!data || data.length === 0) {
+      Swal.fire({
+        text: 'No data to export',
+        icon: 'warning',
+      })
+      return
+    }
+
+    const headers = Object.keys(data[0])
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => 
+        headers.map(header => 
+          `"${String(row[header] || '').replace(/"/g, '""')}"`
+        ).join(',')
+      )
+    ].join('\n')
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', filename)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  }
 
   const columns = [
-
-    // // newly added start
-    // {
-    //   title: 'Discount',
-    //   field: 'hasDiscount',
-    //   width: 80, // Keep it narrow
-    //   render: (rowData) => {
-    //     return hasDiscountData(rowData) ? (
-    //       <div style={{
-    //         backgroundColor: '#e8f5e9',
-    //         padding: '4px 8px',
-    //         borderRadius: '12px',
-    //         display: 'inline-block',
-    //         fontSize: '12px',
-    //         fontWeight: 'bold',
-    //         color: '#2e7d32'
-    //       }}>
-    //         Discount
-    //       </div>
-    //     ) : "-";
-    //   }
-    // } : null,
-
-    { title: 'PID', field: 'pid' },
-    { title: 'Delivery Date', field: 'delivery_date', type: 'date' },
+    { 
+      title: 'PID', 
+      field: 'pid',
+      export: true
+    },
+    { 
+      title: 'Delivery Date', 
+      field: 'delivery_date', 
+      type: 'date',
+      export: true
+    },
     {
       title: 'Location',
       field: 'location1',
@@ -505,52 +462,41 @@ export default function TravellerExperience(props) {
           Show in Map
         </CButton>
       ),
+      export: false,
     },
     {
       title: 'Reconfirmation Date',
       field: 'reconfirmation_date',
       type: 'date',
       render: (rowData) => {
-        // Get today's date in 'YYYY-MM-DD' format
         const today = new Date()
         const todayString = today.toISOString().split('T')[0]
-        // console.log(rowData?.reconfirmationDate, 'reconfirmationDate')
-        // Get yesterday's date in 'YYYY-MM-DD' format
+        
         const yesterday = new Date()
         yesterday.setDate(today.getDate() - 1)
         const yesterdayString = yesterday.toISOString().split('T')[0]
-        // console.log(rowData, 'Row DAta value issssss')
+        
         return (
           <CFormInput
             style={{ fontSize: '11px' }}
             disabled={getDisableStatus(rowData)}
-            defaultValue={rowData?.reconfirmationDate}
             type="date"
-            value={productData[rowData?.index]?.reconfirmationDate}
+            value={productData[rowData?.index]?.reconfirmationDate || rowData?.reconfirmationDate}
             onChange={(e) => {
-              // setDateChanging(true)
-
               const updatedProductData = [...productData]
               updatedProductData[rowData.index] = {
                 ...updatedProductData[rowData.index],
                 reconfirmationDate: e.target.value,
               }
-
-
-
               setProductData(updatedProductData)
-
-              // handleInputFields('reconfirmation_date', e.target.value)
-              // setSelectedDate(e.target.value)
-              // setDateChanging(false)
             }}
             min={yesterdayString}
             max={todayString}
           />
         )
       },
+      export: true,
     },
-
     {
       title: 'QC',
       field: 'qc',
@@ -560,26 +506,25 @@ export default function TravellerExperience(props) {
           style={{ fontSize: '11px' }}
           disabled={getDisableStatus(rowData)}
           custom
+          value={productData[rowData?.index]?.qc || rowData?.qc}
           onChange={(e) => {
             const updatedProductData = [...productData]
             updatedProductData[rowData.index] = {
               ...updatedProductData[rowData.index],
               qc: e.target.value,
             }
-
             setProductData(updatedProductData)
-
-            // handleInputFields('qc', e.target.value)
           }}
         >
-          <option>{'Select QC'}</option>
+          <option value="">Select QC</option>
           {qcValues.map((qc) => (
-            <option key={qc} value={qc} selected={rowData?.qc == qc}>
+            <option key={qc} value={qc}>
               {qc}
             </option>
           ))}
         </CFormSelect>
       ),
+      export: true,
     },
     {
       title: 'Delivery Status',
@@ -590,25 +535,18 @@ export default function TravellerExperience(props) {
           <CFormSelect
             style={{ fontSize: '11px' }}
             custom
+            value={productData[rowData?.index]?.deliveryStatus || rowData?.deliveryStatus}
             onChange={(e) => {
               const updatedProductData = [...productData]
               updatedProductData[rowData.index] = {
                 ...updatedProductData[rowData.index],
                 deliveryStatus: e.target.value,
               }
-
               setProductData(updatedProductData)
-
-
-              console.log(updatedProductData, "Updated Product Dataaaaaaaaaaaaaaaa")
-
-              //   handleInputFields('delivery_status', e.target.value)
             }}
             disabled={getDisableStatus(rowData)}
           >
-            <option>
-              {rowData.deliveryStatus !== null ? rowData?.deliveryStatus : 'Select Status'}
-            </option>
+            <option value="">Select Status</option>
             {deliveryStatusValues.map((status) => (
               <option key={status} value={status}>
                 {status}
@@ -617,6 +555,7 @@ export default function TravellerExperience(props) {
           </CFormSelect>
         )
       },
+      export: true,
     },
     {
       title: 'Driver allocation',
@@ -649,6 +588,7 @@ export default function TravellerExperience(props) {
             )}
         </Tooltip>
       ),
+      export: false,
     },
     {
       title: 'PNL report',
@@ -658,8 +598,6 @@ export default function TravellerExperience(props) {
             userData?.permissions?.includes(permission),
           ) && (
             <CButton
-              // onClick={() => console.log(rowData)}
-
               onClick={() => handlePNLReport(rowData?.data?.checkoutID)}
               style={{ fontSize: 11, color: 'white', backgroundColor: '#ed4242', border: 0 }}
               color="info"
@@ -669,6 +607,7 @@ export default function TravellerExperience(props) {
           )
         )
       },
+      export: false,
     },
     {
       title: '',
@@ -701,49 +640,47 @@ export default function TravellerExperience(props) {
           )
         }
       },
+      export: false,
     },
-    // { title: 'DFeedback', field: 'dFeedback', render: rowData => <CFormSelect custom>{rowData.dFeedback}</CFormSelect> },
   ]
 
-  // Prepare the data for the Material Table
-  const data = productData?.map((value, index) => ({
-    pid: value?.['PID'],
-    delivery_date: value?.service_date,
-    location: value?.location,
-    reconfirmationDate: value?.reconfirmation_date,
-    qc: value?.qc,
-    // deliveryStatus: <CFormSelect custom>{deliveryStatusValues.map(status => <option key={status} value={status}>{status}</option>)}</CFormSelect>,
-    deliveryStatus: value?.delivery_status,
-    data: value,
-    index: index,
-    // dFeedback: <CFormSelect custom>{value?.dFeedback}</CFormSelect>,
-  }))
+  // Prepare the data for the Material Table - SYNC WITH productData
+  const data = productData?.map((value, index) => {
+    // Use current form values from productData, fallback to original data
+    return {
+      pid: value?.PID,
+      delivery_date: value?.service_date,
+      location: value?.location,
+      reconfirmation_date: value?.reconfirmationDate || value?.reconfirmation_date,
+      qc: value?.qc,
+      delivery_status: value?.deliveryStatus || value?.delivery_status,
+      data: value,
+      index: index,
+    }
+  })
 
   const [formData, setFormData] = useState({})
-
-  // Function to handle changes to the Reconfirmation Date
-  const handleReconfirmationDateChange = (date, rowData) => {
-    // You can handle the date change here, e.g., update rowData.reconfirmationDate
-  }
 
   const [driverDetailsLoading, setDriverDetailsLoading] = useState(true)
   const [driverDetails, setDriverDetails] = useState([])
 
   const getAllExistingDeivers = async (country = null) => {
-    setDriverDetailsLoading(true);
+    setDriverDetailsLoading(true)
 
-    let url = '/vehicle-drivers';
+    let url = '/vehicle-drivers'
     if (country) {
-      url += `?country=${country}`;
+      url += `?country=${country}`
     }
 
     await axios.get(url).then((response) => {
-      setDriverDetailsLoading(false);
-      setDriverDetails(response.data.data);
-      setOriginalDriverDetails(response.data.data); // Store original list for filtering
-    });
-  };
-  const [originalDriverDetails, setOriginalDriverDetails] = useState([]);
+      setDriverDetailsLoading(false)
+      setDriverDetails(response.data.data)
+      setOriginalDriverDetails(response.data.data)
+    })
+  }
+  
+  const [originalDriverDetails, setOriginalDriverDetails] = useState([])
+  
   useEffect(() => {
     getAllExistingDeivers()
   }, [driverAllocationStatus.status])
@@ -760,8 +697,8 @@ export default function TravellerExperience(props) {
     let Prod_ID = driverAllocationStatus.data.data.checkoutID
     let Veh_ID = dataset.id
 
-    const formData = new FormData();
-    formData.append('transfer_type', type);
+    const formData = new FormData()
+    formData.append('transfer_type', type)
 
     await axios
       .post(`/allocate-order-product/${Prod_ID}/vehicle-driver/${Veh_ID}`,
@@ -789,10 +726,10 @@ export default function TravellerExperience(props) {
           handleResetAllocationModal()
           props.reload()
         }
-        setDriverAllocationStatus(false);
+        setDriverAllocationStatus(false)
       })
       .catch((response) => {
-        setDriverAllocationStatus(false);
+        setDriverAllocationStatus(false)
         console.log(response.response.data.message, 'Catch Response Value is')
         Swal.fire({
           title: response.response.data.message,
@@ -811,7 +748,6 @@ export default function TravellerExperience(props) {
         <Modal.Body>
           <DeliveryDetails dataset={mapViewData}></DeliveryDetails>
         </Modal.Body>
-        {/* <Modal.Footer></Modal.Footer> */}
       </Modal>
 
       <Modal
@@ -825,18 +761,17 @@ export default function TravellerExperience(props) {
           <Modal.Title>Allocate Vehicle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Add Filter Inputs */}
           <div className="mb-3">
             <CRow>
               <CCol md={4}>
                 <CFormInput
                   placeholder="Filter by Driver Name"
                   onChange={(e) => {
-                    const searchTerm = e.target.value.toLowerCase();
+                    const searchTerm = e.target.value.toLowerCase()
                     const filtered = originalDriverDetails.filter(driver =>
                       driver.driver_name.toLowerCase().includes(searchTerm)
-                    );
-                    setDriverDetails(filtered);
+                    )
+                    setDriverDetails(filtered)
                   }}
                 />
               </CCol>
@@ -844,11 +779,11 @@ export default function TravellerExperience(props) {
                 <CFormInput
                   placeholder="Filter by Vehicle Number"
                   onChange={(e) => {
-                    const searchTerm = e.target.value.toLowerCase();
+                    const searchTerm = e.target.value.toLowerCase()
                     const filtered = originalDriverDetails.filter(driver =>
                       driver.vehicle_number.toLowerCase().includes(searchTerm)
-                    );
-                    setDriverDetails(filtered);
+                    )
+                    setDriverDetails(filtered)
                   }}
                 />
               </CCol>
@@ -856,11 +791,11 @@ export default function TravellerExperience(props) {
                 <CFormInput
                   placeholder="Filter by Vehicle Province"
                   onChange={(e) => {
-                    const searchTerm = e.target.value.toLowerCase();
+                    const searchTerm = e.target.value.toLowerCase()
                     const filtered = originalDriverDetails.filter(driver =>
                       driver.vehicle_province.toLowerCase().includes(searchTerm)
-                    );
-                    setDriverDetails(filtered);
+                    )
+                    setDriverDetails(filtered)
                   }}
                 />
               </CCol>
@@ -883,19 +818,13 @@ export default function TravellerExperience(props) {
               driverDetails
                 .sort((a, b) => (a.id === driverId ? -1 : b.id === driverId ? 1 : 0))
                 .map((driver, index) => {
-                  // const isAllocated = driver.allocation.find((item) => {
-                  //   return (
-                  //     item.service_date == allocateProductData.service_date &&
-                  //     item.time_slot == allocateProductData.pickupTime
-                  //   );
-                  // });
                   const isAllocatedToCurrent = driver.allocation.filter((item) => {
                     return (
                       item.order_product_id == allocateProductData.checkoutID
-                    );
-                  });
-                  const hasDrop = isAllocatedToCurrent.some(item => item.transfer_type === "drop");
-                  const hasPickup = isAllocatedToCurrent.some(item => item.transfer_type === "pickup");
+                    )
+                  })
+                  const hasDrop = isAllocatedToCurrent.some(item => item.transfer_type === "drop")
+                  const hasPickup = isAllocatedToCurrent.some(item => item.transfer_type === "pickup")
                   return (
                     <div
                       key={index}
@@ -904,7 +833,6 @@ export default function TravellerExperience(props) {
                     >
                       <div className="vehicle-primary-info">
                         <div className="vehicle-identification">
-                          {/* {isAllocated && driverId != driver.id && (<span className='text-danger'>The driver is unavailable for the selected time slot and service date</span>)} */}
                           <span className="vehicle-number">Vehicle No: {driver.vehicle_number}</span>
                           <span className="vehicle-province">{driver.vehicle_province}</span>
                         </div>
@@ -965,44 +893,6 @@ export default function TravellerExperience(props) {
                       >
                         Select vehicle for pickup
                       </CButton>)}
-
-
-                      {/* {!isAllocated && (driverId === driver.id ? (
-                        <CButton
-                          color="dark"
-                          disabled
-                          className="select-allocation-btn"
-                          onClick={() => handleChooseDriver(driver)}
-                        >
-                          Selected
-                        </CButton>
-                      ) : (
-                        <CButton
-                          color="warning"
-                          className="select-allocation-btn"
-                          onClick={() => handleChooseDriver('one-way', driver)}
-                        >
-                          Select vehicle for one way
-                        </CButton>
-                      ))}
-                      {!isAllocated && (driverId === driver.id ? (
-                        <CButton
-                          color="dark"
-                          disabled
-                          className="select-allocation-btn"
-                          onClick={() => handleChooseDriver(driver)}
-                        >
-                          Selected
-                        </CButton>
-                      ) : (
-                        <CButton
-                          color="success"
-                          className="select-allocation-btn"
-                          onClick={() => handleChooseDriver('two-way', driver)}
-                        >
-                          Select vehicle for two way
-                        </CButton>
-                      ))} */}
                     </div>
                   )
                 })
@@ -1038,97 +928,6 @@ export default function TravellerExperience(props) {
         </Modal.Body>
       </Modal>
 
-      {/* <MaterialTable
-
-        title="Traveller Experience"
-        columns={columns}
-        data={data}
-        options={{
-          headerStyle: { fontSize: '11px' },
-          cellStyle: { fontSize: '11px' },
-          paging: false,
-          search: false,
-          columnsButton: true,
-          exportButton: true,
-          grouping: true,
-          rowStyle: rowStyle,
-        }}
-      /> */}
-      {/* <MaterialTable
-        title="Traveller Experience"
-        columns={columns}
-        data={data}
-        options={{
-          headerStyle: { fontSize: '11px' },
-          cellStyle: { fontSize: '11px' },
-          paging: false,
-          search: false,
-          columnsButton: true,
-          exportButton: true,
-          grouping: true,
-          rowStyle: rowStyle,
-          // These options control the detail panel column
-          detailPanelColumnAlignment: 'left',
-          detailPanelColumnStyle: {
-            width: '10px',  // Reduced from default
-            minWidth: '10px', // Ensures it doesn't expand
-            maxWidth: '10px', // Ensures it doesn't expand
-            padding: '0 5px', // Reduces padding
-            display: discountData ? 'table-cell' : 'none'
-
-          },
-          // This prevents the column from being resizable
-          columnsResizable: false
-        }}
-
-        detailPanel={discountData ? [
-          {
-            render: rowData => {
-              if (!hasDiscountData(rowData)) return null;
-
-              const discountData = rowData.data.discountData;
-              const discountMainData = discountData?.discountMainData;
-
-              if (!discountMainData) return null;
-
-              return (
-                <div style={{
-                  backgroundColor: '#e8f5e9',
-                  padding: '10px',
-                  margin: '0',
-                  border: '1px solid #c8e6c9',
-                  borderRadius: '4px',
-                  // Constrain the width of the content
-                  maxWidth: 'calc(100% - 10px)', // Accounts for the column width
-                  marginLeft: '20px' // Aligns with the column
-                }}>
-                  <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>
-                    {discountMainData.discount_tag_line || 'Special Discount Offer'}
-                  </h5>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-                    <div>
-                      <p><strong>Discount Type:</strong> {discountMainData.discount_type}</p>
-                      <p><strong>Valid Until:</strong> {discountMainData.discount_end_date}</p>
-                    </div>
-                    <div>
-                      <p><strong>Travel Period:</strong> {discountMainData.discount_travel_start_date} to {discountMainData.discount_travel_end_date}</p>
-                      {discountData.productData && (
-                        <p><strong>Free Product:</strong> {discountData.productData.product_name}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-          }
-        ] : undefined}
-        onRowClick={(event, rowData, togglePanel) => {
-          if (hasDiscountData(rowData)) {
-            togglePanel();
-          }
-        }}
-      />  */}
-
       <MaterialTable
         title="Traveller Experience"
         columns={columns}
@@ -1142,20 +941,27 @@ export default function TravellerExperience(props) {
           exportButton: true,
           grouping: true,
           rowStyle: rowStyle,
-          // These options control the detail panel column
           detailPanelColumnAlignment: 'left',
           detailPanelColumnStyle: {
-            width: '10px',  // Reduced from default
-            minWidth: '10px', // Ensures it doesn't expand
-            maxWidth: '10px', // Ensures it doesn't expand
-            padding: '0 5px', // Reduces padding
+            width: '10px',
+            minWidth: '10px',
+            maxWidth: '10px',
+            padding: '0 5px',
             display: discountData ? 'table-cell' : 'none'
-
           },
-          // This prevents the column from being resizable
-          columnsResizable: false
+          columnsResizable: false,
+          // Custom export handlers
+          exportMenu: [
+            {
+              label: 'Export PDF',
+              exportFunc: (cols, datas) => handleExportPdf()
+            },
+            {
+              label: 'Export CSV',
+              exportFunc: (cols, datas) => handleExportCsv()
+            }
+          ]
         }}
-
         detailPanel={discountData ? [
           {
             render: rowData => {
@@ -1173,9 +979,8 @@ export default function TravellerExperience(props) {
                   margin: '0',
                   border: '1px solid #c8e6c9',
                   borderRadius: '4px',
-                  // Constrain the width of the content
-                  maxWidth: 'calc(100% - 10px)', // Accounts for the column width
-                  marginLeft: '20px' // Aligns with the column
+                  maxWidth: 'calc(100% - 10px)',
+                  marginLeft: '20px'
                 }}>
                   <h5 style={{ color: '#2e7d32', marginBottom: '12px' }}>
                     {discountMainData.discount_tag_line || 'Special Discount Offer'}
@@ -1203,10 +1008,6 @@ export default function TravellerExperience(props) {
           }
         }}
       />
-
-      {/* {
-        discountData && <DiscountRow />
-      } */}
     </>
   )
 }

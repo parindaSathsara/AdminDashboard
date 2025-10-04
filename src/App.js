@@ -78,16 +78,20 @@ axios.defaults.supplierUrl = 'https://staging-supplier.aahaas.com/'
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
+  
+  // whitelist for public access
+  const publicPaths = ['/users/stats']
+  const isPublic = publicPaths.some(path => config.url.includes(path))
 
-  // console.log(token,"Token value id is")
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`
-    // console.log(`Bearer ${token}`)
-  } else {
+  if (!token && !isPublic) {
     window.location.href = '/#/login'
+  } else if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`
   }
+
   return config
 })
+
 
 axios.interceptors.response.use(
   (response) => {
@@ -500,65 +504,25 @@ function App() {
         <NotificationContainer notifications={notifications} />
         <HashRouter>
           <Suspense fallback={loading}>
-            <Routes>
-              {!userLogin ? (
-                <>
-                  <Route
-                    exact
-                    path="/"
-                    name="Login Page"
-                    element={<Login />}
-                    errorElement={<Page404></Page404>}
-                  />
-                  <Route
-                    exact
-                    path="/login"
-                    name="Login Page"
-                    element={<Login />}
-                    errorElement={<Page404></Page404>}
-                  />
-                  <Route
-                    exact
-                    path="/register"
-                    name="Register Page"
-                    element={<Register />}
-                    errorElement={<Page404></Page404>}
-                  />
-                  <Route
-                    exact
-                    path="/forgetpassword"
-                    name="Forget Password Page"
-                    element={<ForgetPassword />}
-                    errorElement={<Page404></Page404>}
-                  />
-                  <Route
-                    exact
-                    path="*"
-                    name="404"
-                    element={<Page404 />}
-                    errorElement={<Page404></Page404>}
-                  />
-                </>
-              ) : (
-                <>
-                  {/* <Route exact path="/login" name="Login Page" element={<Login />} errorElement={<Page404></Page404>} />
-                <Route exact path="/register" name="Register Page" element={<Register />} errorElement={<Page404></Page404>} /> */}
-                  <Route
-                    exact
-                    path="*"
-                    element={<DefaultLayout />}
-                    errorElement={<Page404></Page404>}
-                  />
-                  <Route
-                    exact
-                    path="/users/stats"
-                    element={<UserCountStats />}
-                    errorElement={<Page404></Page404>}
-                  />
-                </>
-              )}
-            </Routes>
-          </Suspense>
+  <Routes>
+    {/* Public Routes */}
+    <Route path="/users/stats" element={<UserCountStats />} />
+    
+    {!userLogin ? (
+      <>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgetpassword" element={<ForgetPassword />} />
+        <Route path="*" element={<Page404 />} />
+      </>
+    ) : (
+      <>
+        <Route path="*" element={<DefaultLayout />} />
+      </>
+    )}
+  </Routes>
+</Suspense>
+
         </HashRouter>
       </UserLoginContext.Provider>
     </CurrencyContext.Provider>

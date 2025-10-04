@@ -238,9 +238,10 @@ function NotificationList(props) {
                         </div>
                       </CCol>
 
-                      {/* Right Section - Statistics */}
+
                       <CCol md={3} className="mb-3 mb-md-0">
                         <div className="row g-3">
+                          {/* Users Column */}
                           <div className="col-6">
                             <div className="p-3 bg-light rounded-3">
                               <div className="d-flex align-items-center mb-1">
@@ -248,10 +249,13 @@ function NotificationList(props) {
                                 <small className="text-muted fw-medium">Users</small>
                               </div>
                               <span className="fw-bold fs-6 text-dark">
-                                {item.total_users?.toLocaleString() || '0'}
+                                {/* Check item.total_users first, then fallback to item.topic.total_users */}
+                                {(item.total_users || item.topic?.total_users)?.toLocaleString() || '0'}
                               </span>
                             </div>
                           </div>
+
+                          {/* Devices Column (The one causing issues) */}
                           <div className="col-6">
                             <div className="p-3 bg-light rounded-3">
                               <div className="d-flex align-items-center mb-1">
@@ -259,10 +263,14 @@ function NotificationList(props) {
                                 <small className="text-muted fw-medium">Devices</small>
                               </div>
                               <span className="fw-bold fs-6 text-dark">
-                                {item.total_devices?.toLocaleString() || '0'}
+                                {/* Check item.total_devices first, then fallback to item.topic.total_devices */}
+                                {(item.total_devices || item.topic?.total_devices)?.toLocaleString() || '0'}
                               </span>
                             </div>
                           </div>
+
+                          {/* Push Notification Success Rate */}
+                          {/* We need total_devices for the success rate calculation. */}
                           <div className="col-12">
                             <div className="p-3 bg-success bg-opacity-10 rounded-3 border border-success border-opacity-25">
                               <div className="d-flex align-items-center mb-1">
@@ -271,25 +279,28 @@ function NotificationList(props) {
                                   Push Notification Success Rate
                                 </small>
                               </div>
-                              <div className="d-flex align-items-center">
-                                <span className="fw-bold text-success me-2">
-                                  {item.successful_devices?.toLocaleString() || '0'}
-                                </span>
-                                <small className="text-muted">
-                                  / {item.total_devices?.toLocaleString() || '0'}
-                                </small>
-                                <small className="ms-auto text-success fw-medium">
-                                  {item.total_devices > 0
-                                    ? `${Math.round(
-                                        (item.successful_devices / item.total_devices) * 100,
-                                      )}%`
-                                    : '0%'}
-                                </small>
-                              </div>
+
+                              {/* Define the total for calculation using item.total_devices or item.topic.total_devices as fallback */}
+                              {(() => {
+                                const successfulDevices = item.successful_devices || item.topic?.success_devices || 0;
+                                const totalDevices = item.total_devices || item.topic?.total_devices || 0;
+                                const successRate = totalDevices > 0
+                                  ? `${Math.round((successfulDevices / totalDevices) * 100)}%` : '0%';
+                                return (
+                                  <div className="d-flex align-items-center">
+                                    <span className="fw-bold text-success me-2">
+                                      {successfulDevices.toLocaleString()}
+                                    </span>
+                                    <small className="text-muted"> / {totalDevices.toLocaleString()}</small>
+                                    <small className="ms-auto text-success fw-medium">{successRate}</small>
+                                  </div>
+                                );
+                              })()}
                             </div>
                           </div>
                         </div>
                       </CCol>
+
 
                       {/* Far Right Section - Status and Date */}
                       <CCol md={2}>

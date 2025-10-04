@@ -427,6 +427,8 @@ const WhatsAppMessages = () => {
 
     return items;
   };
+const isFilterApplied =
+  filters.date_after !== '' || filters.date_before !== '' || filters.limit !== 20;
 
   return (
     <CContainer fluid className="vh-100">
@@ -474,20 +476,24 @@ const WhatsAppMessages = () => {
                       <option value={100}>100 messages</option>
                     </CFormSelect>
                   </div>
-                  <div className="col-12 d-flex gap-2 mt-2">
-                    <CButton
-                      color="primary"
-                      size="sm"
-                      onClick={applyFilters}
-                      disabled={isDateRangeInvalid()}
-                      className="flex-fill"
-                    >
-                      Apply Filters
-                    </CButton>
-                    <CButton color="secondary" size="sm" onClick={resetFilters}>
-                      <CIcon icon={cilReload} />
-                    </CButton>
-                  </div>
+                 <div className="col-12 d-flex gap-2 mt-2">
+  <CButton
+    color="primary"
+    size="sm"
+    onClick={applyFilters}
+    disabled={isDateRangeInvalid()}
+    className="flex-fill"
+  >
+    Apply Filters
+  </CButton>
+
+  {isFilterApplied && (
+    <CButton color="danger" size="sm" onClick={resetFilters}>
+      Clear Filters
+    </CButton>
+  )}
+</div>
+
                 </div>
               </div>
 
@@ -553,9 +559,9 @@ const WhatsAppMessages = () => {
                 {!loading && conversations.length === 0 && !error && (
                   <div className="text-center py-4">
                     <div className="text-muted small">No conversations found</div>
-                    <CButton color="primary" size="sm" className="mt-2" onClick={resetFilters}>
+                    {/* <CButton color="primary" size="sm" className="mt-2" onClick={resetFilters}>
                       Clear Filters
-                    </CButton>
+                    </CButton> */}
                   </div>
                 )}
               </div>

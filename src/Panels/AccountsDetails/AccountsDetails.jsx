@@ -15,10 +15,13 @@ function AccountsDetails(props) {
   const [selectedDocument, setSelectedDocument] = useState([])
   const [loading, setLoading] = useState(false)
 
+  // ✅ Check if it's orders type
+  const isOrdersType = props.pnlType === "orders"
+
   // Fetch payment details using your API
   const fetchPaymentDetails = async () => {
-    if (props.pnlType !== "orders" || !props.dataset) return;
-    
+    if (!isOrdersType || !props.dataset) return;
+
     try {
       setLoading(true)
       const response = await axios.post('/fetch_order_wise_payment_details', {
@@ -27,7 +30,7 @@ function AccountsDetails(props) {
         paymentmood: props.dataset?.pay_type,
         paymenttype: props.dataset?.pay_category
       })
-      
+
       if (response.data.status === 200) {
         setPaymentData(response.data)
         console.log("API Response:", response.data)
@@ -40,7 +43,7 @@ function AccountsDetails(props) {
   }
 
   useEffect(() => {
-    if (props.pnlType === "orders") {
+    if (isOrdersType) {
       fetchPaymentDetails()
     }
   }, [props.dataset, props.pnlType])
@@ -49,75 +52,47 @@ function AccountsDetails(props) {
     setDocumentViewModal(!documentViewModal)
   }
 
-const getReferenceImage = () => {
-  // Check API top-level reference_Image
-  if (paymentData?.response?.[0]?.reference_Image) {
-    return paymentData.response[0].reference_Image;
-  }
+  const getReferenceImage = () => {
+    // Check API top-level reference_Image
+    if (paymentData?.response?.[0]?.reference_Image) {
+      return paymentData.response[0].reference_Image;
+    }
 
-  // Existing checks (optional, if needed)
-  if (paymentData?.essNEssData?.[0]?.product_image) {
-    return paymentData.essNEssData[0].product_image;
-  }
-  if (paymentData?.productData?.[0]?.product_image) {
-    return paymentData.productData[0].product_image;
-  }
-  if (paymentData?.lifestyleData?.[0]?.product_image) {
-    return paymentData.lifestyleData[0].product_image;
-  }
+    // Existing checks (optional, if needed)
+    if (paymentData?.essNEssData?.[0]?.product_image) {
+      return paymentData.essNEssData[0].product_image;
+    }
+    if (paymentData?.productData?.[0]?.product_image) {
+      return paymentData.productData[0].product_image;
+    }
+    if (paymentData?.lifestyleData?.[0]?.product_image) {
+      return paymentData.lifestyleData[0].product_image;
+    }
 
-  return null;
-};
+    return null;
+  };
 
-
-  // Get total amount - sum from all product types
   const getTotalAmount = () => {
-    let total = 0
-    
-    // Sum from essNEssData
-    if (paymentData?.essNEssData) {
-      paymentData.essNEssData.forEach(item => {
-        total += parseFloat(item.total_amount || 0)
-      })
+    if (paymentData?.response?.[0]?.total_amount) {
+      return parseFloat(paymentData.response[0].total_amount).toFixed(2);
     }
-    
-    // Sum from productData
-    if (paymentData?.productData) {
-      paymentData.productData.forEach(item => {
-        total += parseFloat(item.total_amount || 0)
-      })
+    return "0.00";
+  };
+
+  // Get paid amount
+  const getPaidAmount = () => {
+    if (paymentData?.response?.[0]?.paid_amount) {
+      return parseFloat(paymentData.response[0].paid_amount).toFixed(2);
     }
-    
-    // Sum from lifestyleData
-    if (paymentData?.lifestyleData) {
-      paymentData.lifestyleData.forEach(item => {
-        total += parseFloat(item.total_amount || 0)
-      })
+    return "0.00";
+  };
+
+  const getBalanceAmount = () => {
+    if (paymentData?.response?.[0]?.balance_amount) {
+      return parseFloat(paymentData.response[0].balance_amount).toFixed(2);
     }
-    
-    // Sum from hotelData
-    if (paymentData?.hotelData) {
-      paymentData.hotelData.forEach(item => {
-        total += parseFloat(item.total_amount || 0)
-      })
-    }
-    
-    // Sum from educationData
-    if (paymentData?.educationData) {
-      paymentData.educationData.forEach(item => {
-        total += parseFloat(item.total_amount || 0)
-      })
-    }
-    
-    // Sum from flightsData
-    if (paymentData?.flightsData) {
-      paymentData.flightsData.forEach(item => {
-        total += parseFloat(item.total_amount || 0)
-      })
-    }
-    
-    return total.toFixed(2)
-  }
+    return "0.00";
+  };
 
   // Get payment type from props
   const getPaymentType = () => {
@@ -143,15 +118,15 @@ const getReferenceImage = () => {
   const handlePNLReport = async () => {
     let id
     let url = ''
-    
-    if (props?.pnlType === "orders") {
+
+    if (isOrdersType) {
       url = "/pnl/order"
       id = props?.orderid
     } else {
       url = "/pnl/order-product"
       id = props?.productData?.[0]?.checkoutID
     }
-    
+
     setpnlReportLoading(true)
     try {
       const response = await axios.get(`${url}/${id}`)
@@ -167,7 +142,7 @@ const getReferenceImage = () => {
 
   const downloadPdf = async () => {
     let url = ''
-    if (props?.pnlType === "orders") {
+    if (isOrdersType) {
       url = `${axios.defaults.baseURL}/pnl/order/${currentOrderId}/pdf`
     } else {
       url = `${axios.defaults.baseURL}/pnl/order-product/${currentOrderId}/pdf`
@@ -181,6 +156,13 @@ const getReferenceImage = () => {
     setCurrentOrderId('')
     setProductPNLReport([])
   }
+
+  // ✅ Check if user has PNL permissions
+  const hasPNLPermissions = [
+    'all accounts access',
+    'view customer order pnl',
+    'view account pnl',
+  ].some(permission => userData?.permissions?.includes(permission))
 
   return (
     <>
@@ -197,80 +179,115 @@ const getReferenceImage = () => {
                     </div>
                   ) : (
                     <>
-                      {/* SINGLE ROW WITH ALL 4 ITEMS */}
-                      <div className="row align-items-center bg-light p-3 rounded">
-                        {/* Total Amount */}
-                        <div className="col-md-3 text-center">
-                          <div>
+                      {/* ✅ CONDITIONAL RENDERING BASED ON TYPE */}
+                      {isOrdersType ? (
+                        // ✅ ORDERS TYPE - Show all details
+                        <div className="row align-items-center bg-light p-3 rounded">
+                          {/* Total Amount */}
+                          <div className="col-md-2 text-center">
                             <h6 className="text-muted mb-1">Total Amount</h6>
                             <h4 className="text-success mb-0">
                               {getCurrency()} {getTotalAmount()}
                             </h4>
                           </div>
-                        </div>
 
-                        {/* Payment Type */}
-                        <div className="col-md-3 text-center">
-                          <div>
-                            <h6 className="text-muted mb-1">Payment Type</h6>
-                            <h5 className="text-primary mb-0">{getPaymentType()}</h5>
+                          {/* Paid Amount */}
+                          <div className="col-md-2 text-center">
+                            <h6 className="text-muted mb-1">Paid Amount</h6>
+                            <h4 className="text-info mb-0">
+                              {getCurrency()} {getPaidAmount()}
+                            </h4>
+                          </div>
+
+                          {/* Balance Amount */}
+                          <div className="col-md-2 text-center">
+                            <h6 className="text-muted mb-1">Balance Amount</h6>
+                            <h4 className="text-danger mb-0">
+                              {getCurrency()} {getBalanceAmount()}
+                            </h4>
+                          </div>
+
+                          {/* Payment Type */}
+                          <div className="col-md-2 text-center">
+                            <div>
+                              <h6 className="text-muted mb-1">Payment Type</h6>
+                              <h5 className="text-primary mb-0">{getPaymentType()}</h5>
+                            </div>
+                          </div>
+
+                          {/* Reference Image */}
+                          <div className="col-md-2 text-center">
+                            <div>
+                              <h6 className="text-muted mb-2">Reference Image</h6>
+                              {getReferenceImage() ? (
+                                <a
+                                  target="_blank"
+                                  href={getReferenceImage()}
+                                  rel="noopener noreferrer"
+                                  className="d-inline-block"
+                                >
+                                  <img
+                                    src={paymentData?.response?.[0]?.paySlips?.[0] || getReferenceImage()}
+                                    width="80"
+                                    height="60"
+                                    style={{ objectFit: 'cover', borderRadius: '6px', border: '2px solid #dee2e6', cursor: 'pointer' }}
+                                    alt="Reference"
+                                  />
+                                </a>
+                              ) : (
+                                <div className="text-muted">
+                                  <small>No image</small>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Show PNL Report */}
+                          <div className="col-md-2 text-center">
+                            <div>
+                              <h6 className="text-muted mb-2">PNL Report</h6>
+                              {hasPNLPermissions && (
+                                <CButton
+                                  color="info"
+                                  size="sm"
+                                  style={{
+                                    color: 'white',
+                                    minWidth: '120px'
+                                  }}
+                                  onClick={handlePNLReport}
+                                  disabled={pnlReportLoading}
+                                >
+                                  {pnlReportLoading ? <CSpinner size="sm" /> : 'Show PNL'}
+                                </CButton>
+                              )}
+                            </div>
                           </div>
                         </div>
-
-                        {/* Reference Image */}
-                        <div className="col-md-3 text-center">
-                          <div>
-                            <h6 className="text-muted mb-2">Reference Image</h6>
-                            {getReferenceImage() ? (
-                              <a
-                                target="_blank"
-                                href={getReferenceImage()}
-                                rel="noopener noreferrer"
-                                className="d-inline-block"
-                              >
-                               <img
-  src={paymentData?.response?.[0]?.paySlips?.[0] || getReferenceImage()}
-  width="80"
-  height="60"
-  style={{ objectFit: 'cover', borderRadius: '6px', border: '2px solid #dee2e6', cursor: 'pointer' }}
-  alt="Reference"
-/>
-
-                              </a>
-                            ) : (
-                              <div className="text-muted">
-                                <small>No image</small>
-                              </div>
-                            )}
+                      ) : (
+                        // ✅ NON-ORDERS TYPE - Show only PNL Report
+                        <div className="row align-items-center bg-light p-3 rounded">
+                          <div className="col-md-12 text-center">
+                            <div>
+                              <h6 className="text-muted mb-2">PNL Report</h6>
+                              {hasPNLPermissions && (
+                                <CButton
+                                  color="info"
+                                  size="lg"
+                                  style={{
+                                    color: 'white',
+                                    minWidth: '200px',
+                                    fontSize: '16px'
+                                  }}
+                                  onClick={handlePNLReport}
+                                  disabled={pnlReportLoading}
+                                >
+                                  {pnlReportLoading ? <CSpinner size="sm" /> : 'Show PNL Report'}
+                                </CButton>
+                              )}
+                            </div>
                           </div>
                         </div>
-
-                        {/* Show PNL Report */}
-                        <div className="col-md-3 text-center">
-                          <div>
-                            <h6 className="text-muted mb-2">PNL Report</h6>
-                            {[
-                              'all accounts access',
-                              'view customer order pnl',
-                              'view account pnl',
-                            ].some(permission => userData?.permissions?.includes(permission)) && (
-                              <CButton
-                                color="info"
-                                size="sm"
-                                style={{
-                                  color: 'white',
-                                  minWidth: '120px'
-                                }}
-                                onClick={handlePNLReport}
-                                disabled={pnlReportLoading}
-                              >
-                                {pnlReportLoading ? <CSpinner size="sm" /> : 'Show PNL'}
-                              </CButton>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
+                      )}
                     </>
                   )}
                 </div>
