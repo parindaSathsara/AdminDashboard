@@ -77,9 +77,17 @@ const SupportSidebar = ({ show, onHide, getHelpCount }) => {
               }}>
               <Card.Body style={{ position: 'relative' }} onClick={() => handleReqClick(request)}>
                 <div className="d-flex justify-content-between align-items-start">
-                  <Card.Title className="h5 mb-2">
+                  <Card.Title
+                    className="h5 mb-2"
+                    style={{
+                      whiteSpace: 'normal', // allow text to wrap
+                      wordBreak: 'break-word', // break long words if needed
+                      overflow: 'visible', // prevent hiding overflowing text
+                    }}
+                  >
                     {request.title || 'Untitled Request'}
                   </Card.Title>
+
                 </div>
                 <Card.Text className="text-muted mb-2 small">
                   {formatDate(request.created_at)}
